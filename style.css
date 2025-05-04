@@ -28,6 +28,12 @@ input {
     border: 1px solid #ccc;
     box-sizing: border-box;
 }
-.hidden {
+.hidden_karyawan {
+    display: none; /* Hides the element */
+}
+.hidden_user {
+    display: none; /* Hides the element */
+}
+.hidden_role {
     display: none; /* Hides the element */
 }

@@ -1,15 +1,38 @@
-document.getElementById('create').addEventListener('click', function () {
-    const div = document.getElementById('toggleDiv');
-    div.classList.toggle('hidden'); // Toggles the 'hidden' class
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('create_karyawan').addEventListener('click', function () {
+        const div = document.getElementById('toggleDiv_karyawan');
+        div.classList.toggle('hidden_karyawan');
+        console.log('Create Karyawan button clicked');
+
+        document.getElementById('toggleDiv_role').classList.add('hidden_role');
+        document.getElementById('toggleDiv_user').classList.add('hidden_user');
+    });
+
+    document.getElementById('create_role').addEventListener('click', function () {
+        const div = document.getElementById('toggleDiv_role');
+        div.classList.toggle('hidden_role');
+        console.log('Create role button clicked');
+        document.getElementById('toggleDiv_karyawan').classList.add('hidden_karyawan');
+        document.getElementById('toggleDiv_user').classList.add('hidden_user');
+    });
+
+    document.getElementById('create_user').addEventListener('click', function () {
+        const div = document.getElementById('toggleDiv_user');
+        div.classList.toggle('hidden_user');
+        console.log('Create user button clicked');
+        document.getElementById('toggleDiv_karyawan').classList.add('hidden_karyawan');
+        document.getElementById('toggleDiv_role').classList.add('hidden_role');
+    });
 });
-document.getElementById('submit').addEventListener('click', function () {
+
+document.getElementById('submit_karyawan').addEventListener('click', function () {
     // Collect form data
-    const id = document.getElementById('id').value;
-    const name = document.getElementById('name').value;
-    const divisi = document.getElementById('divisi').value;
-    const phone = document.getElementById('phone').value;
-    const address = document.getElementById('address').value;
-    const nik = document.getElementById('nik').value;
+    const id = document.getElementById('id_karyawan').value;
+    const name = document.getElementById('name_karyawan').value;
+    const divisi = document.getElementById('divisi_karyawan').value;
+    const phone = document.getElementById('phone_karyawan').value;
+    const address = document.getElementById('address_karyawan').value;
+    const nik = document.getElementById('nik_karyawan').value;
 
     // Create a data object
     const data = { id, name, divisi, phone, address, nik };

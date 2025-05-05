@@ -1,0 +1,87 @@
+button{
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #45a049;
+}
+label{
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    display: block;
+}
+input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.hidden_karyawan {
+    display: none; /* Hides the element */
+}
+.hidden_role {
+    display: none; /* Hides the element */
+}
+/* Style the Select2 container */
+.select2-container {
+    width: 100% !important; /* Ensure it takes the full width */
+    font-size: 16px; /* Adjust font size */
+
+}
+
+/* Style the dropdown */
+.select2-dropdown {
+    background-color: #f9f9f9; /* Light background */
+    border: 1px solid #ccc; /* Border color */
+}
+
+/* Style the search box inside the dropdown */
+.select2-search input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Style the selected option */
+.select2-selection {
+    height: 40px !important; /* Adjust height */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+
+}
+
+/* Style the placeholder text */
+.select2-selection__placeholder {
+    color: #aaa; /* Placeholder color */
+    font-style: italic;
+    vertical-align: middle; /* Center vertically */
+
+}
+
+/* Style the dropdown options */
+.select2-results__option {
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Highlighted option on hover */
+.select2-results__option--highlighted {
+    background-color: #4CAF50; /* Green background */
+    color: white;
+}

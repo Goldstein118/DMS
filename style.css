@@ -1,4 +1,4 @@
-button{
+.create_button{
     background-color: #4CAF50; /* Green */
     border: none;
     color: white;
@@ -10,7 +10,7 @@ button{
     margin: 4px 2px;
     cursor: pointer;
 }
-button:hover {
+.create_button:hover {
     background-color: #45a049;
 }
 label{
@@ -84,4 +84,36 @@ input {
 .select2-results__option--highlighted {
     background-color: #4CAF50; /* Green background */
     color: white;
+}
+.delete_button{
+    background-color: #f44336; /* Red */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.update_button{
+    background-color: #008CBA; /* Blue */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.delete_button:hover {
+    background-color: #a04545;
+}
+.update_button:hover {
+    background-color: #454ea0;
 }

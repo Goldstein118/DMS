@@ -1,7 +1,8 @@
 <?php
-    $servername="localhost";
-    $username="root";
-    $password="";
+    require_once __DIR__ .'/env_loader.php';
+    $servername=$_ENV['DB_HOST'];
+    $username=$_ENV['DB_USERNAME'];
+    $password=$_ENV['DB_PASSWORD'];
     
     $conn= mysqli_connect($servername,$username,$password);
     

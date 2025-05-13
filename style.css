@@ -1,119 +1,246 @@
-.create_button{
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
+:root {
+    --primary-color: #4CAF50; /* Green */
+    --secondary-color: #008CBA; /* Blue */
+    --danger-color: #f44336; /* Red */
+    --hover-danger-color: #a04545;
+    --hover-secondary-color: #454ea0;
+    --neutral-color: #f9f9f9; /* Light background */
+    --text-color: #333; /* Dark text */
+    --border-color: #ccc; /* Light border */
+    --font-size-small: 10px;
+    --font-size-medium: 14px;
+    --font-size-large: 20px;
+    --padding-small: 4px 8px;
+    --padding-medium: 10px 20px;
+    --border-radius: 5px;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-.create_button:hover {
-    background-color: #45a049;
-}
-label{
-    font-size: 20px;
+label {
+    font-size: var(--font-size-large);
     font-weight: bold;
-    color: #333;
+    color: var(--text-color);
     margin-bottom: 10px;
     display: block;
 }
-input {
+
+input, select, textarea {
     width: 100%;
-    padding: 12px 20px;
+    padding: 12px;
     margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
     box-sizing: border-box;
+    font-size: var(--font-size-medium);
 }
-.hidden_karyawan {
-    display: none; /* Hides the element */
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Green glow */
 }
-.hidden_role {
-    display: none; /* Hides the element */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: var(--font-size-medium);
+    text-align: left;
 }
-/* Style the Select2 container */
+
+table th, table td {
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+}
+
+table th {
+    background-color: var(--neutral-color);
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2; /* Light gray for alternate rows */
+}
+
+table tr:hover {
+    background-color: #ddd; /* Highlight row on hover */
+}
+.hidden_karyawan, .hidden_role, .hidden_role_update {
+    display: none;
+}
+
+#toggleDiv_karyawan, #toggleDiv_role {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: var(--neutral-color);
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    width: 400px;
+    max-width: 90%;
+    transition: box-shadow 0.3s ease;
+}
+
+#toggleDiv_karyawan:hover, #toggleDiv_role:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+}
 .select2-container {
-    width: 100% !important; /* Ensure it takes the full width */
-    font-size: 16px; /* Adjust font size */
-
+    width: 100% !important;
+    font-size: var(--font-size-medium);
 }
 
-/* Style the dropdown */
 .select2-dropdown {
-    background-color: #f9f9f9; /* Light background */
-    border: 1px solid #ccc; /* Border color */
+    background-color: var(--neutral-color);
+    border: 1px solid var(--border-color);
 }
 
-/* Style the search box inside the dropdown */
 .select2-search input {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     box-sizing: border-box;
 }
 
-/* Style the selected option */
 .select2-selection {
-    height: 40px !important; /* Adjust height */
+    height: 40px !important;
     padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
     background-color: #fff;
-
 }
 
-/* Style the placeholder text */
 .select2-selection__placeholder {
-    color: #aaa; /* Placeholder color */
+    color: #aaa;
     font-style: italic;
-    vertical-align: middle; /* Center vertically */
-
+    vertical-align: middle;
 }
 
-/* Style the dropdown options */
 .select2-results__option {
     padding: 10px;
-    font-size: 16px;
-    color: #333;
+    font-size: var(--font-size-medium);
+    color: var(--text-color);
 }
 
-/* Highlighted option on hover */
 .select2-results__option--highlighted {
-    background-color: #4CAF50; /* Green background */
+    background-color: var(--primary-color);
     color: white;
 }
-.delete_button{
-    background-color: #f44336; /* Red */
+@media (max-width: 768px) {
+    table {
+        font-size: 12px;
+    }
+
+    button {
+        font-size: 12px;
+        padding: var(--padding-small);
+    }
+
+    #toggleDiv_karyawan, #toggleDiv_role {
+        width: 90%;
+        padding: 15px;
+    }
+}
+.text-center {
+    text-align: center;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.p-20 {
+    padding: 20px;
+}
+
+button {
     border: none;
     color: white;
-    padding: 10px 20px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 10px;
-    margin: 4px 2px;
+    font-size: var(--font-size-medium);
+    margin: var(--padding-small);
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
+    padding: var(--padding-medium);
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
-.update_button{
-    background-color: #008CBA; /* Blue */
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 10px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 5px;
+.delete_karyawan, .delete_role, .delete_user, .update_karyawan, .update_role, .update_user {
+    padding:4px 8px;
+
 }
+
+button:hover {
+    transform: scale(1.05); /* Slight zoom effect */
+}
+
+.create_button {
+    background-color: var(--primary-color);
+    margin: var(--padding-small);
+}
+
+.create_button:hover {
+    background-color: #45a049; /* Slightly darker green */
+}
+
+.delete_button {
+    background-color: var(--danger-color);
+}
+
 .delete_button:hover {
-    background-color: #a04545;
+    background-color: var(--hover-danger-color);
 }
+
+.update_button {
+    background-color: var(--secondary-color);
+}
+
 .update_button:hover {
-    background-color: #454ea0;
+    background-color: var(--hover-secondary-color);
+}
+
+.delete_karyawan, .delete_role, .delete_user {
+    background-color: var(--danger-color);
+    color: white;
+    padding: var(--padding-medium);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.delete_karyawan :hover, .delete_role:hover, .delete_user:hover {
+    background-color: var(--hover-danger-color);
+    transform: scale(1.05);
+}
+
+.update_karyawan, .update_role, .update_user {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: var(--padding-medium);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.update_karyawan:hover, .update_role:hover, .update_user:hover {
+    background-color: var(--hover-secondary-color);
+    transform: scale(1.05);
+}
+#submit_karyawan, #submit_role, #submit_user {
+    background-color: var(--primary-color);
+    color: white;
+    padding: var(--padding-medium);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }

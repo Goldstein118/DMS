@@ -1,6 +1,5 @@
 <?php
 require_once 'createDB.php';
-require_once 'env_loader.php';
 include('db.php');
 ?>
 <!DOCTYPE html>
@@ -22,24 +21,20 @@ include('db.php');
 </head>
 <body>
 
-    <div id="toggleDiv_karyawan" class="hidden_karyawan">
-        <label for="name">Name:</label>
-        <input type="text" id="name_karyawan" name="name_karyawan"><br><br>
-        <label for="divisi">Divisi:</label>
-        <input type="text" id="divisi_karyawan" name="divisi_karyawan"><br><br>
-        <select  id="role_select">
-            <option value="">Select Role</option>
-        </select>
-        <label for="phone">Phone:</label>
-        <input type="text" id="phone_karyawan" name="phone_karyawan"><br><br>
-        <label for="address">Address:</label>
-        <input type="text" id="address_karyawan" name="address_karyawan"><br><br>
-        <label for ="nik">NIK:</label>
-        <input type="text" id="nik_karyawan" name="nik_karyawan"><br><br>
-        <button id="submit_karyawan" >Submit</button>
+    <div id="toggleDiv_role" class="hidden_role">
+        <label for="name_role">Name:</label>
+        <input type="text" id="name_role" name="name_role"><br><br>
+        <label for="akses">Akses</label>
+        <input type="text" id="akses_role" name="akses"><br><br>
+        <button id="submit_role" >Submit</button>
     </div>
-
-
+<div id="toggleDiv_role_update" class="hidden_role_update">
+        <label for="name_role">Name:</label>
+        <input type="text" id="name_role_update" name="name_role"><br><br>
+        <label for="akses">Akses</label>
+        <input type="text" id="akses_role_update" name="akses"><br><br>
+        <button id="submit_role_update" >Submit</button>
+</div>
 
 <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
   <button id="closeNav" class="w3-bar-item w3-button w3-large">Close &times;</button>
@@ -53,33 +48,29 @@ include('db.php');
     <div class="w3-teal">
   <button id="openNav" class="w3-button w3-teal w3-xlarge">&#9776;</button>
   <div class="w3-container">
-    <h1>Tabel Karyawan</h1>
+    <h1>Tabel Role</h1>
   </div>
 </div>
-        <div id="app1" class="w3-container">
-        <button id="create_karyawan" class="create_button"> [&plus;]Karyawan</button>
-            <table id="table_karyawan" class="cell-border compact stripe hover order-column" style="width:100%">
+        <div id="app3" class="w3-container">
+            <button id="create_role" class="create_button">[&plus;]Role</button>
+            <table id="table_role" class="cell-border compact stripe hover order-column" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Karyawan_ID</th>
-                        <th>Name</th>
                         <th>Role_ID</th>
-                        <th>Divisi</th>
-                        <th>no Telp</th>
-                        <th>Alamat</th>
-                        <th>KTP/NPWP</th>
+                        <th>Name</th>
+                        <th>Akses</th>
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="karyawan_table_body">
+                <tbody id="role_table_body">
                     <!-- Data will be populated here -->
                 </tbody>
             </table>
+
         </div>
     </div>
-    </div>
-    <script type="module" src="<?php echo $_ENV['BASE_URL'];?>../JS/select_karyawan.js?v=2.0"></script>
-    <script type="module" src="<?php echo $_ENV['BASE_URL'];?>../JS/submit_karyawan.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL'];?>../JS/select_role.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL'];?>../JS/submit_role.js?v=2.0"></script>
     <script  src="<?php echo $_ENV['BASE_URL'];?>../JS/side_bar.js"></script>
 </body>
 </html>

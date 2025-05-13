@@ -1,6 +1,5 @@
 <?php
 require_once 'createDB.php';
-require_once 'env_loader.php';
 include('db.php');
 ?>
 <!DOCTYPE html>
@@ -21,26 +20,6 @@ include('db.php');
 
 </head>
 <body>
-
-    <div id="toggleDiv_karyawan" class="hidden_karyawan">
-        <label for="name">Name:</label>
-        <input type="text" id="name_karyawan" name="name_karyawan"><br><br>
-        <label for="divisi">Divisi:</label>
-        <input type="text" id="divisi_karyawan" name="divisi_karyawan"><br><br>
-        <select  id="role_select">
-            <option value="">Select Role</option>
-        </select>
-        <label for="phone">Phone:</label>
-        <input type="text" id="phone_karyawan" name="phone_karyawan"><br><br>
-        <label for="address">Address:</label>
-        <input type="text" id="address_karyawan" name="address_karyawan"><br><br>
-        <label for ="nik">NIK:</label>
-        <input type="text" id="nik_karyawan" name="nik_karyawan"><br><br>
-        <button id="submit_karyawan" >Submit</button>
-    </div>
-
-
-
 <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
   <button id="closeNav" class="w3-bar-item w3-button w3-large">Close &times;</button>
   <a href="<?php echo $_ENV['BASE_URL'];?>index.php" class="w3-bar-item w3-button">Tabel Karyawan</a>
@@ -53,33 +32,26 @@ include('db.php');
     <div class="w3-teal">
   <button id="openNav" class="w3-button w3-teal w3-xlarge">&#9776;</button>
   <div class="w3-container">
-    <h1>Tabel Karyawan</h1>
+    <h1>Tabel User</h1>
   </div>
 </div>
-        <div id="app1" class="w3-container">
-        <button id="create_karyawan" class="create_button"> [&plus;]Karyawan</button>
-            <table id="table_karyawan" class="cell-border compact stripe hover order-column" style="width:100%">
+        <div id="app2" class="w3-container">
+            <table id="table_user" class="cell-border compact stripe hover order-column">
                 <thead>
                     <tr>
+                        <th>User_ID</th>
                         <th>Karyawan_ID</th>
-                        <th>Name</th>
-                        <th>Role_ID</th>
-                        <th>Divisi</th>
-                        <th>no Telp</th>
-                        <th>Alamat</th>
-                        <th>KTP/NPWP</th>
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="karyawan_table_body">
+                <tbody id="user_table_body">
                     <!-- Data will be populated here -->
                 </tbody>
             </table>
+
         </div>
     </div>
-    </div>
-    <script type="module" src="<?php echo $_ENV['BASE_URL'];?>../JS/select_karyawan.js?v=2.0"></script>
-    <script type="module" src="<?php echo $_ENV['BASE_URL'];?>../JS/submit_karyawan.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL'];?>../JS/select_user.js?v=2.0"></script>
     <script  src="<?php echo $_ENV['BASE_URL'];?>../JS/side_bar.js"></script>
 </body>
 </html>

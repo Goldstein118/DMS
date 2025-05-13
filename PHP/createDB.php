@@ -30,7 +30,7 @@
 
     $karyawan="CREATE TABLE IF NOT EXISTS tb_Karyawan (
     karyawan_ID VARCHAR(10) PRIMARY KEY NOT NULL,
-    nama VARCHAR(100) NOT NULL,role_ID VARCHAR(10),FOREIGN KEY (role_ID) REFERENCES tb_role(role_ID) , divisi VARCHAR(100), noTelp VARCHAR(20),alamat VARCHAR(100),KTP_NPWP VARCHAR(100)
+    nama VARCHAR(100) NOT NULL,role_ID VARCHAR(10),FOREIGN KEY (role_ID) REFERENCES tb_role(role_ID) ON DELETE SET NULL, divisi VARCHAR(100), noTelp VARCHAR(20),alamat VARCHAR(100),KTP_NPWP VARCHAR(100)
     )";
     if($conn->query($karyawan)){
         try{
@@ -42,7 +42,7 @@
     }
 
     $user = "CREATE TABLE IF NOT EXISTS tb_User (
-    user_ID VARCHAR(10) PRIMARY KEY NOT NULL, karyawan_ID VARCHAR(10),FOREIGN KEY (karyawan_ID) REFERENCES tb_karyawan(karyawan_ID)
+    user_ID VARCHAR(10) PRIMARY KEY NOT NULL, karyawan_ID VARCHAR(10),FOREIGN KEY (karyawan_ID) REFERENCES tb_karyawan(karyawan_ID) ON DELETE CASCADE
     )";
         if($conn->query($user)){
             try{

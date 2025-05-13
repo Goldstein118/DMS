@@ -1,2 +1,2 @@
-const config={API_BASE_URL:'http://localhost/Web_Project/DMS'}
+const config={API_BASE_URL:'http://localhost/DMS'}
 export default config;

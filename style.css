@@ -64,11 +64,11 @@ table tr:nth-child(even) {
 table tr:hover {
     background-color: #ddd; /* Highlight row on hover */
 }
-.hidden_karyawan, .hidden_role, .hidden_role_update {
+.hidden_karyawan, .hidden_role, .hidden_role_update, .hidden_karyawan_update {
     display: none;
 }
 
-#toggleDiv_karyawan, #toggleDiv_role {
+#toggleDiv_karyawan, #toggleDiv_role, #toggleDiv_role_update, #toggleDiv_karyawan_update {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -235,7 +235,7 @@ button:hover {
     background-color: var(--hover-secondary-color);
     transform: scale(1.05);
 }
-#submit_karyawan, #submit_role, #submit_user {
+#submit_karyawan, #submit_role, #submit_user, #submit_role_update, #submit_karyawan_update {
     background-color: var(--primary-color);
     color: white;
     padding: var(--padding-medium);

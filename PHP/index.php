@@ -18,25 +18,45 @@ include('db.php');
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src ="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 </head>
 <body>
 
     <div id="toggleDiv_karyawan" class="hidden_karyawan">
         <label for="name">Name:</label>
-        <input type="text" id="name_karyawan" name="name_karyawan"><br><br>
+        <input type="text" id="name_karyawan" name="name_karyawan" value=""><br><br>
         <label for="divisi">Divisi:</label>
-        <input type="text" id="divisi_karyawan" name="divisi_karyawan"><br><br>
+        <input type="text" id="divisi_karyawan" name="divisi_karyawan"value=""><br><br>
         <select  id="role_select">
             <option value="">Select Role</option>
         </select>
         <label for="phone">Phone:</label>
-        <input type="text" id="phone_karyawan" name="phone_karyawan"><br><br>
+        <input type="text" id="phone_karyawan" name="phone_karyawan"value=""><br><br>
         <label for="address">Address:</label>
-        <input type="text" id="address_karyawan" name="address_karyawan"><br><br>
+        <input type="text" id="address_karyawan" name="address_karyawan"value=""><br><br>
         <label for ="nik">NIK:</label>
-        <input type="text" id="nik_karyawan" name="nik_karyawan"><br><br>
+        <input type="text" id="nik_karyawan" name="nik_karyawan"value=""><br><br>
         <button id="submit_karyawan" >Submit</button>
+    </div>
+        <div id="toggleDiv_karyawan_update" class="hidden_karyawan_update">
+        <label for="update_karyawan_ID">Karyawan ID:</label>
+        <input type="text" id="update_karyawan_ID" disabled><br><br>
+        <label for="update_name_karyawan">Name:</label>
+        <input type="text" id="update_name_karyawan" name="name_karyawan_update"><br><br>
+        <label for="update_divisi_karyawan">Divisi:</label>
+        <input type="text" id="update_divisi_karyawan" name="divisi_karyawan_update"><br><br>
+        <select  id="update_role_select">
+            <option value="">Select Role</option>
+        </select>
+        <label for="update_phone_karyawan">Phone:</label>
+        <input type="text" id="update_phone_karyawan" name="phone_karyawan_update"><br><br>
+        <label for="update_address_karyawan">Address:</label>
+        <input type="text" id="update_address_karyawan" name="address_karyawan_update"><br><br>
+        <label for ="update_nik_karyawan">NIK:</label>
+        <input type="text" id="update_nik_karyawan" name="nik_karyawan_update"><br><br>
+        <button id="submit_karyawan_update" >Submit</button>
     </div>
 
 

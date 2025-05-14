@@ -17,7 +17,8 @@ include('db.php');
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src ="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 <body>
 
@@ -29,10 +30,12 @@ include('db.php');
         <button id="submit_role" >Submit</button>
     </div>
 <div id="toggleDiv_role_update" class="hidden_role_update">
-        <label for="name_role">Name:</label>
-        <input type="text" id="name_role_update" name="name_role"><br><br>
-        <label for="akses">Akses</label>
-        <input type="text" id="akses_role_update" name="akses"><br><br>
+        <label >Role ID :</label>
+        <input type="text" id="update_role_ID" disabled ><br><br>
+        <label >Name:</label>
+        <input type="text" id="update_role_name" ><br><br>
+        <label >Akses</label>
+        <input type="text" id="update_role_akses" ><br><br>
         <button id="submit_role_update" >Submit</button>
 </div>
 

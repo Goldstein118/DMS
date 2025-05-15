@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $karyawan_ID = $data['karyawan_ID'];
 
     // Prepare the DELETE statement
-    $stmt = $conn->prepare("DELETE FROM tb_karyawan WHERE karyawan_ID = ?");
+    $stmt = $conn->prepare("DELETE FROM tb_karyawan WHERE karyawan_id = ?");
     if (!$stmt) {
         file_put_contents('php://stderr', "Prepare failed: " . $conn->error . "\n");
         http_response_code(500);

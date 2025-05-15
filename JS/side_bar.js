@@ -1,19 +1,63 @@
+const sidebar = document.getElementById('mySidebar');
+const resizer = document.getElementById('resizer');
+const toggleBtn = document.getElementById('toggleSidebar');
+const main = document.getElementById('main');
 
-function w3_open() {
-document.getElementById("main").style.marginLeft = "25%";
-document.getElementById("mySidebar").style.width = "25%";
-document.getElementById("mySidebar").style.display = "block";
-document.getElementById("openNav").style.display = 'none';
+let isResizing = false;
 
-}
-function w3_close() {
-document.getElementById("main").style.marginLeft = "0%";
-document.getElementById("mySidebar").style.display = "none";
-document.getElementById("openNav").style.display = "inline-block";
+// ⏪ Load saved width on page load
+window.addEventListener('DOMContentLoaded', () => {
+  const savedWidth = localStorage.getItem('sidebarWidth');
+  const isHidden = localStorage.getItem('sidebarHidden') === 'true';
 
-}
+  if (savedWidth && !isHidden) {
+    sidebar.style.width = savedWidth + 'px';
+  }
 
-document.addEventListener('DOMContentLoaded', function () {
-document.getElementById('openNav').addEventListener('click', w3_open);
-document.getElementById('closeNav').addEventListener('click', w3_close);
+  if (isHidden) {
+    sidebar.style.display = 'none';
+    resizer.style.display = 'none';
+  }
+});
+
+// 🖱️ Start resize
+resizer.addEventListener('mousedown', () => {
+  isResizing = true;
+  document.body.style.cursor = 'ew-resize';
+});
+
+// 🏗 Resize in real time
+document.addEventListener('mousemove', (e) => {
+  if (!isResizing) return;
+  const newWidth = e.clientX;
+  if (newWidth >= 150 && newWidth <= 400) {
+    sidebar.style.width = newWidth + 'px';
+    localStorage.setItem('sidebarWidth', newWidth); // 💾 Save width
+  }
+});
+
+// 🖐 Stop resize
+document.addEventListener('mouseup', () => {
+  if (isResizing) {
+    isResizing = false;
+    document.body.style.cursor = 'default';
+  }
+});
+
+// 📥 Collapse / expand
+toggleBtn.addEventListener('click', () => {
+  const isCurrentlyVisible = sidebar.style.display !== 'none';
+
+  if (isCurrentlyVisible) {
+    sidebar.style.display = 'none';
+    resizer.style.display = 'none';
+    localStorage.setItem('sidebarHidden', 'true');
+  } else {
+    sidebar.style.display = 'block';
+    resizer.style.display = 'block';
+
+    const savedWidth = localStorage.getItem('sidebarWidth') || '250';
+    sidebar.style.width = savedWidth + 'px';
+    localStorage.setItem('sidebarHidden', 'false');
+  }
 });

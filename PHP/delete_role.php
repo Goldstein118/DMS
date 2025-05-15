@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $role_ID = $data['role_ID'];
 
     // Prepare the DELETE statement
-    $stmt = $conn->prepare("DELETE FROM tb_role WHERE role_ID = ?");
+    $stmt = $conn->prepare("DELETE FROM tb_role WHERE role_id = ?");
     if (!$stmt) {
         file_put_contents('php://stderr', "Prepare failed: " . $conn->error . "\n");
         http_response_code(500);

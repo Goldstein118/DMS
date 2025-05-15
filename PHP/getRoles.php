@@ -7,7 +7,7 @@ header('Content-Type: application/json');
 $search = $_GET['search'] ?? '';
 
 // Fetch roles from the database based on the search term
-$query = "SELECT role_ID, nama FROM tb_role WHERE nama LIKE ?";
+$query = "SELECT role_id, nama FROM tb_role WHERE nama LIKE ?";
 $stmt = $conn->prepare($query);
 $likeSearch = "%" . $search . "%";
 $stmt->bind_param("s", $likeSearch);
@@ -18,7 +18,7 @@ $roles = [];
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $roles[] = [
-            'role_id' => $row['role_ID'],
+            'role_id' => $row['role_id'],
             'role_text' => $row['nama']
         ];
     }

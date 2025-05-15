@@ -62,25 +62,27 @@ try {
         $address_karyawan = $data['address_karyawan'] ?? null;
         $nik_karyawan = $data['nik_karyawan'] ?? null;
         $role_id = $data['role_id'] ?? null;
+        $status_karyawan = $data['status_karyawan'] ?? 'aktif';
+        $npwp_karyawan = $data['npwp_karyawan'] ?? null;
 
         if (!$name_karyawan || !$divisi_karyawan || !$phone_karyawan || !$address_karyawan || !$nik_karyawan || !$role_id) {
             throw new Exception("Invalid input data");
         }
 
-        $id_karyawan = generateCustomID('KA', 'tb_karyawan', 'karyawan_ID', $conn);
+        $id_karyawan = generateCustomID('KA', 'tb_karyawan', 'karyawan_id', $conn);
         $conn->begin_transaction();
 
         executeInsert(
             $conn,
-            "INSERT INTO tb_karyawan (karyawan_ID, nama, divisi, noTelp, alamat, KTP_NPWP, role_ID) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            [$id_karyawan, $name_karyawan, $divisi_karyawan, $phone_karyawan, $address_karyawan, $nik_karyawan, $role_id],
-            "sssssss"
+            "INSERT INTO tb_karyawan (karyawan_id, nama, divisi, noTelp, alamat, ktp, npwp , status,role_id) VALUES (?, ?, ?, ?, ?, ?, ?,? ?, ?)",
+            [$id_karyawan, $name_karyawan, $divisi_karyawan, $phone_karyawan, $address_karyawan, $nik_karyawan,$npwp_karyawan,$status_karyawan ,$role_id],
+            "ssssssssss"
         );
 
-        $id_user = generateCustomID('US', 'tb_user', 'user_ID', $conn);
+        $id_user = generateCustomID('US', 'tb_user', 'user_id', $conn);
         executeInsert(
             $conn,
-            "INSERT INTO tb_user (user_ID, karyawan_ID) VALUES (?, ?)",
+            "INSERT INTO tb_user (user_id, karyawan_id) VALUES (?, ?)",
             [$id_user, $id_karyawan],
             "ss"
         );
@@ -95,10 +97,10 @@ try {
             throw new Exception("Invalid input data");
         }
 
-        $id_role = generateCustomID('RO', 'tb_role', 'role_ID', $conn);
+        $id_role = generateCustomID('RO', 'tb_role', 'role_id', $conn);
         executeInsert(
             $conn,
-            "INSERT INTO tb_role (role_ID, nama, akses) VALUES (?, ?, ?)",
+            "INSERT INTO tb_role (role_id, nama, akses) VALUES (?, ?, ?)",
             [$id_role, $name_role, $akses_role],
             "sss"
         );

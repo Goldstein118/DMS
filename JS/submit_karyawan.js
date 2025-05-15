@@ -70,6 +70,8 @@ function submitKaryawan() {
     const address_karyawan = document.getElementById('address_karyawan').value;
     const nik_karyawan = document.getElementById('nik_karyawan').value;
     const role_id = document.getElementById('role_select').value;
+    const npwp_karyawan= document.getElementById('npwp_karyawan').value;
+    const status_karyawan= document.getElementById('status_karyawan').value;
 
     // Validate form data
     if (!name_karyawan || !divisi_karyawan || !phone_karyawan || !address_karyawan || !nik_karyawan || !role_id) {
@@ -78,7 +80,7 @@ function submitKaryawan() {
     }
 
     // Create a data object
-    const data_karyawan = { action: 'submit_karyawan', name_karyawan, divisi_karyawan, phone_karyawan, address_karyawan, nik_karyawan, role_id };
+    const data_karyawan = { action: 'submit_karyawan', name_karyawan, divisi_karyawan, phone_karyawan, address_karyawan, nik_karyawan, role_id, npwp_karyawan, status_karyawan };
 
     // Send the data to the PHP script
     fetch(`${config.API_BASE_URL}/PHP/create.php`, {
@@ -104,6 +106,8 @@ function submitKaryawan() {
                 document.getElementById('phone_karyawan').value = '';
                 document.getElementById('address_karyawan').value = '';
                 document.getElementById('nik_karyawan').value = '';
+                document.getElementById('npwp_karyawan').value = '';
+                document.getElementById('status_karyawan').value = '';
                 $('#role_select').val(null).trigger('change');
 
                 // Hide the form

@@ -39,21 +39,26 @@ include('db.php');
         <button id="submit_role_update" >Submit</button>
 </div>
 
-<div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
-  <button id="closeNav" class="w3-bar-item w3-button w3-large">Close &times;</button>
-  <a href="<?php echo $_ENV['BASE_URL'];?>index.php" class="w3-bar-item w3-button">Tabel Karyawan</a>
-  <a href="<?php echo $_ENV['BASE_URL'];?>tabel_user.php" class="w3-bar-item w3-button">Tabel User</a>
-  <a href="<?php echo $_ENV['BASE_URL'];?>tabel_role.php" class="w3-bar-item w3-button">Tabel Role</a>
+<div class="w3-teal w3-bar">
+  <button id="toggleSidebar" class="w3-bar-item w3-button w3-teal w3-large">☰</button>
+  <span class="w3-bar-item w3-xlarge">Tabel Role</span>
 </div>
 
-    <!-- Main Content -->
-    <div id="main">
-    <div class="w3-teal">
-  <button id="openNav" class="w3-button w3-teal w3-xlarge">&#9776;</button>
-  <div class="w3-container">
-    <h1>Tabel Role</h1>
+<!-- Flex Container -->
+<div id="layout" style="display: flex; height: calc(100vh - 50px);">
+
+  <!-- Sidebar -->
+  <div id="mySidebar" class="w3-light-grey w3-bar-block" style="width: 25%; min-width: 150px; max-width: 400px; overflow-y: auto;">
+    <a href="<?php echo $_ENV['BASE_URL'];?>index.php" class="w3-bar-item w3-button">Tabel Karyawan</a>
+    <a href="<?php echo $_ENV['BASE_URL'];?>tabel_user.php" class="w3-bar-item w3-button">Tabel User</a>
+    <a href="<?php echo $_ENV['BASE_URL'];?>tabel_role.php" class="w3-bar-item w3-button">Tabel Role</a>
   </div>
-</div>
+
+  <!-- Resizer -->
+  <div id="resizer" style="width: 5px; cursor: ew-resize; background: #ccc;"></div>
+
+  <!-- Main content -->
+  <div id="main" style="flex: 1; overflow: auto; padding: 16px;">
         <div id="app3" class="w3-container">
             <button id="create_role" class="create_button">[&plus;]Role</button>
             <table id="table_role" class="cell-border compact stripe hover order-column" style="width:100%">
@@ -71,7 +76,9 @@ include('db.php');
             </table>
 
         </div>
-    </div>
+  </div>
+</div>
+
     <script type="module" src="<?php echo $_ENV['BASE_URL'];?>../JS/select_role.js?v=2.0"></script>
     <script type="module" src="<?php echo $_ENV['BASE_URL'];?>../JS/submit_role.js?v=2.0"></script>
     <script  src="<?php echo $_ENV['BASE_URL'];?>../JS/side_bar.js"></script>

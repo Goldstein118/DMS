@@ -7,7 +7,7 @@ include 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $data = json_decode(file_get_contents('php://input'), true);
-    file_put_contents('php://stderr', "Incoming DELETE data: " . print_r($data, true));
+
 
     if (!isset($data['user_ID'])) {
         http_response_code(400); // Bad Request
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $user_ID = $data['user_ID'];
 
     // Prepare the DELETE statement
-    $stmt = $conn->prepare("DELETE FROM tb_user WHERE user_ID = ?");
+    $stmt = $conn->prepare("DELETE FROM tb_user WHERE user_id = ?");
     if (!$stmt) {
         file_put_contents('php://stderr', "Prepare failed: " . $conn->error . "\n");
         http_response_code(500);
@@ -29,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $stmt->bind_param("s", $user_ID);
     if ($stmt->execute()) {
         http_response_code(200);
-        echo json_encode(["message" => "Role deleted successfully"]);
     } else {
         file_put_contents('php://stderr', "Execute failed: " . $stmt->error . "\n");
         http_response_code(500);

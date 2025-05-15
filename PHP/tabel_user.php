@@ -1,5 +1,6 @@
 <?php
 require_once 'createDB.php';
+require_once 'env_loader.php';
 include('db.php');
 ?>
 <!DOCTYPE html>
@@ -21,21 +22,35 @@ include('db.php');
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 <body>
-<div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
-  <button id="closeNav" class="w3-bar-item w3-button w3-large">Close &times;</button>
-  <a href="<?php echo $_ENV['BASE_URL'];?>index.php" class="w3-bar-item w3-button">Tabel Karyawan</a>
-  <a href="<?php echo $_ENV['BASE_URL'];?>tabel_user.php" class="w3-bar-item w3-button">Tabel User</a>
-  <a href="<?php echo $_ENV['BASE_URL'];?>tabel_role.php" class="w3-bar-item w3-button">Tabel Role</a>
+    <div id="toggleDiv_user_update" class="hidden_user_update">
+        <label for="update_user_ID">User ID:</label>
+        <input type="text" id="update_user_ID" disabled><br><br>
+        <label for="update_karyawan_ID">Karyawan ID:</label>
+        <select  id="update_karyawan_ID">
+            <option value=""></option>
+        </select>
+        <button id ="submit_user_update">Submit</button>
+    </div>
+<div class="w3-teal w3-bar">
+  <button id="toggleSidebar" class="w3-bar-item w3-button w3-teal w3-large">☰</button>
+  <span class="w3-bar-item w3-xlarge">Tabel User</span>
 </div>
 
-    <!-- Main Content -->
-    <div id="main">
-    <div class="w3-teal">
-  <button id="openNav" class="w3-button w3-teal w3-xlarge">&#9776;</button>
-  <div class="w3-container">
-    <h1>Tabel User</h1>
+<!-- Flex Container -->
+<div id="layout" style="display: flex; height: calc(100vh - 50px);">
+
+  <!-- Sidebar -->
+  <div id="mySidebar" class="w3-light-grey w3-bar-block" style="width: 25%; min-width: 150px; max-width: 400px; overflow-y: auto;">
+    <a href="<?php echo $_ENV['BASE_URL'];?>index.php" class="w3-bar-item w3-button">Tabel Karyawan</a>
+    <a href="<?php echo $_ENV['BASE_URL'];?>tabel_user.php" class="w3-bar-item w3-button">Tabel User</a>
+    <a href="<?php echo $_ENV['BASE_URL'];?>tabel_role.php" class="w3-bar-item w3-button">Tabel Role</a>
   </div>
-</div>
+
+  <!-- Resizer -->
+  <div id="resizer" style="width: 5px; cursor: ew-resize; background: #ccc;"></div>
+
+  <!-- Main content -->
+  <div id="main" style="flex: 1; overflow: auto; padding: 16px;">
         <div id="app2" class="w3-container">
             <table id="table_user" class="cell-border compact stripe hover order-column">
                 <thead>
@@ -49,9 +64,9 @@ include('db.php');
                     <!-- Data will be populated here -->
                 </tbody>
             </table>
-
         </div>
-    </div>
+  </div>
+</div>
     <script type="module" src="<?php echo $_ENV['BASE_URL'];?>../JS/select_user.js?v=2.0"></script>
     <script  src="<?php echo $_ENV['BASE_URL'];?>../JS/side_bar.js"></script>
 </body>

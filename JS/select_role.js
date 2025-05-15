@@ -36,7 +36,7 @@ function populateRoleTable(roles) {
     roles.forEach(role => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${role.role_ID}</td>
+            <td>${role.role_id}</td>
             <td>${role.nama}</td>
             <td>${role.akses}</td>
             <td>
@@ -75,13 +75,20 @@ async function handleDeleteRole(button) {
 
         if (response.ok) {
             row.remove();
-            toastr.success('Role deleted successfully.');
+            toastr.success('Role deleted successfully.',{
+            timeOut: 500,
+            extendedTimeOut: 500,
+        });
         } else {
-            throw new Error(`Failed to delete role. Status: ${response.status}`);
+            throw new Error(`Failed to delete role. Status: ${response.status}`,toastr.error('Failed to delete user.',{
+            timeOut: 500,extendedTimeOut: 500}));
         }
     } catch (error) {
         console.error('Error deleting role:', error);
-        toastr.error('Failed to delete role.');
+        toastr.error('Failed to delete role.'),{
+            timeOut: 500,
+            extendedTimeOut: 500,
+        };
     }
 }
 
@@ -103,7 +110,10 @@ function handleUpdateRole(button) {
 
 document.getElementById('submit_role_update').addEventListener('click', async function () {
     if (!window.currentRow) {
-        toastr.error('No row selected for update.');
+        toastr.error('No row selected for update.',{
+            timeOut: 500,
+            extendedTimeOut: 500,
+        });
         return;
     }
 
@@ -132,12 +142,18 @@ document.getElementById('submit_role_update').addEventListener('click', async fu
             const updateDiv = document.getElementById('toggleDiv_role_update');
             updateDiv.classList.add('hidden_role_update');
 
-            toastr.success('Role updated successfully.');
+            toastr.success('Role updated successfully.',{
+            timeOut: 500,
+            extendedTimeOut: 500,
+        });
         } else {
             throw new Error(`Failed to update role. Status: ${response.status}`);
         }
     } catch (error) {
         console.error('Error updating role:', error);
-        toastr.error('Failed to update role.');
+        toastr.error('Failed to update role.',{
+            timeOut: 500,
+            extendedTimeOut: 500,
+        });
     }
 });

@@ -19,7 +19,7 @@
     }
     mysqli_select_db($conn, "data_DB");
     $role = "CREATE TABLE IF NOT EXISTS tb_role (
-        role_ID VARCHAR(10) PRIMARY KEY NOT NULL,
+        role_id VARCHAR(10) PRIMARY KEY NOT NULL,
         nama VARCHAR(100),
         akses VARCHAR(100)
     )";
@@ -29,8 +29,8 @@
     }
 
     $karyawan="CREATE TABLE IF NOT EXISTS tb_Karyawan (
-    karyawan_ID VARCHAR(10) PRIMARY KEY NOT NULL,
-    nama VARCHAR(100) NOT NULL,role_ID VARCHAR(10),FOREIGN KEY (role_ID) REFERENCES tb_role(role_ID) ON DELETE SET NULL, divisi VARCHAR(100), noTelp VARCHAR(20),alamat VARCHAR(100),KTP_NPWP VARCHAR(100)
+    karyawan_id VARCHAR(10) PRIMARY KEY NOT NULL,
+    nama VARCHAR(100) NOT NULL,role_id VARCHAR(10),FOREIGN KEY (role_id) REFERENCES tb_role(role_id) ON DELETE SET NULL, divisi VARCHAR(100), noTelp VARCHAR(20),alamat VARCHAR(100),ktp VARCHAR(100),npwp VARCHAR(100),status VARCHAR(10) DEFAULT 'aktif'
     )";
     if($conn->query($karyawan)){
         try{
@@ -42,7 +42,8 @@
     }
 
     $user = "CREATE TABLE IF NOT EXISTS tb_User (
-    user_ID VARCHAR(10) PRIMARY KEY NOT NULL, karyawan_ID VARCHAR(10),FOREIGN KEY (karyawan_ID) REFERENCES tb_karyawan(karyawan_ID) ON DELETE CASCADE
+    user_id VARCHAR(10) PRIMARY KEY NOT NULL, karyawan_id VARCHAR(10), FOREIGN KEY (karyawan_id) REFERENCES tb_karyawan(karyawan_id) ON DELETE SET NULL
+
     )";
         if($conn->query($user)){
             try{

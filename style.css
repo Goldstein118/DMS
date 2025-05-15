@@ -15,6 +15,28 @@
     --border-radius: 5px;
     --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+#layout {
+  display: flex;
+  height: calc(100vh - 50px); /* adjust if header is taller */
+}
+
+#mySidebar {
+  transition: width 0.2s ease;
+}
+
+#resizer {
+  width: 5px;
+  background: #ccc;
+  cursor: ew-resize;
+}
+
+#main {
+  flex: 1;
+  transition: margin-left 0.2s;
+  overflow: auto;
+}
+
+
 label {
     font-size: var(--font-size-large);
     font-weight: bold;
@@ -64,11 +86,11 @@ table tr:nth-child(even) {
 table tr:hover {
     background-color: #ddd; /* Highlight row on hover */
 }
-.hidden_karyawan, .hidden_role, .hidden_role_update, .hidden_karyawan_update {
+.hidden_karyawan, .hidden_role, .hidden_role_update, .hidden_karyawan_update, .hidden_user_update {
     display: none;
 }
 
-#toggleDiv_karyawan, #toggleDiv_role, #toggleDiv_role_update, #toggleDiv_karyawan_update {
+#toggleDiv_karyawan, #toggleDiv_role, #toggleDiv_role_update, #toggleDiv_karyawan_update, #toggleDiv_user_update {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -183,8 +205,22 @@ button:hover {
 
 .create_button {
     background-color: var(--primary-color);
-    margin: var(--padding-small);
+    margin:5px;
+    float: right;
+    position: inline-block ;   /* Fixes the button's position on the screen */
+    top: 13%;         /* 20px space from the top of the screen */
+    right: 20px;       /* 20px space from the right edge of the screen */
+    padding: 12px 20px; /* Padding inside the button for better size */
+    background-color: #4CAF50; /* Green background */
+    color: white;      /* White text color */
+    font-size: 16px;    /* Font size */
+    border: none;      /* No border */
+    border-radius: 5px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+
 }
+
+
 
 .create_button:hover {
     background-color: #45a049; /* Slightly darker green */
@@ -235,7 +271,7 @@ button:hover {
     background-color: var(--hover-secondary-color);
     transform: scale(1.05);
 }
-#submit_karyawan, #submit_role, #submit_user, #submit_role_update, #submit_karyawan_update {
+#submit_karyawan, #submit_role, #submit_user, #submit_role_update, #submit_karyawan_update,#submit_user_update {
     background-color: var(--primary-color);
     color: white;
     padding: var(--padding-medium);
@@ -243,4 +279,5 @@ button:hover {
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 10px;
 }

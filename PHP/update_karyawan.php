@@ -1,11 +1,6 @@
 <?php
 include 'db.php';
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-error_log("Received Data: " . print_r($data, true));
-
 // Add CORS headers
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
@@ -26,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(["success" => false, "error" => "Invalid JSON payload"]);
     exit;
     }
-    $requiredFields = ['karyawan_ID', 'nama', 'role_ID', 'divisi', 'noTelp', 'alamat', 'KTP_NPWP'];
+    $requiredFields = ['karyawan_id', 'nama', 'role_id', 'divisi', 'noTelp', 'alamat', 'ktp','npwp','status'];
     foreach ($requiredFields as $field) {
     if (!isset($data[$field]) || empty(trim($data[$field]))) {
         error_log("Missing or empty field: $field");
@@ -37,13 +32,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate required fields
 
     // Extract and sanitize inputs
-    $karyawan_ID = $data['karyawan_ID'];
+    $karyawan_ID = $data['karyawan_id'];
     $nama = $data['nama'];
-    $role_ID = $data['role_ID'];
+    $role_ID = $data['role_id'];
     $divisi = $data['divisi'];
     $noTelp = $data['noTelp'];
     $alamat = $data['alamat'];
-    $ktp_npwp = $data['KTP_NPWP'];
+    $ktp_npwp = $data['ktp'];
+    $npwp = $data['npwp'];
+    $status = $data['status'];
 }
 // Input validation
 
@@ -56,14 +53,15 @@ function validateField($field, $pattern, $errorMessage) {
 }
 
 // Validate fields
-validateField($nama, '/^[a-zA-Z0-9\s,.\-]+$/', "Invalid name format");
-validateField($divisi, '/^[a-zA-Z0-9\s,.\-]+$/', "Invalid division format");
-validateField($alamat, '/^[a-zA-Z0-9\s,.\-]+$/', "Invalid address format");
-validateField($noTelp, '/^\d{10,15}$/', "Invalid phone number format");
-validateField(($ktp_npwp), '/^\d+$/', "Invalid KTP/NPWP format");
+validateField($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
+validateField($divisi, '/^[a-zA-Z0-9, ]+$/', "Invalid division format");
+validateField($alamat, '/^[a-zA-Z0-9, ]+$/', "Invalid address format");
+validateField($noTelp, '/^[+]?[\d\s\-()]+$/', "Invalid phone number format");
+validateField(($ktp_npwp),'/^[a-zA-Z0-9, ]+$/', "Invalid KTP format");
+validateField(($npwp),'/^[a-zA-Z0-9, ]+$/', "Invalid NPWP format");
 
 // Prepare the SQL statement
-$stmt = $conn->prepare("UPDATE tb_karyawan SET nama = ?, role_ID = ?, divisi = ?, noTelp = ?, alamat = ?, KTP_NPWP = ? WHERE karyawan_ID = ?");
+$stmt = $conn->prepare("UPDATE tb_karyawan SET nama = ?, role_id = ?, divisi = ?, noTelp = ?, alamat = ?, ktp = ? ,npwp = ?, status =? WHERE karyawan_id = ?");
 if (!$stmt) {
     error_log("Failed to prepare statement: " . $conn->error);
     http_response_code(500);
@@ -72,7 +70,7 @@ if (!$stmt) {
 }
 
 // Bind parameters and execute the statement
-$stmt->bind_param("sssssss", $nama, $role_ID, $divisi, $noTelp, $alamat, $ktp_npwp, $karyawan_ID);
+$stmt->bind_param("sssssssss", $nama, $role_ID, $divisi, $noTelp, $alamat, $ktp_npwp,$npwp,$status, $karyawan_ID);
 if ($stmt->execute()) {
     error_log("Karyawan updated successfully: ID = $karyawan_ID");
     http_response_code(200);

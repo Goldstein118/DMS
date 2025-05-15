@@ -29,6 +29,7 @@ include('db.php');
         <input type="text" id="name_karyawan" name="name_karyawan" value=""><br><br>
         <label for="divisi">Divisi:</label>
         <input type="text" id="divisi_karyawan" name="divisi_karyawan"value=""><br><br>
+        <label for="role_select">Role:</label>
         <select  id="role_select">
             <option value="">Select Role</option>
         </select>
@@ -38,15 +39,24 @@ include('db.php');
         <input type="text" id="address_karyawan" name="address_karyawan"value=""><br><br>
         <label for ="nik">NIK:</label>
         <input type="text" id="nik_karyawan" name="nik_karyawan"value=""><br><br>
+        <label for="npwp_karyawan">NPWP:</label>
+        <input type="text" id="npwp_karyawan" name="npwp_karyawan"value=""><br><br>
+        <label for="status_karyawan">Status:</label><br>
+        <select id="status_karyawan">
+            <option value="aktif">Aktif</option>
+            <option value="nonaktif">Non Aktif</option>
+        </select><br><br>
         <button id="submit_karyawan" >Submit</button>
     </div>
-        <div id="toggleDiv_karyawan_update" class="hidden_karyawan_update">
+
+    <div id="toggleDiv_karyawan_update" class="hidden_karyawan_update">
         <label for="update_karyawan_ID">Karyawan ID:</label>
         <input type="text" id="update_karyawan_ID" disabled><br><br>
         <label for="update_name_karyawan">Name:</label>
         <input type="text" id="update_name_karyawan" name="name_karyawan_update"><br><br>
         <label for="update_divisi_karyawan">Divisi:</label>
         <input type="text" id="update_divisi_karyawan" name="divisi_karyawan_update"><br><br>
+        <label for="update_role_select">Role:</label>
         <select  id="update_role_select">
             <option value="">Select Role</option>
         </select>
@@ -56,50 +66,64 @@ include('db.php');
         <input type="text" id="update_address_karyawan" name="address_karyawan_update"><br><br>
         <label for ="update_nik_karyawan">NIK:</label>
         <input type="text" id="update_nik_karyawan" name="nik_karyawan_update"><br><br>
+        <label for="update_npwp_karyawan">NPWP:</label>
+        <input type="text" id="update_npwp_karyawan" name="npwp_karyawan"value=""><br><br>
+        <label for="status_karyawan">Status:</label> <br>
+        <select id="update_status_karyawan">
+            <option value="aktif">Aktif</option>
+            <option value="nonaktif">Non Aktif</option>
+        </select><br><br>
         <button id="submit_karyawan_update" >Submit</button>
     </div>
-
-
-
-<div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
-  <button id="closeNav" class="w3-bar-item w3-button w3-large">Close &times;</button>
-  <a href="<?php echo $_ENV['BASE_URL'];?>index.php" class="w3-bar-item w3-button">Tabel Karyawan</a>
-  <a href="<?php echo $_ENV['BASE_URL'];?>tabel_user.php" class="w3-bar-item w3-button">Tabel User</a>
-  <a href="<?php echo $_ENV['BASE_URL'];?>tabel_role.php" class="w3-bar-item w3-button">Tabel Role</a>
+<!-- Sidebar -->
+<!-- Top Header / Navbar -->
+<div class="w3-teal w3-bar">
+  <button id="toggleSidebar" class="w3-bar-item w3-button w3-teal w3-large">☰</button>
+  <span class="w3-bar-item w3-xlarge">Tabel Karyawan</span>
 </div>
 
-    <!-- Main Content -->
-    <div id="main">
-    <div class="w3-teal">
-  <button id="openNav" class="w3-button w3-teal w3-xlarge">&#9776;</button>
-  <div class="w3-container">
-    <h1>Tabel Karyawan</h1>
+<!-- Flex Container -->
+<div id="layout" style="display: flex; height: calc(100vh - 50px);">
+
+  <!-- Sidebar -->
+  <div id="mySidebar" class="w3-light-grey w3-bar-block" style="width: 25%; min-width: 150px; max-width: 400px; overflow-y: auto;">
+    <a href="<?php echo $_ENV['BASE_URL'];?>index.php" class="w3-bar-item w3-button">Tabel Karyawan</a>
+    <a href="<?php echo $_ENV['BASE_URL'];?>tabel_user.php" class="w3-bar-item w3-button">Tabel User</a>
+    <a href="<?php echo $_ENV['BASE_URL'];?>tabel_role.php" class="w3-bar-item w3-button">Tabel Role</a>
+  </div>
+
+  <!-- Resizer -->
+  <div id="resizer" style="width: 5px; cursor: ew-resize; background: #ccc;"></div>
+
+  <!-- Main content -->
+  <div id="main" style="flex: 1; overflow: auto; padding: 16px;">
+    <div id="app1" class="w3-container">
+      <button id="create_karyawan" class="create_button">[&plus;] Karyawan</button>
+      <table id="table_karyawan" class="cell-border compact stripe hover order-column" style="width:100%">
+        <thead>
+          <tr>
+            <th>Karyawan_ID</th>
+            <th>Name</th>
+            <th>Role_ID</th>
+            <th>Divisi</th>
+            <th>no Telp</th>
+            <th>Alamat</th>
+            <th>KTP</th>
+            <th>NPWP</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="karyawan_table_body">
+          <!-- Data will be populated here -->
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
-        <div id="app1" class="w3-container">
-        <button id="create_karyawan" class="create_button"> [&plus;]Karyawan</button>
-            <table id="table_karyawan" class="cell-border compact stripe hover order-column" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>Karyawan_ID</th>
-                        <th>Name</th>
-                        <th>Role_ID</th>
-                        <th>Divisi</th>
-                        <th>no Telp</th>
-                        <th>Alamat</th>
-                        <th>KTP/NPWP</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="karyawan_table_body">
-                    <!-- Data will be populated here -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-    </div>
+
     <script type="module" src="<?php echo $_ENV['BASE_URL'];?>../JS/select_karyawan.js?v=2.0"></script>
     <script type="module" src="<?php echo $_ENV['BASE_URL'];?>../JS/submit_karyawan.js?v=2.0"></script>
-    <script  src="<?php echo $_ENV['BASE_URL'];?>../JS/side_bar.js"></script>
+    <script src="<?php echo $_ENV['BASE_URL'];?>../JS/side_bar.js"></script>
 </body>
 </html>

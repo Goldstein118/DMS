@@ -73,11 +73,12 @@ try {
         $conn->begin_transaction();
 
         executeInsert(
-            $conn,
-            "INSERT INTO tb_karyawan (karyawan_id, nama, divisi, noTelp, alamat, ktp, npwp , status,role_id) VALUES (?, ?, ?, ?, ?, ?, ?,? ?, ?)",
-            [$id_karyawan, $name_karyawan, $divisi_karyawan, $phone_karyawan, $address_karyawan, $nik_karyawan,$npwp_karyawan,$status_karyawan ,$role_id],
-            "ssssssssss"
-        );
+        $conn,
+        "INSERT INTO tb_karyawan (karyawan_id, nama, divisi, noTelp, alamat, ktp, npwp, status, role_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [$id_karyawan, $name_karyawan, $divisi_karyawan, $phone_karyawan, $address_karyawan, $nik_karyawan, $npwp_karyawan, $status_karyawan, $role_id],
+        "sssssssss"
+);
+
 
         $id_user = generateCustomID('US', 'tb_user', 'user_id', $conn);
         executeInsert(

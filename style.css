@@ -1,19 +1,19 @@
 :root {
-    --primary-color: #4CAF50; /* Green */
-    --secondary-color: #008CBA; /* Blue */
-    --danger-color: #f44336; /* Red */
-    --hover-danger-color: #a04545;
-    --hover-secondary-color: #454ea0;
-    --neutral-color: #f9f9f9; /* Light background */
-    --text-color: #333; /* Dark text */
-    --border-color: #ccc; /* Light border */
-    --font-size-small: 10px;
-    --font-size-medium: 14px;
-    --font-size-large: 20px;
-    --padding-small: 4px 8px;
-    --padding-medium: 10px 20px;
-    --border-radius: 5px;
-    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  --primary-color: #4caf50; /* Green */
+  --secondary-color: #008cba; /* Blue */
+  --danger-color: #f44336; /* Red */
+  --hover-danger-color: #a04545;
+  --hover-secondary-color: #454ea0;
+  --neutral-color: #f9f9f9; /* Light background */
+  --text-color: #333; /* Dark text */
+  --border-color: #ccc; /* Light border */
+  --font-size-small: 10px;
+  --font-size-medium: 14px;
+  --font-size-large: 20px;
+  --padding-small: 4px 8px;
+  --padding-medium: 10px 20px;
+  --border-radius: 5px;
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 #layout {
   display: flex;
@@ -36,248 +36,276 @@
   overflow: auto;
 }
 
-
 label {
-    font-size: var(--font-size-large);
-    font-weight: bold;
-    color: var(--text-color);
-    margin-bottom: 10px;
-    display: block;
+  font-size: var(--font-size-large);
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 10px;
+  display: block;
 }
 
-input, select, textarea {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    box-sizing: border-box;
-    font-size: var(--font-size-medium);
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-sizing: border-box;
+  font-size: var(--font-size-medium);
 }
 
-input:focus, select:focus, textarea:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Green glow */
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Green glow */
 }
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: var(--font-size-medium);
-    text-align: left;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: var(--font-size-medium);
+  text-align: left;
 }
 
-table th, table td {
-    padding: 12px 15px;
-    border: 1px solid var(--border-color);
+table th,
+table td {
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
 }
 
 table th {
-    background-color: var(--neutral-color);
-    color: var(--text-color);
-    font-weight: bold;
+  background-color: var(--neutral-color);
+  color: var(--text-color);
+  font-weight: bold;
 }
 
 table tr:nth-child(even) {
-    background-color: #f2f2f2; /* Light gray for alternate rows */
+  background-color: #f2f2f2; /* Light gray for alternate rows */
 }
 
 table tr:hover {
-    background-color: #ddd; /* Highlight row on hover */
+  background-color: #ddd; /* Highlight row on hover */
 }
-.hidden_karyawan, .hidden_role, .hidden_role_update, .hidden_karyawan_update, .hidden_user_update {
-    display: none;
-}
-
-#toggleDiv_karyawan, #toggleDiv_role, #toggleDiv_role_update, #toggleDiv_karyawan_update, #toggleDiv_user_update {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    background-color: var(--neutral-color);
-    padding: 20px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    width: 400px;
-    max-width: 90%;
-    transition: box-shadow 0.3s ease;
+.hidden_karyawan,
+.hidden_role,
+.hidden_role_update,
+.hidden_karyawan_update,
+.hidden_user_update {
+  display: none;
 }
 
-#toggleDiv_karyawan:hover, #toggleDiv_role:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+#toggleDiv_karyawan,
+#toggleDiv_role,
+#toggleDiv_role_update,
+#toggleDiv_karyawan_update,
+#toggleDiv_user_update {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: var(--neutral-color);
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  width: 400px;
+  max-width: 90%;
+  transition: box-shadow 0.3s ease;
+}
+
+#toggleDiv_karyawan:hover,
+#toggleDiv_role:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
 }
 .select2-container {
-    width: 100% !important;
-    font-size: var(--font-size-medium);
+  width: 100% !important;
+  font-size: var(--font-size-medium);
 }
 
 .select2-dropdown {
-    background-color: var(--neutral-color);
-    border: 1px solid var(--border-color);
+  background-color: var(--neutral-color);
+  border: 1px solid var(--border-color);
 }
 
 .select2-search input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
 }
 
 .select2-selection {
-    height: 40px !important;
-    padding: 5px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    background-color: #fff;
+  height: 40px !important;
+  padding: 5px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: #fff;
 }
 
 .select2-selection__placeholder {
-    color: #aaa;
-    font-style: italic;
-    vertical-align: middle;
+  color: #aaa;
+  font-style: italic;
+  vertical-align: middle;
 }
 
 .select2-results__option {
-    padding: 10px;
-    font-size: var(--font-size-medium);
-    color: var(--text-color);
+  padding: 10px;
+  font-size: var(--font-size-medium);
+  color: var(--text-color);
 }
 
 .select2-results__option--highlighted {
-    background-color: var(--primary-color);
-    color: white;
+  background-color: var(--primary-color);
+  color: white;
 }
 @media (max-width: 768px) {
-    table {
-        font-size: 12px;
-    }
+  table {
+    font-size: 12px;
+  }
 
-    button {
-        font-size: 12px;
-        padding: var(--padding-small);
-    }
+  button {
+    font-size: 12px;
+    padding: var(--padding-small);
+  }
 
-    #toggleDiv_karyawan, #toggleDiv_role {
-        width: 90%;
-        padding: 15px;
-    }
+  #toggleDiv_karyawan,
+  #toggleDiv_role {
+    width: 90%;
+    padding: 15px;
+  }
 }
 .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 .mt-20 {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .mb-20 {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .p-20 {
-    padding: 20px;
+  padding: 20px;
 }
 
 button {
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: var(--font-size-medium);
-    margin: var(--padding-small);
-    cursor: pointer;
-    border-radius: var(--border-radius);
-    padding: var(--padding-medium);
-    transition: background-color 0.3s ease, transform 0.2s ease;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: var(--font-size-medium);
+  margin: var(--padding-small);
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  padding: var(--padding-medium);
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
-.delete_karyawan, .delete_role, .delete_user, .update_karyawan, .update_role, .update_user {
-    padding:4px 8px;
-
+.delete_karyawan,
+.delete_role,
+.delete_user,
+.update_karyawan,
+.update_role,
+.update_user {
+  padding: 4px 8px;
 }
 
 button:hover {
-    transform: scale(1.05); /* Slight zoom effect */
+  transform: scale(1.05); /* Slight zoom effect */
 }
 
 .create_button {
-    background-color: var(--primary-color);
-    margin:5px;
-    float: right;
-    position: inline-block ;   /* Fixes the button's position on the screen */
-    top: 13%;         /* 20px space from the top of the screen */
-    right: 20px;       /* 20px space from the right edge of the screen */
-    padding: 12px 20px; /* Padding inside the button for better size */
-    background-color: #4CAF50; /* Green background */
-    color: white;      /* White text color */
-    font-size: 16px;    /* Font size */
-    border: none;      /* No border */
-    border-radius: 5px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-
+  background-color: var(--primary-color);
+  margin: 5px;
+  float: right;
+  position: inline-block; /* Fixes the button's position on the screen */
+  top: 13%; /* 20px space from the top of the screen */
+  right: 20px; /* 20px space from the right edge of the screen */
+  padding: 12px 20px; /* Padding inside the button for better size */
+  background-color: #4caf50; /* Green background */
+  color: white; /* White text color */
+  font-size: 16px; /* Font size */
+  border: none; /* No border */
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-
-
 .create_button:hover {
-    background-color: #45a049; /* Slightly darker green */
+  background-color: #45a049; /* Slightly darker green */
 }
 
 .delete_button {
-    background-color: var(--danger-color);
+  background-color: var(--danger-color);
 }
 
 .delete_button:hover {
-    background-color: var(--hover-danger-color);
+  background-color: var(--hover-danger-color);
 }
 
 .update_button {
-    background-color: var(--secondary-color);
+  background-color: var(--secondary-color);
 }
 
 .update_button:hover {
-    background-color: var(--hover-secondary-color);
+  background-color: var(--hover-secondary-color);
 }
 
-.delete_karyawan, .delete_role, .delete_user {
-    background-color: var(--danger-color);
-    color: white;
-    padding: var(--padding-medium);
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+.delete_karyawan,
+.delete_role,
+.delete_user {
+  background-color: var(--danger-color);
+  color: white;
+  padding: var(--padding-medium);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.delete_karyawan :hover, .delete_role:hover, .delete_user:hover {
-    background-color: var(--hover-danger-color);
-    transform: scale(1.05);
+.delete_karyawan :hover,
+.delete_role:hover,
+.delete_user:hover {
+  background-color: var(--hover-danger-color);
+  transform: scale(1.05);
 }
 
-.update_karyawan, .update_role, .update_user {
-    background-color: var(--secondary-color);
-    color: white;
-    padding: var(--padding-medium);
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+.update_karyawan,
+.update_role,
+.update_user {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: var(--padding-medium);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.update_karyawan:hover, .update_role:hover, .update_user:hover {
-    background-color: var(--hover-secondary-color);
-    transform: scale(1.05);
+.update_karyawan:hover,
+.update_role:hover,
+.update_user:hover {
+  background-color: var(--hover-secondary-color);
+  transform: scale(1.05);
 }
-#submit_karyawan, #submit_role, #submit_user, #submit_role_update, #submit_karyawan_update,#submit_user_update {
-    background-color: var(--primary-color);
-    color: white;
-    padding: var(--padding-medium);
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin: 10px;
+#submit_karyawan,
+#submit_role,
+#submit_user,
+#submit_role_update,
+#submit_karyawan_update,
+#submit_user_update {
+  background-color: var(--primary-color);
+  color: white;
+  padding: var(--padding-medium);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 10px;
 }

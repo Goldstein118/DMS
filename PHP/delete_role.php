@@ -9,13 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $data = json_decode(file_get_contents('php://input'), true);
     file_put_contents('php://stderr', "Incoming DELETE data: " . print_r($data, true));
 
-    if (!isset($data['role_ID'])) {
+    if (!isset($data['role_id'])) {
         http_response_code(400); // Bad Request
-        echo json_encode(["error" => "role_ID is missing"]);
+        echo json_encode(["error" => "role_id is missing"]);
         exit;
     }
 
-    $role_ID = $data['role_ID'];
+    $role_ID = $data['role_id'];
 
     // Prepare the DELETE statement
     $stmt = $conn->prepare("DELETE FROM tb_role WHERE role_id = ?");

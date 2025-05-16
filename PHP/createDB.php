@@ -28,10 +28,19 @@
         die("Error creating tb_role: " . mysqli_error($conn));
     }
 
-    $karyawan="CREATE TABLE IF NOT EXISTS tb_Karyawan (
+    $karyawan = "CREATE TABLE IF NOT EXISTS tb_Karyawan (
     karyawan_id VARCHAR(10) PRIMARY KEY NOT NULL,
-    nama VARCHAR(100) NOT NULL,role_id VARCHAR(10),FOREIGN KEY (role_id) REFERENCES tb_role(role_id) ON DELETE SET NULL, divisi VARCHAR(100), noTelp VARCHAR(20),alamat VARCHAR(100),ktp VARCHAR(100),npwp VARCHAR(100),status VARCHAR(10) DEFAULT 'aktif'
-    )";
+    nama VARCHAR(100) NOT NULL,
+    role_id VARCHAR(10),
+    divisi VARCHAR(100),
+    noTelp VARCHAR(20),
+    alamat VARCHAR(100),
+    ktp VARCHAR(100),
+    npwp VARCHAR(100),
+    status VARCHAR(10) DEFAULT 'aktif',
+    FOREIGN KEY (role_id) REFERENCES tb_role(role_id) ON DELETE SET NULL
+)";
+
     if($conn->query($karyawan)){
         try{
 

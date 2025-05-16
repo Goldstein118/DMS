@@ -9,13 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $data = json_decode(file_get_contents('php://input'), true);
 
 
-    if (!isset($data['user_ID'])) {
+    if (!isset($data['user_id'])) {
         http_response_code(400); // Bad Request
-        echo json_encode(["error" => "role_ID is missing"]);
+        echo json_encode(["error" => "user_id is missing"]);
         exit;
     }
 
-    $user_ID = $data['user_ID'];
+    $user_ID = $data['user_id'];
 
     // Prepare the DELETE statement
     $stmt = $conn->prepare("DELETE FROM tb_user WHERE user_id = ?");
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     } else {
         file_put_contents('php://stderr', "Execute failed: " . $stmt->error . "\n");
         http_response_code(500);
-        echo json_encode(["error" => "Failed to delete role: " . $stmt->error]);
+        echo json_encode(["error" => "Failed to delete user: " . $stmt->error]);
     }
     $stmt->close();
 }

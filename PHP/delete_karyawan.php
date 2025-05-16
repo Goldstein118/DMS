@@ -9,13 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $data = json_decode(file_get_contents('php://input'), true);
     file_put_contents('php://stderr', "Incoming DELETE data: " . print_r($data, true));
 
-    if (!isset($data['karyawan_ID'])) {
+    if (!isset($data['karyawan_id'])) {
         http_response_code(400); // Bad Request
         echo json_encode(["error" => "karyawan_ID is missing"]);
         exit;
     }
 
-    $karyawan_ID = $data['karyawan_ID'];
+    $karyawan_ID = $data['karyawan_id'];
 
     // Prepare the DELETE statement
     $stmt = $conn->prepare("DELETE FROM tb_karyawan WHERE karyawan_id = ?");

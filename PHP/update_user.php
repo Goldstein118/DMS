@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Validate required fields
-    $requiredFields = ['user_id', 'karyawan_ID'];
+    $requiredFields = ['user_id', 'karyawan_id'];
     foreach ($requiredFields as $field) {
         if (!isset($data[$field])) {
             http_response_code(400);
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("ss", $karyawan_ID, $user_ID);
     
     if ($stmt->execute()) {
-        error_log("Karyawan updated successfully: ID = $karyawan_ID");
+        error_log("user updated successfully: ID = $karyawan_ID");
         http_response_code(200);
     } else {
         error_log("Failed to execute statement: " . $stmt->error);

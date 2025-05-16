@@ -9,30 +9,83 @@ include('db.php');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <!-- jQuery (use full version, not slim) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL'];?>../style.css?v=2.0">
+
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
+    <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css" rel="stylesheet" />
+    
+    <!-- W3.CSS -->
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
-<!-- Select2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src ="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL'];?>../style.css?v=2.0">
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <!-- DataTables JS -->
+    <script src ="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
+    
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <div id="toggleDiv_user_update" class="hidden_user_update">
-        <label for="update_user_ID">User ID:</label>
+
+<!-- Modal -->
+<div class="modal fade" id="modal_user_update" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Edit user</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="update_user_ID">Kode User:</label>
         <input type="text" id="update_user_ID" disabled><br><br>
-        <label for="update_karyawan_ID">Karyawan ID:</label>
+        <label for="update_karyawan_ID">Kode Karyawan:</label>
         <select  id="update_karyawan_ID">
             <option value=""></option>
         </select>
-        <button id ="submit_user_update">Submit</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+        <button  id="submit_user_update" type="button" class="btn btn-primary">Simpan</button>
+      </div>
     </div>
+  </div>
+</div>
+
+
 <div class="w3-teal w3-bar">
-  <button id="toggleSidebar" class="w3-bar-item w3-button w3-teal w3-large">☰</button>
+  <span>    </span>
   <span class="w3-bar-item w3-xlarge">Tabel User</span>
 </div>
 
@@ -55,9 +108,9 @@ include('db.php');
             <table id="table_user" class="cell-border compact stripe hover order-column">
                 <thead>
                     <tr>
-                        <th>User_ID</th>
-                        <th>Karyawan_ID</th>
-                        <th>Action</th>
+                        <th>Kode User</th>
+                        <th>Kode Karyawan</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="user_table_body">

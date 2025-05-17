@@ -15,26 +15,6 @@
   --border-radius: 5px;
   --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-#layout {
-  display: flex;
-  height: calc(100vh - 50px); /* adjust if header is taller */
-}
-
-#mySidebar {
-  transition: width 0.2s ease;
-}
-
-#resizer {
-  width: 5px;
-  background: #ccc;
-  cursor: ew-resize;
-}
-
-#main {
-  flex: 1;
-  transition: margin-left 0.2s;
-  overflow: auto;
-}
 
 label {
   font-size: var(--font-size-large);
@@ -64,11 +44,16 @@ textarea:focus {
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Green glow */
 }
 table {
-  width: 100%;
+  width: calc(100%-550px);
   border-collapse: collapse;
   margin: 20px 0;
   font-size: var(--font-size-medium);
   text-align: left;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+table.visible {
+  opacity: 1; /* Make table visible once the data is populated */
 }
 
 table th,
@@ -89,38 +74,6 @@ table tr:nth-child(even) {
 
 table tr:hover {
   background-color: #ddd; /* Highlight row on hover */
-}
-.hidden_karyawan,
-.hidden_role,
-.hidden_role_update,
-.hidden_karyawan_update,
-.hidden_user_update {
-  display: none;
-}
-
-#toggleDiv_karyawan,
-#toggleDiv_role,
-#toggleDiv_role_update,
-#toggleDiv_karyawan_update,
-#toggleDiv_user_update {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-  background-color: var(--neutral-color);
-  padding: 20px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  width: 400px;
-  max-width: 90%;
-  transition: box-shadow 0.3s ease;
-}
-
-#toggleDiv_karyawan:hover,
-#toggleDiv_role:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
 }
 .select2-container {
   width: 100% !important;
@@ -163,149 +116,140 @@ table tr:hover {
   background-color: var(--primary-color);
   color: white;
 }
-@media (max-width: 768px) {
-  table {
-    font-size: 12px;
-  }
 
-  button {
-    font-size: 12px;
-    padding: var(--padding-small);
-  }
-
-  #toggleDiv_karyawan,
-  #toggleDiv_role {
-    width: 90%;
-    padding: 15px;
-  }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
 }
-.text-center {
-  text-align: center;
+main .d-flex {
+  flex-wrap: nowrap; /* Don't wrap children */
+  width: 100vw; /* Force full viewport width */
+  overflow-x: hidden; /* Prevent flex from overflowing */
+}
+main {
+  display: flex;
+  height: calc(100%-60px);
 }
 
-.mt-20 {
-  margin-top: 20px;
+.sidebar {
+  width: 250px;
+  height: 100%;
+  overflow-y: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 60px;
+  z-index: 1030;
+}
+#main {
+  margin-left: 250px; /* sidebar width */
+  padding: 16px;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: calc(100vh - 60px); /* match the space minus footer */
+  min-width: 0;
 }
 
-.mb-20 {
-  margin-bottom: 20px;
+footer {
+  height: 60px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1020;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.content {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
 }
 
-.p-20 {
-  padding: 20px;
+.btn-toggle {
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
+  color: #333;
+  background-color: transparent;
 }
 
-button {
-  border: none;
-  color: white;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: var(--font-size-medium);
-  margin: var(--padding-small);
-  cursor: pointer;
-  border-radius: var(--border-radius);
-  padding: var(--padding-medium);
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-.delete_karyawan,
-.delete_role,
-.delete_user,
-.update_karyawan,
-.update_role,
-.update_user {
-  padding: 4px 8px;
+.btn-toggle:hover {
+  background-color: #e9ecef;
 }
 
-button:hover {
-  transform: scale(1.05); /* Slight zoom effect */
+.btn-toggle-nav a {
+  padding: 0.1875rem 0.5rem;
+  margin-left: 1.25rem;
 }
 
-.create_button {
-  background-color: var(--primary-color);
-  margin: 5px;
+.toggle-icon {
+  margin-right: 0.5rem;
+}
+
+.btn-toggle {
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
+  color: #333;
+  background-color: transparent;
+}
+
+.btn-toggle:hover {
+  background-color: #e9ecef;
+}
+
+.btn-toggle-nav a {
+  padding: 0.1875rem 0.5rem;
+  margin-left: 1.25rem;
+}
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  padding: 1rem;
+  background-color: #fff;
+  border-right: 1px solid #dee2e6;
+}
+.modal {
+  z-index: 1055; /* above fixed sidebar/footer */
+}
+/* For modern browsers */
+body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  overflow: auto;
+}
+
+/* Chrome, Safari, Opera */
+body::-webkit-scrollbar {
+  display: none;
+}
+#search_karyawan {
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ced4da;
+  margin-left: 0.5rem;
+  font-size: 1rem;
+  width: 15%;
   float: right;
-  position: inline-block; /* Fixes the button's position on the screen */
-  top: 13%; /* 20px space from the top of the screen */
-  right: 20px; /* 20px space from the right edge of the screen */
-  padding: 12px 20px; /* Padding inside the button for better size */
-  background-color: #4caf50; /* Green background */
-  color: white; /* White text color */
-  font-size: 16px; /* Font size */
-  border: none; /* No border */
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
-.create_button:hover {
-  background-color: #45a049; /* Slightly darker green */
+.hidden {
+  display: none;
 }
-
-.delete_button {
-  background-color: var(--danger-color);
+#loading_spinner {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
 }
-
-.delete_button:hover {
-  background-color: var(--hover-danger-color);
-}
-
-.update_button {
-  background-color: var(--secondary-color);
-}
-
-.update_button:hover {
-  background-color: var(--hover-secondary-color);
-}
-
-.delete_karyawan,
-.delete_role,
-.delete_user {
-  background-color: var(--danger-color);
-  color: white;
-  padding: var(--padding-medium);
-  border: none;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.delete_karyawan :hover,
-.delete_role:hover,
-.delete_user:hover {
-  background-color: var(--hover-danger-color);
-  transform: scale(1.05);
-}
-
-.update_karyawan,
-.update_role,
-.update_user {
-  background-color: var(--secondary-color);
-  color: white;
-  padding: var(--padding-medium);
-  border: none;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.update_karyawan:hover,
-.update_role:hover,
-.update_user:hover {
-  background-color: var(--hover-secondary-color);
-  transform: scale(1.05);
-}
-#submit_karyawan,
-#submit_role,
-#submit_user,
-#submit_role_update,
-#submit_karyawan_update,
-#submit_user_update {
-  background-color: var(--primary-color);
-  color: white;
-  padding: var(--padding-medium);
-  border: none;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin: 10px;
+.hidden {
+  display: none;
 }

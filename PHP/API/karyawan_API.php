@@ -10,7 +10,10 @@ if(!$conn){
     exit;
 }
 
-$sql = "SELECT * FROM tb_Karyawan";
+$sql = "SELECT karyawan.karyawan_id, karyawan.nama, karyawan.role_id, role.nama AS role_nama,
+               karyawan.divisi, karyawan.noTelp, karyawan.alamat, karyawan.ktp, karyawan.npwp, karyawan.status
+            FROM tb_karyawan karyawan
+            JOIN tb_role role ON karyawan.role_id = role.role_id";
 $result = $conn->query($sql);
 
 if ($result) {

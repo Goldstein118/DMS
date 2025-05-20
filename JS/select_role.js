@@ -1,63 +1,78 @@
 import config from "../JS/config.js";
 
 $(document).ready(function () {
-  $("#table_role").DataTable({
-    paging: false,
-    searching: false,
-    ordering: false,
-    info: false,
-    language: {
-      emptyTable: "",
-      zeroRecords: "",
-    },
-  });
+  $("#loading_spinner").fadeOut();
 
-  fetchRoles();
+  fetch_role();
 });
 
-async function fetchRoles() {
+async function fetch_role() {
   try {
+    document.getElementById("loading_spinner").style.visibility = "visible";
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const response = await fetch(`${config.API_BASE_URL}/PHP/API/role_API.php`);
     if (!response.ok) {
       throw new Error(`Failed to fetch roles. Status: ${response.status}`);
     }
     const roles = await response.json();
-    populateRoleTable(roles);
-  } catch (error) {
-    console.error("Error fetching roles:", error);
-    toastr.error("Failed to load roles.");
-  }
-}
+    const tableBody = document.getElementById("role_table_body");
+    tableBody.innerHTML = ""; // Clear existing rows
 
-function populateRoleTable(roles) {
-  const tableBody = document.getElementById("role_table_body");
-  tableBody.innerHTML = ""; // Clear existing rows
-
-  roles.forEach((role) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
+    roles.forEach((role) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
             <td>${role.role_id}</td>
             <td>${role.nama}</td>
             <td>${role.akses}</td>
             <td>
-                <button type="button" class="btn btn-warning update_role" data-toggle="modal" data-target="#modal_role_update"><i class="bi bi-pencil-square"></i></button>
+                <button type="button"  id ="update_role_button" class="btn btn-warning update_role">
+                    <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
+                    <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
+                </button>
                 <button type="button" class="btn btn-danger delete_role"><i class="bi bi-trash-fill"></i></button>
             </td>
         `;
-    tableBody.appendChild(row);
-  });
+      tableBody.appendChild(row);
+    });
 
-  attachEventListeners();
+    attachEventListeners();
+    $(document).ready(function () {
+      let table = $("#table_role").DataTable({
+        dom: "lrtip",
+        order: [
+          [3, "desc"],
+          [0, "asc"],
+        ],
+        paging: false,
+        scrollCollapse: true,
+        scrollY: "75vh",
+        language: {
+          emptyTable: "",
+          zeroRecords: "",
+        },
+      });
+      $("#search_role").on("keyup", function () {
+        table.search(this.value).draw();
+      });
+    });
+    document.getElementById("loading_spinner").style.visibility = "hidden";
+  } catch (error) {
+    console.error("Error fetching roles:", error);
+    setTimeout;
+  }
 }
 
 function attachEventListeners() {
   document
     .getElementById("role_table_body")
     .addEventListener("click", function (event) {
-      if (event.target.classList.contains("delete_role")) {
-        handleDeleteRole(event.target);
-      } else if (event.target.classList.contains("update_role")) {
-        handleUpdateRole(event.target);
+      const delete_btn = event.target.closest(".delete_role");
+      const update_btn = event.target.closest(".update_role");
+
+      if (delete_btn) {
+        handleDeleteRole(delete_btn);
+      } else if (update_btn) {
+        handleUpdateRole(update_btn);
       }
     });
 }
@@ -109,14 +124,18 @@ async function handleDeleteRole(button) {
     }
     Swal.fire({
       title: "Berhasil !",
-      text: "Data Role Berhasil Terhapus!",
       icon: "success",
     });
   }
 }
 
-function handleUpdateRole(button) {
+async function handleUpdateRole(button) {
   const row = button.closest("tr");
+  window.currentRow = row;
+  const button_icon = button.querySelector(".button_icon");
+  const spinner = button.querySelector(".spinner_update");
+  button_icon.style.display = "none";
+  spinner.style.display = "inline-block";
   const role_ID = row.cells[0].textContent;
   const currentNama = row.cells[1].textContent;
   const currentAkses = row.cells[2].textContent;
@@ -124,8 +143,9 @@ function handleUpdateRole(button) {
   document.getElementById("update_role_ID").value = role_ID;
   document.getElementById("update_role_name").value = currentNama;
   document.getElementById("update_role_akses").value = currentAkses;
-
-  window.currentRow = row;
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  button_icon.style.display = "inline-block";
+  spinner.style.display = "none";
   $("#modal_role_update").modal("show");
 }
 
@@ -165,11 +185,11 @@ document
         row.cells[1].textContent = newNama;
         row.cells[2].textContent = newAkses;
 
-        toastr.success("Role updated successfully.", {
-          timeOut: 500,
-          extendedTimeOut: 500,
-        });
         $("#modal_role_update").modal("hide");
+        Swal.fire({
+          title: "Berhasil",
+          icon: "success",
+        });
       } else {
         throw new Error(`Failed to update role. Status: ${response.status}`);
       }

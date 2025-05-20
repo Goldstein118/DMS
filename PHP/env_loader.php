@@ -15,6 +15,7 @@ function loadEnv($filePath) {
 
     $value= trim($value, "'\"");
     $_ENV[$key] = $value;
+    putenv("$key=$value");
 
     }
 

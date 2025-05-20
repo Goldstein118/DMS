@@ -30,15 +30,14 @@ function submitRole() {
     .then((response) => response.json())
     .then((result) => {
       if (result.success) {
-        toastr.success(result.message, {
-          timeOut: 500,
-          extendedTimeOut: 500,
-        });
-
         // Reset the form
         document.getElementById("name_role").value = "";
         document.getElementById("akses_role").value = "";
         $("#modal_role").modal("hide");
+        Swal.fire({
+          title: "Berhasil",
+          icon: "success",
+        });
       } else {
         toastr.error(result.message, {
           timeOut: 500,

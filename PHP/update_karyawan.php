@@ -15,6 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
+    file_put_contents("log.txt", file_get_contents("php://input"));
+
+
     
     if ($data === null) {
     http_response_code(400); // Bad Request

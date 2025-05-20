@@ -10,7 +10,7 @@ $("#role_select").select2({
 });
 
 // Fetch roles and populate the dropdown
-fetchRoles();
+fetch_roles();
 
 // Submit form data
 document
@@ -19,7 +19,7 @@ document
     submitKaryawan();
   });
 
-function fetchRoles() {
+function fetch_roles() {
   fetch(`${config.API_BASE_URL}/PHP/API/role_API.php`)
     .then((response) => {
       if (response.ok) {
@@ -112,11 +112,6 @@ function submitKaryawan() {
     })
     .then((jsonData) => {
       if (jsonData.success) {
-        toastr.success(jsonData.message, {
-          timeOut: 500,
-          extendedTimeOut: 500,
-        });
-
         // Reset the form
         document.getElementById("name_karyawan").value = "";
         document.getElementById("divisi_karyawan").value = "";
@@ -127,6 +122,10 @@ function submitKaryawan() {
         document.getElementById("status_karyawan").value = "";
         $("#role_select").val(null).trigger("change");
         $("#modal_karyawan").modal("hide");
+        Swal.fire({
+          title: "Berhasil",
+          icon: "success",
+        });
       } else {
         toastr.error(jsonData.message, {
           timeOut: 500,

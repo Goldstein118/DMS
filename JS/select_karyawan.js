@@ -3,78 +3,75 @@ import { Grid, html } from "https://unpkg.com/gridjs?module";
 
 $(document).ready(function () {
   $("#loading_spinner").fadeOut();
-  fetch_karyawan();
 });
 
-async function fetch_karyawan() {
-  try {
-    // Start loading spinner or loading UI here
-    document.getElementById("loading_spinner").style.visibility = "visible";
-
-    // Fetch karyawan data and wait for the response
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const response = await fetch(
-      `${config.API_BASE_URL}/PHP/API/karyawan_API.php`
-    );
-    if (!response.ok) {
-      throw new Error(`Failed to fetch user. Status: ${response.status}`);
-    }
-    const karyawan = await response.json();
-
-    // Process the data and populate the table
-    const tableBody = document.getElementById("karyawan_table_body");
-    karyawan.forEach((karyawan) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-                <td>${karyawan.karyawan_id}</td>
-                <td>${karyawan.nama}</td>
-                <td data-role-id = "${karyawan.role_id}">${karyawan.role_nama}</td>
-                <td>${karyawan.divisi}</td>
-                <td>${karyawan.noTelp}</td>
-                <td>${karyawan.alamat}</td>
-                <td>${karyawan.ktp}</td>
-                <td>${karyawan.npwp}</td>
-                <td>${karyawan.status}</td>
-                <td>
-                  <button type="button"  id ="update_karyawan_button" class="btn btn-warning update_karyawan">
-                    <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
-                    <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
-                  </button>
-                  <button type="button" class="btn btn-danger delete_karyawan">
+new Grid({
+  columns: [
+    "Kode Karyawan",
+    "Nama",
+    "Role",
+    "Divisi",
+    "Nomor Telepon",
+    "Alamat",
+    "KTP",
+    "NPWP",
+    "Status",
+    "role_id",
+    {
+      name: "Aksi",
+      formatter: () => {
+        return html(`
+        <button type="button"  id ="update_karyawan_button" class="btn btn-warning update_karyawan">
+          <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
+          <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
+        </button>
+        
+        <button type="button" class="btn btn-danger delete_karyawan">
                     <i class="bi bi-trash-fill"></i>
-                  </button>
-                </td>
-            `;
-      tableBody.appendChild(row);
-    });
-    $(document).ready(function () {
-      let table = $("#table_karyawan").DataTable({
-        dom: "lrtip",
-        order: [
-          [3, "desc"],
-          [0, "asc"],
-        ],
-        paging: false,
-        scrollCollapse: true,
-        scrollY: "75vh",
-        language: {
-          emptyTable: "",
-          zeroRecords: "",
-        },
-      });
-      $("#search_karyawan").on("keyup", function () {
-        table.search(this.value).draw();
-      });
-    });
-    attachEventListeners();
-    document.getElementById("loading_spinner").style.visibility = "hidden";
-  } catch (error) {
-    console.error("Error fetching karyawan:", error);
-
-    // Hide loading spinner in case of error
-    setTimeout();
-  }
+        </button>
+        `);
+      },
+    },
+  ],
+  search: {
+    enabled: true,
+    server: {
+      url: (prev, keyword) => `${prev}?search=${keyword}`,
+      method: "GET",
+    },
+  },
+  sort: true,
+  pagination: { limit: 10 },
+  server: {
+    url: `${config.API_BASE_URL}/PHP/API/karyawan_API.php`,
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    then: (data) =>
+      data.map((karyawan) => [
+        karyawan.karyawan_id,
+        karyawan.nama,
+        karyawan.role_nama,
+        karyawan.divisi,
+        karyawan.noTelp,
+        karyawan.alamat,
+        karyawan.ktp,
+        karyawan.npwp,
+        karyawan.status,
+        karyawan.role_id,
+        null, // Placeholder for the action buttons column
+      ]),
+  },
+}).render(document.getElementById("table_karyawan"));
+const input = document.querySelector("#table_karyawan .gridjs-input");
+if (input) {
+  input.placeholder = "Cari Karyawan...";
+  input.style.justifyContent = "flex-end";
 }
+
+attachEventListeners();
+document.getElementById("loading_spinner").style.visibility = "hidden";
 
 function attachEventListeners() {
   document
@@ -149,19 +146,20 @@ async function handleUpdateKaryawan(button) {
 
   const karyawan_ID = row.cells[0].textContent;
   const currentNama = row.cells[1].textContent;
-  const currentrole_nama = row.cells[2].textContent;
-  const roleCell = row.cells[2];
-  const currentrole_id = roleCell.getAttribute("data-role-id");
+  const currentrole_id = row.cells[9].textContent;
   const currentdivisi = row.cells[3].textContent;
   const currentnoTelp = row.cells[4].textContent;
   const currentalamat = row.cells[5].textContent;
   const currentKTP_NPWP = row.cells[6].textContent;
   const currentnpwp = row.cells[7].textContent;
   const currentstatus = row.cells[8].textContent;
-
+  /*
   console.log("Button_pressed");
   console.log(karyawan_ID);
   console.log(currentrole_nama);
+  console.log("current role_id:", currentrole_id);
+
+*/
 
   // Populate the modal fields
   document.getElementById("update_karyawan_ID").value = karyawan_ID;
@@ -187,13 +185,13 @@ async function handleUpdateKaryawan(button) {
         `${role.role_id} - ${role.nama}`,
         role.role_id,
         false,
-        role.role_id == currentrole_id
+        role.role_id == currentrole_id,
+        console.log(role.role_id)
       );
       role_ID_Field.append(option);
     });
 
     role_ID_Field.trigger("change"); // Trigger change event after appending options
-    console.log(document.getElementById("update_role_select").value);
 
     button_icon.style.display = "inline-block";
     spinner.style.display = "none";
@@ -252,7 +250,9 @@ document
       );
       if (response.ok) {
         row.cells[1].textContent = karyawan_nama_new;
-        row.cells[2].textContent = role_ID_new;
+        const role_name_new = $("#update_role_select option:selected").text();
+        const role_name_only = role_name_new.split(" - ")[1];
+        row.cells[2].textContent = role_name_only;
         row.cells[3].textContent = divisi_new;
         row.cells[4].textContent = noTelp_new;
         row.cells[5].textContent = alamat_new;
@@ -265,7 +265,6 @@ document
           title: "Berhasil",
           icon: "success",
         });
-        Grid.forceRender(); // re-fetch from API
       } else {
         throw new Error(
           `Failed to update karyawan. Status: ${response.status}`

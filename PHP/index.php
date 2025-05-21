@@ -13,29 +13,28 @@ include ("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tabel Karyawan</title>
 
-  <!-- jQuery (use full version, not slim) -->
+  <!-- jQuery -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/jquery-3.6.0.min.js"></script>
-
-  <!-- Select2 CSS -->
-  <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/select2.min.css" rel="stylesheet" />
-
   <!-- DataTables CSS -->
   <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/dataTables.min.css" rel="stylesheet" />
-
-
   <!-- Bootstrap 5 CSS -->
   <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/bootstrap.min.css" rel="stylesheet">
 
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="<?php echo $_ENV['VENDOR_BASE_URL']?>/bootstrap-icons.css">
+    <!-- Select2 CSS -->
+  <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/select2.min.css" rel="stylesheet" />
 
     <!-- Toastr CSS -->
   <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/toastr.min.css" rel="stylesheet">
+    
+  
+  <link href="<?php echo $_ENV['VENDOR_BASE_URL'] ?>/mermaid.min.css" rel="stylesheet" />
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>../style.css?v=2.0">
 
-  <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+
 
   <!-- Select2 JS -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/select2.min.js"></script>
@@ -55,7 +54,9 @@ include ("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
     <!-- Toastr JS -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/toastr.min.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+  <!--Grid.js -->
+  <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/gridjs.umd.js"></script>
+
 
 
 </head>
@@ -69,7 +70,7 @@ include ("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 </div>
 
   <!-- Modal_karyawan -->
-  <div class="modal fade" id="modal_karyawan" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal fade" id="modal_karyawan" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -83,7 +84,6 @@ include ("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
           <input class="form-control" type="text" id="divisi_karyawan" name="divisi_karyawan" value=""><br>
           <label class="form-label" for="role_select">Role:</label>
           <select class ="form-select" id="role_select">
-            <option value="">Pilih Role</option>
           </select><br><br>
           <label class="form-label" for="phone">Nomor Telepon:</label>
           <input class="form-control" type="text" id="phone_karyawan" name="phone_karyawan" value=""><br>
@@ -247,32 +247,12 @@ include ("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_karyawan">
             <i class="bi bi-person-plus-fill"></i> Karyawan
           </button>
-          <input type="text" id="search_karyawan" placeholder="Cari Karyawan..." class="form-control mb-3">
-          <table id="table_karyawan" class="cell-border compact stripe hover order-column">
-            <thead>
-              <tr>
-                <th>Kode Karyawan</th>
-                <th>Nama</th>
-                <th>Nama Role</th>
-                <th>Divisi</th>
-                <th>Nomor Telepon</th>
-                <th>Alamat</th>
-                <th>KTP</th>
-                <th>NPWP</th>
-                <th>Status</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="karyawan_table_body">
-              <!-- Data will be populated here -->
-            </tbody>
-          </table>
+          <div id ="table_karyawan"></div>
         </div>
       </div>
     </div>
   </main>
-
-  </div>
+</div>
   
   <footer class="bg-body-tertiary text-center">
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">

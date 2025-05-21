@@ -13,8 +13,7 @@ include('db.php');
   <!-- jQuery (use full version, not slim) -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/jquery-3.6.0.min.js"></script>
 
-  <!-- Select2 CSS -->
-  <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/select2.min.css" rel="stylesheet" />
+
 
   <!-- DataTables CSS -->
   <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/dataTables.min.css" rel="stylesheet" />
@@ -26,11 +25,19 @@ include('db.php');
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="<?php echo $_ENV['VENDOR_BASE_URL']?>/bootstrap-icons.css">
 
+    <!-- Select2 CSS -->
+  <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/select2.min.css" rel="stylesheet" />
+
     <!-- Toastr CSS -->
   <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/toastr.min.css" rel="stylesheet">
+    
+  
+  <link href="<?php echo $_ENV['VENDOR_BASE_URL'] ?>/mermaid.min.css" rel="stylesheet" />
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>../style.css?v=2.0">
+
+
 
   <!-- Select2 JS -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/select2.min.js"></script>
@@ -50,6 +57,10 @@ include('db.php');
     <!-- Toastr JS -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/toastr.min.js"></script>
 
+  <!--Grid.js -->
+  <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/gridjs.umd.js"></script>
+
+
 
 </head>
 <body>
@@ -61,7 +72,7 @@ include('db.php');
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modal_user_update" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modal_user_update"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -181,18 +192,7 @@ include('db.php');
 <div id="main">
         <div id="app2" class="table-responsive">
           <input type="text" id="search_user" placeholder="Cari User..." class="form-control mb-3">
-            <table id="table_user" class="cell-border compact stripe hover order-column">
-                <thead>
-                    <tr>
-                        <th>Kode User</th>
-                        <th>Nama Karyawan</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="user_table_body">
-                    <!-- Data will be populated here -->
-                </tbody>
-            </table>
+        <div id ="table_user"></div>
         </div>
   </div>
 </div>

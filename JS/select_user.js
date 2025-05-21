@@ -1,72 +1,67 @@
 import config from "../JS/config.js";
+import { Grid, html } from "https://unpkg.com/gridjs?module";
 
 $(document).ready(function () {
   $("#loading_spinner").fadeOut();
-
-  fetch_user();
 });
 
-async function fetch_user() {
-  try {
-    document.getElementById("loading_spinner").style.visibility = "visible";
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const response = await fetch(`${config.API_BASE_URL}/PHP/API/user_API.php`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch user. Status: ${response.status}`);
-    }
-    const users = await response.json();
-
-    const tableBody = document.getElementById("user_table_body");
-
-    users.forEach((user) => {
-      const row = document.createElement("tr");
-
-      row.innerHTML = `
-                <td>${user.user_id}</td>
-                <td>${user.karyawan_nama}</td>
-                <td>
-                <button type="button" id= "update_user_button"class="btn btn-warning update_user">
-                 <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
-                 <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
-                 </button>
-                <button type="button" class="btn btn-danger delete_user"><i class="bi bi-trash-fill"></i></button>
-                </td>
-            `;
-
-      tableBody.appendChild(row);
-    });
-    attachEventListeners();
-    $(document).ready(function () {
-      let table = $("#table_user").DataTable({
-        dom: "lrtip",
-        order: [
-          [3, "desc"],
-          [0, "asc"],
-        ],
-        paging: false,
-        scrollCollapse: true,
-        scrollY: "75vh",
-        language: {
-          emptyTable: "",
-          zeroRecords: "",
-        },
-      });
-      $("#search_user").on("keyup", function () {
-        table.search(this.value).draw();
-      });
-    });
-    document.getElementById("loading_spinner").style.visibility = "hidden";
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    toastr.error("Failed to load user.");
-    setTimeout();
-  }
+new Grid({
+  columns: [
+    "Kode User",
+    "Nama Karyawan",
+    "karyawan_id",
+    {
+      name: "Aksi",
+      formatter: () => {
+        return html(`
+        <button type="button"  id ="update_user_button" class="btn btn-warning update_user">
+          <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
+          <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
+        </button>
+        
+        <button type="button" class="btn btn-danger delete_user">
+                    <i class="bi bi-trash-fill"></i>
+        </button>
+        `);
+      },
+    },
+  ],
+  search: {
+    enabled: true,
+    server: {
+      url: (prev, keyword) => `${prev}?search=${keyword}`,
+      method: "GET",
+    },
+  },
+  sort: true,
+  pagination: { limit: 10 },
+  server: {
+    url: `${config.API_BASE_URL}/PHP/API/user_API.php`,
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    then: (data) =>
+      data.map((user) => [
+        user.user_id,
+        user.karyawan_nama,
+        user.karyawan_id,
+        null, // Placeholder for the action buttons column
+      ]),
+  },
+}).render(document.getElementById("table_user"));
+const input = document.querySelector("#table_user .gridjs-input");
+if (input) {
+  input.placeholder = "Cari User...";
+  input.style.justifyContent = "flex-end";
 }
+
+attachEventListeners();
+document.getElementById("loading_spinner").style.visibility = "hidden";
 
 function attachEventListeners() {
   document
-    .getElementById("user_table_body")
+    .getElementById("table_user")
     .addEventListener("click", function (event) {
       const delete_btn = event.target.closest(".delete_user");
       const update_btn = event.target.closest(".update_user");
@@ -134,13 +129,14 @@ async function handleDeleteUser(button) {
 
 async function handleUpdateUser(button) {
   const row = button.closest("tr");
+  window.currentRow = row;
   const button_icon = button.querySelector(".button_icon");
   const spinner = button.querySelector(".spinner_update");
   button_icon.style.display = "none";
   spinner.style.display = "inline-block";
 
   const userID = row.cells[0].textContent;
-  const karyawanID = row.cells[1].textContent;
+  const karyawanID = row.cells[2].textContent;
 
   document.getElementById("update_user_ID").value = userID;
 
@@ -155,12 +151,11 @@ async function handleUpdateUser(button) {
     karyawan_ID_field.empty();
 
     karyawans.forEach((karyawan) => {
-      const isSelected = karyawan.karyawan_id === karyawanID;
       const option = new Option(
         `${karyawan.karyawan_id} - ${karyawan.nama}`,
         karyawan.karyawan_id,
-        isSelected,
-        isSelected
+        false,
+        karyawan.karyawan_id === karyawanID
       );
       karyawan_ID_field.append(option);
     });
@@ -177,8 +172,6 @@ async function handleUpdateUser(button) {
     button_icon.style.display = "none";
     spinner.style.display = "inline-block";
   }
-
-  window.currentRow = row;
 }
 
 document
@@ -210,7 +203,11 @@ document
         }
       );
       if (response.ok) {
-        row.cells[1].textContent = karyawan_ID_new;
+        const karyawan_name_new = $(
+          "#update_karyawan_ID option:selected"
+        ).text();
+        const karyawan_name_only = karyawan_name_new.split(" - ")[1];
+        row.cells[1].textContent = karyawan_name_only;
         $("#modal_user_update").modal("hide");
         Swal.fire({
           title: "Berhasil",

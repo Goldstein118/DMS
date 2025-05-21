@@ -1,1 +1,0 @@
-{"karyawan_id":"KA0525-013","nama":"Fitzgerald Hobbs","role_id":"RO0525-025","divisi":"Quia natus exercitat","noTelp":"+1 (975) 683-5637","alamat":"Sint sit sed quidem","ktp":"Laborum voluptatem ","npwp":"76575432","status":"aktif"}

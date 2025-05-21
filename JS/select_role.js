@@ -1,70 +1,62 @@
 import config from "../JS/config.js";
-
+import { Grid, html } from "https://unpkg.com/gridjs?module";
 $(document).ready(function () {
   $("#loading_spinner").fadeOut();
-
-  fetch_role();
 });
 
-async function fetch_role() {
-  try {
-    document.getElementById("loading_spinner").style.visibility = "visible";
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const response = await fetch(`${config.API_BASE_URL}/PHP/API/role_API.php`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch roles. Status: ${response.status}`);
-    }
-    const roles = await response.json();
-    const tableBody = document.getElementById("role_table_body");
-    tableBody.innerHTML = ""; // Clear existing rows
-
-    roles.forEach((role) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-            <td>${role.role_id}</td>
-            <td>${role.nama}</td>
-            <td>${role.akses}</td>
-            <td>
-                <button type="button"  id ="update_role_button" class="btn btn-warning update_role">
-                    <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
-                    <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-danger delete_role"><i class="bi bi-trash-fill"></i></button>
-            </td>
-        `;
-      tableBody.appendChild(row);
-    });
-
-    attachEventListeners();
-    $(document).ready(function () {
-      let table = $("#table_role").DataTable({
-        dom: "lrtip",
-        order: [
-          [3, "desc"],
-          [0, "asc"],
-        ],
-        paging: false,
-        scrollCollapse: true,
-        scrollY: "75vh",
-        language: {
-          emptyTable: "",
-          zeroRecords: "",
-        },
-      });
-      $("#search_role").on("keyup", function () {
-        table.search(this.value).draw();
-      });
-    });
-    document.getElementById("loading_spinner").style.visibility = "hidden";
-  } catch (error) {
-    console.error("Error fetching roles:", error);
-    setTimeout;
-  }
-}
+new Grid({
+  columns: [
+    "Kode Role",
+    "Nama",
+    "Akses",
+    {
+      name: "Aksi",
+      formatter: () => {
+        return html(`
+        <button type="button"  id ="update_role_button" class="btn btn-warning update_role">
+          <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
+          <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
+        </button>
+        
+        <button type="button" class="btn btn-danger delete_role">
+                    <i class="bi bi-trash-fill"></i>
+        </button>
+        `);
+      },
+    },
+  ],
+  search: {
+    enabled: true,
+  },
+  server: {
+    url: (prev, keyword) => `${prev}?search=${keyword}`,
+    method: "GET",
+  },
+  sort: true,
+  pagination: { limit: 10 },
+  server: {
+    url: `${config.API_BASE_URL}/PHP/API/role_API.php`,
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    then: (data) =>
+      data.map((role) => [
+        role.role_id,
+        role.nama,
+        role.akses,
+        null, // Placeholder for the action buttons column
+      ]),
+  },
+}).render(document.getElementById("table_role"));
+const input = document.querySelector("#table_role .gridjs-input");
+if (input) input.placeholder = "Cari Role...";
+attachEventListeners();
+document.getElementById("loading_spinner").style.visibility = "hidden";
 
 function attachEventListeners() {
   document
-    .getElementById("role_table_body")
+    .getElementById("table_role")
     .addEventListener("click", function (event) {
       const delete_btn = event.target.closest(".delete_role");
       const update_btn = event.target.closest(".update_role");

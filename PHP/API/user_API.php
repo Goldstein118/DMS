@@ -4,13 +4,31 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow specific HT
 header('Access-Control-Allow-Headers: Content-Type'); // Allow specific headers
 header('Content-Type: application/json');
 include '../db.php';
-$sql_user = "SELECT user.user_id, user.karyawan_id, karyawan.nama AS karyawan_nama FROM tb_user user
-             JOIN tb_karyawan karyawan ON user.karyawan_id = karyawan.karyawan_id";
-$result_user = $conn->query($sql_user);
+if(!$conn){
+    http_response_code(500);
+    echo json_encode(["error" => "Database connection failed"]);
+    exit;
+}
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+$search = trim($search);
 
-if ($result_user) {
+if($search !==''){
+    $stmt =$conn->prepare("SELECT user.user_id, user.karyawan_id, karyawan.nama AS karyawan_nama FROM tb_user user JOIN tb_karyawan karyawan ON user.karyawan_id = karyawan.karyawan_id WHERE user.user_id LIKE CONCAT ('%',?,'%')
+    OR karyawan.karyawan_nama LIKE CONCAT ('%',?,'%')
+    ");
+    $stmt->bind_param('ss',$search,$search);
+    $stmt->execute();
+    $result = $stmt->get_resulr();
+}else {
+    $sql_user = "SELECT user.user_id, user.karyawan_id, karyawan.nama AS karyawan_nama FROM tb_user user JOIN tb_karyawan karyawan ON user.karyawan_id = karyawan.karyawan_id";
+    $result = $conn->query($sql_user);
+}
+
+
+
+if ($result) {
     $userData = [];
-    while ($row = mysqli_fetch_assoc($result_user)) {
+    while ($row = mysqli_fetch_assoc($result)) {
         $userData[] = $row;
     }
     http_response_code(200);

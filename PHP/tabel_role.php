@@ -28,9 +28,14 @@ include('db.php');
 
     <!-- Toastr CSS -->
   <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/toastr.min.css" rel="stylesheet">
+    
+  
+  <link href="<?php echo $_ENV['VENDOR_BASE_URL'] ?>/mermaid.min.css" rel="stylesheet" />
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>../style.css?v=2.0">
+
+
 
   <!-- Select2 JS -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/select2.min.js"></script>
@@ -49,6 +54,10 @@ include('db.php');
 
     <!-- Toastr JS -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/toastr.min.js"></script>
+
+  <!--Grid.js -->
+  <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/gridjs.umd.js"></script>
+
 
 
 </head>
@@ -204,20 +213,7 @@ include('db.php');
       <div id="main" >
         <div id="app3" class="table-responsive">
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_role"><i class="bi bi-plus-square"></i> Role </button>
-          <input type="text" id="search_role" placeholder="Cari Role..." class="form-control mb-3">
-          <table id="table_role" class="cell-border compact stripe hover order-column">
-            <thead>
-              <tr>
-                <th>Kode Role</th>
-                <th>Nama</th>
-                <th>Akses</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="role_table_body">
-              <!-- Data will be populated here -->
-            </tbody>
-          </table>
+          <div id="table_role"></div>
         </div>
       </div>
   </main>

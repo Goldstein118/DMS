@@ -14,10 +14,15 @@ $search = trim($search);
 
 if ($search !== '') {
     $stmt = $conn->prepare("SELECT k.karyawan_id, k.nama, k.role_id, r.nama AS role_nama,k.divisi,k.noTelp,k.alamat,k.ktp,k.status
-    FROM tb_karyawan k JOIN tb_role r ON k.role_id = r.role_id WHERE k.nama LIKE CONCAT ('%',?,'%')
-    OR r.nama LIKE CONCAT ('%',?,%')
+    FROM tb_karyawan k JOIN tb_role r ON k.role_id = r.role_id WHERE k.karyawan_id LIKE CONCAT ('%',?,'%')
+    OR k.nama LIKE CONCAT ('%',?,'%')
+    OR r.nama LIKE CONCAT ('%',?,%') 
+    OR k.divisi LIKE CONCAT ('%',?,'%')
+    OR k.noTelp LIKE CONCAT ('%',?,'%')
+    OR k.alamat LIKE LIKE CONCAT ('%',?,'%')
+    OR k.ktp LIKE CONCAT ('%',?,'%')
     ");
-    $stmt->bind_param(['ss' => $search,$search]);
+    $stmt->bind_param('sssssss',$search,$search,$search,$search,$search,$search,$search);
     $stmt->execute();
     $result = $stmt->get_result();
 } else {

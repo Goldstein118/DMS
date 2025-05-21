@@ -1,16 +1,16 @@
 import config from "./config.js";
-$("#modal_karyawan").on("shown.bs.modal", function () {
-  $("#name_karyawan").trigger("focus");
+$(document).ready(function () {
+  $("#modal_karyawan").on("shown.bs.modal", function () {
+    fetch_roles();
+    $("#name_karyawan").trigger("focus");
+    $("#role_select").select2({
+      placeholder: "Pilih Role",
+      allowClear: true,
+      dropdownParent: $("#modal_karyawan"),
+      minimumResultforSearch: 5,
+    });
+  });
 });
-
-// Initialize Select2 on the role_select element
-$("#role_select").select2({
-  placeholder: "Search and select a role",
-  allowClear: true,
-});
-
-// Fetch roles and populate the dropdown
-fetch_roles();
 
 // Submit form data
 document
@@ -31,6 +31,7 @@ function fetch_roles() {
       }
     })
     .then((data) => {
+      console.log(data);
       if (Array.isArray(data) && data.length > 0) {
         populateRoleDropdown(data);
       } else {
@@ -44,22 +45,15 @@ function fetch_roles() {
 }
 
 function populateRoleDropdown(data) {
-  const select = document.getElementById("role_select");
-  select.innerHTML = ""; // Clear existing options
-
-  const defaultOption = document.createElement("option");
-  defaultOption.value = "";
-  defaultOption.textContent = "Select a role";
-  select.appendChild(defaultOption);
+  const select = $("#role_select");
+  select.empty();
+  select.append(new Option("Pilih Role", "", false, false));
 
   data.forEach((item) => {
-    const option = document.createElement("option");
-    option.value = item.role_id;
-    option.textContent = item.nama;
-    select.appendChild(option);
+    select.append(new Option(item.nama, item.role_id, false, false));
   });
 
-  $("#role_select").select2();
+  select.trigger("change");
 }
 
 function submitKaryawan() {

@@ -1,23 +1,23 @@
 import config from "./config.js";
-$(document).ready(function () {
-  $("#modal_karyawan").on("shown.bs.modal", function () {
-    fetch_roles();
-    $("#name_karyawan").trigger("focus");
-    $("#role_select").select2({
-      placeholder: "Pilih Role",
-      allowClear: true,
-      dropdownParent: $("#modal_karyawan"),
-      minimumResultforSearch: 5,
+
+const submit_karyawan = document.getElementById("submit_karyawan");
+if (submit_karyawan) {
+  submit_karyawan.addEventListener("click", function () {
+    submitKaryawan();
+    $(document).ready(function () {
+      $("#modal_karyawan").on("shown.bs.modal", function () {
+        fetch_roles();
+        $("#name_karyawan").trigger("focus");
+        $("#role_select").select2({
+          placeholder: "Pilih Role",
+          allowClear: true,
+          dropdownParent: $("#modal_karyawan"),
+          minimumResultforSearch: 5,
+        });
+      });
     });
   });
-});
-
-// Submit form data
-document
-  .getElementById("submit_karyawan")
-  .addEventListener("click", function () {
-    submitKaryawan();
-  });
+}
 
 function fetch_roles() {
   fetch(`${config.API_BASE_URL}/PHP/API/role_API.php`)
@@ -31,7 +31,6 @@ function fetch_roles() {
       }
     })
     .then((data) => {
-      console.log(data);
       if (Array.isArray(data) && data.length > 0) {
         populateRoleDropdown(data);
       } else {
@@ -70,13 +69,19 @@ function submitKaryawan() {
   // Validate form data
   if (
     !name_karyawan ||
+    name_karyawan.trim() === "" ||
     !divisi_karyawan ||
+    divisi_karyawan.trim() === "" ||
     !phone_karyawan ||
+    phone_karyawan.trim() === "" ||
     !address_karyawan ||
+    address_karyawan.trim() === "" ||
     !nik_karyawan ||
-    !role_id
+    nik_karyawan.trim() === "" ||
+    !role_id ||
+    role_id.trim() === ""
   ) {
-    toastr.error("Please fill in all fields before submitting.");
+    toastr.error("Harap isi semua kolom sebelum submit.");
     return;
   }
 

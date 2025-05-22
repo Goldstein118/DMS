@@ -236,10 +236,17 @@ body::-webkit-scrollbar {
   justify-content: center;
 }
 #table_karyawan th:nth-child(10),
-#table_karyawan td:nth-child(10) {
+#table_karyawan td:nth-child(10),
+#table_user th:nth-child(3),
+#table_user td:nth-child(3),
+#table_role th:nth-child(3),
+#table_role td:nth-child(3) {
   display: none !important;
 }
 #table_karyawan .gridjs-search {
   display: flex;
   justify-content: flex-end;
+}
+#logout {
+  float: right;
 }

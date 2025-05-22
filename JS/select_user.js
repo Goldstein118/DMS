@@ -1,19 +1,17 @@
 import config from "../JS/config.js";
 import { Grid, html } from "https://unpkg.com/gridjs?module";
 
-$(document).ready(function () {
-  $("#loading_spinner").fadeOut();
-});
-
-new Grid({
-  columns: [
-    "Kode User",
-    "Nama Karyawan",
-    "karyawan_id",
-    {
-      name: "Aksi",
-      formatter: () => {
-        return html(`
+const grid_container_user = document.querySelector("#table_user");
+if (grid_container_user) {
+  new Grid({
+    columns: [
+      "Username",
+      "Nama Karyawan",
+      "karyawan_id",
+      {
+        name: "Aksi",
+        formatter: () => {
+          return html(`
         <button type="button"  id ="update_user_button" class="btn btn-warning update_user">
           <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
           <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
@@ -23,41 +21,65 @@ new Grid({
                     <i class="bi bi-trash-fill"></i>
         </button>
         `);
+        },
+      },
+    ],
+    search: {
+      enabled: true,
+      server: {
+        url: (prev, keyword) => {
+          if (keyword.length >= 5 && keyword !== "") {
+            return `${prev}?search=${encodeURIComponent(keyword)}`;
+          } else {
+            return prev;
+          }
+        },
+        method: "GET",
       },
     },
-  ],
-  search: {
-    enabled: true,
+    sort: true,
+    pagination: { limit: 10 },
     server: {
-      url: (prev, keyword) => `${prev}?search=${keyword}`,
+      url: `${config.API_BASE_URL}/PHP/API/user_API.php`,
       method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      then: (data) =>
+        data.map((user) => [
+          user.user_id,
+          user.karyawan_nama,
+          user.karyawan_id,
+          null, // Placeholder for the action buttons column
+        ]),
     },
-  },
-  sort: true,
-  pagination: { limit: 10 },
-  server: {
-    url: `${config.API_BASE_URL}/PHP/API/user_API.php`,
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    then: (data) =>
-      data.map((user) => [
-        user.user_id,
-        user.karyawan_nama,
-        user.karyawan_id,
-        null, // Placeholder for the action buttons column
-      ]),
-  },
-}).render(document.getElementById("table_user"));
-const input = document.querySelector("#table_user .gridjs-input");
-if (input) {
-  input.placeholder = "Cari User...";
-  input.style.justifyContent = "flex-end";
-}
+  }).render(document.getElementById("table_user"));
+  setTimeout(() => {
+    const grid_header = document.querySelector("#table_user .gridjs-head");
+    const search_Box = grid_header.querySelector(".gridjs-search");
 
-attachEventListeners();
-document.getElementById("loading_spinner").style.visibility = "hidden";
+    // Wrap both button and search bar in a flex container
+    const wrapper = document.createElement("div");
+    wrapper.className =
+      "d-flex justify-content-between align-items-center mb-3";
+    wrapper.appendChild(search_Box);
+
+    // Replace grid header content
+    grid_header.innerHTML = "";
+    grid_header.appendChild(wrapper);
+    const input = document.querySelector("#table_user .gridjs-input");
+    grid_header.style.display = "flex";
+    grid_header.style.justifyContent = "flex-end";
+
+    search_Box.style.display = "flex";
+    search_Box.style.justifyContent = "flex-end";
+    search_Box.style.marginLeft = "auto";
+    input.placeholder = "Cari User...";
+    document.getElementById("loading_spinner").style.visibility = "hidden";
+    $("#loading_spinner").fadeOut();
+    attachEventListeners();
+  }, 200);
+}
 
 function attachEventListeners() {
   document
@@ -173,10 +195,9 @@ async function handleUpdateUser(button) {
     spinner.style.display = "inline-block";
   }
 }
-
-document
-  .getElementById("submit_user_update")
-  .addEventListener("click", async function () {
+const submit_user_update = document.getElementById("submit_user_update");
+if (submit_user_update) {
+  submit_user_update.addEventListener("click", async function () {
     if (!window.currentRow) {
       toastr.error("No row selected for update.", {
         timeOut: 500,
@@ -224,3 +245,4 @@ document
       });
     }
   });
+}

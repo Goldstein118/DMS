@@ -12,41 +12,39 @@ if(!$conn){
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $search = trim($search);
 
-if ($search !== '') {
-    $stmt = $conn->prepare("SELECT k.karyawan_id, k.nama, k.role_id, r.nama AS role_nama,k.divisi,k.noTelp,k.alamat,k.ktp,k.status
-    FROM tb_karyawan k JOIN tb_role r ON k.role_id = r.role_id WHERE k.karyawan_id LIKE CONCAT ('%',?,'%')
-    OR k.nama LIKE CONCAT ('%',?,'%')
-    OR r.nama LIKE CONCAT ('%',?,%') 
-    OR k.divisi LIKE CONCAT ('%',?,'%')
-    OR k.noTelp LIKE CONCAT ('%',?,'%')
-    OR k.alamat LIKE LIKE CONCAT ('%',?,'%')
-    OR k.ktp LIKE CONCAT ('%',?,'%')
+if (strlen($search)>=5 && $search !=='') {
+    $stmt = $conn->prepare("SELECT karyawan.karyawan_id, karyawan.nama, karyawan.role_id, role.nama AS role_nama, karyawan.divisi, karyawan.no_telp, karyawan.alamat, karyawan.ktp, karyawan.status
+    FROM tb_karyawan karyawan JOIN tb_role role ON karyawan.role_id = role.role_id WHERE karyawan.karyawan_id LIKE CONCAT ('%',?,'%')
+    OR karyawan.nama LIKE CONCAT ('%',?,'%')
+    OR role.nama LIKE CONCAT ('%',?,'%') 
+    OR karyawan.divisi LIKE CONCAT ('%',?,'%')
+    OR karyawan.no_telp LIKE CONCAT ('%',?,'%')
+    OR karyawan.alamat LIKE CONCAT ('%',?,'%')
+    OR karyawan.ktp LIKE CONCAT ('%',?,'%')
     ");
     $stmt->bind_param('sssssss',$search,$search,$search,$search,$search,$search,$search);
     $stmt->execute();
     $result = $stmt->get_result();
 } else {
     $sql = "SELECT karyawan.karyawan_id, karyawan.nama, karyawan.role_id, role.nama AS role_nama,
-               karyawan.divisi, karyawan.noTelp, karyawan.alamat, karyawan.ktp, karyawan.npwp, karyawan.status
+               karyawan.divisi, karyawan.no_telp, karyawan.alamat, karyawan.ktp, karyawan.npwp, karyawan.status
             FROM tb_karyawan karyawan
             JOIN tb_role role ON karyawan.role_id = role.role_id";
 $result = $conn->query($sql);
 }
 
-
-
-
-if ($result) {
+    if ($result) {
     $karyawanData = [];
     while ($row = mysqli_fetch_assoc($result)) {
         $karyawanData[] = $row;
     }
     http_response_code(200);
     echo json_encode($karyawanData);
-} else {
+    } else {
     http_response_code(500);
     echo json_encode(["error" => "Failed to fetch data: " . $conn->error]);
-}
+    }
+
 
 
 ?>

@@ -1,26 +1,23 @@
 import config from "./config.js";
 import { Grid, html } from "https://unpkg.com/gridjs?module";
-
-$(document).ready(function () {
-  $("#loading_spinner").fadeOut();
-});
-
-new Grid({
-  columns: [
-    "Kode Karyawan",
-    "Nama",
-    "Role",
-    "Divisi",
-    "Nomor Telepon",
-    "Alamat",
-    "KTP",
-    "NPWP",
-    "Status",
-    "role_id",
-    {
-      name: "Aksi",
-      formatter: () => {
-        return html(`
+const grid_container_karyawan = document.querySelector("#table_karyawan");
+if (grid_container_karyawan) {
+  new Grid({
+    columns: [
+      "Kode Karyawan",
+      "Nama",
+      "Role",
+      "Divisi",
+      "Nomor Telepon",
+      "Alamat",
+      "KTP",
+      "NPWP",
+      "Status",
+      "role_id",
+      {
+        name: "Aksi",
+        formatter: () => {
+          return html(`
         <button type="button"  id ="update_karyawan_button" class="btn btn-warning update_karyawan">
           <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
           <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
@@ -30,48 +27,81 @@ new Grid({
                     <i class="bi bi-trash-fill"></i>
         </button>
         `);
+        },
+      },
+    ],
+    search: {
+      enabled: true,
+      server: {
+        url: (prev, keyword) => {
+          if (keyword.length >= 5 && keyword !== "") {
+            return `${prev}?search=${encodeURIComponent(keyword)}`;
+          } else {
+            return prev;
+          }
+        },
+        method: "GET",
       },
     },
-  ],
-  search: {
-    enabled: true,
+    sort: true,
+    pagination: { limit: 10 },
     server: {
-      url: (prev, keyword) => `${prev}?search=${keyword}`,
+      url: `${config.API_BASE_URL}/PHP/API/karyawan_API.php`,
       method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      then: (data) =>
+        data.map((karyawan) => [
+          karyawan.karyawan_id,
+          karyawan.nama,
+          karyawan.role_nama,
+          karyawan.divisi,
+          karyawan.no_telp,
+          karyawan.alamat,
+          karyawan.ktp,
+          karyawan.npwp,
+          karyawan.status,
+          karyawan.role_id,
+          null, // Placeholder for the action buttons column
+        ]),
     },
-  },
-  sort: true,
-  pagination: { limit: 10 },
-  server: {
-    url: `${config.API_BASE_URL}/PHP/API/karyawan_API.php`,
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    then: (data) =>
-      data.map((karyawan) => [
-        karyawan.karyawan_id,
-        karyawan.nama,
-        karyawan.role_nama,
-        karyawan.divisi,
-        karyawan.noTelp,
-        karyawan.alamat,
-        karyawan.ktp,
-        karyawan.npwp,
-        karyawan.status,
-        karyawan.role_id,
-        null, // Placeholder for the action buttons column
-      ]),
-  },
-}).render(document.getElementById("table_karyawan"));
-const input = document.querySelector("#table_karyawan .gridjs-input");
-if (input) {
-  input.placeholder = "Cari Karyawan...";
-  input.style.justifyContent = "flex-end";
-}
+  }).render(document.getElementById("table_karyawan"));
+  setTimeout(() => {
+    const grid_header = document.querySelector("#table_karyawan .gridjs-head");
+    const search_Box = grid_header.querySelector(".gridjs-search");
 
-attachEventListeners();
-document.getElementById("loading_spinner").style.visibility = "hidden";
+    // Create the button
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn btn-primary";
+    btn.setAttribute("data-bs-toggle", "modal");
+    btn.setAttribute("data-bs-target", "#modal_karyawan");
+    btn.innerHTML = '<i class="bi bi-person-plus-fill"></i> Karyawan';
+
+    // Wrap both button and search bar in a flex container
+    const wrapper = document.createElement("div");
+    wrapper.className =
+      "d-flex justify-content-between align-items-center mb-3";
+    wrapper.appendChild(btn);
+    wrapper.appendChild(search_Box);
+
+    // Replace grid header content
+    grid_header.innerHTML = "";
+    grid_header.appendChild(wrapper);
+    const input = document.querySelector("#table_karyawan .gridjs-input");
+    grid_header.style.display = "flex";
+    grid_header.style.justifyContent = "flex-end";
+
+    search_Box.style.display = "flex";
+    search_Box.style.justifyContent = "flex-end";
+    search_Box.style.marginLeft = "auto";
+    input.placeholder = "Cari Karyawan...";
+    document.getElementById("loading_spinner").style.visibility = "hidden";
+    $("#loading_spinner").fadeOut();
+    attachEventListeners();
+  }, 200);
+}
 
 function attachEventListeners() {
   document
@@ -87,6 +117,7 @@ function attachEventListeners() {
       }
     });
 }
+
 // Attach delete listeners
 async function handleDeleteKaryawan(button) {
   const row = button.closest("tr");
@@ -204,11 +235,12 @@ async function handleUpdateKaryawan(button) {
     spinner.style.display = "inline-block";
   }
 }
+const submit_karyawan_update = document.getElementById(
+  "submit_karyawan_update"
+);
 
-// Submit updated karyawan
-document
-  .getElementById("submit_karyawan_update")
-  .addEventListener("click", async function () {
+if (submit_karyawan_update) {
+  submit_karyawan_update.addEventListener("click", async function () {
     if (!window.currentRow) {
       toastr.error("No row selected for update.");
       return;
@@ -223,10 +255,30 @@ document
     const divisi_new = document.getElementById("update_divisi_karyawan").value;
     const noTelp_new = document.getElementById("update_phone_karyawan").value;
     const alamat_new = document.getElementById("update_address_karyawan").value;
-    const KTP_NPWP_new = document.getElementById("update_nik_karyawan").value;
+    const KTP_new = document.getElementById("update_nik_karyawan").value;
     const npwp_new = document.getElementById("update_npwp_karyawan").value;
     const status_new = document.getElementById("update_status_karyawan").value;
-
+    if (
+      !karyawan_nama_new ||
+      karyawan_nama_new.trim() === "" ||
+      !role_ID_new ||
+      role_ID_new.trim() === "" ||
+      !divisi_new ||
+      divisi_new.trim() === "" ||
+      !noTelp_new ||
+      noTelp_new.trim() === "" ||
+      !alamat_new ||
+      alamat_new.trim() === "" ||
+      !KTP_new ||
+      KTP_new.trim() === "" ||
+      !npwp_new ||
+      npwp_new.trim() === "" ||
+      !status_new ||
+      status_new.trim() === ""
+    ) {
+      toastr.error("Harap isi semua kolom sebelum simpan.");
+      return;
+    }
     try {
       const response = await fetch(
         `${config.API_BASE_URL}/PHP/update_karyawan.php`,
@@ -240,9 +292,9 @@ document
             nama: karyawan_nama_new,
             role_id: role_ID_new,
             divisi: divisi_new,
-            noTelp: noTelp_new,
+            no_telp: noTelp_new,
             alamat: alamat_new,
-            ktp: KTP_NPWP_new,
+            ktp: KTP_new,
             npwp: npwp_new,
             status: status_new,
           }),
@@ -256,7 +308,7 @@ document
         row.cells[3].textContent = divisi_new;
         row.cells[4].textContent = noTelp_new;
         row.cells[5].textContent = alamat_new;
-        row.cells[6].textContent = KTP_NPWP_new;
+        row.cells[6].textContent = KTP_new;
         row.cells[7].textContent = npwp_new;
         row.cells[8].textContent = status_new;
 
@@ -278,3 +330,4 @@ document
       });
     }
   });
+}

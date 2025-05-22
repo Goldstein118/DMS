@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
-    file_put_contents("log.txt", file_get_contents("php://input"));
+    //file_put_contents("log.txt", file_get_contents("php://input"));
 
 
     
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(["success" => false, "error" => "Invalid JSON payload"]);
     exit;
     }
-    $requiredFields = ['karyawan_id', 'nama', 'role_id', 'divisi', 'noTelp', 'alamat', 'ktp','npwp','status'];
+    $requiredFields = [ 'karyawan_id','nama', 'role_id', 'divisi', 'no_telp', 'alamat', 'ktp','npwp','status'];
     foreach ($requiredFields as $field) {
     if (!isset($data[$field]) || empty(trim($data[$field]))) {
         error_log("Missing or empty field: $field");
@@ -33,13 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     // Validate required fields
-
-    // Extract and sanitize inputs
-    $karyawan_ID = $data['karyawan_id'];
+    $karyawan_id=$data['karyawan_id'];
     $nama = $data['nama'];
     $role_ID = $data['role_id'];
     $divisi = $data['divisi'];
-    $noTelp = $data['noTelp'];
+    $noTelp = $data['no_telp'];
     $alamat = $data['alamat'];
     $ktp_npwp = $data['ktp'];
     $npwp = $data['npwp'];
@@ -64,7 +62,7 @@ validateField(($ktp_npwp),'/^[a-zA-Z0-9, ]+$/', "Invalid KTP format");
 validateField(($npwp),'/^[a-zA-Z0-9, ]+$/', "Invalid NPWP format");
 
 // Prepare the SQL statement
-$stmt = $conn->prepare("UPDATE tb_karyawan SET nama = ?, role_id = ?, divisi = ?, noTelp = ?, alamat = ?, ktp = ? ,npwp = ?, status =? WHERE karyawan_id = ?");
+$stmt = $conn->prepare("UPDATE tb_karyawan SET nama = ?, role_id = ?, divisi = ?, no_telp = ?, alamat = ?, ktp = ? ,npwp = ?, status =? WHERE karyawan_id = ?");
 if (!$stmt) {
     error_log("Failed to prepare statement: " . $conn->error);
     http_response_code(500);
@@ -73,9 +71,9 @@ if (!$stmt) {
 }
 
 // Bind parameters and execute the statement
-$stmt->bind_param("sssssssss", $nama, $role_ID, $divisi, $noTelp, $alamat, $ktp_npwp,$npwp,$status, $karyawan_ID);
+$stmt->bind_param("sssssssss", $nama, $role_ID, $divisi, $noTelp, $alamat, $ktp_npwp,$npwp,$status, $karyawan_id);
 if ($stmt->execute()) {
-    error_log("Karyawan updated successfully: ID = $karyawan_ID");
+    error_log("Karyawan updated successfully: ID = $karyawan_id");
     http_response_code(200);
     echo json_encode(["success" => true, "message" => "Karyawan updated successfully"]);
 } else {

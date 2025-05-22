@@ -12,7 +12,7 @@ if(!$conn){
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $search = trim($search);
 
-if ($search !== '') {
+if ($search !== ''&& strlen($search)>=5) {
     $stmt = $conn->prepare("SELECT role_id, nama, akses
     FROM tb_role WHERE nama LIKE CONCAT ('%',?,'%')
     OR role_id LIKE CONCAT ('%',?,'%')

@@ -15,7 +15,7 @@
               aria-expanded="true">
               <i
                 class="bi bi-chevron-down toggle-icon"
-                data-target="#karyawan-collapse"></i>
+                data-bs-target="#data-collapse"></i>
               Data
             </button>
             <div class="collapse show" id="data-collapse">
@@ -34,6 +34,11 @@
                   <a
                     href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_role"
                     class="link-dark d-inline-flex text-decoration-none rounded">Tabel Role</a>
+                </li>
+                <li>
+                  <a
+                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_supplier"
+                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Supplier</a>
                 </li>
               </ul>
             </div>
@@ -61,7 +66,7 @@
               aria-expanded="true">
               <i
                 class="bi bi-chevron-down toggle-icon"
-                data-target="#karyawan-collapse"></i>
+                data-bs-target="#data-collapse"></i>
               Data
             </button>
             <div class="collapse show" id="data-collapse">
@@ -80,6 +85,11 @@
                   <a
                     href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_role"
                     class="link-dark d-inline-flex text-decoration-none rounded">Tabel Role</a>
+                </li>
+                <li>
+                  <a
+                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_supplier"
+                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Supplier</a>
                 </li>
               </ul>
             </div>

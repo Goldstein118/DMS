@@ -13,7 +13,7 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 $search = trim($search);
 
 if (strlen($search)>=5 && $search !=='') {
-    $stmt = $conn->prepare("SELECT karyawan.karyawan_id, karyawan.nama, karyawan.role_id, role.nama AS role_nama, karyawan.divisi, karyawan.no_telp, karyawan.alamat, karyawan.ktp, karyawan.status
+    $stmt = $conn->prepare("SELECT karyawan.karyawan_id, karyawan.nama, karyawan.role_id, role.nama AS role_nama, karyawan.divisi, karyawan.no_telp, karyawan.alamat, karyawan.ktp, karyawan.npwp,karyawan.status
     FROM tb_karyawan karyawan JOIN tb_role role ON karyawan.role_id = role.role_id WHERE karyawan.karyawan_id LIKE CONCAT ('%',?,'%')
     OR karyawan.nama LIKE CONCAT ('%',?,'%')
     OR role.nama LIKE CONCAT ('%',?,'%') 
@@ -21,8 +21,10 @@ if (strlen($search)>=5 && $search !=='') {
     OR karyawan.no_telp LIKE CONCAT ('%',?,'%')
     OR karyawan.alamat LIKE CONCAT ('%',?,'%')
     OR karyawan.ktp LIKE CONCAT ('%',?,'%')
+    OR karyawan.npwp LIKE CONCAT ('%',?,'%')
+    OR karyawan.status LIKE CONCAT ('%',?,'%')
     ");
-    $stmt->bind_param('sssssss',$search,$search,$search,$search,$search,$search,$search);
+    $stmt->bind_param('sssssssss',$search,$search,$search,$search,$search,$search,$search,$search,$search);
     $stmt->execute();
     $result = $stmt->get_result();
 } else {

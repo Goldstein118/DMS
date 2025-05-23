@@ -47,6 +47,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $stmt->close();
     }
+    function validate_1($data, $requiredFields, $default = [])
+    {
+        $result = [];
+        foreach ($requiredFields as $field) {
+            if (!isset($data[$field]) || empty(trim($data[$field]))) {
+                error_log("Missing or empty field: $field");
+                http_response_code(400);
+                echo json_encode(["success" => false, "error" => "Missing or empty field: $field"]);
+                exit;
+            }
+            $result[$field] = trim($data[$field]);
+        }
+        foreach ($default as $field => $default) {
+            if (!isset($result[$field]) || $result[$field] === '') {
+                $result[$field] = $default;
+            }
+        }
+        return $result;
+    }
+    function validate_2($field, $pattern, $errorMessage)
+    {
+        if (!preg_match($pattern, $field)) {
+            http_response_code(400);
+            echo json_encode(["success" => false, "error" => $errorMessage]);
+            exit;
+        }
+    }
+
+
 
     try {
         $input = file_get_contents('php://input');
@@ -56,40 +85,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($action === 'submit_karyawan') {
 
             $requiredFields = ['name_karyawan', 'role_id', 'divisi_karyawan', 'phone_karyawan', 'address_karyawan', 'nik_karyawan', 'npwp_karyawan', 'status_karyawan'];
-            foreach ($requiredFields as $field) {
-                if (!isset($data[$field]) || empty(trim($data[$field]))) {
-                    error_log("Missing or empty field: $field");
-                    http_response_code(400);
-                    echo json_encode(["success" => false, "error" => "Missing or empty field: $field"]);
-                    exit;
-                }
-                $nama_karyawan = $data['name_karyawan'];
-                $role_id = $data['role_id'];
-                $divisi_karyawan = $data['divisi_karyawan'];
-                $noTelp_karyawan = $data['phone_karyawan'];
-                $alamat_karyawan = $data['address_karyawan'];
-                $nik_karyawan = $data['nik_karyawan'];
-                $npwp_karyawan = $data['npwp_karyawan'];
-                $status_karyawan = $data['status_karyawan'] ?? 'aktif';
-            }
-            function validateField($field, $pattern, $errorMessage)
-            {
-                if (!preg_match($pattern, $field)) {
-                    http_response_code(400);
-                    echo json_encode(["success" => false, "error" => $errorMessage]);
-                    exit;
-                }
-            }
+            $defaults = ['status_karyawan' => 'aktif'];
+            $fields = validate_1($data, $requiredFields, $defaults);
+
+            $nama_karyawan = $fields['name_karyawan'];
+            $role_id = $fields['role_id'];
+            $divisi_karyawan = $fields['divisi_karyawan'];
+            $noTelp_karyawan = $fields['phone_karyawan'];
+            $alamat_karyawan = $fields['address_karyawan'];
+            $nik_karyawan = $fields['nik_karyawan'];
+            $npwp_karyawan = $fields['npwp_karyawan'];
+            $status_karyawan = $fields['status_karyawan'];
 
             // Validate fields
-            validateField($nama_karyawan, '/^[a-zA-Z\s]+$/', "Invalid name format");
-            validateField($divisi_karyawan, '/^[a-zA-Z0-9, ]+$/', "Invalid division format");
-            validateField($alamat_karyawan, '/^[a-zA-Z0-9, ]+$/', "Invalid address format");
-            validateField($noTelp_karyawan, '/^[+]?[\d\s\-()]+$/', "Invalid phone number format");
-            validateField($nik_karyawan, '/^[a-zA-Z0-9, ]+$/', "Invalid KTP format");
-            validateField($npwp_karyawan, '/^[a-zA-Z0-9, ]+$/', "Invalid NPWP format");
-
-
+            validate_2($nama_karyawan, '/^[a-zA-Z\s]+$/', "Invalid name format");
+            validate_2($divisi_karyawan, '/^[a-zA-Z0-9, ]+$/', "Invalid division format");
+            validate_2($alamat_karyawan, '/^[a-zA-Z0-9, ]+$/', "Invalid address format");
+            validate_2($noTelp_karyawan, '/^[+]?[\d\s\-()]+$/', "Invalid phone number format");
+            validate_2($nik_karyawan, '/^[a-zA-Z0-9, ]+$/', "Invalid KTP format");
+            validate_2($npwp_karyawan, '/^[a-zA-Z0-9, ]+$/', "Invalid NPWP format");
 
 
             $id_karyawan = generateCustomID('KA', 'tb_karyawan', 'karyawan_id', $conn);
@@ -114,28 +128,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($action === 'submit_role') {
 
             $requiredFields = ['name_role', 'akses_role'];
-            foreach ($requiredFields as $field) {
-                if (!isset($data[$field]) || empty(trim($data[$field]))) {
-                    error_log("Missing or empty field: $field");
-                    http_response_code(400);
-                    echo json_encode(["success" => false, "error" => "Missing or empty field: $field"]);
-                    exit;
-                }
-                $name_role = $data['name_role'];
-                $akses_role = $data['akses_role'];
-            }
-            function validateField($field, $pattern, $errorMessage)
-            {
-                if (!preg_match($pattern, $field)) {
-                    http_response_code(400);
-                    echo json_encode(["success" => false, "error" => $errorMessage]);
-                    exit;
-                }
-            }
+            $fields = validate_1($data, $requiredFields);
 
+            $name_role = $fields['name_role'];
+            $akses_role = $fields['akses_role'];
             // Validate fields
-            validateField($name_role, '/^[a-zA-Z\s]+$/', "Invalid name format");
-            validateField($akses_role, '/^[a-zA-Z0-9, ]+$/', "Invalid division format");
+            validate_2($name_role, '/^[a-zA-Z\s]+$/', "Invalid name format");
+            validate_2($akses_role, '/^[a-zA-Z0-9, ]+$/', "Invalid division format");
 
             $id_role = generateCustomID('RO', 'tb_role', 'role_id', $conn);
             executeInsert(
@@ -146,6 +145,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
 
             echo json_encode(["success" => true, "message" => "Role saved successfully", "data" => ["role_id" => $id_role]]);
+        } elseif ($action === 'submit_supplier') {
+            $requiredFields = ['supplier_nama', 'supplier_alamat', 'supplier_no_telp', 'supplier_ktp', 'supplier_npwp', 'supplier_status'];
+            $defaults = ['supplier_status' => 'aktif'];
+            $fields = validate_1($data, $requiredFields, $defaults);
+
+            $supplier_nama = $fields['supplier_nama'];
+            $supplier_alamat = $fields['supplier_alamat'];
+            $supplier_no_telp = $fields['supplier_no_telp'];
+            $supplier_ktp = $fields['supplier_ktp'];
+            $supplier_npwp = $fields['supplier_npwp'];
+            $supplier_status = $fields['supplier_status'];
+
+            $supplier_id = generateCustomID('SU', 'tb_supplier', 'supplier_id', $conn);
+
+            executeInsert(
+                $conn,
+                "INSERT INTO tb_supplier (supplier_id, nama, alamat, no_telp, ktp, npwp, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                [$supplier_id, $supplier_nama, $supplier_alamat, $supplier_no_telp, $supplier_ktp, $supplier_npwp, $supplier_status],
+                "sssssss"
+            );
+
+            echo json_encode(["success" => true, "message" => "Supplier saved successfully", "data" => ["supplier_id" => $supplier_id]]);
         } else {
             echo json_encode(["success" => false, "message" => "Invalid action"]);
         }

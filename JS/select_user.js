@@ -143,7 +143,7 @@ async function handleDeleteUser(button) {
     }
     Swal.fire({
       title: "Berhasil!",
-
+      text: "Data User berhasil dihapus!",
       icon: "success",
     });
   }

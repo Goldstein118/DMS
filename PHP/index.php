@@ -81,7 +81,7 @@ include('sidebar.php');
 $page = $_GET['page'] ?? 'tabel_karyawan';
 
 // Whitelist allowed pages for security
-$allowed_pages = ['tabel_karyawan', 'tabel_role', 'tabel_user'];
+$allowed_pages = ['tabel_karyawan', 'tabel_role', 'tabel_user','tabel_supplier'];
 
 if (in_array($page, $allowed_pages)) {
   include $page . '.php';
@@ -99,6 +99,8 @@ include('footer.php');
   <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_role.js?v=2.0"></script>
   <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_role.js?v=2.0"></script>
   <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_user.js?v=2.0"></script>
+  <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_supplier.js?v=2.0"></script>
+  <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_supplier.js?v=2.0"></script>
   <script src="<?php echo $_ENV['BASE_URL']; ?>../JS/side_bar.js"></script>
 </body>
 </html>

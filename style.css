@@ -70,13 +70,10 @@ table th {
   font-weight: bold;
 }
 
-table tr:nth-child(even) {
-  background-color: #b1b1b1; /* Light gray for alternate rows */
+tr:nth-of-type(even) td {
+  background-color: #f1f1f1; /* Light gray for alternate rows */
 }
 
-table tr:hover {
-  background-color: #ddd; /* Highlight row on hover */
-}
 .select2-container {
   width: 100% !important;
   font-size: var(--font-size-medium);
@@ -164,21 +161,21 @@ footer {
   padding: 1rem;
   overflow-y: auto;
 }
-
-.btn-toggle {
-  padding: 0.25rem 0.5rem;
-  font-weight: 600;
-  color: #333;
-  background-color: transparent;
+/* 
+.gridjs-td:hover {
+  background-color: #ddd;
 }
-
+  */
 .btn-toggle:hover {
   background-color: #e9ecef;
 }
-
-.btn-toggle-nav a {
-  padding: 0.1875rem 0.5rem;
-  margin-left: 1.25rem;
+li a.link-dark:hover {
+  background-color: #e9ecef;
+  text-decoration: none;
+}
+li a.link-dark {
+  display: block;
+  padding: 0.5rem 1rem;
 }
 
 .toggle-icon {
@@ -192,10 +189,6 @@ footer {
   background-color: transparent;
 }
 
-.btn-toggle:hover {
-  background-color: #e9ecef;
-}
-
 .btn-toggle-nav a {
   padding: 0.1875rem 0.5rem;
   margin-left: 1.25rem;
@@ -207,7 +200,7 @@ footer {
   background-color: #fff;
   border-right: 1px solid #dee2e6;
 }
-/* For modern browsers */
+/* */
 body {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */

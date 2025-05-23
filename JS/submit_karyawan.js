@@ -2,18 +2,16 @@ import config from "./config.js";
 
 const submit_karyawan = document.getElementById("submit_karyawan");
 if (submit_karyawan) {
-  submit_karyawan.addEventListener("click", function () {
-    submitKaryawan();
-    $(document).ready(function () {
-      $("#modal_karyawan").on("shown.bs.modal", function () {
-        fetch_roles();
-        $("#name_karyawan").trigger("focus");
-        $("#role_select").select2({
-          placeholder: "Pilih Role",
-          allowClear: true,
-          dropdownParent: $("#modal_karyawan"),
-          minimumResultforSearch: 5,
-        });
+  submit_karyawan.addEventListener("click", submitKaryawan);
+  $(document).ready(function () {
+    $("#modal_karyawan").on("shown.bs.modal", function () {
+      fetch_roles();
+      $("#name_karyawan").trigger("focus");
+      $("#role_select").select2({
+        placeholder: "Pilih Role",
+        allowClear: true,
+        dropdownParent: $("#modal_karyawan"),
+        minimumResultforSearch: 5,
       });
     });
   });

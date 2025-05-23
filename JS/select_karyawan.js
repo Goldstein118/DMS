@@ -10,7 +10,7 @@ if (grid_container_karyawan) {
       "Divisi",
       "Nomor Telepon",
       "Alamat",
-      "KTP",
+      "NIK",
       "NPWP",
       "Status",
       "role_id",
@@ -216,8 +216,7 @@ async function handleUpdateKaryawan(button) {
         `${role.role_id} - ${role.nama}`,
         role.role_id,
         false,
-        role.role_id == currentrole_id,
-        console.log(role.role_id)
+        role.role_id == currentrole_id
       );
       role_ID_Field.append(option);
     });
@@ -279,55 +278,90 @@ if (submit_karyawan_update) {
       toastr.error("Harap isi semua kolom sebelum simpan.");
       return;
     }
-    try {
-      const response = await fetch(
-        `${config.API_BASE_URL}/PHP/update_karyawan.php`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            karyawan_id: karyawan_ID,
-            nama: karyawan_nama_new,
-            role_id: role_ID_new,
-            divisi: divisi_new,
-            no_telp: noTelp_new,
-            alamat: alamat_new,
-            ktp: KTP_new,
-            npwp: npwp_new,
-            status: status_new,
-          }),
-        }
-      );
-      if (response.ok) {
-        row.cells[1].textContent = karyawan_nama_new;
-        const role_name_new = $("#update_role_select option:selected").text();
-        const role_name_only = role_name_new.split(" - ")[1];
-        row.cells[2].textContent = role_name_only;
-        row.cells[3].textContent = divisi_new;
-        row.cells[4].textContent = noTelp_new;
-        row.cells[5].textContent = alamat_new;
-        row.cells[6].textContent = KTP_new;
-        row.cells[7].textContent = npwp_new;
-        row.cells[8].textContent = status_new;
-
-        $("#modal_karyawan_update").modal("hide");
-        Swal.fire({
-          title: "Berhasil",
-          icon: "success",
+    function validateField(field, pattern, errorMessage) {
+      if (!pattern.test(field)) {
+        toastr.error(errorMessage, {
+          timeOut: 500,
+          extendedTimeOut: 500,
         });
-      } else {
-        throw new Error(
-          `Failed to update karyawan. Status: ${response.status}`
-        );
+        return false;
       }
-    } catch (error) {
-      console.error("Error updating karyawan:", error);
-      toastr.error("Failed to update karyawan.", {
-        timeOut: 500,
-        extendedTimeOut: 500,
-      });
+      return true;
+    }
+    const is_valid =
+      validateField(
+        karyawan_nama_new,
+        /^[a-zA-Z\s]+$/,
+        "Format nama tidak valid"
+      ) &&
+      validateField(
+        divisi_new,
+        /^[a-zA-Z0-9, ]+$/,
+        "Format alamat tidak valid"
+      ) &&
+      validateField(
+        alamat_new,
+        /^[a-zA-Z0-9, ]+$/,
+        "Format alamat tidak valid"
+      ) &&
+      validateField(
+        noTelp_new,
+        /^[+]?[\d\s\-()]+$/,
+        "Format nomor telepon tidak valid"
+      ) &&
+      validateField(KTP_new, /^[a-zA-Z0-9, ]+$/, "Format NIK tidak valid") &&
+      validateField(npwp_new, /^[a-zA-Z0-9, ]+$/, "Format NPWP tidak valid");
+    if (is_valid) {
+      try {
+        const response = await fetch(
+          `${config.API_BASE_URL}/PHP/update_karyawan.php`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              karyawan_id: karyawan_ID,
+              nama: karyawan_nama_new,
+              role_id: role_ID_new,
+              divisi: divisi_new,
+              no_telp: noTelp_new,
+              alamat: alamat_new,
+              ktp: KTP_new,
+              npwp: npwp_new,
+              status: status_new,
+            }),
+          }
+        );
+        if (response.ok) {
+          row.cells[1].textContent = karyawan_nama_new;
+          const role_name_new = $("#update_role_select option:selected").text();
+          const role_name_only = role_name_new.split(" - ")[1];
+          row.cells[2].textContent = role_name_only;
+          row.cells[3].textContent = divisi_new;
+          row.cells[4].textContent = noTelp_new;
+          row.cells[5].textContent = alamat_new;
+          row.cells[6].textContent = KTP_new;
+          row.cells[7].textContent = npwp_new;
+          row.cells[8].textContent = status_new;
+
+          $("#modal_karyawan_update").modal("hide");
+          Swal.fire({
+            title: "Berhasil",
+            icon: "success",
+          });
+        } else {
+          throw new Error(
+            `Failed to update karyawan. Status: ${response.status}`
+          );
+        }
+      } catch (error) {
+        console.error("Error updating karyawan:", error);
+        toastr.error("Failed to update karyawan.", {
+          timeOut: 500,
+          extendedTimeOut: 500,
+        });
+      }
     }
   });
 }

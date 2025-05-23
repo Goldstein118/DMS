@@ -151,6 +151,7 @@ async function handleDeleteRole(button) {
     }
     Swal.fire({
       title: "Berhasil !",
+      text: "Data Role berhasil dihapus!",
       icon: "success",
     });
   }

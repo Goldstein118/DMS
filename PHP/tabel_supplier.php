@@ -4,8 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalCenterTitle">Tambah Supplier</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
           </button>
         </div>
         <div class="modal-body">
@@ -13,8 +12,11 @@
           <input class="form-control" type="text" id="supplier_nama"><br><br>
           <label class="form-label">Alamat:</label>
           <input class="form-control" type="text" id="supplier_alamat"><br><br>
-          <label class="form-label">Nomor Telepon:</label>
-          <input class="form-control" type="text" id="supplier_no_telp"><br><br>
+          <label class="form-label" for="phone">Nomor Telepon:</label>
+          <div class = "input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">+62</span>
+          <input class="form-control" type="text" id="supplier_no_telp" name="supplier_no_telp" aria-describedby="basic-addon1"value="">
+          </div><br><br>
           <label class="form-label">NIK:</label>
           <input class="form-control" type="text" id="supplier_ktp"><br><br>
           <label class="form-label">NPWP:</label>
@@ -38,9 +40,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalCenterTitle">Edit Supplier</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <label class = "form-label">Kode Supplier</label>
@@ -48,9 +48,12 @@
           <label class="form-label">Nama:</label>
           <input class="form-control" type="text" id="update_supplier_nama"><br><br>
           <label class="form-label">Alamat:</label>
-          <input class="form-control" type="text" id="update_supplier_alamat"><br><br>
-          <label class="form-label">Nomor Telepon:</label>
-          <input class="form-control" type="text" id="update_supplier_no_telp"><br><br>
+          <input class="form-control" type="text" id="update_supplier_alamat"><br><br>          
+          <label class="form-label" for="phone">Nomor Telepon:</label>
+          <div class = "input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">+62</span>
+          <input class="form-control" type="text" id="update_supplier_no_telp" name="update_supplier_no_telp" aria-describedby="basic-addon1"value="">
+          </div><br><br>
           <label class="form-label">NIK:</label>
           <input class="form-control" type="text" id="update_supplier_ktp"><br><br>
           <label class="form-label">NPWP:</label>

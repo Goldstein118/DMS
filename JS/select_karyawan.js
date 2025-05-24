@@ -117,7 +117,15 @@ function attachEventListeners() {
       }
     });
 }
+function format_no_telp(str) {
+  if (7 > str.length) {
+    return "Invalid index";
+  }
 
+  let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
+  let result = "+62 " + format;
+  return result;
+}
 // Attach delete listeners
 async function handleDeleteKaryawan(button) {
   const row = button.closest("tr");
@@ -179,7 +187,8 @@ async function handleUpdateKaryawan(button) {
   const currentNama = row.cells[1].textContent;
   const currentrole_id = row.cells[9].textContent;
   const currentdivisi = row.cells[3].textContent;
-  const currentnoTelp = row.cells[4].textContent;
+  let current_phone = row.cells[4].textContent;
+  const currentnoTelp = current_phone.replace(/\+62|-|\s/g, "");
   const currentalamat = row.cells[5].textContent;
   const currentKTP_NPWP = row.cells[6].textContent;
   const currentnpwp = row.cells[7].textContent;
@@ -234,6 +243,16 @@ async function handleUpdateKaryawan(button) {
     spinner.style.display = "inline-block";
   }
 }
+function validateField(field, pattern, errorMessage) {
+  if (!pattern.test(field)) {
+    toastr.error(errorMessage, {
+      timeOut: 500,
+      extendedTimeOut: 500,
+    });
+    return false;
+  }
+  return true;
+}
 const submit_karyawan_update = document.getElementById(
   "submit_karyawan_update"
 );
@@ -252,7 +271,7 @@ if (submit_karyawan_update) {
     ).value;
     const role_ID_new = $("#update_role_select").val();
     const divisi_new = document.getElementById("update_divisi_karyawan").value;
-    const noTelp_new = document.getElementById("update_phone_karyawan").value;
+    let noTelp_new = document.getElementById("update_phone_karyawan").value;
     const alamat_new = document.getElementById("update_address_karyawan").value;
     const KTP_new = document.getElementById("update_nik_karyawan").value;
     const npwp_new = document.getElementById("update_npwp_karyawan").value;
@@ -278,16 +297,7 @@ if (submit_karyawan_update) {
       toastr.error("Harap isi semua kolom sebelum simpan.");
       return;
     }
-    function validateField(field, pattern, errorMessage) {
-      if (!pattern.test(field)) {
-        toastr.error(errorMessage, {
-          timeOut: 500,
-          extendedTimeOut: 500,
-        });
-        return false;
-      }
-      return true;
-    }
+
     const is_valid =
       validateField(
         karyawan_nama_new,
@@ -296,22 +306,24 @@ if (submit_karyawan_update) {
       ) &&
       validateField(
         divisi_new,
-        /^[a-zA-Z0-9, ]+$/,
-        "Format alamat tidak valid"
+        /^[a-zA-Z0-9,. ]+$/,
+        "Format divisi tidak valid"
       ) &&
       validateField(
         alamat_new,
-        /^[a-zA-Z0-9, ]+$/,
+        /^[a-zA-Z0-9,. ]+$/,
         "Format alamat tidak valid"
       ) &&
       validateField(
         noTelp_new,
-        /^[+]?[\d\s\-()]+$/,
+        /^[0-9]{9,13}$/,
         "Format nomor telepon tidak valid"
       ) &&
-      validateField(KTP_new, /^[a-zA-Z0-9, ]+$/, "Format NIK tidak valid") &&
-      validateField(npwp_new, /^[a-zA-Z0-9, ]+$/, "Format NPWP tidak valid");
+      validateField(KTP_new, /^[0-9]+$/, "Format NIK tidak valid") &&
+      validateField(npwp_new, /^[0-9 .-]+$/, "Format NPWP tidak valid");
     if (is_valid) {
+      const no_telp_update = format_no_telp(noTelp_new);
+
       try {
         const response = await fetch(
           `${config.API_BASE_URL}/PHP/update_karyawan.php`,
@@ -325,7 +337,7 @@ if (submit_karyawan_update) {
               nama: karyawan_nama_new,
               role_id: role_ID_new,
               divisi: divisi_new,
-              no_telp: noTelp_new,
+              no_telp: no_telp_update,
               alamat: alamat_new,
               ktp: KTP_new,
               npwp: npwp_new,
@@ -339,7 +351,7 @@ if (submit_karyawan_update) {
           const role_name_only = role_name_new.split(" - ")[1];
           row.cells[2].textContent = role_name_only;
           row.cells[3].textContent = divisi_new;
-          row.cells[4].textContent = noTelp_new;
+          row.cells[4].textContent = no_telp_update;
           row.cells[5].textContent = alamat_new;
           row.cells[6].textContent = KTP_new;
           row.cells[7].textContent = npwp_new;

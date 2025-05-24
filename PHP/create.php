@@ -84,14 +84,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($action === 'submit_karyawan') {
 
-            $requiredFields = ['name_karyawan', 'role_id', 'divisi_karyawan', 'phone_karyawan', 'address_karyawan', 'nik_karyawan', 'npwp_karyawan', 'status_karyawan'];
-            $defaults = ['status_karyawan' => 'aktif'];
-            $fields = validate_1($data, $requiredFields, $defaults);
+            $requiredFields = ['name_karyawan', 'role_id', 'divisi_karyawan', 'no_telp_karyawan', 'address_karyawan', 'nik_karyawan', 'npwp_karyawan', 'status_karyawan'];
+            $default = ['status_karyawan' => 'aktif'];
+            $fields = validate_1($data, $requiredFields, $default);
 
             $nama_karyawan = $fields['name_karyawan'];
             $role_id = $fields['role_id'];
             $divisi_karyawan = $fields['divisi_karyawan'];
-            $noTelp_karyawan = $fields['phone_karyawan'];
+            $noTelp_karyawan = $fields['no_telp_karyawan'];
             $alamat_karyawan = $fields['address_karyawan'];
             $nik_karyawan = $fields['nik_karyawan'];
             $npwp_karyawan = $fields['npwp_karyawan'];
@@ -99,11 +99,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Validate fields
             validate_2($nama_karyawan, '/^[a-zA-Z\s]+$/', "Invalid name format");
-            validate_2($divisi_karyawan, '/^[a-zA-Z0-9, ]+$/', "Invalid division format");
-            validate_2($alamat_karyawan, '/^[a-zA-Z0-9, ]+$/', "Invalid address format");
-            validate_2($noTelp_karyawan, '/^[+]?[\d\s\-()]+$/', "Invalid phone number format");
-            validate_2($nik_karyawan, '/^[a-zA-Z0-9, ]+$/', "Invalid KTP format");
-            validate_2($npwp_karyawan, '/^[a-zA-Z0-9, ]+$/', "Invalid NPWP format");
+            validate_2($divisi_karyawan, '/^[a-zA-Z0-9,. ]+$/', "Invalid division format");
+            validate_2($alamat_karyawan, '/^[a-zA-Z0-9,. ]+$/', "Invalid address format");
+            validate_2($noTelp_karyawan, '/^[+]?[\d\s\-]+$/', "Invalid phone number format");
+            validate_2($nik_karyawan, '/^[0-9]+$/', "Invalid KTP format");
+            validate_2($npwp_karyawan, '/^[0-9 .-]+$/', "Invalid NPWP format");
 
 
             $id_karyawan = generateCustomID('KA', 'tb_karyawan', 'karyawan_id', $conn);
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $akses_role = $fields['akses_role'];
             // Validate fields
             validate_2($name_role, '/^[a-zA-Z\s]+$/', "Invalid name format");
-            validate_2($akses_role, '/^[a-zA-Z0-9, ]+$/', "Invalid division format");
+            validate_2($akses_role, '/^[0-9]+$/', "Invalid division format");
 
             $id_role = generateCustomID('RO', 'tb_role', 'role_id', $conn);
             executeInsert(
@@ -147,8 +147,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(["success" => true, "message" => "Role saved successfully", "data" => ["role_id" => $id_role]]);
         } elseif ($action === 'submit_supplier') {
             $requiredFields = ['supplier_nama', 'supplier_alamat', 'supplier_no_telp', 'supplier_ktp', 'supplier_npwp', 'supplier_status'];
-            $defaults = ['supplier_status' => 'aktif'];
-            $fields = validate_1($data, $requiredFields, $defaults);
+            $default = ['supplier_status' => 'aktif'];
+            $fields = validate_1($data, $requiredFields, $default);
 
             $supplier_nama = $fields['supplier_nama'];
             $supplier_alamat = $fields['supplier_alamat'];
@@ -156,6 +156,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $supplier_ktp = $fields['supplier_ktp'];
             $supplier_npwp = $fields['supplier_npwp'];
             $supplier_status = $fields['supplier_status'];
+
+            validate_2($supplier_nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
+            validate_2($supplier_alamat, '/^[a-zA-Z0-9,. ]+$/', "Invalid address format");
+            validate_2($supplier_no_telp, '/^[+]?[\d\s\-]+$/', "Invalid phone number format");
+            validate_2($supplier_ktp, '/^[0-9]+$/', "Invalid KTP format");
+            validate_2($supplier_npwp, '/^[0-9 .-]+$/', "Invalid NPWP format");
+
+
 
             $supplier_id = generateCustomID('SU', 'tb_supplier', 'supplier_id', $conn);
 
@@ -165,16 +173,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 [$supplier_id, $supplier_nama, $supplier_alamat, $supplier_no_telp, $supplier_ktp, $supplier_npwp, $supplier_status],
                 "sssssss"
             );
-
             echo json_encode(["success" => true, "message" => "Supplier saved successfully", "data" => ["supplier_id" => $supplier_id]]);
-        } else {
+
+        }elseif ($action==='submit_customer')
+        {
+            $requiredFields=['name_customer','alamat_customer','no_telp_customer','nik_customer','npwp_customer','nitko','term_payment','max_invoice','max_piutang','status_customer'];
+            $default=['status_customer'=>'aktif'];
+            $fields =validate_1($data,$requiredFields,$default);
+            $nama_customer = $fields['name_customer'];
+            $alamat_customer= $fields['alamat_customer'];
+            $no_telp_customer = $fields['no_telp_customer'];
+            $ktp_customer = $fields['nik_customer'];
+            $npwp_customer = $fields['npwp_customer'];
+            $nitko=$fields['nitko'];
+            $term_payment = $fields['term_payment'];
+            $max_invoice = $fields['max_invoice'];
+            $max_piutang = $fields['max_piutang'];
+            $status_customer =$fields['status_customer'];
+
+
+            echo json_encode(["success" => false, "message" => "Customer saved successfully", "data" => ["customer_id" => $customer_id]]);
+        } 
+        else {
             echo json_encode(["success" => false, "message" => "Invalid action"]);
         }
     } catch (Exception $e) {
         $conn->rollback();
         error_log($e->getMessage());
         echo json_encode(["success" => false, "message" => "An error occurred. Please try again later."]);
-    }
+        }
 }
 
 $conn->close();

@@ -15,7 +15,10 @@
           <select class ="form-select" id="role_select">
           </select><br><br>
           <label class="form-label" for="phone">Nomor Telepon:</label>
-          <input class="form-control" type="text" id="phone_karyawan" name="phone_karyawan" value=""><br>
+          <div class = "input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">+62</span>
+          <input class="form-control" type="text" id="phone_karyawan" name="phone_karyawan" aria-describedby="basic-addon1"value="">
+          </div><br>
           <label class="form-label" for="address">Alamat:</label>
           <input class="form-control" type="text" id="address_karyawan" name="address_karyawan" value=""><br>
           <label class="form-label" for="nik">NIK:</label>
@@ -56,8 +59,11 @@
           <select class="form-select" id="update_role_select">
             <option value="">Pilih Role</option>
           </select><br><br>
-          <label class="form-label" for="update_phone_karyawan">Nomor Telepon:</label>
-          <input class="form-control" type="text" id="update_phone_karyawan" name="phone_karyawan_update"><br>
+          <label class="form-label" for="phone">Nomor Telepon:</label>
+          <div class = "input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">+62</span>
+          <input class="form-control" type="text" id="update_phone_karyawan" name="phone_karyawan_update" aria-describedby="basic-addon1"value="">
+          </div><br>
           <label class="form-label" for="update_address_karyawan">Alamat:</label>
           <input class="form-control" type="text" id="update_address_karyawan" name="address_karyawan_update"><br>
           <label class="form-label" for="update_nik_karyawan">NIK:</label>

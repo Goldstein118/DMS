@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if (!preg_match('/^[a-zA-Z0-9, ]+$/', $akses)) {
+    if (!preg_match('/^[0-9]+$/', $akses)) {
         http_response_code(400);
         echo json_encode(["success" => false, "error" => "Invalid akses format"]);
         exit;

@@ -7,7 +7,16 @@ if (submit_role) {
     $("#name_role").trigger("focus");
   });
 }
-
+function validateField(field, pattern, errorMessage) {
+  if (!pattern.test(field)) {
+    toastr.error(errorMessage, {
+      timeOut: 500,
+      extendedTimeOut: 500,
+    });
+    return false;
+  }
+  return true;
+}
 function submitRole() {
   // Collect form data
   const name_role = document.getElementById("name_role").value;
@@ -23,39 +32,43 @@ function submitRole() {
     toastr.error("Harap isi semua kolom sebelum submit.");
     return;
   }
+  const is_valid =
+    validateField(name_role, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
+    validateField(akses_role, /^[0-9]+$/, "Format akses tidak valid");
 
-  // Create a data object
   const data_role = { action: "submit_role", name_role, akses_role };
 
-  fetch(`${config.API_BASE_URL}/PHP/create.php`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data_role),
-  })
-    .then((response) => response.json())
-    .then((result) => {
-      if (result.success) {
-        // Reset the form
-        document.getElementById("name_role").value = "";
-        document.getElementById("akses_role").value = "";
-        $("#modal_role").modal("hide");
-        Swal.fire({
-          title: "Berhasil",
-          icon: "success",
-        });
-      } else {
-        toastr.error(result.message, {
-          timeOut: 500,
-          extendedTimeOut: 500,
-        });
-      }
+  if (is_valid) {
+    fetch(`${config.API_BASE_URL}/PHP/create.php`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data_role),
     })
-    .catch((error) => {
-      console.error("Error:", error);
-      toastr.error(
-        "An error occurred while submitting the form. Please try again."
-      );
-    });
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.success) {
+          // Reset the form
+          document.getElementById("name_role").value = "";
+          document.getElementById("akses_role").value = "";
+          $("#modal_role").modal("hide");
+          Swal.fire({
+            title: "Berhasil",
+            icon: "success",
+          });
+        } else {
+          toastr.error(result.message, {
+            timeOut: 500,
+            extendedTimeOut: 500,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toastr.error(
+          "An error occurred while submitting the form. Please try again."
+        );
+      });
+  }
 }

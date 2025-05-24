@@ -168,7 +168,8 @@ async function handleUpdateSupplier(button) {
   const supplier_id = row.cells[0].textContent;
   const name = row.cells[1].textContent;
   const alamat = row.cells[2].textContent;
-  const no_telp = row.cells[3].textContent;
+  let phone_supplier = row.cells[3].textContent;
+  const no_telp = phone_supplier.replace(/\+62|-|\s/g, "");
   const ktp = row.cells[4].textContent;
   const npwp = row.cells[5].textContent;
   const status = row.cells[6].textContent;
@@ -187,18 +188,32 @@ async function handleUpdateSupplier(button) {
   spinner.style.display = "none";
   $("#modal_supplier_update").modal("show");
 }
+function validateField(field, pattern, errorMessage) {
+  if (!pattern.test(field)) {
+    toastr.error(errorMessage, {
+      timeOut: 500,
+      extendedTimeOut: 500,
+    });
+    return false;
+  }
+  return true;
+}
+function format_no_telp(str) {
+  if (7 > str.length) {
+    return "Invalid index";
+  }
 
+  let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
+  let result = "+62 " + format;
+  return result;
+}
 const submit_supplier_update = document.getElementById(
   "submit_supplier_update"
 );
 if (submit_supplier_update) {
   submit_supplier_update.addEventListener("click", async function () {
     if (!window.currentRow) {
-      toastr.error("no row selected for update."),
-        {
-          timeOut: 500,
-          extendedTimeOut: 500,
-        };
+      toastr.error("no row selected for update.");
       return;
     }
 
@@ -208,7 +223,7 @@ if (submit_supplier_update) {
     const update_alamat = document.getElementById(
       "update_supplier_alamat"
     ).value;
-    const update_no_telp = document.getElementById(
+    let update_no_telp = document.getElementById(
       "update_supplier_no_telp"
     ).value;
     const update_ktp = document.getElementById("update_supplier_ktp").value;
@@ -233,50 +248,67 @@ if (submit_supplier_update) {
       toastr.error("Harap isi semua kolom sebelum simpan.");
       return;
     }
-    try {
-      const response = await fetch(
-        `${config.API_BASE_URL}/PHP/update_supplier.php`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            supplier_id: supplier_id,
-            nama: update_nama,
-            alamat: update_alamat,
-            no_telp: update_no_telp,
-            ktp: update_ktp,
-            npwp: update_npwp,
-            status: update_status,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        row.cells[1].textContent = update_nama;
-        row.cells[2].textContent = update_alamat;
-        row.cells[3].textContent = update_no_telp;
-        row.cells[4].textContent = update_ktp;
-        row.cells[5].textContent = update_npwp;
-        row.cells[6].textContent = update_status;
-
-        $("#modal_supplier_update").modal("hide");
-        Swal.fire({
-          title: "Berhasil",
-          icon: "success",
-        });
-      } else {
-        throw new Error(
-          `Failed to update supplier. Status: ${response.status}`
+    const is_valid =
+      validateField(update_nama, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
+      validateField(
+        update_alamat,
+        /^[a-zA-Z0-9,. ]+$/,
+        "Format alamat tidak valid"
+      ) &&
+      validateField(
+        update_no_telp,
+        /^[0-9]{9,13}$/,
+        "Format nomor telepon tidak valid"
+      ) &&
+      validateField(update_ktp, /^[0-9]+$/, "Format NIK tidak valid") &&
+      validateField(update_npwp, /^[0-9 .-]+$/, "Format NPWP tidak valid");
+    if (is_valid) {
+      const new_no_telp = format_no_telp(update_no_telp);
+      try {
+        const response = await fetch(
+          `${config.API_BASE_URL}/PHP/update_supplier.php`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              supplier_id: supplier_id,
+              nama: update_nama,
+              alamat: update_alamat,
+              no_telp: new_no_telp,
+              ktp: update_ktp,
+              npwp: update_npwp,
+              status: update_status,
+            }),
+          }
         );
+
+        if (response.ok) {
+          row.cells[1].textContent = update_nama;
+          row.cells[2].textContent = update_alamat;
+          row.cells[3].textContent = new_no_telp;
+          row.cells[4].textContent = update_ktp;
+          row.cells[5].textContent = update_npwp;
+          row.cells[6].textContent = update_status;
+
+          $("#modal_supplier_update").modal("hide");
+          Swal.fire({
+            title: "Berhasil",
+            icon: "success",
+          });
+        } else {
+          throw new Error(
+            `Failed to update supplier. Status: ${response.status}`
+          );
+        }
+      } catch (error) {
+        console.error("Error updating supplier:", error);
+        toastr.error("Failed to update supplier.", {
+          timeOut: 500,
+          extendedTimeOut: 500,
+        });
       }
-    } catch (error) {
-      console.error("Error updating supplier:", error);
-      toastr.error("Failed to update supplier.", {
-        timeOut: 500,
-        extendedTimeOut: 500,
-      });
     }
   });
 }

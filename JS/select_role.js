@@ -200,41 +200,55 @@ if (submit_role_update) {
       toastr.error("Harap isi semua kolom sebelum simpan.");
       return;
     }
-
-    try {
-      const response = await fetch(
-        `${config.API_BASE_URL}/PHP/update_role.php`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            role_id: role_ID,
-            nama: newNama,
-            akses: newAkses,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        row.cells[1].textContent = newNama;
-        row.cells[2].textContent = newAkses;
-
-        $("#modal_role_update").modal("hide");
-        Swal.fire({
-          title: "Berhasil",
-          icon: "success",
+    function validateField(field, pattern, errorMessage) {
+      if (!pattern.test(field)) {
+        toastr.error(errorMessage, {
+          timeOut: 500,
+          extendedTimeOut: 500,
         });
-      } else {
-        throw new Error(`Failed to update role. Status: ${response.status}`);
+        return false;
       }
-    } catch (error) {
-      console.error("Error updating role:", error);
-      toastr.error("Failed to update role.", {
-        timeOut: 500,
-        extendedTimeOut: 500,
-      });
+      return true;
+    }
+    const is_valid =
+      validateField(newNama, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
+      validateField(newAkses, /^[0-9]+$/, "Format akses tidak valid");
+    if (is_valid) {
+      try {
+        const response = await fetch(
+          `${config.API_BASE_URL}/PHP/update_role.php`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              role_id: role_ID,
+              nama: newNama,
+              akses: newAkses,
+            }),
+          }
+        );
+
+        if (response.ok) {
+          row.cells[1].textContent = newNama;
+          row.cells[2].textContent = newAkses;
+
+          $("#modal_role_update").modal("hide");
+          Swal.fire({
+            title: "Berhasil",
+            icon: "success",
+          });
+        } else {
+          throw new Error(`Failed to update role. Status: ${response.status}`);
+        }
+      } catch (error) {
+        console.error("Error updating role:", error);
+        toastr.error("Failed to update role.", {
+          timeOut: 500,
+          extendedTimeOut: 500,
+        });
+      }
     }
   });
 }

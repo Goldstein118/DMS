@@ -50,10 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate fields
     validateField($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
-    validateField($alamat, '/^[a-zA-Z0-9, ]+$/', "Invalid address format");
+    validateField($alamat, '/^[a-zA-Z0-9,. ]+$/', "Invalid address format");
     validateField($no_telp, '/^[+]?[\d\s\-()]+$/', "Invalid phone number format");
-    validateField($ktp, '/^[a-zA-Z0-9, ]+$/', "Invalid KTP format");
-    validateField($npwp, '/^[a-zA-Z0-9, ]+$/', "Invalid NPWP format");
+    validateField($ktp, '/^[0-9]+$/', "Invalid KTP format");
+    validateField($npwp, '/^[0-9 .-]+$/', "Invalid NPWP format");
     // Example SQL update (adjust table/fields as needed)
     $stmt = $conn->prepare("UPDATE tb_supplier SET nama=?,no_telp=?, alamat=?, ktp=?, npwp=?, status=? WHERE supplier_id=?");
     $stmt->bind_param("sssssss", $nama, $no_telp, $alamat, $ktp, $npwp, $status, $supplier_id);

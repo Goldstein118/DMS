@@ -42,26 +42,25 @@ textarea {
   box-sizing: border-box;
   font-size: var(--font-size-medium);
 }
+.input-group-text {
+  margin: 8px 0;
+}
 
 input:focus,
 select:focus,
 textarea:focus {
   outline: none;
 }
-table {
-  display: table;
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-  font-size: var(--font-size-medium);
-  text-align: left;
-  transition: opacity 0.3s ease-in-out;
-}
 
-table th,
-table td {
-  padding: 12px 15px;
-  border: 1px solid var(--border-color);
+table {
+  font-size: var(--font-size-medium);
+}
+.gridjs-td {
+  word-break: break-word;
+  white-space: normal;
+  max-width: 200px; /* adjust as needed */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 table th {
@@ -137,6 +136,7 @@ main {
   padding: 1rem;
   background-color: #fff;
   border-right: 1px solid #dee2e6;
+  max-width: 200px;
 }
 #main {
   padding: 16px;

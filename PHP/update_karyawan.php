@@ -55,11 +55,11 @@ function validateField($field, $pattern, $errorMessage) {
 
 // Validate fields
 validateField($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
-validateField($divisi, '/^[a-zA-Z0-9, ]+$/', "Invalid division format");
-validateField($alamat, '/^[a-zA-Z0-9, ]+$/', "Invalid address format");
+validateField($divisi, '/^[a-zA-Z0-9,. ]+$/', "Invalid division format");
+validateField($alamat, '/^[a-zA-Z0-9,. ]+$/', "Invalid address format");
 validateField($noTelp, '/^[+]?[\d\s\-()]+$/', "Invalid phone number format");
-validateField($ktp_npwp,'/^[a-zA-Z0-9, ]+$/', "Invalid KTP format");
-validateField($npwp,'/^[a-zA-Z0-9, ]+$/', "Invalid NPWP format");
+validateField($ktp_npwp,'/^[0-9]+$/', "Invalid KTP format");
+validateField($npwp,'/^[0-9 .-]+$/', "Invalid NPWP format");
 
 // Prepare the SQL statement
 $stmt = $conn->prepare("UPDATE tb_karyawan SET nama = ?, role_id = ?, divisi = ?, no_telp = ?, alamat = ?, ktp = ? ,npwp = ?, status =? WHERE karyawan_id = ?");

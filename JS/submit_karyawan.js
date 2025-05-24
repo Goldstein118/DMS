@@ -52,12 +52,31 @@ function populateRoleDropdown(data) {
 
   select.trigger("change");
 }
+function validateField(field, pattern, errorMessage) {
+  if (!pattern.test(field)) {
+    toastr.error(errorMessage, {
+      timeOut: 500,
+      extendedTimeOut: 500,
+    });
+    return false;
+  }
+  return true;
+}
+function format_no_telp(str) {
+  if (7 > str.length) {
+    return "Invalid index";
+  }
+
+  let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
+  let result = "+62 " + format;
+  return result;
+}
 
 function submitKaryawan() {
   // Collect form data
   const name_karyawan = document.getElementById("name_karyawan").value;
   const divisi_karyawan = document.getElementById("divisi_karyawan").value;
-  const phone_karyawan = document.getElementById("phone_karyawan").value;
+  let phone_karyawan = document.getElementById("phone_karyawan").value;
   const address_karyawan = document.getElementById("address_karyawan").value;
   const nik_karyawan = document.getElementById("nik_karyawan").value;
   const role_id = document.getElementById("role_select").value;
@@ -82,58 +101,79 @@ function submitKaryawan() {
     toastr.error("Harap isi semua kolom sebelum submit.");
     return;
   }
+  const is_valid =
+    validateField(name_karyawan, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
+    validateField(
+      divisi_karyawan,
+      /^[a-zA-Z0-9,. ]+$/,
+      "Format divisi tidak valid"
+    ) &&
+    validateField(
+      address_karyawan,
+      /^[a-zA-Z0-9,. ]+$/,
+      "Format alamat tidak valid"
+    ) &&
+    validateField(
+      phone_karyawan,
+      /^[0-9]{9,13}$/,
+      "Format nomor telepon tidak valid"
+    ) &&
+    validateField(nik_karyawan, /^[0-9]+$/, "Format NIK tidak valid") &&
+    validateField(npwp_karyawan, /^[0-9 .-]+$/, "Format NPWP tidak valid");
 
-  // Create a data object
-  const data_karyawan = {
-    action: "submit_karyawan",
-    name_karyawan,
-    divisi_karyawan,
-    phone_karyawan,
-    address_karyawan,
-    nik_karyawan,
-    role_id,
-    npwp_karyawan,
-    status_karyawan,
-  };
+  if (is_valid) {
+    const no_telp_karyawan = format_no_telp(phone_karyawan);
 
-  // Send the data to the PHP script
-  fetch(`${config.API_BASE_URL}/PHP/create.php`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data_karyawan),
-  })
-    .then((response) => {
-      return response.json();
+    const data_karyawan = {
+      action: "submit_karyawan",
+      name_karyawan,
+      divisi_karyawan,
+      no_telp_karyawan,
+      address_karyawan,
+      nik_karyawan,
+      role_id,
+      npwp_karyawan,
+      status_karyawan,
+    };
+    // Send the data to the PHP script
+    fetch(`${config.API_BASE_URL}/PHP/create.php`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data_karyawan),
     })
-    .then((jsonData) => {
-      if (jsonData.success) {
-        // Reset the form
-        document.getElementById("name_karyawan").value = "";
-        document.getElementById("divisi_karyawan").value = "";
-        document.getElementById("phone_karyawan").value = "";
-        document.getElementById("address_karyawan").value = "";
-        document.getElementById("nik_karyawan").value = "";
-        document.getElementById("npwp_karyawan").value = "";
-        document.getElementById("status_karyawan").value = "";
-        $("#role_select").val(null).trigger("change");
-        $("#modal_karyawan").modal("hide");
-        Swal.fire({
-          title: "Berhasil",
-          icon: "success",
-        });
-      } else {
-        toastr.error(jsonData.message, {
-          timeOut: 500,
-          extendedTimeOut: 500,
-        });
-      }
-    })
-    .catch((error) => {
-      console.error("Error submitting karyawan:", error);
-      toastr.error(
-        "An error occurred while submitting the form. Please try again."
-      );
-    });
+      .then((response) => {
+        return response.json();
+      })
+      .then((jsonData) => {
+        if (jsonData.success) {
+          // Reset the form
+          document.getElementById("name_karyawan").value = "";
+          document.getElementById("divisi_karyawan").value = "";
+          document.getElementById("phone_karyawan").value = "";
+          document.getElementById("address_karyawan").value = "";
+          document.getElementById("nik_karyawan").value = "";
+          document.getElementById("npwp_karyawan").value = "";
+          document.getElementById("status_karyawan").value = "";
+          $("#role_select").val(null).trigger("change");
+          $("#modal_karyawan").modal("hide");
+          Swal.fire({
+            title: "Berhasil",
+            icon: "success",
+          });
+        } else {
+          toastr.error(jsonData.message, {
+            timeOut: 500,
+            extendedTimeOut: 500,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error submitting karyawan:", error);
+        toastr.error(
+          "An error occurred while submitting the form. Please try again."
+        );
+      });
+  }
 }

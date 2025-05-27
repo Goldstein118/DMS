@@ -11,7 +11,6 @@ if (submit_karyawan) {
         placeholder: "Pilih Role",
         allowClear: true,
         dropdownParent: $("#modal_karyawan"),
-        minimumResultforSearch: 5,
       });
     });
   });

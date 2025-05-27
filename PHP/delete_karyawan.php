@@ -29,11 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $stmt->bind_param("s", $karyawan_ID);
     if ($stmt->execute()) {
         http_response_code(200);
-        echo json_encode(["message" => "Role deleted successfully"]);
+        echo json_encode(["message" => "Karyawan deleted successfully"]);
     } else {
         file_put_contents('php://stderr', "Execute failed: " . $stmt->error . "\n");
         http_response_code(500);
-        echo json_encode(["error" => "Failed to delete role: " . $stmt->error]);
+        echo json_encode(["error" => "Failed to delete karyawan: " . $stmt->error]);
     }
     $stmt->close();
 }

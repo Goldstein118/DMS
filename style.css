@@ -7,11 +7,6 @@
   --neutral-color: #f9f9f9; /* Light background */
   --text-color: #333; /* Dark text */
   --border-color: #ccc; /* Light border */
-  --font-size-small: 10px;
-  --font-size-medium: 14px;
-  --font-size-large: 20px;
-  --padding-small: 4px 8px;
-  --padding-medium: 10px 20px;
   --border-radius: 5px;
   --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -20,15 +15,14 @@
     display: none !important;
   }
   .table-responsive {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
   }
 }
 label {
-  font-size: var(--font-size-large);
+  font-size: 0.875rem;
   font-weight: bold;
   color: var(--text-color);
   margin-bottom: 10px;
-  display: block;
 }
 
 input,
@@ -40,7 +34,7 @@ textarea {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   box-sizing: border-box;
-  font-size: var(--font-size-medium);
+  font-size: 0.875rem;
 }
 .input-group-text {
   margin: 8px 0;
@@ -51,22 +45,48 @@ select:focus,
 textarea:focus {
   outline: none;
 }
-
+input.gridjs-input {
+  max-width: 140px;
+}
 table {
-  font-size: var(--font-size-medium);
+  font-size: 0.875rem;
+}
+th.gridjs-th {
+  word-break: break-word;
+  white-space: normal;
+  padding: 5px 10px !important;
+  white-space: normal !important;
+  min-width: 100px;
 }
 .gridjs-td {
   word-break: break-word;
-  white-space: normal;
-  max-width: 200px; /* adjust as needed */
   overflow: hidden;
-  text-overflow: ellipsis;
+  padding: 5px 10px !important;
+  min-width: 100px;
+}
+.gridjs-table {
+  width: 100% !important;
+  overflow-y: hidden !important;
 }
 
 table th {
   background-color: var(--neutral-color);
   color: var(--text-color);
   font-weight: bold;
+}
+.gridjs-tbody {
+  overflow-y: auto !important;
+  width: 100%;
+}
+.gridjs-thead {
+  width: 100%;
+  overflow-y: hidden !important;
+  overflow-x: auto;
+}
+.gridjs-wrapper {
+  height: 68vh !important;
+  overflow: none !important;
+  width: 100% !important;
 }
 
 tr:nth-of-type(even) td {
@@ -75,7 +95,7 @@ tr:nth-of-type(even) td {
 
 .select2-container {
   width: 100% !important;
-  font-size: var(--font-size-medium);
+  font-size: 0.875rem;
 }
 
 .select2-dropdown {
@@ -106,7 +126,7 @@ tr:nth-of-type(even) td {
 
 .select2-results__option {
   padding: 10px;
-  font-size: var(--font-size-medium);
+  font-size: 0.875rem;
   color: var(--text-color);
 }
 
@@ -119,8 +139,8 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
 }
 main .d-flex {
   flex-wrap: nowrap;
@@ -139,9 +159,9 @@ main {
   max-width: 200px;
 }
 #main {
-  padding: 16px;
+  padding: 10px;
   flex: 1;
-  overflow-y: auto;
+  overflow-y: hidden !important;
   overflow-x: hidden;
   height: calc(100vh - 60px); /* match the space minus footer */
   min-width: 0;
@@ -200,21 +220,10 @@ li a.link-dark {
   background-color: #fff;
   border-right: 1px solid #dee2e6;
 }
-/* */
-body {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
-  overflow: auto;
-}
 
 /* Chrome, Safari, Opera */
 body::-webkit-scrollbar {
   display: none;
-}
-.gridjs-input,
-#search_role,
-#search_user {
-  float: right !important;
 }
 
 #loading_spinner {
@@ -228,6 +237,7 @@ body::-webkit-scrollbar {
   align-items: center;
   justify-content: center;
 }
+
 #table_karyawan th:nth-child(10),
 #table_karyawan td:nth-child(10),
 #table_user th:nth-child(3),
@@ -236,10 +246,31 @@ body::-webkit-scrollbar {
 #table_role td:nth-child(3) {
   display: none !important;
 }
-#table_karyawan .gridjs-search {
-  display: flex;
-  justify-content: flex-end;
+
+.ms-auto {
+  margin-right: auto !important;
 }
-#logout {
-  float: right;
+
+.table-responsive::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+#menu_container {
+  width: 100%;
+  text-align: right;
+}
+#menu {
+  display: inline-block;
+}
+.form-check .form-check-input {
+  float: none !important;
+}
+.accordion-body {
+  display: flex;
+  flex-wrap: wrap; /* wrap to next line if needed */
+  gap: 10px; /* space between accordions */
+}
+.accordion_anak {
+  max-width: 150px !important;
+  font-size: 0.875rem !important;
+  flex: 0 0 auto; /* prevent stretching */
 }

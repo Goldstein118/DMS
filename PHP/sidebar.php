@@ -5,7 +5,7 @@
     <h5 class="offcanvas-title">Navigasi</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
   </div>
-  <div class="offcanvas-body">
+  <div class="offcanvas-body d-flex flex-column h-100">
     <ul class="list-unstyled ps-0">
           <li class="mb-1">
             <button
@@ -40,15 +40,26 @@
                     href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_supplier"
                     class="link-dark d-inline-flex text-decoration-none rounded">Tabel Supplier</a>
                 </li>
+                <li>
+                  <a
+                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_customer"
+                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Customer</a>
+                </li>
+                  <li>
+                  <a
+                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_channel"
+                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Channel</a>
+                </li>
               </ul>
             </div>
           </li>
     </ul>
+    <button type="button" id="logout" class="btn btn-outline-danger btn-sm mt-auto"> <i class="bi bi-box-arrow-in-right"></i> Logout</button>
   </div>
 </div>
 
 
-<div class="sidebar col-lg-2 d-none d-lg-block bg-light p-2">
+<div class="sidebar col-lg-2 d-none d-lg-block bg-light p-2 d-flex flex-column vh-100">
         <a
           href="#"
           class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
@@ -57,7 +68,8 @@
           </svg>
           <span class="fs-5 fw-semibold">Navigasi</span>
         </a>
-        <ul class="list-unstyled ps-0">
+        <div class="d-flex flex-column flex-grow-1">
+                <ul class="list-unstyled ps-0">
           <li class="mb-1">
             <button
               class="btn btn-toggle d-inline-flex align-items-center rounded border-0"
@@ -91,8 +103,21 @@
                     href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_supplier"
                     class="link-dark d-inline-flex text-decoration-none rounded">Tabel Supplier</a>
                 </li>
+                <li>
+                  <a
+                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_customer"
+                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Customer</a>
+                </li>
+                  <li>
+                  <a
+                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_channel"
+                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Channel</a>
+                </li>
               </ul>
             </div>
           </li>
         </ul>
-          </div>
+        <button type="button" id="logout" class="btn btn-outline-danger btn-sm mt-auto"> <i class="bi bi-box-arrow-in-right"></i> Logout</button>
+        </div>
+        
+</div>

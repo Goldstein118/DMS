@@ -15,12 +15,12 @@ if (gird_container_supplier) {
         name: "Aksi",
         formatter: () => {
           return html(`
-        <button type="button"  id ="update_supplier_button" class="btn btn-warning update_supplier">
+        <button type="button"  id ="update_supplier_button" class="btn btn-warning update_supplier btn-sm">
           <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
           <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
         </button>
         
-        <button type="button" class="btn btn-danger delete_supplier">
+        <button type="button" class="btn btn-danger delete_supplier btn-sm">
                     <i class="bi bi-trash-fill"></i>
         </button>
         `);
@@ -41,7 +41,7 @@ if (gird_container_supplier) {
       },
     },
     sort: true,
-    pagination: { limit: 10 },
+    pagination: { limit: 15 },
     server: {
       url: `${config.API_BASE_URL}/PHP/API/supplier_API.php`,
       method: "GET",
@@ -68,7 +68,7 @@ if (gird_container_supplier) {
     // Create the button
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "btn btn-primary";
+    btn.className = "btn btn-primary btn_sm";
     btn.setAttribute("data-bs-toggle", "modal");
     btn.setAttribute("data-bs-target", "#modal_supplier");
     btn.innerHTML = '<i class="bi bi-plus-square"></i> Supplier ';
@@ -137,6 +137,11 @@ async function handleDeleteSupplier(button) {
       );
       if (response.ok) {
         row.remove();
+        Swal.fire({
+          title: "Berhasil !",
+          text: "Data Supplier berhasil dihapus!",
+          icon: "success",
+        });
       } else {
         throw new Error(
           `Failed to delete supplier. Status: ${response.status}`
@@ -149,11 +154,6 @@ async function handleDeleteSupplier(button) {
         extendedTimeOut: 500,
       });
     }
-    Swal.fire({
-      title: "Berhasil !",
-      text: "Data Supplier berhasil dihapus!",
-      icon: "success",
-    });
   }
 }
 
@@ -182,7 +182,7 @@ async function handleUpdateSupplier(button) {
   document.getElementById("update_supplier_npwp").value = npwp;
   document.getElementById("update_supplier_status").value = status;
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   button_icon.style.display = "inline-block";
   spinner.style.display = "none";

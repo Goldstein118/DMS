@@ -191,9 +191,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $max_piutang = $fields['max_piutang'];
             $status_customer =$fields['status_customer'];
 
+            validate_2($nama_customer,'/^[a-zA-Z\s]+$/',"Invalid name format");
+            validate_2($alamat_customer,'/^[a-zA-Z0-9, .-]+$/',"Invalid address format");
+            validate_2($no_telp_customer,'/^[+]?[\d\s\-]+$/',"Invalid phone number format");
+            validate_2($ktp_customer,'/^[0-9]+$/',"Invalid KTP format");
+            validate_2($npwp_customer,'/^[0-9 .-]+$/',"Invalid NPWP format");
+            validate_2($nitko,'/^[a-zA-Z0-9, .-]+$/',"Invalid nitko format");
+            validate_2($term_payment,'/^[a-zA-Z0-9 ]+$/',"Invalid term payment format");
+            validate_2($max_invoice,'/^[a-zA-Z0-9 ]+$/',"Invalid max invoice format");
+            validate_2($max_piutang,'/^[a-zA-Z0-9 ]+$/',"Invalid msx piutang format");
+            $customer_id = generateCustomID('CU','tb_customer','customer_id',$conn);
+            executeInsert(
+                $conn,"INSERT INTO tb_customer (customer_id,nama,alamat,no_telp,ktp,npwp,status,nitko,term_pembayaran,max_invoice,max_piutang) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                [$customer_id,$nama_customer,$alamat_customer,$no_telp_customer,$ktp_customer,$npwp_customer,$status_customer,$nitko,$term_payment,$max_invoice,$max_piutang],
+                "sssssssssss"
+            );
 
-            echo json_encode(["success" => false, "message" => "Customer saved successfully", "data" => ["customer_id" => $customer_id]]);
-        } 
+            echo json_encode(["success" => true, "message" => "Customer saved successfully", "data" => ["customer_id" => $customer_id]]);
+        } elseif ($action ==='submit_channel'){
+            $requiredFields=['name_channel'];
+            $field=validate_1($data,$requiredFields);
+            $nama_channel=$field['name_channel'];
+            validate_2($nama_channel,'/^[a-zA-Z\s]+$/',"Invalid name format");
+
+            $channel_id=generateCustomID('CH','tb_channel','channel_id',$conn);
+            executeInsert($conn,"INSERT INTO tb_channel(channel_id,nama)VALUES (?,?)",
+            [$channel_id,$nama_channel],"ss");
+
+            echo json_encode(["success" => true, "message" => "Channel saved successfully", "data" => ["channel_id" => $channel_id]]);
+
+        }
         else {
             echo json_encode(["success" => false, "message" => "Invalid action"]);
         }

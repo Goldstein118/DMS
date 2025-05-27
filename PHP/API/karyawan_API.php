@@ -36,12 +36,12 @@ $result = $conn->query($sql);
 }
 
     if ($result) {
-    $karyawanData = [];
+    $karyawan_data = [];
     while ($row = mysqli_fetch_assoc($result)) {
-        $karyawanData[] = $row;
+        $karyawan_data[] = $row;
     }
     http_response_code(200);
-    echo json_encode($karyawanData);
+    echo json_encode($karyawan_data);
     } else {
     http_response_code(500);
     echo json_encode(["error" => "Failed to fetch data: " . $conn->error]);

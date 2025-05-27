@@ -9,11 +9,11 @@
         <div class="modal-body">
           <label class="form-label" for="name">Nama:</label>
           <input class="form-control" type="text" id="name_karyawan" name="name_karyawan" value=""><br>
-          <label class="form-label" for="divisi">Divisi:</label>
-          <input class="form-control" type="text" id="divisi_karyawan" name="divisi_karyawan" value=""><br>
           <label class="form-label" for="role_select">Role:</label>
           <select class ="form-select" id="role_select">
           </select><br><br>
+          <label class="form-label" for="divisi">Divisi:</label>
+          <input class="form-control" type="text" id="divisi_karyawan" name="divisi_karyawan" value=""><br>
           <label class="form-label" for="phone">Nomor Telepon:</label>
           <div class = "input-group mb-3">
           <span class="input-group-text" id="basic-addon1">+62</span>
@@ -28,7 +28,7 @@
           <label class="form-label" for="status_karyawan">Status:</label>
           <select class="form-select" id="status_karyawan">
             <option value="aktif">Aktif</option>
-            <option value="nonaktif">Non Aktif</option>
+            <option value="non aktif">Non Aktif</option>
           </select>
         </div>
         <div class="modal-footer">
@@ -53,12 +53,13 @@
           <input class="form-control" type="text" id="update_karyawan_ID" disabled><br>
           <label class="form-label" for="update_name_karyawan">Name:</label>
           <input class="form-control" type="text" id="update_name_karyawan" name="name_karyawan_update"><br>
-          <label class="form-label" for="update_divisi_karyawan">Divisi:</label>
-          <input class="form-control" type="text" id="update_divisi_karyawan" name="divisi_karyawan_update"><br>
           <label class="form-label" for="update_role_select">Role:</label>
           <select class="form-select" id="update_role_select">
             <option value="">Pilih Role</option>
           </select><br><br>
+          <label class="form-label" for="update_divisi_karyawan">Divisi:</label>
+          <input class="form-control" type="text" id="update_divisi_karyawan" name="divisi_karyawan_update"><br>
+
           <label class="form-label" for="phone">Nomor Telepon:</label>
           <div class = "input-group mb-3">
           <span class="input-group-text" id="basic-addon1">+62</span>
@@ -73,7 +74,7 @@
           <label class="form-label" for="status_karyawan">Status:</label> <br>
           <select class="form-select" id="update_status_karyawan">
             <option value="aktif">Aktif</option>
-            <option value="nonaktif">Non Aktif</option>
+            <option value="non aktif">Non Aktif</option>
           </select><br><br>
         </div>
         <div class="modal-footer">
@@ -84,10 +85,10 @@
      </div>
   </div>
 
-<main class="col-12 col-lg-10 ms-auto px-3" >
+<main class="col-12 col-lg-10 ms-auto px-1" >
       <div id="main" class="table-responsive" >
-          <button type="button" id ="logout" class="btn btn-outline-danger"> <i class="bi bi-box-arrow-in-right"></i> Logout</button>
           <div id ="table_karyawan"></div>
+      </div>
       </div>
     </div>
 </main>

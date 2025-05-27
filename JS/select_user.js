@@ -3,6 +3,12 @@ import { Grid, html } from "https://unpkg.com/gridjs?module";
 
 const grid_container_user = document.querySelector("#table_user");
 if (grid_container_user) {
+  $(document).ready(function () {
+    $("#update_karyawan_ID").select2({
+      allowClear: true,
+      dropdownParent: $("#modal_user_update"),
+    });
+  });
   new Grid({
     columns: [
       "Username",
@@ -12,12 +18,12 @@ if (grid_container_user) {
         name: "Aksi",
         formatter: () => {
           return html(`
-        <button type="button"  id ="update_user_button" class="btn btn-warning update_user">
+        <button type="button"  id ="update_user_button" class="btn btn-warning update_user btn-sm">
           <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
           <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
         </button>
         
-        <button type="button" class="btn btn-danger delete_user">
+        <button type="button" class="btn btn-danger delete_user btn-sm">
                     <i class="bi bi-trash-fill"></i>
         </button>
         `);
@@ -38,7 +44,7 @@ if (grid_container_user) {
       },
     },
     sort: true,
-    pagination: { limit: 10 },
+    pagination: { limit: 15 },
     server: {
       url: `${config.API_BASE_URL}/PHP/API/user_API.php`,
       method: "GET",
@@ -124,6 +130,11 @@ async function handleDeleteUser(button) {
 
       if (response.ok) {
         row.remove();
+        Swal.fire({
+          title: "Berhasil!",
+          text: "Data User berhasil dihapus!",
+          icon: "success",
+        });
       } else {
         throw new Error(
           `Failed to delete role. Status: ${response.status}`,
@@ -141,11 +152,6 @@ async function handleDeleteUser(button) {
           extendedTimeOut: 500,
         };
     }
-    Swal.fire({
-      title: "Berhasil!",
-      text: "Data User berhasil dihapus!",
-      icon: "success",
-    });
   }
 }
 
@@ -163,7 +169,7 @@ async function handleUpdateUser(button) {
   document.getElementById("update_user_ID").value = userID;
 
   const karyawan_ID_field = $("#update_karyawan_ID");
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     const response = await fetch(
       `${config.API_BASE_URL}/PHP/API/karyawan_API.php`

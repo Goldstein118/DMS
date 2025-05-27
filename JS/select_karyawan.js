@@ -1,7 +1,14 @@
 import config from "./config.js";
 import { Grid, html } from "https://unpkg.com/gridjs?module";
+
 const grid_container_karyawan = document.querySelector("#table_karyawan");
 if (grid_container_karyawan) {
+  $(document).ready(function () {
+    $("#update_role_select").select2({
+      allowClear: true,
+      dropdownParent: $("#modal_karyawan_update"),
+    });
+  });
   new Grid({
     columns: [
       "Kode Karyawan",
@@ -18,12 +25,12 @@ if (grid_container_karyawan) {
         name: "Aksi",
         formatter: () => {
           return html(`
-        <button type="button"  id ="update_karyawan_button" class="btn btn-warning update_karyawan">
+        <button type="button"  id ="update_karyawan_button" class="btn btn-warning update_karyawan btn-sm">
           <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
           <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
         </button>
         
-        <button type="button" class="btn btn-danger delete_karyawan">
+        <button type="button" class="btn btn-danger delete_karyawan btn-sm">
                     <i class="bi bi-trash-fill"></i>
         </button>
         `);
@@ -44,7 +51,7 @@ if (grid_container_karyawan) {
       },
     },
     sort: true,
-    pagination: { limit: 10 },
+    pagination: { limit: 15 },
     server: {
       url: `${config.API_BASE_URL}/PHP/API/karyawan_API.php`,
       method: "GET",
@@ -74,7 +81,7 @@ if (grid_container_karyawan) {
     // Create the button
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "btn btn-primary";
+    btn.className = "btn btn-primary btn-sm";
     btn.setAttribute("data-bs-toggle", "modal");
     btn.setAttribute("data-bs-target", "#modal_karyawan");
     btn.innerHTML = '<i class="bi bi-person-plus-fill"></i> Karyawan';
@@ -155,6 +162,11 @@ async function handleDeleteKaryawan(button) {
       );
       if (response.ok) {
         row.remove();
+        Swal.fire({
+          title: "Berhasil !",
+          text: "Data Karyawan berhasil dihapus!",
+          icon: "success",
+        });
       } else {
         throw new Error(
           `Failed to delete karyawan. Status: ${response.status}`
@@ -167,11 +179,6 @@ async function handleDeleteKaryawan(button) {
         extendedTimeOut: 500,
       });
     }
-    Swal.fire({
-      title: "Berhasil !",
-      text: "Data Karyawan berhasil dihapus!",
-      icon: "success",
-    });
   }
 }
 
@@ -212,7 +219,7 @@ async function handleUpdateKaryawan(button) {
   document.getElementById("update_status_karyawan").value = currentstatus;
 
   const role_ID_Field = $("#update_role_select");
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     // Fetch the roles data using async/await
     const response = await fetch(`${config.API_BASE_URL}/PHP/API/role_API.php`);

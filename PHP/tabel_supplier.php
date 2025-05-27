@@ -9,7 +9,7 @@
         </div>
         <div class="modal-body">
           <label class="form-label">Nama:</label>
-          <input class="form-control" type="text" id="supplier_nama"><br><br>
+          <input class="form-control" type="text" id="supplier_nama" name="supplier_nama" value=""><br><br>
           <label class="form-label">Alamat:</label>
           <input class="form-control" type="text" id="supplier_alamat"><br><br>
           <label class="form-label" for="phone">Nomor Telepon:</label>
@@ -24,7 +24,7 @@
           <label class="form-label">Status:</label>
           <select class ="form-select" id ="supplier_status">
           <option value = "aktif">Aktif</option>
-          <option value = "nonaktif">Non Aktif</option>
+          <option value = "non aktif">Non Aktif</option>
           </select>
         </div>
         <div class="modal-footer">
@@ -61,7 +61,7 @@
           <label class="form-label">Status:</label>
           <select class ="form-select" id ="update_supplier_status">
           <option value = "aktif">Aktif</option>
-          <option value = "nonaktif">Non Aktif</option>
+          <option value = "non aktif">Non Aktif</option>
           </select>
         </div>
         <div class="modal-footer">
@@ -71,10 +71,9 @@
       </div>
     </div>
   </div>
-<main class="col-12 col-lg-10 ms-auto px-3">
+<main class="col-12 col-lg-10 ms-auto px-1">
       <!-- Main content -->
       <div id="main"  class="table-responsive">
-        <button type="button" id ="logout" class="btn btn-outline-danger"> <i class="bi bi-box-arrow-in-right"></i> Logout</button>
           <div id="table_supplier"></div>
       </div>
   </main>

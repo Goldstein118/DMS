@@ -1,10 +1,61 @@
 import config from "../JS/config.js";
+function proses_check_box() {
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  const results = [];
 
+  checkboxes.forEach((checkbox) => {
+    const value = checkbox.checked ? 1 : 0;
+    results.push({ value: checkbox.value, checked: value });
+  });
+
+  console.log(results);
+  return results;
+}
+function event_check_box(field) {
+  let view = document.getElementById("check_view_" + field);
+  view.checked = !view.checked;
+
+  let create = document.getElementById("check_create_" + field);
+  create.checked = !create.checked;
+
+  let edit = document.getElementById("check_edit_" + field);
+  edit.checked = !edit.checked;
+
+  let delete_check_box = document.getElementById("check_delete_" + field);
+  delete_check_box.checked = !delete_check_box.checked;
+}
 const submit_role = document.getElementById("submit_role");
 if (submit_role) {
   submit_role.addEventListener("click", submitRole);
-  $("#modal_karyawan").on("shown.bs.modal", function () {
+  $("#modal_role").on("shown.bs.modal", function () {
     $("#name_role").trigger("focus");
+  });
+  document.addEventListener("DOMContentLoaded", () => {
+    let checkbox_karyawan = document.getElementById("check_all_karyawan");
+    checkbox_karyawan.addEventListener("click", () => {
+      event_check_box("karyawan");
+    });
+
+    let checkbox_user = document.getElementById("check_all_user");
+    checkbox_user.addEventListener("click", () => event_check_box("user"));
+
+    let checkbox_role = document.getElementById("check_all_role");
+    checkbox_role.addEventListener("click", () => event_check_box("role"));
+
+    let checkbox_supplier = document.getElementById("check_all_supplier");
+    checkbox_supplier.addEventListener("click", () =>
+      event_check_box("supplier")
+    );
+
+    let checkbox_customer = document.getElementById("check_all_customer");
+    checkbox_customer.addEventListener("click", () =>
+      event_check_box("customer")
+    );
+
+    let checkbox_channel = document.getElementById("check_all_channel");
+    checkbox_channel.addEventListener("click", () =>
+      event_check_box("channel")
+    );
   });
 }
 function validateField(field, pattern, errorMessage) {

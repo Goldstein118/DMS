@@ -1,8 +1,9 @@
 import config from "../JS/config.js";
+
 const submit_supplier = document.getElementById("submit_supplier");
 if (submit_supplier) {
   submit_supplier.addEventListener("click", submitSupplier);
-  $("#modal_supplier").on("show.bs.modal", function () {
+  $("#modal_supplier").on("shown.bs.modal", function () {
     $("#supplier_nama").trigger("focus");
   });
 }

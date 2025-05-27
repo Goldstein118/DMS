@@ -2,10 +2,9 @@ import config from "./config.js";
 
 const submit_customer = document.getElementById("submit_customer");
 if (submit_customer) {
-  submit_customer.addEventListener("click", submit_customer);
+  submit_customer.addEventListener("click", submitCustomer);
   $(document).ready(function () {
     $("#modal_customer").on("shown.bs.modal", function () {
-      fetch_roles();
       $("#name_customer").trigger("focus");
     });
   });
@@ -74,7 +73,7 @@ function submitCustomer() {
     validateField(name_customer, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
     validateField(
       alamat_customer,
-      /^[a-zA-Z0-9,.- ]+$/,
+      /^[a-zA-Z0-9, .-]+$/,
       "Format alamat tidak valid"
     ) &&
     validateField(
@@ -84,7 +83,7 @@ function submitCustomer() {
     ) &&
     validateField(nik_customer, /^[0-9]+$/, "Format NIK tidak valid") &&
     validateField(npwp_customer, /^[0-9 .-]+$/, "Format NPWP tidak valid") &&
-    validateField(nitko, /^[a-zA-Z0-9,.- ]+$/, "Format nitko tidak valid") &&
+    validateField(nitko, /^[a-zA-Z0-9, .-]+$/, "Format nitko tidak valid") &&
     validateField(
       term_payment,
       /^[a-zA-Z0-9 ]+$/,

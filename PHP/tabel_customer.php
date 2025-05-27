@@ -10,13 +10,13 @@
         <div class="modal-body">
           <label class="form-label" for="name">Nama:</label>
           <input class="form-control" type="text" id="name_customer" name="name_customer" value=""><br>
+          <label class="form-label" for="address">Alamat:</label>
+          <input class="form-control" type="text" id="alamat_customer" name="alamat_customer" value=""><br>
           <label class="form-label" for="phone">Nomor Telepon:</label>
           <div class = "input-group mb-3">
           <span class="input-group-text" id="basic-addon1">+62</span>
           <input class="form-control" type="text" id="no_telp_customer" name="no_telp_customer" aria-describedby="basic-addon1"value="">
           </div><br>
-          <label class="form-label" for="address">Alamat:</label>
-          <input class="form-control" type="text" id="alamat_customer" name="alamat_customer" value=""><br>
           <label class="form-label" for="nik">NIK:</label>
           <input class="form-control" type="text" id="nik_customer" name="nik_customer" value=""><br>
           <label class="form-label" for="npwp_customer">NPWP:</label>
@@ -24,7 +24,7 @@
           <label class="form-label" for="status_customer">Status:</label>
           <select class="form-select" id="status_customer">
             <option value="aktif">Aktif</option>
-            <option value="nonaktif">Non Aktif</option>
+            <option value="non aktif">Non Aktif</option>
           </select>
           <label class="form-label" for="nitko">Nitko</label>
           <input class ="form-control" type ="text" id ="nitko" name="nitko"aria-describedby="basic-addon1"value=""><br>
@@ -54,25 +54,25 @@
 
         </div>
         <div class="modal-body">
-          <label class="form-label" for="update_customer_ID">Kode Customer:</label>
-          <input class="form-control" type="text" id="update_customer_ID" disabled><br>
+          <label class="form-label" for="update_customer_id">Kode Customer:</label>
+          <input class="form-control" type="text" id="update_customer_id" disabled><br>
           <label class="form-label" for="update_name_customer">Name:</label>
           <input class="form-control" type="text" id="update_name_customer" name="name_customer_update"><br>
-          <label class="form-label" for="phone">Nomor Telepon:</label>
+          <label class="form-label" for="update_address_customer">Alamat:</label>
+          <input class="form-control" type="text" id="update_address_customer" name="address_customer_update"><br>
+          <label class="form-label" for="update_phone_customer">Nomor Telepon:</label>
           <div class = "input-group mb-3">
           <span class="input-group-text" id="basic-addon1">+62</span>
           <input class="form-control" type="text" id="update_phone_customer" name="phone_customer_update" aria-describedby="basic-addon1"value="">
           </div><br>
-          <label class="form-label" for="update_address_customer">Alamat:</label>
-          <input class="form-control" type="text" id="update_address_customer" name="address_customer_update"><br>
           <label class="form-label" for="update_nik_customer">NIK:</label>
           <input class="form-control" type="text" id="update_nik_customer" name="nik_customer_update"><br>
           <label class="form-label" for="update_npwp_customer">NPWP:</label>
           <input class="form-control" type="text" id="update_npwp_customer" name="npwp_customer" value=""><br>
-          <label class="form-label" for="status_customer">Status:</label> <br>
+          <label class="form-label" for="update_status_customer">Status:</label> <br>
           <select class="form-select" id="update_status_customer">
             <option value="aktif">Aktif</option>
-            <option value="nonaktif">Non Aktif</option>
+            <option value="non aktif">Non Aktif</option>
           </select><br><br>
           <label class="form-label" for="update_nitko">Nitko</label>
           <input class ="form-control" type ="text" id ="update_nitko" name="update_nitko"aria-describedby="basic-addon1"value=""><br>
@@ -91,10 +91,8 @@
      </div>
   </div>
 
-<main class="col-12 col-lg-10 ms-auto px-3" >
+<main class="col-12 col-lg-10 ms-auto px-1" >
       <div id="main" class="table-responsive" >
-          <button type="button" id ="logout" class="btn btn-outline-danger"> <i class="bi bi-box-arrow-in-right"></i> Logout</button>
           <div id ="table_customer"></div>
       </div>
-    </div>
 </main>

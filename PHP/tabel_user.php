@@ -21,9 +21,8 @@
     </div>
   </div>
 </div>
-<main class="col-12 col-lg-10 ms-auto px-3" >
+<main class="col-12 col-lg-10 ms-auto px-1" >
   <div id="main"  class="table-responsive">
-        <button type="button" id ="logout" class="btn btn-outline-danger"> <i class="bi bi-box-arrow-in-right"></i> Logout</button>
         <div id ="table_user"></div>
   </div>
 </main>

@@ -26,12 +26,12 @@ if ($search !== ''&& strlen($search)>=5) {
 }
 
     if ($result) {
-        $roleData = [];
+        $role_data = [];
         while ($row = mysqli_fetch_assoc($result)) {
-            $roleData[] = $row;
+            $role_data[] = $row;
         }
         http_response_code(200);
-        echo json_encode($roleData);
+        echo json_encode($role_data);
     } else {
         http_response_code(500);
         echo json_encode(["error" => "Failed to fetch data: " . $conn->error]);

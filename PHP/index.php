@@ -69,9 +69,12 @@ include ("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
     <span class="visually-hidden">Loading...</span>
   </div>
 </div>
-<button class="btn btn-primary d-lg-none m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+<div id="menu_container">
+<button class="btn btn-primary d-lg-none m-2 btn-sm" id="menu" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
   ☰ Menu
 </button>
+</div>
+
 <div class="container-fluid">
   <diV class = "row">
 <?php
@@ -81,7 +84,7 @@ include('sidebar.php');
 $page = $_GET['page'] ?? 'tabel_karyawan';
 
 // Whitelist allowed pages for security
-$allowed_pages = ['tabel_karyawan', 'tabel_role', 'tabel_user','tabel_supplier'];
+$allowed_pages = ['tabel_karyawan', 'tabel_role', 'tabel_user','tabel_supplier','tabel_customer','tabel_channel'];
 
 if (in_array($page, $allowed_pages)) {
   include $page . '.php';
@@ -94,13 +97,46 @@ if (in_array($page, $allowed_pages)) {
 <?php
 include('footer.php');
 ?>
-  <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_karyawan.js?v=2.0"></script>
-  <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_karyawan.js?v=2.0"></script>
-  <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_role.js?v=2.0"></script>
-  <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_role.js?v=2.0"></script>
-  <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_user.js?v=2.0"></script>
-  <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_supplier.js?v=2.0"></script>
-  <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_supplier.js?v=2.0"></script>
+<?php
+// Only load JS files needed for the current page
+switch ($page) {
+  case 'tabel_karyawan':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_karyawan.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_karyawan.js?v=2.0"></script>
+    <?php
+    break;
+  case 'tabel_role':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_role.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_role.js?v=2.0"></script>
+    <?php
+    break;
+  case 'tabel_user':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_user.js?v=2.0"></script>
+    <?php
+    break;
+  case 'tabel_supplier':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_supplier.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_supplier.js?v=2.0"></script>
+    <?php
+    break;
+  case 'tabel_customer':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_customer.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_customer.js?v=2.0"></script>
+    <?php
+    break;
+  case 'tabel_channel':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_channel.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_channel.js?v=2.0"></script>
+    <?php
+    break;
+}
+?>
   <script src="<?php echo $_ENV['BASE_URL']; ?>../JS/side_bar.js"></script>
 </body>
 </html>

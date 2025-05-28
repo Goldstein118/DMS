@@ -9,8 +9,6 @@
                 <div class="modal-body">
                     <label class="form-label" for="name_role">Nama:</label>
                     <input class="form-control" type="text" id="name_role" name="name_role"><br><br>
-                    <label class="form-label" for="akses">Akses</label>
-                    <input class="form-control" type="text" id="akses_role" name="akses"><br><br>
                     <div class="accordion" id="accordion_main">
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading_main">
@@ -32,23 +30,23 @@
                                     <div id="collapse_karyawan" class="accordion-collapse collapse" data-bs-parent="#accordion_karyawan">
                                       <div class="accordion-body">
                                         <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_all_karyawan" value="0" autocomplete="off">
+                                        <input class="form-check-input" type="checkbox" id="check_all_karyawan"  autocomplete="off">
                                         <label class="form-check-label" for="check_all_karyawan">Select All</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_view_karyawan" value="0">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_view_karyawan" >
                                         <label class="form-check-label" for="check_view_karyawan">View</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_create_karyawan" value="0">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_create_karyawan" >
                                         <label class="form-check-label" for="check_create_karyawan">Create</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_edit_karyawan" value="0">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_edit_karyawan" >
                                         <label class="form-check-label" for="check_edit_karyawan">Edit</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_delete_karyawan" value="0">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_delete_karyawan" >
                                         <label class="form-check-label" for="check_delete_karyawan">Delete</label>
                                       </div>
                                       </div>
@@ -69,19 +67,19 @@
                                         <label class="form-check-label" for="check_all_user">Select All</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_view_user">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_view_user">
                                         <label class="form-check-label" for="check_view_user">View</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_create_user">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_create_user">
                                         <label class="form-check-label" for="check_create_user">Create</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_edit_user">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_edit_user">
                                         <label class="form-check-label" for="check_edit_user">Edit</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_delete_user">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_delete_user">
                                         <label class="form-check-label" for="check_delete_user">Delete</label>
                                       </div>
                                       </div>
@@ -103,19 +101,19 @@
                                         <label class="form-check-label" for="check_all_role">Select All</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_view_role">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_view_role">
                                         <label class="form-check-label" for="check_view_role">View</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_create_role">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_create_role">
                                         <label class="form-check-label" for="check_create_role">Create</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_edit_role">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_edit_role">
                                         <label class="form-check-label" for="check_edit_role">Edit</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_delete_role">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_delete_role">
                                         <label class="form-check-label" for="check_delete_role">Delete</label>
                                       </div>
                                       </div>
@@ -137,19 +135,19 @@
                                         <label class="form-check-label" for="check_all_supplier">Select All</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_view_supplier">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_view_supplier">
                                         <label class="form-check-label" for="check_view_supplier">View</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_create_supplier">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_create_supplier">
                                         <label class="form-check-label" for="check_create_supplier">Create</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_edit_supplier">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_edit_supplier">
                                         <label class="form-check-label" for="check_edit_supplier">Edit</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_delete_supplier">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_delete_supplier">
                                         <label class="form-check-label" for="check_delete_supplier">Delete</label>
                                       </div>
                                       </div>
@@ -170,19 +168,19 @@
                                         <label class="form-check-label" for="check_all_customer">Select All</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_view_customer">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_view_customer">
                                         <label class="form-check-label" for="check_view_customer">View</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_create_customer">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_create_customer">
                                         <label class="form-check-label" for="check_create_customer">Create</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_edit_customer">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_edit_customer">
                                         <label class="form-check-label" for="check_edit_customer">Edit</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_delete_customer">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_delete_customer">
                                         <label class="form-check-label" for="check_delete_customer">Delete</label>
                                       </div>
                                       </div>
@@ -194,7 +192,7 @@
                                   <div class="accordion-item">
                                     <h2 class="accordion-header" id="heading_channel">
                                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_channel" aria-expanded="false" aria-controls="collapse_channel">
-                                        Table User
+                                        Table Channel
                                       </button>
                                     </h2>
                                     <div id="collapse_channel" class="accordion-collapse collapse" data-bs-parent="#accordion_channel">
@@ -204,19 +202,19 @@
                                         <label class="form-check-label" for="check_all_channel">Select All</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_view_channel">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_view_channel">
                                         <label class="form-check-label" for="check_view_channel">View</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_create_channel">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_create_channel">
                                         <label class="form-check-label" for="check_create_channel">Create</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_edit_channel">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_edit_channel">
                                         <label class="form-check-label" for="check_edit_channel">Edit</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_delete_channel">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_delete_channel">
                                         <label class="form-check-label" for="check_delete_channel">Delete</label>
                                       </div>
                                       </div>
@@ -252,8 +250,6 @@
                     <input class="form-control" type="text" id="update_role_ID" disabled><br><br>
                     <label class="form-label">Nama:</label>
                     <input class="form-control" type="text" id="update_role_name"><br><br>
-                    <label class="form-label">Akses</label>
-                    <input class="form-control" type="text" id="update_role_akses"><br><br>
 
                     <div class="accordion" id="accordion_main_update">
                         <div class="accordion-item">
@@ -280,19 +276,19 @@
                                         <label class="form-check-label" for="check_all_karyawan_update">Select All</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_view_karyawan_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_view_karyawan_update">
                                         <label class="form-check-label" for="check_view_karyawan_update">View</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_create_karyawan_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_create_karyawan_update">
                                         <label class="form-check-label" for="check_create_karyawan_update">Create</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_edit_karyawan_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_edit_karyawan_update">
                                         <label class="form-check-label" for="check_edit_karyawan_update">Edit</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_delete_karyawan_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_delete_karyawan_update">
                                         <label class="form-check-label" for="check_delete_karyawan_update">Delete</label>
                                       </div>
                                       </div>
@@ -313,19 +309,19 @@
                                         <label class="form-check-label" for="check_all_user_update">Select All</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_view_user_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_view_user_update">
                                         <label class="form-check-label" for="check_view_user_update">View</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_create_user_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_create_user_update">
                                         <label class="form-check-label" for="check_create_user_update">Create</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_edit_user_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_edit_user_update">
                                         <label class="form-check-label" for="check_edit_user_update">Edit</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_delete_user_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_delete_user_update">
                                         <label class="form-check-label" for="check_delete_user_update">Delete</label>
                                       </div>
                                       </div>
@@ -347,19 +343,19 @@
                                         <label class="form-check-label" for="check_all_role_update">Select All</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_view_role_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_view_role_update">
                                         <label class="form-check-label" for="check_view_role_update">View</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_create_role_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_create_role_update">
                                         <label class="form-check-label" for="check_create_role_update">Create</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_edit_role_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_edit_role_update">
                                         <label class="form-check-label" for="check_edit_role_update">Edit</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_delete_role_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_delete_role_update">
                                         <label class="form-check-label" for="check_delete_role_update">Delete</label>
                                       </div>
                                       </div>
@@ -381,19 +377,19 @@
                                         <label class="form-check-label" for="check_all_supplier_update">Select All</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_view_supplier_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_view_supplier_update">
                                         <label class="form-check-label" for="check_view_supplier_update">View</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_create_supplier_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_create_supplier_update">
                                         <label class="form-check-label" for="check_create_supplier_update">Create</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_edit_supplier_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_edit_supplier_update">
                                         <label class="form-check-label" for="check_edit_supplier_update">Edit</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_delete_supplier_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_delete_supplier_update">
                                         <label class="form-check-label" for="check_delete_supplier_update">Delete</label>
                                       </div>
                                       </div>
@@ -414,19 +410,19 @@
                                         <label class="form-check-label" for="check_all_customer_update">Select All</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_view_customer_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_view_customer_update">
                                         <label class="form-check-label" for="check_view_customer_update">View</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_create_customer_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_create_customer_update">
                                         <label class="form-check-label" for="check_create_customer_update">Create</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_edit_customer_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_edit_customer_update">
                                         <label class="form-check-label" for="check_edit_customer_update">Edit</label>
                                       </div>
-                                      <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_delete_customer_update">
+                                      <div class="form-check mb-2"> 
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_delete_customer_update">
                                         <label class="form-check-label" for="check_delete_customer_update">Delete</label>
                                       </div>
                                       </div>
@@ -438,7 +434,7 @@
                                   <div class="accordion-item">
                                     <h2 class="accordion-header" id="heading_channel_update">
                                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_channel_update" aria-expanded="false" aria-controls="collapse_channel_update">
-                                        Table User
+                                        Table Channel
                                       </button>
                                     </h2>
                                     <div id="collapse_channel_update" class="accordion-collapse collapse" data-bs-parent="#accordion_channel_update">
@@ -448,19 +444,19 @@
                                         <label class="form-check-label" for="check_all_channel_update">Select All</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_view_channel_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_view_channel_update">
                                         <label class="form-check-label" for="check_view_channel_update">View</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_create_channel_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_create_channel_update">
                                         <label class="form-check-label" for="check_create_channel_update">Create</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_edit_channel_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_edit_channel_update">
                                         <label class="form-check-label" for="check_edit_channel_update">Edit</label>
                                       </div>
                                       <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="check_delete_channel_update">
+                                        <input class="form-check-input perm-checkbox" type="checkbox" id="check_delete_channel_update">
                                         <label class="form-check-label" for="check_delete_channel_update">Delete</label>
                                       </div>
                                       </div>

@@ -13,14 +13,15 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 $search = trim($search);
 
 if($search !==''&& strlen($search)>=5){
-    $stmt =$conn->prepare("SELECT user.user_id, user.karyawan_id, karyawan.nama AS karyawan_nama FROM tb_user user JOIN tb_karyawan karyawan ON user.karyawan_id = karyawan.karyawan_id WHERE user.user_id LIKE CONCAT ('%',?,'%')
+    $stmt =$conn->prepare("SELECT user.user_id, user.karyawan_id, karyawan.nama AS karyawan_nama , user.level FROM tb_user user JOIN tb_karyawan karyawan ON user.karyawan_id = karyawan.karyawan_id WHERE user.user_id LIKE CONCAT ('%',?,'%')
     OR karyawan.nama LIKE CONCAT ('%',?,'%')
+    OR user.level LIKE CONCAT ('%',?,'%')
     ");
     $stmt->bind_param('ss',$search,$search);
     $stmt->execute();
     $result = $stmt->get_result();
 }else {
-    $sql_user = "SELECT user.user_id, user.karyawan_id, karyawan.nama AS karyawan_nama FROM tb_user user JOIN tb_karyawan karyawan ON user.karyawan_id = karyawan.karyawan_id";
+    $sql_user = "SELECT user.user_id, user.karyawan_id, karyawan.nama AS karyawan_nama , user.level FROM tb_user user JOIN tb_karyawan karyawan ON user.karyawan_id = karyawan.karyawan_id";
     $result = $conn->query($sql_user);
 }
 

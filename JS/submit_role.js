@@ -1,13 +1,13 @@
 import config from "../JS/config.js";
 function proses_check_box() {
-  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-  const results = [];
+  const checkboxes = document.querySelectorAll("#modal_role .perm-checkbox");
+  let results = [];
 
   checkboxes.forEach((checkbox) => {
     const value = checkbox.checked ? 1 : 0;
-    results.push({ value: checkbox.value, checked: value });
+    results.push(value);
   });
-
+  results = results.join("");
   console.log(results);
   return results;
 }
@@ -69,11 +69,10 @@ function validateField(field, pattern, errorMessage) {
   return true;
 }
 function submitRole() {
+  const akses_role = proses_check_box();
   // Collect form data
   const name_role = document.getElementById("name_role").value;
-  const akses_role = document.getElementById("akses_role").value;
 
-  // Validate form data
   if (
     !name_role ||
     name_role.trim() === "" ||
@@ -102,7 +101,6 @@ function submitRole() {
         if (result.success) {
           // Reset the form
           document.getElementById("name_role").value = "";
-          document.getElementById("akses_role").value = "";
           $("#modal_role").modal("hide");
           Swal.fire({
             title: "Berhasil",

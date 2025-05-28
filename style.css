@@ -265,12 +265,11 @@ body::-webkit-scrollbar {
   float: none !important;
 }
 .accordion-body {
-  display: flex;
-  flex-wrap: wrap; /* wrap to next line if needed */
+  display: grid;
   gap: 10px; /* space between accordions */
 }
 .accordion_anak {
-  max-width: 150px !important;
+  min-width: 100px;
   font-size: 0.875rem !important;
   flex: 0 0 auto; /* prevent stretching */
 }

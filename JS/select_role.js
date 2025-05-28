@@ -105,7 +105,49 @@ function attachEventListeners() {
       }
     });
 }
+function updateCheckbox(field) {
+  const checkboxes = document.querySelectorAll(
+    "#modal_role_update .perm-checkbox"
+  );
+  if (!field || field.length < checkboxes.length) {
+    console.warn("Field length doesn't match checkbox count");
+    return;
+  }
 
+  checkboxes.forEach((checkbox, index) => {
+    checkbox.checked = field[index] === "1";
+  });
+}
+
+function proses_check_box() {
+  const checkboxes = document.querySelectorAll(
+    "#modal_role_update .perm-checkbox"
+  );
+  let results = [];
+
+  checkboxes.forEach((checkbox) => {
+    const value = checkbox.checked ? 1 : 0;
+    results.push(value);
+  });
+  results = results.join("");
+  console.log(results);
+  return results;
+}
+function event_check_box(field) {
+  let view = document.getElementById("check_view_" + field + "_update");
+  view.checked = !view.checked;
+
+  let create = document.getElementById("check_create_" + field + "_update");
+  create.checked = !create.checked;
+
+  let edit = document.getElementById("check_edit_" + field + "_update");
+  edit.checked = !edit.checked;
+
+  let delete_check_box = document.getElementById(
+    "check_delete_" + field + "_update"
+  );
+  delete_check_box.checked = !delete_check_box.checked;
+}
 async function handleDeleteRole(button) {
   const row = button.closest("tr");
   const roleId = row.cells[0].textContent;
@@ -169,13 +211,39 @@ async function handleUpdateRole(button) {
   const role_ID = row.cells[0].textContent;
   const currentNama = row.cells[1].textContent;
   const currentAkses = row.cells[2].textContent;
+  console.log(currentAkses);
 
   document.getElementById("update_role_ID").value = role_ID;
   document.getElementById("update_role_name").value = currentNama;
-  document.getElementById("update_role_akses").value = currentAkses;
+
+  let checkbox_karyawan = document.getElementById("check_all_karyawan_update");
+  checkbox_karyawan.addEventListener("click", () => {
+    event_check_box("karyawan");
+  });
+
+  let checkbox_user = document.getElementById("check_all_user_update");
+  checkbox_user.addEventListener("click", () => event_check_box("user"));
+
+  let checkbox_role = document.getElementById("check_all_role_update");
+  checkbox_role.addEventListener("click", () => event_check_box("role"));
+
+  let checkbox_supplier = document.getElementById("check_all_supplier_update");
+  checkbox_supplier.addEventListener("click", () =>
+    event_check_box("supplier")
+  );
+
+  let checkbox_customer = document.getElementById("check_all_customer_update");
+  checkbox_customer.addEventListener("click", () =>
+    event_check_box("customer")
+  );
+
+  let checkbox_channel = document.getElementById("check_all_channel_update");
+  checkbox_channel.addEventListener("click", () => event_check_box("channel"));
+
   await new Promise((resolve) => setTimeout(resolve, 500));
   button_icon.style.display = "inline-block";
   spinner.style.display = "none";
+  updateCheckbox(currentAkses);
   $("#modal_role_update").modal("show");
 }
 const submit_role_update = document.getElementById("submit_role_update");
@@ -192,7 +260,7 @@ if (submit_role_update) {
     const row = window.currentRow;
     const role_ID = document.getElementById("update_role_ID").value;
     const newNama = document.getElementById("update_role_name").value;
-    const newAkses = document.getElementById("update_role_akses").value;
+    const newAkses = proses_check_box();
     if (
       !newNama ||
       newNama.trim() === "" ||
@@ -216,6 +284,7 @@ if (submit_role_update) {
       validateField(newNama, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
       validateField(newAkses, /^[0-9]+$/, "Format akses tidak valid");
     if (is_valid) {
+      console.log(newAkses);
       try {
         const response = await fetch(
           `${config.API_BASE_URL}/PHP/update_role.php`,

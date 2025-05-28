@@ -14,6 +14,7 @@ if (grid_container_user) {
       "Username",
       "Nama Karyawan",
       "karyawan_id",
+      "Level",
       {
         name: "Aksi",
         formatter: () => {
@@ -56,7 +57,8 @@ if (grid_container_user) {
           user.user_id,
           user.karyawan_nama,
           user.karyawan_id,
-          null, // Placeholder for the action buttons column
+          user.level,
+          null,
         ]),
     },
   }).render(document.getElementById("table_user"));
@@ -64,13 +66,19 @@ if (grid_container_user) {
     const grid_header = document.querySelector("#table_user .gridjs-head");
     const search_Box = grid_header.querySelector(".gridjs-search");
 
-    // Wrap both button and search bar in a flex container
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn btn-primary btn-sm";
+    btn.setAttribute("data-bs-toggle", "modal");
+    btn.setAttribute("data-bs-target", "#modal_user");
+    btn.innerHTML = '<i class="bi bi-person-plus-fill"></i> User';
+
     const wrapper = document.createElement("div");
     wrapper.className =
       "d-flex justify-content-between align-items-center mb-3";
+    wrapper.appendChild(btn);
     wrapper.appendChild(search_Box);
 
-    // Replace grid header content
     grid_header.innerHTML = "";
     grid_header.appendChild(wrapper);
     const input = document.querySelector("#table_user .gridjs-input");
@@ -165,22 +173,22 @@ async function handleUpdateUser(button) {
 
   const userID = row.cells[0].textContent;
   const karyawanID = row.cells[2].textContent;
+  const level = row.cells[3].textContent;
 
   document.getElementById("update_user_ID").value = userID;
+  document.getElementById("update_level").value = level;
 
   const karyawan_ID_field = $("#update_karyawan_ID");
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
-    const response = await fetch(
-      `${config.API_BASE_URL}/PHP/API/karyawan_API.php`
-    );
+    const response = await fetch(`${config.API_BASE_URL}/PHP/API/user_API.php`);
     const karyawans = await response.json();
 
     karyawan_ID_field.empty();
 
     karyawans.forEach((karyawan) => {
       const option = new Option(
-        `${karyawan.karyawan_id} - ${karyawan.nama}`,
+        `${karyawan.karyawan_id} - ${karyawan.karyawan_nama}`,
         karyawan.karyawan_id,
         false,
         karyawan.karyawan_id === karyawanID
@@ -213,6 +221,7 @@ if (submit_user_update) {
     }
     const row = window.currentRow;
     const User_ID = document.getElementById("update_user_ID").value;
+    const level = document.getElementById("update_level").value;
     const karyawan_ID_new = $("#update_karyawan_ID").val();
 
     try {
@@ -226,6 +235,7 @@ if (submit_user_update) {
           body: JSON.stringify({
             user_id: User_ID,
             karyawan_id: karyawan_ID_new,
+            level: level,
           }),
         }
       );
@@ -235,6 +245,7 @@ if (submit_user_update) {
         ).text();
         const karyawan_name_only = karyawan_name_new.split(" - ")[1];
         row.cells[1].textContent = karyawan_name_only;
+        row.cells[3].textContent = level;
         $("#modal_user_update").modal("hide");
         Swal.fire({
           title: "Berhasil",

@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Validate required fields
-    $requiredFields = ['user_id', 'karyawan_id'];
+    $requiredFields = ['user_id', 'karyawan_id','level'];
     foreach ($requiredFields as $field) {
         if (!isset($data[$field])) {
             http_response_code(400);
@@ -36,12 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Extract and sanitize inputs
     $user_ID = $data['user_id'];
     $karyawan_ID = $data['karyawan_id'];
-
-
-
+    $level = $data['level'];
 
     // Prepare the SQL statement
-    $stmt = $conn->prepare("UPDATE tb_user SET karyawan_id = ? WHERE user_id = ?");
+    $stmt = $conn->prepare("UPDATE tb_user SET karyawan_id = ? , level = ? WHERE user_id = ?");
     if (!$stmt) {
         error_log("Failed to prepare statement: " . $conn->error);
         http_response_code(500);
@@ -50,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Bind parameters and execute the statement
-    $stmt->bind_param("ss", $karyawan_ID, $user_ID);
+    $stmt->bind_param("sss", $karyawan_ID,$level, $user_ID);
     
     if ($stmt->execute()) {
         error_log("user updated successfully: ID = $karyawan_ID");

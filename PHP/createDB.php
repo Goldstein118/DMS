@@ -48,7 +48,7 @@ if ($conn->query($karyawan)) {
 }
 
 $user = "CREATE TABLE IF NOT EXISTS tb_user (
-    user_id VARCHAR(10) PRIMARY KEY NOT NULL, 
+    user_id VARCHAR(10) PRIMARY KEY NOT NULL, level VARCHAR(10) DEFAULT 'user',
     karyawan_id VARCHAR(10), FOREIGN KEY (karyawan_id) REFERENCES tb_karyawan(karyawan_id) ON DELETE SET NULL
 
     )";

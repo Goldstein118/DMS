@@ -1,52 +1,67 @@
+
 <?php
+require_once '../db.php';
+require_once '../cek_akses.php';
+
+// require_once 'AuthMiddleware.php'; <-- for future token check
+
+header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *'); // Allow requests from any origin
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow specific HTTP methods
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE'); // Allow specific HTTP methods
 header('Access-Control-Allow-Headers: Content-Type'); // Allow specific headers
 header('Content-Type: application/json');
-include '../db.php'; // Include your database connection file
-if(!$conn){
-    http_response_code(500);
-    echo json_encode(["error" => "Database connection failed"]);
+
+
+// (Future) Auth token validation
+// $user = verifyToken(); // get user_id from JWT
+$rawInput=file_get_contents("php://input");
+
+$data = json_decode($rawInput, true) ?? [];
+error_log("Incoming data: " . print_r($data, true));
+
+$user_id = $data['user_id'] ?? $_GET['user_id'] ?? $_POST['user_id']??null;
+
+// Get the action from query or body
+$action =$data['action']?? $_GET['action'] ?? $_POST['action'] ?? null;
+
+
+
+if (!$action) {
+    http_response_code(400);
+    echo json_encode(["error" => "No action specified"]);
     exit;
 }
-$search = isset($_GET['search']) ? $_GET['search'] : '';
-$search = trim($search);
-
-if (strlen($search)>=5 && $search !=='') {
-    $stmt = $conn->prepare("SELECT karyawan.karyawan_id, karyawan.nama, karyawan.role_id, role.nama AS role_nama, karyawan.divisi, karyawan.no_telp, karyawan.alamat, karyawan.ktp, karyawan.npwp,karyawan.status
-    FROM tb_karyawan karyawan JOIN tb_role role ON karyawan.role_id = role.role_id WHERE karyawan.karyawan_id LIKE CONCAT ('%',?,'%')
-    OR karyawan.nama LIKE CONCAT ('%',?,'%')
-    OR role.nama LIKE CONCAT ('%',?,'%') 
-    OR karyawan.divisi LIKE CONCAT ('%',?,'%')
-    OR karyawan.no_telp LIKE CONCAT ('%',?,'%')
-    OR karyawan.alamat LIKE CONCAT ('%',?,'%')
-    OR karyawan.ktp LIKE CONCAT ('%',?,'%')
-    OR karyawan.npwp LIKE CONCAT ('%',?,'%')
-    OR karyawan.status LIKE CONCAT ('%',?,'%')
-    ");
-    $stmt->bind_param('sssssssss',$search,$search,$search,$search,$search,$search,$search,$search,$search);
-    $stmt->execute();
-    $result = $stmt->get_result();
-} else {
-    $sql = "SELECT karyawan.karyawan_id, karyawan.nama, karyawan.role_id, role.nama AS role_nama,
-               karyawan.divisi, karyawan.no_telp, karyawan.alamat, karyawan.ktp, karyawan.npwp, karyawan.status
-            FROM tb_karyawan karyawan
-            JOIN tb_role role ON karyawan.role_id = role.role_id";
-$result = $conn->query($sql);
+if (!$user_id) {
+    http_response_code(400);
+    echo json_encode(["error" => "Missing user_id"]);
+    exit;
 }
 
-    if ($result) {
-    $karyawan_data = [];
-    while ($row = mysqli_fetch_assoc($result)) {
-        $karyawan_data[] = $row;
-    }
-    http_response_code(200);
-    echo json_encode($karyawan_data);
-    } else {
-    http_response_code(500);
-    echo json_encode(["error" => "Failed to fetch data: " . $conn->error]);
-    }
+// Handle based on action
+switch ($action) {
+    case 'select':
+        checkAccess($conn, $user_id, 'tb_karyawan', 0); // View access
+        require __DIR__ . '/actions/select_karyawan.php';
+        break;
 
+    case 'create':
+        checkAccess($conn, $user_id, 'tb_karyawan', 1); // Create access
+        require  __DIR__ . '/actions/create_karyawan.php';
+        break;
 
+    case 'update':
+        checkAccess($conn, $user_id, 'tb_karyawan', 2); // Edit access
+        require  __DIR__ . '/actions/update_karyawan.php';
+        break;
 
+    case 'delete':
+        checkAccess($conn, $user_id, 'tb_karyawan', 3); // Delete access
+        require  __DIR__ . '/actions/delete_karyawan.php';
+        break;
+
+    default:
+        http_response_code(400);
+        echo json_encode(["error" => "Invalid action"]);
+        break;
+}
 ?>

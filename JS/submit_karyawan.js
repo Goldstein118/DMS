@@ -1,4 +1,5 @@
 import config from "./config.js";
+import { apiRequest } from "./api.js";
 
 const submit_karyawan = document.getElementById("submit_karyawan");
 if (submit_karyawan) {
@@ -16,28 +17,13 @@ if (submit_karyawan) {
   });
 }
 
-function fetch_roles() {
-  fetch(`${config.API_BASE_URL}/PHP/API/role_API.php`)
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error(
-          `Failed to fetch roles. Status: ${response.status} ${response.statusText}`
-        );
-      }
-    })
-    .then((data) => {
-      if (Array.isArray(data) && data.length > 0) {
-        populateRoleDropdown(data);
-      } else {
-        console.warn("No roles found or invalid data format.");
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching roles:", error);
-      toastr.error("Failed to load roles. Please refresh the page.");
-    });
+async function fetch_roles() {
+  try {
+    const data = await apiRequest("/PHP/API/role_API.php");
+    populateRoleDropdown(data);
+  } catch (error) {
+    toastr.error("Gagal mengambil data role: " + error.message);
+  }
 }
 
 function populateRoleDropdown(data) {
@@ -71,7 +57,7 @@ function format_no_telp(str) {
   return result;
 }
 
-function submitKaryawan() {
+async function submitKaryawan() {
   // Collect form data
   const name_karyawan = document.getElementById("name_karyawan").value;
   const divisi_karyawan = document.getElementById("divisi_karyawan").value;
@@ -124,7 +110,7 @@ function submitKaryawan() {
     const no_telp_karyawan = format_no_telp(phone_karyawan);
 
     const data_karyawan = {
-      action: "submit_karyawan",
+      user_id: "US0525-010",
       name_karyawan,
       divisi_karyawan,
       no_telp_karyawan,
@@ -134,45 +120,24 @@ function submitKaryawan() {
       npwp_karyawan,
       status_karyawan,
     };
-    // Send the data to the PHP script
-    fetch(`${config.API_BASE_URL}/PHP/create.php`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data_karyawan),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((jsonData) => {
-        if (jsonData.success) {
-          // Reset the form
-          document.getElementById("name_karyawan").value = "";
-          document.getElementById("divisi_karyawan").value = "";
-          document.getElementById("phone_karyawan").value = "";
-          document.getElementById("address_karyawan").value = "";
-          document.getElementById("nik_karyawan").value = "";
-          document.getElementById("npwp_karyawan").value = "";
-          document.getElementById("status_karyawan").value = "";
-          $("#role_select").val(null).trigger("change");
-          $("#modal_karyawan").modal("hide");
-          Swal.fire({
-            title: "Berhasil",
-            icon: "success",
-          });
-        } else {
-          toastr.error(jsonData.message, {
-            timeOut: 500,
-            extendedTimeOut: 500,
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Error submitting karyawan:", error);
-        toastr.error(
-          "An error occurred while submitting the form. Please try again."
-        );
-      });
+    try {
+      const response = await apiRequest(
+        "/PHP/API/karyawan_API.php?action=create",
+        "POST",
+        data_karyawan
+      );
+      swal.fire("Berhasil", response.message, "success");
+      document.getElementById("name_karyawan").value = "";
+      document.getElementById("divisi_karyawan").value = "";
+      document.getElementById("phone_karyawan").value = "";
+      document.getElementById("address_karyawan").value = "";
+      document.getElementById("nik_karyawan").value = "";
+      document.getElementById("npwp_karyawan").value = "";
+      document.getElementById("status_karyawan").value = "";
+      $("#role_select").val(null).trigger("change");
+      $("#modal_karyawan").modal("hide");
+    } catch (error) {
+      toastr.error(error.message);
+    }
   }
 }

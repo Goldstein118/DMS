@@ -115,6 +115,7 @@ switch ($page) {
   case 'tabel_user':
     ?>
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_user.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_user.js?v=2.0"></script>
     <?php
     break;
   case 'tabel_supplier':

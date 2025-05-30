@@ -80,43 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = json_decode($input, true);
         $action = $data['action'] ?? null;
 
-        if ($action === 'submit_karyawan') {
-
-            $requiredFields = ['name_karyawan', 'role_id', 'divisi_karyawan', 'no_telp_karyawan', 'address_karyawan', 'nik_karyawan', 'npwp_karyawan', 'status_karyawan'];
-            $default = ['status_karyawan' => 'aktif'];
-            $fields = validate_1($data, $requiredFields, $default);
-
-            $nama_karyawan = $fields['name_karyawan'];
-            $role_id = $fields['role_id'];
-            $divisi_karyawan = $fields['divisi_karyawan'];
-            $noTelp_karyawan = $fields['no_telp_karyawan'];
-            $alamat_karyawan = $fields['address_karyawan'];
-            $nik_karyawan = $fields['nik_karyawan'];
-            $npwp_karyawan = $fields['npwp_karyawan'];
-            $status_karyawan = $fields['status_karyawan'];
-
-            // Validate fields
-            validate_2($nama_karyawan, '/^[a-zA-Z\s]+$/', "Invalid name format");
-            validate_2($divisi_karyawan, '/^[a-zA-Z0-9,. ]+$/', "Invalid division format");
-            validate_2($alamat_karyawan, '/^[a-zA-Z0-9,. ]+$/', "Invalid address format");
-            validate_2($noTelp_karyawan, '/^[+]?[\d\s\-]+$/', "Invalid phone number format");
-            validate_2($nik_karyawan, '/^[0-9]+$/', "Invalid KTP format");
-            validate_2($npwp_karyawan, '/^[0-9 .-]+$/', "Invalid NPWP format");
-
-
-            $id_karyawan = generateCustomID('KA', 'tb_karyawan', 'karyawan_id', $conn);
-            $conn->begin_transaction();
-
-            executeInsert(
-                $conn,
-                "INSERT INTO tb_karyawan (karyawan_id, nama, divisi, no_telp, alamat, ktp, npwp, status, role_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [$id_karyawan, $nama_karyawan, $divisi_karyawan, $noTelp_karyawan, $alamat_karyawan, $nik_karyawan, $npwp_karyawan, $status_karyawan, $role_id],
-                "sssssssss"
-            );
-
-            $conn->commit();
-            echo json_encode(["success" => true, "message" => "Data saved successfully", "data" => ["karyawan_id" => $id_karyawan, "user_id" => $id_user]]);
-        } elseif ($action === 'submit_user') {
+         if ($action === 'submit_user') {
             $requiredFields = ['karyawan_id', 'level'];
             $fields = validate_1($data, $requiredFields);
 

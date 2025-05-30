@@ -37,7 +37,7 @@ $karyawan = "CREATE TABLE IF NOT EXISTS tb_karyawan (
     ktp VARCHAR(100),
     npwp VARCHAR(100),
     status VARCHAR(10) DEFAULT 'aktif',
-    FOREIGN KEY (role_id) REFERENCES tb_role(role_id) ON DELETE SET NULL
+    FOREIGN KEY (role_id) REFERENCES tb_role(role_id) ON DELETE RESTRICT
 )";
 
 if ($conn->query($karyawan)) {
@@ -49,7 +49,7 @@ if ($conn->query($karyawan)) {
 
 $user = "CREATE TABLE IF NOT EXISTS tb_user (
     user_id VARCHAR(10) PRIMARY KEY NOT NULL, level VARCHAR(10) DEFAULT 'user',
-    karyawan_id VARCHAR(10), FOREIGN KEY (karyawan_id) REFERENCES tb_karyawan(karyawan_id) ON DELETE SET NULL
+    karyawan_id VARCHAR(10), FOREIGN KEY (karyawan_id) REFERENCES tb_karyawan(karyawan_id) ON DELETE RESTRICT
 
     )";
 if ($conn->query($user)) {
@@ -134,8 +134,8 @@ status VARCHAR(10) DEFAULT 'aktif',
 harga_minimal VARCHAR(20),
 kategori_id VARCHAR(10),
 brand_id VARCHAR(10),
-FOREIGN KEY (kategori_id) REFERENCES tb_kategori(kategori_id) ON DELETE SET NULL,
-FOREIGN KEY (brand_id) REFERENCES tb_brand(brand_id) ON DELETE SET NULL
+FOREIGN KEY (kategori_id) REFERENCES tb_kategori(kategori_id) ON DELETE RESTRICT,
+FOREIGN KEY (brand_id) REFERENCES tb_brand(brand_id) ON DELETE RESTRICT
 )";
 
 if ($conn->query($produk)) {

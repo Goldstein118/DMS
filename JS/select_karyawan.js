@@ -1,5 +1,6 @@
 import config from "./config.js";
 import { Grid, html } from "https://unpkg.com/gridjs?module";
+import { apiRequest } from "./api.js";
 
 const grid_container_karyawan = document.querySelector("#table_karyawan");
 if (grid_container_karyawan) {
@@ -42,7 +43,8 @@ if (grid_container_karyawan) {
       server: {
         url: (prev, keyword) => {
           if (keyword.length >= 5 && keyword !== "") {
-            return `${prev}?search=${encodeURIComponent(keyword)}`;
+            const separator = prev.includes("?") ? "&" : "?";
+            return `${prev}${separator}search=${encodeURIComponent(keyword)}`;
           } else {
             return prev;
           }
@@ -53,7 +55,7 @@ if (grid_container_karyawan) {
     sort: true,
     pagination: { limit: 15 },
     server: {
-      url: `${config.API_BASE_URL}/PHP/API/karyawan_API.php`,
+      url: `${config.API_BASE_URL}/PHP/API/karyawan_API.php?action=select&user_id=US0525-010`,
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -150,36 +152,39 @@ async function handleDeleteKaryawan(button) {
   });
   if (result.isConfirmed) {
     try {
-      const response = await fetch(
-        `${config.API_BASE_URL}/PHP/delete_karyawan.php`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ karyawan_id: karyawan_ID }),
-        }
+      const response = await apiRequest(
+        "/PHP/API/karyawan_API.php?action=delete&user_id=US0525-010",
+        "DELETE",
+        { karyawan_ID }
       );
       if (response.ok) {
         row.remove();
-        Swal.fire({
-          title: "Berhasil !",
-          text: "Data Karyawan berhasil dihapus!",
-          icon: "success",
-        });
-      } else {
-        throw new Error(
-          `Failed to delete karyawan. Status: ${response.status}`
+        Swal.fire(
+          "Berhasil",
+          response.message || "Karyawan dihapus.",
+          "success"
         );
       }
     } catch (error) {
-      console.error("Error deleting karyawan:", error);
-      toastr.error("Failed to delete karyawan.", {
-        timeOut: 500,
-        extendedTimeOut: 500,
-      });
+      toastr.error(error.message);
     }
   }
+}
+
+function populateRoleDropdown(data, currentrole_id) {
+  const role_ID_Field = $("#update_role_select");
+  role_ID_Field.empty();
+  data.forEach((role) => {
+    const option = new Option(
+      `${role.role_id} - ${role.nama}`,
+      role.role_id,
+      false,
+      role.role_id == currentrole_id
+    );
+    role_ID_Field.append(option);
+  });
+
+  role_ID_Field.trigger("change");
 }
 
 async function handleUpdateKaryawan(button) {
@@ -218,32 +223,16 @@ async function handleUpdateKaryawan(button) {
   document.getElementById("update_npwp_karyawan").value = currentnpwp;
   document.getElementById("update_status_karyawan").value = currentstatus;
 
-  const role_ID_Field = $("#update_role_select");
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
-    // Fetch the roles data using async/await
-    const response = await fetch(`${config.API_BASE_URL}/PHP/API/role_API.php`);
-    const roles = await response.json(); // Wait for the JSON data
-
-    // Clear the role options and populate the dropdown
-    role_ID_Field.empty();
-    roles.forEach((role) => {
-      const option = new Option(
-        `${role.role_id} - ${role.nama}`,
-        role.role_id,
-        false,
-        role.role_id == currentrole_id
-      );
-      role_ID_Field.append(option);
-    });
-
-    role_ID_Field.trigger("change"); // Trigger change event after appending options
+    const data = await apiRequest("/PHP/API/role_API.php");
+    populateRoleDropdown(data, currentrole_id);
 
     button_icon.style.display = "inline-block";
     spinner.style.display = "none";
     $("#modal_karyawan_update").modal("show");
   } catch (error) {
-    console.error("Error fetching user:", error);
+    toastr.error("Gagal mengambil data role: " + error.message);
     const button_icon = button.querySelector(".button_icon");
     const spinner = button.querySelector(".spinner_update");
     button_icon.style.display = "none";
@@ -332,54 +321,38 @@ if (submit_karyawan_update) {
       const no_telp_update = format_no_telp(noTelp_new);
 
       try {
-        const response = await fetch(
-          `${config.API_BASE_URL}/PHP/update_karyawan.php`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              karyawan_id: karyawan_ID,
-              nama: karyawan_nama_new,
-              role_id: role_ID_new,
-              divisi: divisi_new,
-              no_telp: no_telp_update,
-              alamat: alamat_new,
-              ktp: KTP_new,
-              npwp: npwp_new,
-              status: status_new,
-            }),
-          }
+        const data_karyawan_update = {
+          karyawan_id: karyawan_ID,
+          nama: karyawan_nama_new,
+          role_id: role_ID_new,
+          divisi: divisi_new,
+          no_telp: no_telp_update,
+          alamat: alamat_new,
+          ktp: KTP_new,
+          npwp: npwp_new,
+          status: status_new,
+        };
+        const response = await apiRequest(
+          "/PHP/API/karyawan_API.php?action=update&user_id=US0525-010",
+          "POST",
+          data_karyawan_update
         );
-        if (response.ok) {
-          row.cells[1].textContent = karyawan_nama_new;
-          const role_name_new = $("#update_role_select option:selected").text();
-          const role_name_only = role_name_new.split(" - ")[1];
-          row.cells[2].textContent = role_name_only;
-          row.cells[3].textContent = divisi_new;
-          row.cells[4].textContent = no_telp_update;
-          row.cells[5].textContent = alamat_new;
-          row.cells[6].textContent = KTP_new;
-          row.cells[7].textContent = npwp_new;
-          row.cells[8].textContent = status_new;
 
-          $("#modal_karyawan_update").modal("hide");
-          Swal.fire({
-            title: "Berhasil",
-            icon: "success",
-          });
-        } else {
-          throw new Error(
-            `Failed to update karyawan. Status: ${response.status}`
-          );
-        }
+        row.cells[1].textContent = karyawan_nama_new;
+        const role_name_new = $("#update_role_select option:selected").text();
+        const role_name_only = role_name_new.split(" - ")[1];
+        row.cells[2].textContent = role_name_only;
+        row.cells[3].textContent = divisi_new;
+        row.cells[4].textContent = no_telp_update;
+        row.cells[5].textContent = alamat_new;
+        row.cells[6].textContent = KTP_new;
+        row.cells[7].textContent = npwp_new;
+        row.cells[8].textContent = status_new;
+
+        $("#modal_karyawan_update").modal("hide");
+        Swal.fire("Berhasil", response.message, "success");
       } catch (error) {
-        console.error("Error updating karyawan:", error);
-        toastr.error("Failed to update karyawan.", {
-          timeOut: 500,
-          extendedTimeOut: 500,
-        });
+        toastr.error(error.message);
       }
     }
   });

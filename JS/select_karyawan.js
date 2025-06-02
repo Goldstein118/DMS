@@ -55,7 +55,7 @@ if (grid_container_karyawan) {
     sort: true,
     pagination: { limit: 15 },
     server: {
-      url: `${config.API_BASE_URL}/PHP/API/karyawan_API.php?action=select&user_id=US0525-010`,
+      url: `${config.API_BASE_URL}/PHP/API/karyawan_API.php?action=select&user_id=US0525-058`,
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -153,7 +153,7 @@ async function handleDeleteKaryawan(button) {
   if (result.isConfirmed) {
     try {
       const response = await apiRequest(
-        "/PHP/API/karyawan_API.php?action=delete&user_id=US0525-010",
+        "/PHP/API/karyawan_API.php?action=delete&user_id=US0525-058",
         "DELETE",
         { karyawan_ID }
       );
@@ -163,6 +163,12 @@ async function handleDeleteKaryawan(button) {
           "Berhasil",
           response.message || "Karyawan dihapus.",
           "success"
+        );
+      } else {
+        Swal.fire(
+          "Gagal",
+          response.error || "Gagal meenghapus karyawan.",
+          "error"
         );
       }
     } catch (error) {
@@ -225,8 +231,10 @@ async function handleUpdateKaryawan(button) {
 
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
-    const data = await apiRequest("/PHP/API/role_API.php");
-    populateRoleDropdown(data, currentrole_id);
+    const response = await apiRequest(
+      "/PHP/API/role_API.php?action=select&user_id=US0525-010"
+    );
+    populateRoleDropdown(response.data, currentrole_id);
 
     button_icon.style.display = "inline-block";
     spinner.style.display = "none";
@@ -333,7 +341,7 @@ if (submit_karyawan_update) {
           status: status_new,
         };
         const response = await apiRequest(
-          "/PHP/API/karyawan_API.php?action=update&user_id=US0525-010",
+          "/PHP/API/karyawan_API.php?action=update&user_id=US0525-058",
           "POST",
           data_karyawan_update
         );

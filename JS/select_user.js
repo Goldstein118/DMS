@@ -1,5 +1,6 @@
-import config from "../JS/config.js";
+import config from "./config.js";
 import { Grid, html } from "https://unpkg.com/gridjs?module";
+import { apiRequest } from "./api.js";
 
 const grid_container_user = document.querySelector("#table_user");
 if (grid_container_user) {
@@ -36,7 +37,8 @@ if (grid_container_user) {
       server: {
         url: (prev, keyword) => {
           if (keyword.length >= 5 && keyword !== "") {
-            return `${prev}?search=${encodeURIComponent(keyword)}`;
+            const separator = prev.includes("?") ? "&" : "?";
+            return `${prev}${separator}search=${encodeURIComponent(keyword)}`;
           } else {
             return prev;
           }
@@ -47,7 +49,7 @@ if (grid_container_user) {
     sort: true,
     pagination: { limit: 15 },
     server: {
-      url: `${config.API_BASE_URL}/PHP/API/user_API.php`,
+      url: `${config.API_BASE_URL}/PHP/API/user_API.php?action=select&user_id=US0525-058`,
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -125,40 +127,20 @@ async function handleDeleteUser(button) {
 
   if (result.isConfirmed) {
     try {
-      const response = await fetch(
-        `${config.API_BASE_URL}/PHP/delete_user.php`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ user_id: userID }), // Convert the data object to JSON
-        }
+      const response = await apiRequest(
+        "/PHP/API/user_API.php?action=delete&user_id=US0525-010",
+        "DELETE",
+        { userID }
       );
 
       if (response.ok) {
         row.remove();
-        Swal.fire({
-          title: "Berhasil!",
-          text: "Data User berhasil dihapus!",
-          icon: "success",
-        });
+        Swal.fire("Berhasil!", response.message || "User dihapus", "success");
       } else {
-        throw new Error(
-          `Failed to delete role. Status: ${response.status}`,
-          toastr.error("Failed to delete user.", {
-            timeOut: 500,
-            extendedTimeOut: 500,
-          })
-        );
+        Swal.fire("Gagal", response.error || "Gagal meenghapus user.", "error");
       }
     } catch (error) {
-      console.error("Error deleting role:", error);
-      toastr.error("Failed to delete role."),
-        {
-          timeOut: 500,
-          extendedTimeOut: 500,
-        };
+      toastr.error(error.message);
     }
   }
 }
@@ -178,17 +160,18 @@ async function handleUpdateUser(button) {
   document.getElementById("update_user_ID").value = userID;
   document.getElementById("update_level").value = level;
 
-  const karyawan_ID_field = $("#update_karyawan_ID");
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
-    const response = await fetch(`${config.API_BASE_URL}/PHP/API/user_API.php`);
-    const karyawans = await response.json();
+    const response = await apiRequest(
+      "/PHP/API/karyawan_API.php?action=select&user_id=US0525-058"
+    );
+    const karyawan_ID_field = $("#update_karyawan_ID");
 
     karyawan_ID_field.empty();
 
-    karyawans.forEach((karyawan) => {
+    response.data.forEach((karyawan) => {
       const option = new Option(
-        `${karyawan.karyawan_id} - ${karyawan.karyawan_nama}`,
+        `${karyawan.karyawan_id} - ${karyawan.nama}`,
         karyawan.karyawan_id,
         false,
         karyawan.karyawan_id === karyawanID
@@ -224,42 +207,26 @@ if (submit_user_update) {
     const level = document.getElementById("update_level").value;
     const karyawan_ID_new = $("#update_karyawan_ID").val();
 
+    const data_user_update = {
+      user_id: User_ID,
+      karyawan_id: karyawan_ID_new,
+      level: level,
+    };
     try {
-      const response = await fetch(
-        `${config.API_BASE_URL}/PHP/update_user.php`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user_id: User_ID,
-            karyawan_id: karyawan_ID_new,
-            level: level,
-          }),
-        }
+      const response = await apiRequest(
+        "/PHP/API/user_API.php?action=update&user_id=US0525-058",
+        "POST",
+        data_user_update
       );
-      if (response.ok) {
-        const karyawan_name_new = $(
-          "#update_karyawan_ID option:selected"
-        ).text();
-        const karyawan_name_only = karyawan_name_new.split(" - ")[1];
-        row.cells[1].textContent = karyawan_name_only;
-        row.cells[3].textContent = level;
-        $("#modal_user_update").modal("hide");
-        Swal.fire({
-          title: "Berhasil",
-          icon: "success",
-        });
-      } else {
-        throw new Error(`Failed to update user. Status: ${response.status}`);
-      }
+
+      const karyawan_name_new = $("#update_karyawan_ID option:selected").text();
+      const karyawan_name_only = karyawan_name_new.split(" - ")[1];
+      row.cells[1].textContent = karyawan_name_only;
+      row.cells[3].textContent = level;
+      $("#modal_user_update").modal("hide");
+      Swal.fire("Berhasil", response.message, "success");
     } catch (error) {
-      console.error("Error updating user:", error);
-      toastr.error("Failed to update user.", {
-        timeOut: 500,
-        extendedTimeOut: 500,
-      });
+      toastr.error(error.message);
     }
   });
 }

@@ -1,4 +1,3 @@
-import config from "./config.js";
 import { apiRequest } from "./api.js";
 
 const submit_karyawan = document.getElementById("submit_karyawan");
@@ -19,8 +18,10 @@ if (submit_karyawan) {
 
 async function fetch_roles() {
   try {
-    const data = await apiRequest("/PHP/API/role_API.php");
-    populateRoleDropdown(data);
+    const response = await apiRequest(
+      "/PHP/API/role_API.php?action=select&user_id=US0525-058"
+    );
+    populateRoleDropdown(response.data);
   } catch (error) {
     toastr.error("Gagal mengambil data role: " + error.message);
   }
@@ -110,7 +111,7 @@ async function submitKaryawan() {
     const no_telp_karyawan = format_no_telp(phone_karyawan);
 
     const data_karyawan = {
-      user_id: "US0525-010",
+      user_id: "US0525-058",
       name_karyawan,
       divisi_karyawan,
       no_telp_karyawan,

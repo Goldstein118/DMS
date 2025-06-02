@@ -1,5 +1,6 @@
 import config from "../JS/config.js";
 import { Grid, html } from "https://unpkg.com/gridjs?module";
+import { apiRequest } from "./api.js";
 document.addEventListener("DOMContentLoaded", () => {
   const grid_container_role = document.querySelector("#table_role");
   if (grid_container_role) {
@@ -29,7 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
         server: {
           url: (prev, keyword) => {
             if (keyword.length >= 5 && keyword !== "") {
-              return `${prev}?search=${encodeURIComponent(keyword)}`;
+              const separator = prev.includes("?") ? "&" : "?";
+              return `${prev}${separator}search=${encodeURIComponent(keyword)}`;
             } else {
               return prev;
             }
@@ -40,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sort: true,
       pagination: { limit: 15 },
       server: {
-        url: `${config.API_BASE_URL}/PHP/API/role_API.php`,
+        url: `${config.API_BASE_URL}/PHP/API/role_API.php?action=select&user_id=US0525-054`,
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -163,40 +165,25 @@ async function handleDeleteRole(button) {
   });
   if (result.isConfirmed) {
     try {
-      const response = await fetch(
-        `${config.API_BASE_URL}/PHP/delete_role.php`,
+      const response = await apiRequest(
+        "/PHP/API/role_API.php?action=delete&user_id=US0525-058",
+        "DELETE",
         {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ role_id: roleId }),
+          roleId,
         }
       );
-
       if (response.ok) {
         row.remove();
-        Swal.fire({
-          title: "Berhasil !",
-          text: "Data Role berhasil dihapus!",
-          icon: "success",
-        });
+        Swal.fire("Berhasil", response.message || "Role dihapus.", "success");
       } else {
-        throw new Error(
-          `Failed to delete role. Status: ${response.status}`,
-          toastr.error("Failed to delete user.", {
-            timeOut: 500,
-            extendedTimeOut: 500,
-          })
+        Swal.fire(
+          "Gagal",
+          response.error || "Gagal meenghapus karyawan.",
+          "error"
         );
       }
     } catch (error) {
-      console.error("Error deleting role:", error);
-      toastr.error("Failed to delete role."),
-        {
-          timeOut: 500,
-          extendedTimeOut: 500,
-        };
+      toastr.error(error.message);
     }
   }
 }
@@ -285,41 +272,25 @@ if (submit_role_update) {
       validateField(newAkses, /^[0-9]+$/, "Format akses tidak valid");
     if (is_valid) {
       console.log(newAkses);
+      const data_role_update = {
+        role_id: role_ID,
+        nama: newNama,
+        akses: newAkses,
+      };
       try {
-        const response = await fetch(
-          `${config.API_BASE_URL}/PHP/update_role.php`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              role_id: role_ID,
-              nama: newNama,
-              akses: newAkses,
-            }),
-          }
+        const response = await apiRequest(
+          "/PHP/API/role_API.php?action=update&user_id=US0525-058",
+          "POST",
+          data_role_update
         );
 
-        if (response.ok) {
-          row.cells[1].textContent = newNama;
-          row.cells[2].textContent = newAkses;
+        row.cells[1].textContent = newNama;
+        row.cells[2].textContent = newAkses;
 
-          $("#modal_role_update").modal("hide");
-          Swal.fire({
-            title: "Berhasil",
-            icon: "success",
-          });
-        } else {
-          throw new Error(`Failed to update role. Status: ${response.status}`);
-        }
+        $("#modal_role_update").modal("hide");
+        Swal.fire("Berhasil", response.message, "success");
       } catch (error) {
-        console.error("Error updating role:", error);
-        toastr.error("Failed to update role."),
-          {
-            timeOut: 500,
-            extendedTimeOut: 500,
-          };
+        toastr.error(error.message);
       }
     }
   });

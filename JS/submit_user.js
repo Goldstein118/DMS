@@ -1,4 +1,4 @@
-import config from "../JS/config.js";
+import { apiRequest } from "./api.js";
 
 const submit_user = document.getElementById("submit_user");
 if (submit_user) {
@@ -13,14 +13,15 @@ if (submit_user) {
   });
 }
 async function fetch_karyawan() {
-  const response = await fetch(`${config.API_BASE_URL}/PHP/API/user_API.php`);
-  const karyawans = await response.json();
+  const response = await apiRequest(
+    "/PHP/API/karyawan_API.php?action=select&user_id=US0525-058"
+  );
   const karyawan_id = $("#karyawan_ID");
   karyawan_id.empty();
 
-  karyawans.forEach((karyawan) => {
+  response.data.forEach((karyawan) => {
     const option = new Option(
-      `${karyawan.karyawan_id} - ${karyawan.karyawan_nama}`,
+      `${karyawan.karyawan_id} - ${karyawan.nama}`,
       karyawan.karyawan_id,
       false,
       false
@@ -36,39 +37,22 @@ function submitUser() {
   const karyawan_id = document.getElementById("karyawan_ID").value;
 
   const data_user = {
-    action: "submit_user",
+    user_id: "US0525-058",
     karyawan_id,
     level,
   };
 
-  fetch(`${config.API_BASE_URL}/PHP/create.php`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data_user),
-  })
-    .then((response) => {
-      return response.json();
-    })
-    .then((jsonData) => {
-      if (jsonData.success) {
-        document.getElementById("level").value = "user";
-        $("#karyawan_ID").val(null).trigger("change");
-        $("#modal_user").modal("hide");
-        Swal.fire({
-          title: "Berhasil",
-          icon: "success",
-        });
-      } else {
-        toastr.error(jsonData.message, {
-          timeOut: 500,
-          extendedTimeOut: 500,
-        });
-      }
-    })
-    .catch((error) => {
-      console.error("Error submitting karyawan:", error);
-      toastr.error(
-        "An error occurred while submitting the form. Please try again."
-      );
-    });
+  try {
+    const response = apiRequest(
+      "/PHP/API/user_API.php?action=create",
+      "POST",
+      data_user
+    );
+    document.getElementById("level").value = "user";
+    $("#karyawan_ID").val(null).trigger("change");
+    $("#modal_user").modal("hide");
+    Swal.fire("Berhasil", response.message, "success");
+  } catch (error) {
+    toastr.error(error.message);
+  }
 }

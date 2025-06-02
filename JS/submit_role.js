@@ -1,4 +1,4 @@
-import config from "../JS/config.js";
+import { apiRequest } from "./api.js";
 function proses_check_box() {
   const checkboxes = document.querySelectorAll("#modal_role .perm-checkbox");
   let results = [];
@@ -86,38 +86,20 @@ function submitRole() {
     validateField(name_role, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
     validateField(akses_role, /^[0-9]+$/, "Format akses tidak valid");
 
-  const data_role = { action: "submit_role", name_role, akses_role };
+  const data_role = { user_id: "US0525-058", name_role, akses_role };
 
   if (is_valid) {
-    fetch(`${config.API_BASE_URL}/PHP/create.php`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data_role),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.success) {
-          // Reset the form
-          document.getElementById("name_role").value = "";
-          $("#modal_role").modal("hide");
-          Swal.fire({
-            title: "Berhasil",
-            icon: "success",
-          });
-        } else {
-          toastr.error(result.message, {
-            timeOut: 500,
-            extendedTimeOut: 500,
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toastr.error(
-          "An error occurred while submitting the form. Please try again."
-        );
-      });
+    try {
+      const response = apiRequest(
+        "/PHP/API/role_API.php?action=create",
+        "POST",
+        data_role
+      );
+      Swal.fire("Berhasil", response.message, "success");
+      document.getElementById("name_role").value = "";
+      $("#modal_role").modal("hide");
+    } catch (error) {
+      toastr.error(error.message);
+    }
   }
 }

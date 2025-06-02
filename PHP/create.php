@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         return $prefix . $month . $year . '-' . $new_number;
     }
+    
 
     function executeInsert($conn, $query, $params, $types)
     {

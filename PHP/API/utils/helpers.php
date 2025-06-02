@@ -1,5 +1,6 @@
 <?php
-function generateCustomID($prefix, $table, $column, $conn) {
+function generateCustomID($prefix, $table, $column, $conn)
+{
     $month = date('m');
     $year = date('y');
     $like_pattern = "$prefix$month$year-%";
@@ -14,7 +15,8 @@ function generateCustomID($prefix, $table, $column, $conn) {
     return "$prefix$month$year-$next";
 }
 
-function validate_1($data, $fields, $defaults = []) {
+function validate_1($data, $fields, $defaults = [])
+{
     $output = [];
     foreach ($fields as $f) {
         if (!isset($data[$f]) || trim($data[$f]) === '') {
@@ -32,11 +34,21 @@ function validate_1($data, $fields, $defaults = []) {
     return $output;
 }
 
-function validate_2($value, $pattern, $errorMsg) {
+function validate_2($value, $pattern, $errorMsg)
+{
     if (!preg_match($pattern, $value)) {
         http_response_code(400);
         echo json_encode(["success" => false, "error" => $errorMsg]);
         exit;
     }
 }
-?>
+
+function executeInsert($conn, $query, $params, $types)
+{
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param($types, ...$params);
+    if (!$stmt->execute()) {
+        throw new Exception("Database error: " . $stmt->error);
+    }
+    $stmt->close();
+}

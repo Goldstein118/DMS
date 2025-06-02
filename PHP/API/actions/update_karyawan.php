@@ -13,7 +13,8 @@ $alamat = $data['alamat'];
 $ktp_npwp = $data['ktp'];
 $npwp = $data['npwp'];
 $status = $data['status'];
-// Validate fields
+
+
 validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
 validate_2($divisi, '/^[a-zA-Z0-9,. ]+$/', "Invalid division format");
 validate_2($alamat, '/^[a-zA-Z0-9,. ]+$/', "Invalid address format");
@@ -21,7 +22,7 @@ validate_2($noTelp, '/^[+]?[\d\s\-()]+$/', "Invalid phone number format");
 validate_2($ktp_npwp, '/^[0-9]+$/', "Invalid KTP format");
 validate_2($npwp, '/^[0-9 .-]+$/', "Invalid NPWP format");
 
-// Prepare the SQL statement
+
 $stmt = $conn->prepare("UPDATE tb_karyawan SET nama = ?, role_id = ?, divisi = ?, no_telp = ?, alamat = ?, ktp = ? ,npwp = ?, status =? WHERE karyawan_id = ?");
 if (!$stmt) {
     error_log("Failed to prepare statement: " . $conn->error);
@@ -30,7 +31,7 @@ if (!$stmt) {
     exit;
 }
 
-// Bind parameters and execute the statement
+
 $stmt->bind_param("sssssssss", $nama, $role_ID, $divisi, $noTelp, $alamat, $ktp_npwp, $npwp, $status, $karyawan_id);
 if ($stmt->execute()) {
     error_log("Karyawan updated successfully: ID = $karyawan_id");
@@ -47,7 +48,5 @@ catch(Exception $e){
     echo json_encode(["success"=> false,"error"=> $e->getMessage()]);
 }
 
-
-// Close the statement and connection
 $stmt->close();
 $conn->close();

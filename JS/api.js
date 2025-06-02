@@ -32,8 +32,14 @@ export async function apiRequest(endpoint, method = "GET", body = null) {
       toastr.error(responseData.error || "Terjadi kesalahan server");
       throw new Error(responseData.error || "Server error");
     }
-
-    return { ...responseData, ok: response.ok, status: response.status };
+    if (Array.isArray(responseData)) {
+      return {
+        ok: true,
+        status: response.status,
+        data: responseData,
+      };
+    }
+    return { ...responseData, ok: true, status: response.status };
   } catch (error) {
     console.error("API Request Error:", error.message);
     throw error;

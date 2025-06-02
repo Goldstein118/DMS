@@ -86,7 +86,11 @@ function submitRole() {
     validateField(name_role, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
     validateField(akses_role, /^[0-9]+$/, "Format akses tidak valid");
 
-  const data_role = { user_id: "US0525-058", name_role, akses_role };
+  const data_role = {
+    user_id: `${localStorage.getItem("user_id")}`,
+    name_role,
+    akses_role,
+  };
 
   if (is_valid) {
     try {

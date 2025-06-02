@@ -49,7 +49,11 @@ if (grid_container_user) {
     sort: true,
     pagination: { limit: 15 },
     server: {
-      url: `${config.API_BASE_URL}/PHP/API/user_API.php?action=select&user_id=US0525-058`,
+      url: `${
+        config.API_BASE_URL
+      }/PHP/API/user_API.php?action=select&user_id=${localStorage.getItem(
+        "user_id"
+      )}`,
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -128,7 +132,9 @@ async function handleDeleteUser(button) {
   if (result.isConfirmed) {
     try {
       const response = await apiRequest(
-        "/PHP/API/user_API.php?action=delete&user_id=US0525-010",
+        `/PHP/API/user_API.php?action=delete&user_id=${localStorage.getItem(
+          "user_id"
+        )}`,
         "DELETE",
         { userID }
       );
@@ -163,7 +169,9 @@ async function handleUpdateUser(button) {
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     const response = await apiRequest(
-      "/PHP/API/karyawan_API.php?action=select&user_id=US0525-058"
+      `/PHP/API/karyawan_API.php?action=select&user_id=${localStorage.getItem(
+        "user_id"
+      )}&target=tb_user&context=edit`
     );
     const karyawan_ID_field = $("#update_karyawan_ID");
 
@@ -214,7 +222,9 @@ if (submit_user_update) {
     };
     try {
       const response = await apiRequest(
-        "/PHP/API/user_API.php?action=update&user_id=US0525-058",
+        `/PHP/API/user_API.php?action=update&user_id=${localStorage.getItem(
+          "user_id"
+        )}`,
         "POST",
         data_user_update
       );

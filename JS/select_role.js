@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
         
         <button type="button" class="btn btn-danger delete_role btn-sm">
-                    <i class="bi bi-trash-fill"></i>
+          <i class="bi bi-trash-fill"></i>
         </button>
         `);
           },
@@ -42,7 +42,11 @@ document.addEventListener("DOMContentLoaded", () => {
       sort: true,
       pagination: { limit: 15 },
       server: {
-        url: `${config.API_BASE_URL}/PHP/API/role_API.php?action=select&user_id=US0525-054`,
+        url: `${
+          config.API_BASE_URL
+        }/PHP/API/role_API.php?action=select&user_id=${localStorage.getItem(
+          "user_id"
+        )}`,
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -166,7 +170,9 @@ async function handleDeleteRole(button) {
   if (result.isConfirmed) {
     try {
       const response = await apiRequest(
-        "/PHP/API/role_API.php?action=delete&user_id=US0525-058",
+        `/PHP/API/role_API.php?action=delete&user_id=${localStorage.getItem(
+          "user_id"
+        )}`,
         "DELETE",
         {
           roleId,
@@ -279,7 +285,9 @@ if (submit_role_update) {
       };
       try {
         const response = await apiRequest(
-          "/PHP/API/role_API.php?action=update&user_id=US0525-058",
+          `/PHP/API/role_API.php?action=update&user_id=${localStorage.getItem(
+            "user_id"
+          )}`,
           "POST",
           data_role_update
         );

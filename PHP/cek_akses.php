@@ -19,7 +19,7 @@ function checkAccess($conn, $userId, $table, $index) {
         exit;
     }
 
-    $startIndex = $accessMap[$table] + $index;
+    $startIndex =$index;
 
     // Get user's level and akses string
     $stmt = $conn->prepare("

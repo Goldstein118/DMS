@@ -1,6 +1,24 @@
 import config from "./config.js";
 import { Grid, html } from "https://unpkg.com/gridjs?module";
 import { apiRequest } from "./api.js";
+import * as access from "./cek_access.js";
+
+localStorage.setItem("user_id", "US0525-060");
+
+try {
+  const response = await apiRequest(
+    `/PHP/API/get_akses_data.php?user_id=${localStorage.getItem("user_id")}`
+  );
+  if (response.level && response.akses) {
+    console.log(response);
+    localStorage.setItem("level", response.level);
+    localStorage.setItem("akses", response.akses);
+  } else {
+    console.log(response);
+  }
+} catch (error) {
+  toastr.error(error.message);
+}
 
 const grid_container_karyawan = document.querySelector("#table_karyawan");
 if (grid_container_karyawan) {
@@ -55,7 +73,11 @@ if (grid_container_karyawan) {
     sort: true,
     pagination: { limit: 15 },
     server: {
-      url: `${config.API_BASE_URL}/PHP/API/karyawan_API.php?action=select&user_id=US0525-058`,
+      url: `${
+        config.API_BASE_URL
+      }/PHP/API/karyawan_API.php?action=select&user_id=${localStorage.getItem(
+        "user_id"
+      )}`,
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -153,7 +175,9 @@ async function handleDeleteKaryawan(button) {
   if (result.isConfirmed) {
     try {
       const response = await apiRequest(
-        "/PHP/API/karyawan_API.php?action=delete&user_id=US0525-058",
+        `/PHP/API/karyawan_API.php?action=delete&user_id=${localStorage.getItem(
+          "user_id"
+        )}`,
         "DELETE",
         { karyawan_ID }
       );
@@ -232,7 +256,9 @@ async function handleUpdateKaryawan(button) {
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     const response = await apiRequest(
-      "/PHP/API/role_API.php?action=select&user_id=US0525-010"
+      `/PHP/API/role_API.php?action=select&user_id=${localStorage.getItem(
+        "user_id"
+      )}&target=tb_karyawan&context=edit`
     );
     populateRoleDropdown(response.data, currentrole_id);
 
@@ -341,7 +367,9 @@ if (submit_karyawan_update) {
           status: status_new,
         };
         const response = await apiRequest(
-          "/PHP/API/karyawan_API.php?action=update&user_id=US0525-058",
+          `/PHP/API/karyawan_API.php?action=update&user_id=${localStorage.getItem(
+            "user_id"
+          )}`,
           "POST",
           data_karyawan_update
         );

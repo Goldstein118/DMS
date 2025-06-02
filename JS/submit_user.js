@@ -14,7 +14,9 @@ if (submit_user) {
 }
 async function fetch_karyawan() {
   const response = await apiRequest(
-    "/PHP/API/karyawan_API.php?action=select&user_id=US0525-058"
+    ` /PHP/API/karyawan_API.php?action=select&user_id=${localStorage.getItem(
+      "user_id"
+    )}&target=tb_user&context=create`
   );
   const karyawan_id = $("#karyawan_ID");
   karyawan_id.empty();
@@ -32,18 +34,18 @@ async function fetch_karyawan() {
   karyawan_id.trigger("change");
 }
 
-function submitUser() {
+async function submitUser() {
   const level = document.getElementById("level").value;
   const karyawan_id = document.getElementById("karyawan_ID").value;
 
   const data_user = {
-    user_id: "US0525-058",
+    user_id: `${localStorage.getItem("user_id")}`,
     karyawan_id,
     level,
   };
 
   try {
-    const response = apiRequest(
+    const response = await apiRequest(
       "/PHP/API/user_API.php?action=create",
       "POST",
       data_user

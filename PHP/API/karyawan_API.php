@@ -2,18 +2,16 @@
 <?php
 require_once '../db.php';
 require_once '../cek_akses.php';
+require_once '../cek_akses_contex.php';
 
 // require_once 'AuthMiddleware.php'; <-- for future token check
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *'); // Allow requests from any origin
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE'); // Allow specific HTTP methods
-header('Access-Control-Allow-Headers: Content-Type'); // Allow specific headers
+header('Access-Control-Allow-Origin: *'); 
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE'); 
+header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
-
-// (Future) Auth token validation
-// $user = verifyToken(); // get user_id from JWT
 $rawInput=file_get_contents("php://input");
 
 $data = json_decode($rawInput, true) ?? [];
@@ -23,7 +21,6 @@ $user_id = $data['user_id'] ?? $_GET['user_id'] ?? $_POST['user_id']??null;
 
 // Get the action from query or body
 $action =$data['action']?? $_GET['action'] ?? $_POST['action'] ?? null;
-
 
 
 if (!$action) {
@@ -40,7 +37,25 @@ if (!$user_id) {
 // Handle based on action
 switch ($action) {
     case 'select':
+    $target = $_GET['target'] ?? $data['target'] ?? null;
+    $contextAction = $_GET['context'] ?? $data['context'] ?? null;
+
+    if ($target && $contextAction) {
+        $hasContextAccess = checkContextAccess($conn, $user_id, [
+            'action' => $contextAction,
+            'target' => $target,
+            'table'  => 'tb_karyawan',
+        ]);
+
+        if (!$hasContextAccess) {
+            http_response_code(403);
+            echo json_encode(['error' => 'Access denied (context)']);
+            exit;
+        }
+    } else {
+        // No context info, fall back to normal access check
         checkAccess($conn, $user_id, 'tb_karyawan', 0); // View access
+    }
         require __DIR__ . '/actions/select_karyawan.php';
         break;
 

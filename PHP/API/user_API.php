@@ -30,22 +30,22 @@ if (!$user_id) {
 // Handle based on action
 switch ($action) {
     case 'select':
-        checkAccess($conn, $user_id, 'tb_karyawan', 0); // View access
+        checkAccess($conn, $user_id, 'tb_user', 4); // View access
         require __DIR__ . '/actions/select_user.php';
         break;
 
     case 'create':
-        checkAccess($conn, $user_id, 'tb_karyawan', 1); // Create access
+        checkAccess($conn, $user_id, 'tb_user', 5); // Create access
         require  __DIR__ . '/actions/create_user.php';
         break;
 
     case 'update':
-        checkAccess($conn, $user_id, 'tb_karyawan', 2); // Edit access
+        checkAccess($conn, $user_id, 'tb_user', 6); // Edit access
         require  __DIR__ . '/actions/update_user.php';
         break;
 
     case 'delete':
-        checkAccess($conn, $user_id, 'tb_karyawan', 3); // Delete access
+        checkAccess($conn, $user_id, 'tb_user', 7); // Delete access
         require  __DIR__ . '/actions/delete_user.php';
         break;
 

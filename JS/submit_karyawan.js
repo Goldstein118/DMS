@@ -19,7 +19,9 @@ if (submit_karyawan) {
 async function fetch_roles() {
   try {
     const response = await apiRequest(
-      "/PHP/API/role_API.php?action=select&user_id=US0525-058"
+      `/PHP/API/role_API.php?action=select&user_id=${localStorage.getItem(
+        "user_id"
+      )}&target=tb_karyawan&context=create`
     );
     populateRoleDropdown(response.data);
   } catch (error) {
@@ -111,7 +113,7 @@ async function submitKaryawan() {
     const no_telp_karyawan = format_no_telp(phone_karyawan);
 
     const data_karyawan = {
-      user_id: "US0525-058",
+      user_id: `${localStorage.getItem("user_id")}`,
       name_karyawan,
       divisi_karyawan,
       no_telp_karyawan,
@@ -123,7 +125,7 @@ async function submitKaryawan() {
     };
     try {
       const response = await apiRequest(
-        "/PHP/API/karyawan_API.php?action=create",
+        `/PHP/API/karyawan_API.php?action=create`,
         "POST",
         data_karyawan
       );

@@ -5,6 +5,7 @@ header('Access-Control-Allow-Headers: Content-Type'); // Allow specific headers
 header('Content-Type: application/json');
 include '../db.php';
 require_once '../cek_akses.php';
+require_once '../cek_akses_contex.php';
 
 $rawInput=file_get_contents("php://input");
 
@@ -30,22 +31,40 @@ if (!$user_id) {
 // Handle based on action
 switch ($action) {
     case 'select':
-        checkAccess($conn, $user_id, 'tb_karyawan', 0); // View access
+    $target = $_GET['target'] ?? $data['target'] ?? null;
+    $contextAction = $_GET['context'] ?? $data['context'] ?? null;
+
+    if ($target && $contextAction) {
+        $hasContextAccess = checkContextAccess($conn, $user_id, [
+            'action' => $contextAction,
+            'target' => $target,
+            'table'  => 'tb_role',
+        ]);
+
+        if (!$hasContextAccess) {
+            http_response_code(403);
+            echo json_encode(['error' => 'Access denied (context)']);
+            exit;
+        }
+    } else {
+        // No context info, fall back to normal access check
+        checkAccess($conn, $user_id, 'tb_role', 8); // View access
+    }
         require __DIR__ . '/actions/select_role.php';
         break;
 
     case 'create':
-        checkAccess($conn, $user_id, 'tb_karyawan', 1); // Create access
+        checkAccess($conn, $user_id, 'tb_role', 9); // Create access
         require  __DIR__ . '/actions/create_role.php';
         break;
 
     case 'update':
-        checkAccess($conn, $user_id, 'tb_karyawan', 2); // Edit access
+        checkAccess($conn, $user_id, 'tb_role', 10); // Edit access
         require  __DIR__ . '/actions/update_role.php';
         break;
 
     case 'delete':
-        checkAccess($conn, $user_id, 'tb_karyawan', 3); // Delete access
+        checkAccess($conn, $user_id, 'tb_role', 11); // Delete access
         require  __DIR__ . '/actions/delete_role.php';
         break;
 

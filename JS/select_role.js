@@ -1,6 +1,7 @@
 import config from "../JS/config.js";
-import { Grid, html } from "https://unpkg.com/gridjs?module";
+import { Grid, html } from "../Vendor/gridjs.module.js";
 import { apiRequest } from "./api.js";
+import * as access from "./cek_access.js";
 document.addEventListener("DOMContentLoaded", () => {
   const grid_container_role = document.querySelector("#table_role");
   if (grid_container_role) {
@@ -11,17 +12,29 @@ document.addEventListener("DOMContentLoaded", () => {
         "Akses",
         {
           name: "Aksi",
-          formatter: () => {
-            return html(`
-        <button type="button"   class="btn btn-warning update_role btn-sm">
+          formatter: (cells, row) => {
+            const current_user_id = localStorage.getItem("user_id");
+            const row_user_id = row.cells[3].data;
+            const edit =
+              access.hasAccess("tb_role", "edit") &&
+              row_user_id !== current_user_id;
+            const can_delete =
+              access.hasAccess("tb_role", "delete") &&
+              row_user_id !== current_user_id;
+            let button = "";
+
+            if (edit) {
+              button += `<button type="button"   class="btn btn-warning update_role btn-sm">
           <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
           <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
-        </button>
-        
-        <button type="button" class="btn btn-danger delete_role btn-sm">
-          <i class="bi bi-trash-fill"></i>
-        </button>
-        `);
+          </button>`;
+            }
+            if (can_delete) {
+              button += `<button type="button" class="btn btn-danger delete_role btn-sm">
+                <i class="bi bi-trash-fill"></i>
+              </button>`;
+            }
+            return html(button);
           },
         },
       ],
@@ -29,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         enabled: true,
         server: {
           url: (prev, keyword) => {
-            if (keyword.length >= 5 && keyword !== "") {
+            if (keyword.length >= 3 && keyword !== "") {
               const separator = prev.includes("?") ? "&" : "?";
               return `${prev}${separator}search=${encodeURIComponent(keyword)}`;
             } else {
@@ -56,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
             role.role_id,
             role.nama,
             role.akses,
+            role.user_id,
             null, // Placeholder for the action buttons column
           ]),
       },
@@ -76,7 +90,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const wrapper = document.createElement("div");
       wrapper.className =
         "d-flex justify-content-between align-items-center mb-3";
-      wrapper.appendChild(btn);
+      if (access.hasAccess("tb_role", "create")) {
+        wrapper.appendChild(btn);
+      }
+
       wrapper.appendChild(search_Box);
 
       // Replace grid header content
@@ -154,6 +171,18 @@ function event_check_box(field) {
   );
   delete_check_box.checked = !delete_check_box.checked;
 }
+function view_checkbox(field) {
+  ["create", "edit", "delete"].forEach((action) => {
+    const checkbox = document.getElementById(`check_${action}_${field}_update`);
+    checkbox.addEventListener("change", () => {
+      const view = document.getElementById(`check_view_${field}_update`);
+      if (checkbox.checked) {
+        view.checked = true;
+      }
+    });
+  });
+}
+
 async function handleDeleteRole(button) {
   const row = button.closest("tr");
   const roleId = row.cells[0].textContent;
@@ -232,6 +261,11 @@ async function handleUpdateRole(button) {
 
   let checkbox_channel = document.getElementById("check_all_channel_update");
   checkbox_channel.addEventListener("click", () => event_check_box("channel"));
+  ["user", "role", "karyawan", "supplier", "customer", "channel"].forEach(
+    (table) => {
+      view_checkbox(table);
+    }
+  );
 
   await new Promise((resolve) => setTimeout(resolve, 500));
   button_icon.style.display = "inline-block";

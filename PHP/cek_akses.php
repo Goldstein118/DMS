@@ -1,6 +1,5 @@
 <?php
-
-function checkAccess($conn, $userId, $table, $index) {
+function checkAccess($conn, $userId, $table, $index, $targetUserId = null) {
     $accessMap = [
         'tb_karyawan' => 0,
         'tb_user' => 4,
@@ -19,7 +18,7 @@ function checkAccess($conn, $userId, $table, $index) {
         exit;
     }
 
-    $startIndex =$index;
+    $startIndex = $index;
 
     // Get user's level and akses string
     $stmt = $conn->prepare("
@@ -43,16 +42,18 @@ function checkAccess($conn, $userId, $table, $index) {
     $level = strtolower($row['level'] ?? '');
     $aksesString = $row['akses'] ?? '';
 
-    // If owner, skip access check
+    // Owner has full access
     if ($level === 'owner') {
-        return; // full access granted
+        return;
     }
 
-    // For normal users, check akses string bitmask
+
+    // Regular access check
     if (strlen($aksesString) <= $startIndex || $aksesString[$startIndex] !== '1') {
         http_response_code(403);
         echo json_encode(["error" => "Access denied"]);
         exit;
     }
 }
+
 ?>

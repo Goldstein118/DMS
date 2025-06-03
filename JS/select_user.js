@@ -1,6 +1,7 @@
 import config from "./config.js";
-import { Grid, html } from "https://unpkg.com/gridjs?module";
+import { Grid, html } from "../Vendor/gridjs.module.js";
 import { apiRequest } from "./api.js";
+import * as access from "./cek_access.js";
 
 const grid_container_user = document.querySelector("#table_user");
 if (grid_container_user) {
@@ -18,17 +19,41 @@ if (grid_container_user) {
       "Level",
       {
         name: "Aksi",
-        formatter: () => {
-          return html(`
-        <button type="button"  id ="update_user_button" class="btn btn-warning update_user btn-sm">
-          <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
-          <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
-        </button>
-        
-        <button type="button" class="btn btn-danger delete_user btn-sm">
-                    <i class="bi bi-trash-fill"></i>
-        </button>
-        `);
+        formatter: (_cell, row) => {
+          const current_user_id = localStorage.getItem("user_id");
+          const row_user_id = row.cells[0].data;
+          const edit =
+            access.hasAccess("tb_user", "edit") &&
+            row_user_id !== current_user_id;
+          const can_delete =
+            access.hasAccess("tb_user", "delete") &&
+            row_user_id !== current_user_id;
+          let button = "";
+
+          if (edit) {
+            button += `<button
+                type="button"
+                id="update_user_button"
+                class="btn btn-warning update_user btn-sm"
+              >
+                <span id="button_icon" class="button_icon">
+                  <i class="bi bi-pencil-square"></i>
+                </span>
+                <span
+                  id="spinner_update"
+                  class="spinner-border spinner-border-sm spinner_update"
+                  style="display: none;"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </button>`;
+          }
+          if (can_delete) {
+            button += `<button type="button" class="btn btn-danger delete_user btn-sm">
+                <i class="bi bi-trash-fill"></i>
+              </button>`;
+          }
+          return html(button);
         },
       },
     ],
@@ -36,7 +61,7 @@ if (grid_container_user) {
       enabled: true,
       server: {
         url: (prev, keyword) => {
-          if (keyword.length >= 5 && keyword !== "") {
+          if (keyword.length >= 3 && keyword !== "") {
             const separator = prev.includes("?") ? "&" : "?";
             return `${prev}${separator}search=${encodeURIComponent(keyword)}`;
           } else {
@@ -82,7 +107,10 @@ if (grid_container_user) {
     const wrapper = document.createElement("div");
     wrapper.className =
       "d-flex justify-content-between align-items-center mb-3";
-    wrapper.appendChild(btn);
+    if (access.hasAccess("tb_karyawan", "create")) {
+      wrapper.appendChild(btn);
+    }
+
     wrapper.appendChild(search_Box);
 
     grid_header.innerHTML = "";

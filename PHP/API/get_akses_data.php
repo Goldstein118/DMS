@@ -1,5 +1,5 @@
-
 <?php
+header('Content-Type: application/json');
 require_once '../db.php';
 
 $userId = $_GET['user_id'] ?? null;
@@ -10,7 +10,7 @@ if (!$userId) {
 }
 
 $stmt = $conn->prepare("
-    SELECT u.level, r.akses
+    SELECT u.level, r.akses ,k.nama
     FROM tb_user u
     JOIN tb_karyawan k ON u.karyawan_id = k.karyawan_id
     JOIN tb_role r ON k.role_id = r.role_id
@@ -24,7 +24,8 @@ if ($result && $result->num_rows > 0) {
     $data = $result->fetch_assoc();
     echo json_encode([
         "level" => $data['level'],
-        "akses" => $data['akses']
+        "akses" => $data['akses'],
+        "nama" => $data['nama']
     ]);
 } else {
     http_response_code(404);

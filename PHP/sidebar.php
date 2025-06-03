@@ -2,7 +2,7 @@
 
 <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="mobileSidebar" style="width: 200px;">
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title">Navigasi</h5>
+    <h9 class="offcanvas-title"><img src="../images/8.jpg" class="img-fluid d-block mx-auto my-3" style="max-height: 60px;" alt="DMS"></h9>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
   </div>
   <div class="offcanvas-body d-flex flex-column h-100">
@@ -59,15 +59,12 @@
 </div>
 
 
-<div class="sidebar col-lg-2 d-none d-lg-block bg-light p-2 d-flex flex-column vh-100">
-        <a
-          href="#"
-          class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
-          <svg class="bi pe-none me-2" width="30" height="24">
-            <use xlink:href="#bootstrap" />
-          </svg>
-          <span class="fs-5 fw-semibold">Navigasi</span>
-        </a>
+<div class="sidebar col-lg-2 d-none d-lg-block bg-white p-2 d-flex flex-column vh-100">
+  <div class="d-flex align-items-center justify-content-center mb-3 border-bottom py-2 flex-column text-center">
+    <img src="../images/8.jpg" alt="DMS" class="img-fluid d-block mb-2" style="max-height: 60px;">
+    <span id="welcomeText" class="fw-bold">Selamat Datang,</span>
+    <span id="username" class="text-muted small"></span>
+  </div>
         <div class="d-flex flex-column flex-grow-1">
                 <ul class="list-unstyled ps-0">
           <li class="mb-1">

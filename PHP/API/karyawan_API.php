@@ -1,10 +1,7 @@
-
 <?php
 require_once '../db.php';
 require_once '../cek_akses.php';
 require_once '../cek_akses_contex.php';
-
-// require_once 'AuthMiddleware.php'; <-- for future token check
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *'); 
@@ -18,6 +15,7 @@ $data = json_decode($rawInput, true) ?? [];
 error_log("Incoming data: " . print_r($data, true));
 
 $user_id = $data['user_id'] ?? $_GET['user_id'] ?? $_POST['user_id']??null;
+
 
 // Get the action from query or body
 $action =$data['action']?? $_GET['action'] ?? $_POST['action'] ?? null;

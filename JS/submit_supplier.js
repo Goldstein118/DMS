@@ -1,4 +1,4 @@
-import config from "../JS/config.js";
+import { apiRequest } from "./api.js";
 
 const submit_supplier = document.getElementById("submit_supplier");
 if (submit_supplier) {
@@ -26,7 +26,7 @@ function format_no_telp(str) {
   let result = "+62 " + format;
   return result;
 }
-function submitSupplier() {
+async function submitSupplier() {
   const supplier_nama = document.getElementById("supplier_nama").value;
   const supplier_alamat = document.getElementById("supplier_alamat").value;
   let supplier_phone = document.getElementById("supplier_no_telp").value;
@@ -69,7 +69,7 @@ function submitSupplier() {
   if (is_valid) {
     const supplier_no_telp = format_no_telp(supplier_phone);
     const supplier_data = {
-      action: "submit_supplier",
+      user_id: `${localStorage.getItem("user_id")}`,
       supplier_nama,
       supplier_alamat,
       supplier_no_telp,
@@ -77,39 +77,24 @@ function submitSupplier() {
       supplier_npwp,
       supplier_status,
     };
-    fetch(`${config.API_BASE_URL}/PHP/create.php`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(supplier_data),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((jsonData) => {
-        if (jsonData.success) {
-          document.getElementById("supplier_nama").value = "";
-          document.getElementById("supplier_alamat").value = "";
-          document.getElementById("supplier_no_telp").value = "";
-          document.getElementById("supplier_ktp").value = "";
-          document.getElementById("supplier_npwp").value = "";
-          document.getElementById("supplier_status").value = "";
-          $("#modal_supplier").modal("hide");
-          Swal.fire({
-            title: "Berhasil",
-            icon: "success",
-          });
-        } else {
-          toastr.error(jsonData.message, {
-            timeOut: 500,
-            extendedTimeOut: 500,
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Error submitting supplier:", error);
-        toastr.error(
-          "An error occurred while submitting the form. Please try again."
-        );
-      });
+
+    try {
+      const response = await apiRequest(
+        `/PHP/API/supplier_API.php?action=create`,
+        "POST",
+        supplier_data
+      );
+
+      document.getElementById("supplier_nama").value = "";
+      document.getElementById("supplier_alamat").value = "";
+      document.getElementById("supplier_no_telp").value = "";
+      document.getElementById("supplier_ktp").value = "";
+      document.getElementById("supplier_npwp").value = "";
+      document.getElementById("supplier_status").value = "";
+      $("#modal_supplier").modal("hide");
+      swal.fire("Berhasil", response.message, "success");
+    } catch (error) {
+      toastr.error(error.message);
+    }
   }
 }

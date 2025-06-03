@@ -1,5 +1,7 @@
-import config from "../JS/config.js";
-import { Grid, html } from "https://unpkg.com/gridjs?module";
+import config from "./config.js";
+import { Grid, html } from "../Vendor/gridjs.module.js";
+import { apiRequest } from "./api.js";
+import * as access from "./cek_access.js";
 const grid_container_channel = document.querySelector("#table_channel");
 if (grid_container_channel) {
   new Grid({
@@ -9,16 +11,37 @@ if (grid_container_channel) {
       {
         name: "Aksi",
         formatter: () => {
-          return html(`
-        <button type="button"  class="btn btn-warning update_channel btn-sm">
-            <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
-            <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
-        </button>
-        
-        <button type="button" class="btn btn-danger delete_channel btn-sm" >
-            <i class="bi bi-trash-fill"></i>
-        </button>
-        `);
+          const edit = access.hasAccess("tb_karyawan", "edit");
+          const can_delete = access.hasAccess("tb_karyawan", "delete");
+          let button = "";
+
+          if (edit) {
+            button += `<button
+                type="button"
+                class="btn btn-warning update_channel btn-sm"
+              >
+                <span id="button_icon" class="button_icon">
+                  <i class="bi bi-pencil-square"></i>
+                </span>
+                <span
+                  id="spinner_update"
+                  class="spinner-border spinner-border-sm spinner_update"
+                  style="display: none;"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </button>`;
+          }
+          if (can_delete) {
+            button += `<button
+                type="button"
+                class="btn btn-danger delete_channel btn-sm"
+              >
+                <i class="bi bi-trash-fill"></i>
+              </button>`;
+          }
+
+          return html(button);
         },
       },
     ],
@@ -26,8 +49,9 @@ if (grid_container_channel) {
       enabled: true,
       server: {
         url: (prev, keyword) => {
-          if (keyword.length >= 5 && keyword !== "") {
-            return `${prev}?search=${encodeURIComponent(keyword)}`;
+          if (keyword.length >= 3 && keyword !== "") {
+            const separator = prev.includes("?") ? "&" : "?";
+            return `${prev}${separator}search=${encodeURIComponent(keyword)}`;
           } else {
             return prev;
           }
@@ -38,7 +62,11 @@ if (grid_container_channel) {
     sort: true,
     pagination: { limit: 15 },
     server: {
-      url: `${config.API_BASE_URL}/PHP/API/channel_API.php`,
+      url: `${
+        config.API_BASE_URL
+      }/PHP/API/channel_API.php?action=select&user_id=${localStorage.getItem(
+        "user_id"
+      )}`,
       method: "GET",
       headers: { "Content-Type": "application/json" },
       then: (data) =>
@@ -61,7 +89,10 @@ if (grid_container_channel) {
     const wrapper = document.createElement("div");
     wrapper.className =
       "d-flex justify-content-between align-items-center mb-3";
-    wrapper.appendChild(btn);
+    if (access.hasAccess("tb_channel", "create")) {
+      wrapper.appendChild(btn);
+    }
+
     wrapper.appendChild(search_Box);
 
     // Replace grid header content
@@ -120,31 +151,29 @@ async function handleDeleteChannel(button) {
   });
   if (result.isConfirmed) {
     try {
-      const response = await fetch(
-        `${config.API_BASE_URL}/PHP/delete_channel.php`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ channel_id: channel_id }),
-        }
+      const response = await apiRequest(
+        `/PHP/API/channel_API.php?action=delete&user_id=${localStorage.getItem(
+          "user_id"
+        )}`,
+        "DELETE",
+        { channel_id: channel_id }
       );
       if (response.ok) {
         row.remove();
-        Swal.fire({
-          title: "Berhasil !",
-          text: "Data Channel berhasil dihapus!",
-          icon: "success",
-        });
+        Swal.fire(
+          "Berhasil",
+          response.message || "Channel dihapus.",
+          "success"
+        );
       } else {
-        throw new Error(
-          `Failed to delete supplier. Status: ${response.status}`
+        Swal.fire(
+          "Gagal",
+          response.error || "Gagal menghapus channel.",
+          "error"
         );
       }
     } catch (error) {
-      console.error("Error deleting channel:", error);
-      toastr.error("Failed to delete channel.");
+      toastr.error(error.message);
     }
   }
 }
@@ -175,5 +204,29 @@ if (submit_channel_update) {
       return;
     }
     const row = window.currentRow;
+    const channel_id = document.getElementById("update_channel_id").value;
+    const nama_new = document.getElementById("update_nama_channel").value;
+    if (validateField(nama_new, /^[a-zA-Z\s]+$/, "Format nama tidak valid")) {
+      try {
+        const data_channel_update = {
+          channel_id: channel_id,
+          nama: nama_new,
+        };
+
+        const response = await apiRequest(
+          `/PHP/API/channel_API.php?action=update&user_id=${localStorage.getItem(
+            "user_id"
+          )}`,
+          "POST",
+          data_channel_update
+        );
+        row.cells[1].textContent = nama_new;
+
+        $("#modal_channel_update").modal("hide");
+        Swal.fire("Berhasil", response.message, "success");
+      } catch (error) {
+        toastr.error(error.message);
+      }
+    }
   });
 }

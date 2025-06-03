@@ -24,14 +24,6 @@ validate_2($npwp, '/^[0-9 .-]+$/', "Invalid NPWP format");
 
 
 $stmt = $conn->prepare("UPDATE tb_karyawan SET nama = ?, role_id = ?, divisi = ?, no_telp = ?, alamat = ?, ktp = ? ,npwp = ?, status =? WHERE karyawan_id = ?");
-if (!$stmt) {
-    error_log("Failed to prepare statement: " . $conn->error);
-    http_response_code(500);
-    echo json_encode(["success" => false, "error" => "An internal server error occurred"]);
-    exit;
-}
-
-
 $stmt->bind_param("sssssssss", $nama, $role_ID, $divisi, $noTelp, $alamat, $ktp_npwp, $npwp, $status, $karyawan_id);
 if ($stmt->execute()) {
     error_log("Karyawan updated successfully: ID = $karyawan_id");

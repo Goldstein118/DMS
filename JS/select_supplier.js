@@ -1,5 +1,8 @@
 import config from "../JS/config.js";
-import { Grid, html } from "https://unpkg.com/gridjs?module";
+import { Grid, html } from "../Vendor/gridjs.module.js";
+import { apiRequest } from "./api.js";
+import * as access from "./cek_access.js";
+
 const gird_container_supplier = document.querySelector("#table_supplier");
 if (gird_container_supplier) {
   new Grid({
@@ -14,16 +17,22 @@ if (gird_container_supplier) {
       {
         name: "Aksi",
         formatter: () => {
-          return html(`
-        <button type="button"  id ="update_supplier_button" class="btn btn-warning update_supplier btn-sm">
+          const edit = access.hasAccess("tb_karyawan", "edit");
+          const can_delete = access.hasAccess("tb_karyawan", "delete");
+          let button = "";
+
+          if (edit) {
+            button += `<button type="button"  id ="update_supplier_button" class="btn btn-warning update_supplier btn-sm">
           <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
           <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
-        </button>
-        
-        <button type="button" class="btn btn-danger delete_supplier btn-sm">
+        </button>`;
+          }
+          if (can_delete) {
+            button += `<button type="button" class="btn btn-danger delete_supplier btn-sm">
                     <i class="bi bi-trash-fill"></i>
-        </button>
-        `);
+                    </button>`;
+          }
+          return html(button);
         },
       },
     ],
@@ -31,8 +40,9 @@ if (gird_container_supplier) {
       enabled: true,
       server: {
         url: (prev, keyword) => {
-          if (keyword.length >= 5 && keyword !== "") {
-            return `${prev}?search=${encodeURIComponent(keyword)}`;
+          if (keyword.length >= 3 && keyword !== "") {
+            const separator = prev.includes("?") ? "&" : "?";
+            return `${prev}${separator}search=${encodeURIComponent(keyword)}`;
           } else {
             return prev;
           }
@@ -43,7 +53,11 @@ if (gird_container_supplier) {
     sort: true,
     pagination: { limit: 15 },
     server: {
-      url: `${config.API_BASE_URL}/PHP/API/supplier_API.php`,
+      url: `${
+        config.API_BASE_URL
+      }/PHP/API/supplier_API.php?action=select&user_id=${localStorage.getItem(
+        "user_id"
+      )}`,
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +91,10 @@ if (gird_container_supplier) {
     const wrapper = document.createElement("div");
     wrapper.className =
       "d-flex justify-content-between align-items-center mb-3";
-    wrapper.appendChild(btn);
+    if (access.hasAccess("tb_karyawan", "create")) {
+      wrapper.appendChild(btn);
+    }
+
     wrapper.appendChild(search_Box);
 
     // Replace grid header content
@@ -125,34 +142,29 @@ async function handleDeleteSupplier(button) {
   });
   if (result.isConfirmed) {
     try {
-      const response = await fetch(
-        `${config.API_BASE_URL}/PHP/delete_supplier.php`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ supplier_id: supplier_id }),
-        }
+      const response = await apiRequest(
+        `/PHP/API/supplier_API.php?action=delete&user_id=${localStorage.getItem(
+          "user_id"
+        )}`,
+        "DELETE",
+        { supplier_id: supplier_id }
       );
       if (response.ok) {
         row.remove();
-        Swal.fire({
-          title: "Berhasil !",
-          text: "Data Supplier berhasil dihapus!",
-          icon: "success",
-        });
+        Swal.fire(
+          "Berhasil",
+          response.message || "Supplier dihapus.",
+          "success"
+        );
       } else {
-        throw new Error(
-          `Failed to delete supplier. Status: ${response.status}`
+        Swal.fire(
+          "Gagal",
+          response.error || "Gagal menghapus karyawan.",
+          "error"
         );
       }
     } catch (error) {
-      console.error("Error deleting supplier:", error);
-      toastr.error("Failed to delete supplier.", {
-        timeOut: 500,
-        extendedTimeOut: 500,
-      });
+      toastr.error(error.message);
     }
   }
 }
@@ -265,49 +277,35 @@ if (submit_supplier_update) {
     if (is_valid) {
       const new_no_telp = format_no_telp(update_no_telp);
       try {
-        const response = await fetch(
-          `${config.API_BASE_URL}/PHP/update_supplier.php`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              supplier_id: supplier_id,
-              nama: update_nama,
-              alamat: update_alamat,
-              no_telp: new_no_telp,
-              ktp: update_ktp,
-              npwp: update_npwp,
-              status: update_status,
-            }),
-          }
+        const data_supplier_update = {
+          supplier_id: supplier_id,
+          nama: update_nama,
+          alamat: update_alamat,
+          no_telp: new_no_telp,
+          ktp: update_ktp,
+          npwp: update_npwp,
+          status: update_status,
+        };
+
+        const response = await apiRequest(
+          `/PHP/API/supplier_API.php?action=update&user_id=${localStorage.getItem(
+            "user_id"
+          )}`,
+          "POST",
+          data_supplier_update
         );
 
-        if (response.ok) {
-          row.cells[1].textContent = update_nama;
-          row.cells[2].textContent = update_alamat;
-          row.cells[3].textContent = new_no_telp;
-          row.cells[4].textContent = update_ktp;
-          row.cells[5].textContent = update_npwp;
-          row.cells[6].textContent = update_status;
+        row.cells[1].textContent = update_nama;
+        row.cells[2].textContent = update_alamat;
+        row.cells[3].textContent = new_no_telp;
+        row.cells[4].textContent = update_ktp;
+        row.cells[5].textContent = update_npwp;
+        row.cells[6].textContent = update_status;
 
-          $("#modal_supplier_update").modal("hide");
-          Swal.fire({
-            title: "Berhasil",
-            icon: "success",
-          });
-        } else {
-          throw new Error(
-            `Failed to update supplier. Status: ${response.status}`
-          );
-        }
+        $("#modal_supplier_update").modal("hide");
+        Swal.fire("Berhasil", response.message, "success");
       } catch (error) {
-        console.error("Error updating supplier:", error);
-        toastr.error("Failed to update supplier.", {
-          timeOut: 500,
-          extendedTimeOut: 500,
-        });
+        toastr.error(error.message);
       }
     }
   });

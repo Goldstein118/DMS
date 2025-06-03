@@ -36,7 +36,7 @@ $karyawan = "CREATE TABLE IF NOT EXISTS tb_karyawan (
     alamat VARCHAR(100),
     ktp VARCHAR(100),
     npwp VARCHAR(100),
-    status VARCHAR(10) DEFAULT 'aktif',
+    status VARCHAR(20) DEFAULT 'aktif',
     FOREIGN KEY (role_id) REFERENCES tb_role(role_id) ON DELETE RESTRICT
 )";
 
@@ -66,7 +66,7 @@ $supplier = "CREATE TABLE IF NOT EXISTS tb_supplier (
         no_telp VARCHAR(20),
         ktp VARCHAR(100),
         npwp VARCHAR(100),
-        status VARCHAR(10) DEFAULT 'aktif'
+        status VARCHAR(20) DEFAULT 'aktif'
         )";
 if ($conn->query($supplier)) {
     try {
@@ -82,7 +82,7 @@ $customer = "CREATE TABLE IF NOT EXISTS tb_customer (
         no_telp VARCHAR(20),
         ktp VARCHAR(100),
         npwp VARCHAR(100),
-        status VARCHAR(10) DEFAULT 'aktif', 
+        status VARCHAR(20) DEFAULT 'aktif', 
         nitko VARCHAR(100), 
         term_pembayaran VARCHAR(100),
         max_invoice VARCHAR(20), 
@@ -130,7 +130,7 @@ $produk = "CREATE TABLE IF NOT EXISTS tb_produk(
 produk_id VARCHAR(10) PRIMARY KEY NOT NULL, 
 nama VARCHAR(100),
 no_sku VARCHAR(100),
-status VARCHAR(10) DEFAULT 'aktif',
+status VARCHAR(20) DEFAULT 'aktif',
 harga_minimal VARCHAR(20),
 kategori_id VARCHAR(10),
 brand_id VARCHAR(10),

@@ -16,3 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+document.addEventListener("DOMContentLoaded", function () {
+  const name = localStorage.getItem("nama");
+  if (name) {
+    document.getElementById("username").textContent = name;
+  }
+});

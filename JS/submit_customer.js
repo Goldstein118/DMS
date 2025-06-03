@@ -1,4 +1,4 @@
-import config from "./config.js";
+import { apiRequest } from "./api.js";
 
 const submit_customer = document.getElementById("submit_customer");
 if (submit_customer) {
@@ -30,7 +30,7 @@ function format_no_telp(str) {
   return result;
 }
 
-function submitCustomer() {
+async function submitCustomer() {
   // Collect form data
   const name_customer = document.getElementById("name_customer").value;
   let no_telp_customer = document.getElementById("no_telp_customer").value;
@@ -104,7 +104,7 @@ function submitCustomer() {
     no_telp_customer = format_no_telp(no_telp_customer);
 
     const data_customer = {
-      action: "submit_customer",
+      user_id: `${localStorage.getItem("user_id")}`,
       name_customer,
       alamat_customer,
       no_telp_customer,
@@ -116,48 +116,30 @@ function submitCustomer() {
       max_piutang,
       status_customer,
     };
-    // Send the data to the PHP script
-    fetch(`${config.API_BASE_URL}/PHP/create.php`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data_customer),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((jsonData) => {
-        if (jsonData.success) {
-          // Reset the form
-          document.getElementById("name_customer").value = "";
-          document.getElementById("no_telp_customer").value = "";
-          document.getElementById("alamat_customer").value = "";
-          document.getElementById("nik_customer").value = "";
-          document.getElementById("npwp_customer").value = "";
-          document.getElementById("status_customer").value = "";
-          document.getElementById("nitko").value = "";
-          document.getElementById("term_payment").value = "";
-          document.getElementById("max_invoice").value = "";
-          document.getElementById("max_piutang").value = "";
 
-          $("#modal_customer").modal("hide");
-          Swal.fire({
-            title: "Berhasil",
-            icon: "success",
-          });
-        } else {
-          toastr.error(jsonData.message, {
-            timeOut: 500,
-            extendedTimeOut: 500,
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Error submitting customer:", error);
-        toastr.error(
-          "An error occurred while submitting the form. Please try again."
-        );
-      });
+    try {
+      const response = await apiRequest(
+        `/PHP/API/customer_API.php?action=create&user_id=user_id: ${localStorage.getItem(
+          "user_id"
+        )}`,
+        "POST",
+        data_customer
+      );
+      document.getElementById("name_customer").value = "";
+      document.getElementById("no_telp_customer").value = "";
+      document.getElementById("alamat_customer").value = "";
+      document.getElementById("nik_customer").value = "";
+      document.getElementById("npwp_customer").value = "";
+      document.getElementById("status_customer").value = "";
+      document.getElementById("nitko").value = "";
+      document.getElementById("term_payment").value = "";
+      document.getElementById("max_invoice").value = "";
+      document.getElementById("max_piutang").value = "";
+
+      $("#modal_customer").modal("hide");
+      swal.fire("Berhasil", response.message, "success");
+    } catch (error) {
+      toastr.error(error.message);
+    }
   }
 }

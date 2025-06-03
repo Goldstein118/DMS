@@ -1,47 +1,78 @@
 <?php
+require_once '../db.php';
+require_once '../cek_akses.php';
+require_once '../cek_akses_contex.php';
+
 header('Access-Control-Allow-Origin: *'); // Allow requests from any origin
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow specific HTTP methods
 header('Access-Control-Allow-Headers: Content-Type'); // Allow specific headers
 header('Content-Type: application/json');
-include '../db.php'; // Include your database connection file
-if(!$conn){
-    http_response_code(500);
-    echo json_encode(["error" => "Database connection failed"]);
+
+$rawInput=file_get_contents("php://input");
+
+$data = json_decode($rawInput, true) ?? [];
+error_log("Incoming data: " . print_r($data, true));
+
+$user_id = $data['user_id'] ?? $_GET['user_id'] ?? $_POST['user_id']??null;
+
+
+$action =$data['action']?? $_GET['action'] ?? $_POST['action'] ?? null;
+
+
+if (!$action) {
+    http_response_code(400);
+    echo json_encode(["error" => "No action specified"]);
     exit;
 }
-$search = isset($_GET['search']) ? $_GET['search'] : '';
-$search = trim($search);
-
-if (strlen($search)>=5 && $search !==''){
-    $stmt = $conn->prepare("SELECT * FROM tb_customer WHERE customer_id LIKE CONCAT ('%',?,'%')
-    OR nama LIKE CONCAT ('%',?,'%')
-    OR alamat LIKE CONCAT ('%',?,'%')
-    OR no_telp LIKE CONCAT ('%',?,'%')
-    OR ktp LIKE CONCAT ('%',?,'%')
-    OR npwp LIKE CONCAT ('%',?,'%')
-    OR status LIKE CONCAT ('%',?,'%')
-    OR nitko LIKE CONCAT ('%',?,'%')
-    OR term_pembayaran LIKE CONCAT ('%',?,'%')
-    OR max_invoice LIKE CONCAT ('%',?,'%')
-    OR max_piutang LIKE CONCAT ('%',?,'%')
-    ");
-    $stmt -> bind_param('sssssssssss',$search,$search,$search,$search,$search,$search,$search,$search,$search,$search,$search);
-    $stmt->execute();
-    $result = $stmt->get_result();
-}else {
-    $sql="SELECT * FROM tb_customer";
-    $result=$conn->query($sql);
+if (!$user_id) {
+    http_response_code(400);
+    echo json_encode(["error" => "Missing user_id"]);
+    exit;
 }
 
-    if ($result) {
-    $customer_data = [];
-    while ($row = mysqli_fetch_assoc($result)) {
-        $customer_data[] = $row;
-    }
-    http_response_code(200);
-    echo json_encode($customer_data);
+// Handle based on action
+switch ($action) {
+    case 'select':
+    $target = $_GET['target'] ?? $data['target'] ?? null;
+    $contextAction = $_GET['context'] ?? $data['context'] ?? null;
+
+    if ($target && $contextAction) {
+        $hasContextAccess = checkContextAccess($conn, $user_id, [
+            'action' => $contextAction,
+            'target' => $target,
+            'table'  => 'tb_customer',
+        ]);
+
+        if (!$hasContextAccess) {
+            http_response_code(403);
+            echo json_encode(['error' => 'Access denied (context)']);
+            exit;
+        }
     } else {
-    http_response_code(500);
-    echo json_encode(["error" => "Failed to fetch data: " . $conn->error]);
+        // No context info, fall back to normal access check
+        checkAccess($conn, $user_id, 'tb_customer', 16); // View access
     }
+        require __DIR__ . '/actions/select_customer.php';
+        break;
+
+    case 'create':
+        checkAccess($conn, $user_id, 'tb_customer', 17); // Create access
+        require  __DIR__ . '/actions/create_customer.php';
+        break;
+
+    case 'update':
+        checkAccess($conn, $user_id, 'tb_customer', 18); // Edit access
+        require  __DIR__ . '/actions/update_customer.php';
+        break;
+
+    case 'delete':
+        checkAccess($conn, $user_id, 'tb_customer', 19); // Delete access
+        require  __DIR__ . '/actions/delete_customer.php';
+        break;
+
+    default:
+        http_response_code(400);
+        echo json_encode(["error" => "Invalid action"]);
+        break;
+}
 ?>

@@ -7,7 +7,7 @@ if(!$conn){
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $search = trim($search);
 
-if ($search !== ''&& strlen($search)>=5) {
+if ($search !== ''&& strlen($search)>=3) {
     $stmt = $conn->prepare("SELECT role_id, nama, akses
     FROM tb_role WHERE nama LIKE CONCAT ('%',?,'%')
     OR role_id LIKE CONCAT ('%',?,'%')
@@ -16,7 +16,9 @@ if ($search !== ''&& strlen($search)>=5) {
     $stmt->execute();
     $result = $stmt->get_result();
 } else {
-    $sql_role = "SELECT * FROM tb_role";
+    $sql_role = "SELECT r.role_id,r.nama,r.akses,u.user_id FROM tb_role r
+                JOIN tb_karyawan k ON r.role_id = k.role_id
+                JOIN tb_user u ON u.karyawan_id=k.karyawan_id";
     $result = $conn->query($sql_role);
 }
 

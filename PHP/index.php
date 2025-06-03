@@ -11,7 +11,7 @@ include ("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tabel Karyawan</title>
+  <title>DMS</title>
 
   <!-- jQuery -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/jquery-3.6.0.min.js"></script>

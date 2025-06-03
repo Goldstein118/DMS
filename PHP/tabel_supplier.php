@@ -74,6 +74,7 @@
 <main class="col-12 col-lg-10 ms-auto px-1">
       <!-- Main content -->
       <div id="main"  class="table-responsive">
+        <h3>Tabel Supplier</h3>
           <div id="table_supplier"></div>
       </div>
   </main>

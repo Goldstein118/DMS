@@ -37,9 +37,3 @@ export function hasAccess(table, action) {
   const index = baseIndex + offset;
   return akses.charAt(index) === "1";
 }
-
-// Returns true if user can edit a row with this user_id (not their own)
-export function canEditUser(targetUserId) {
-  const currentUserId = localStorage.getItem("user_id");
-  return hasAccess("tb_user", "edit") && targetUserId !== currentUserId;
-}

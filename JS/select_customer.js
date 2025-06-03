@@ -1,5 +1,7 @@
-import config from "../JS/config.js";
-import { Grid, html } from "https://unpkg.com/gridjs?module";
+import config from "./config.js";
+import { Grid, html } from "../Vendor/gridjs.module.js";
+import { apiRequest } from "./api.js";
+import * as access from "./cek_access.js";
 const gird_container_customer = document.querySelector("#table_customer");
 if (gird_container_customer) {
   new Grid({
@@ -18,16 +20,23 @@ if (gird_container_customer) {
       {
         name: "Aksi",
         formatter: () => {
-          return html(`
-        <button type="button"  id ="update_customer_button" class="btn btn-warning update_customer btn-sm">
+          const edit = access.hasAccess("tb_karyawan", "edit");
+          const can_delete = access.hasAccess("tb_karyawan", "delete");
+          let button = "";
+
+          if (edit) {
+            button += `<button type="button"  id ="update_customer_button" class="btn btn-warning update_customer btn-sm">
             <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
             <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
-        </button>
-        
+        </button>`;
+          }
+          if (can_delete) {
+            button += `
         <button type="button" class="btn btn-danger delete_customer btn-sm">
-                    <i class="bi bi-trash-fill"></i>
-        </button>
-        `);
+          <i class="bi bi-trash-fill"></i>
+        </button>`;
+          }
+          return html(button);
         },
       },
     ],
@@ -35,8 +44,9 @@ if (gird_container_customer) {
       enabled: true,
       server: {
         url: (prev, keyword) => {
-          if (keyword.length >= 5 && keyword !== "") {
-            return `${prev}?search=${encodeURIComponent(keyword)}`;
+          if (keyword.length >= 3 && keyword !== "") {
+            const separator = prev.includes("?") ? "&" : "?";
+            return `${prev}${separator}search=${encodeURIComponent(keyword)}`;
           } else {
             return prev;
           }
@@ -47,7 +57,11 @@ if (gird_container_customer) {
     sort: true,
     pagination: { limit: 15 },
     server: {
-      url: `${config.API_BASE_URL}/PHP/API/customer_API.php`,
+      url: `${
+        config.API_BASE_URL
+      }/PHP/API/customer_API.php?action=select&user_id=${localStorage.getItem(
+        "user_id"
+      )}`,
       method: "GET",
       headers: { "Content-Type": "application/json" },
       then: (data) =>
@@ -83,7 +97,10 @@ if (gird_container_customer) {
     const wrapper = document.createElement("div");
     wrapper.className =
       "d-flex justify-content-between align-items-center mb-3";
-    wrapper.appendChild(btn);
+    if (access.hasAccess("tb_customer", "create")) {
+      wrapper.appendChild(btn);
+    }
+
     wrapper.appendChild(search_Box);
 
     // Replace grid header content
@@ -150,31 +167,29 @@ async function handleDeleteCustomer(button) {
   });
   if (result.isConfirmed) {
     try {
-      const response = await fetch(
-        `${config.API_BASE_URL}/PHP/delete_customer.php`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ customer_id: customer_id }),
-        }
+      const response = await apiRequest(
+        `/PHP/API/customer_API.php?action=delete&user_id=${localStorage.getItem(
+          "user_id"
+        )}`,
+        "DELETE",
+        { customer_id: customer_id }
       );
       if (response.ok) {
         row.remove();
-        Swal.fire({
-          title: "Berhasil !",
-          text: "Data Customer berhasil dihapus!",
-          icon: "success",
-        });
+        Swal.fire(
+          "Berhasil",
+          response.message || "Customer dihapus.",
+          "success"
+        );
       } else {
-        throw new Error(
-          `Failed to delete supplier. Status: ${response.status}`
+        Swal.fire(
+          "Gagal",
+          response.error || "Gagal menghapus customer.",
+          "error"
         );
       }
     } catch (error) {
-      console.error("Error deleting customer:", error);
-      toastr.error("Failed to delete customer.");
+      toastr.error(error.message);
     }
   }
 }
@@ -309,58 +324,44 @@ if (submit_customer_update) {
 
     if (is_valid) {
       const update_no_telp = format_no_telp(update_phone);
+
+      const data_customer_update = {
+        customer_id: customer_id,
+        nama: update_nama,
+        alamat: update_alamat,
+        no_telp: update_no_telp,
+        ktp: update_ktp,
+        npwp: update_npwp,
+        status: update_status,
+        nitko: update_nitko,
+        term_pembayaran: update_term_pembayaran,
+        max_invoice: update_max_invoice,
+        max_piutang: update_max_piutang,
+      };
       try {
-        const response = await fetch(
-          `${config.API_BASE_URL}/PHP/update_customer.php`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              customer_id: customer_id,
-              nama: update_nama,
-              alamat: update_alamat,
-              no_telp: update_no_telp,
-              ktp: update_ktp,
-              npwp: update_npwp,
-              status: update_status,
-              nitko: update_nitko,
-              term_pembayaran: update_term_pembayaran,
-              max_invoice: update_max_invoice,
-              max_piutang: update_max_piutang,
-            }),
-          }
+        const response = await apiRequest(
+          `/PHP/API/customer_API.php?action=update&user_id=${localStorage.getItem(
+            "user_id"
+          )}`,
+          "POST",
+          data_customer_update
         );
 
-        if (response.ok) {
-          row.cells[1].textContent = update_nama;
-          row.cells[2].textContent = update_alamat;
-          row.cells[3].textContent = update_no_telp;
-          row.cells[4].textContent = update_ktp;
-          row.cells[5].textContent = update_npwp;
-          row.cells[6].textContent = update_status;
-          row.cells[7].textContent = update_nitko;
-          row.cells[8].textContent = update_term_pembayaran;
-          row.cells[9].textContent = update_max_invoice;
-          row.cells[10].textContent = update_max_piutang;
+        row.cells[1].textContent = update_nama;
+        row.cells[2].textContent = update_alamat;
+        row.cells[3].textContent = update_no_telp;
+        row.cells[4].textContent = update_ktp;
+        row.cells[5].textContent = update_npwp;
+        row.cells[6].textContent = update_status;
+        row.cells[7].textContent = update_nitko;
+        row.cells[8].textContent = update_term_pembayaran;
+        row.cells[9].textContent = update_max_invoice;
+        row.cells[10].textContent = update_max_piutang;
 
-          $("#modal_customer_update").modal("hide");
-          Swal.fire({
-            title: "Berhasil",
-            icon: "success",
-          });
-        } else {
-          throw new Error(
-            `Failed to update customer. Status: ${response.status}`
-          );
-        }
+        $("#modal_customer_update").modal("hide");
+        Swal.fire("Berhasil", response.message, "success");
       } catch (error) {
-        console.error("Error updating customer:", error);
-        toastr.error("Failed to update customer.", {
-          timeOut: 500,
-          extendedTimeOut: 500,
-        });
+        toastr.error(error.message);
       }
     }
   });

@@ -93,6 +93,7 @@
 
 <main class="col-12 col-lg-10 ms-auto px-1" >
       <div id="main" class="table-responsive" >
+        <h3>Tabel Customer</h3>
           <div id ="table_customer"></div>
       </div>
 </main>

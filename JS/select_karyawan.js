@@ -1,24 +1,29 @@
 import config from "./config.js";
-import { Grid, html } from "https://unpkg.com/gridjs?module";
+import { Grid, html } from "../Vendor/gridjs.module.js";
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 
-localStorage.setItem("user_id", "US0525-060");
+localStorage.setItem("user_id", "US0525-041");
 
 try {
   const response = await apiRequest(
     `/PHP/API/get_akses_data.php?user_id=${localStorage.getItem("user_id")}`
   );
+  console.log(response);
   if (response.level && response.akses) {
-    console.log(response);
     localStorage.setItem("level", response.level);
     localStorage.setItem("akses", response.akses);
+    localStorage.setItem("nama", response.nama);
   } else {
     console.log(response);
   }
 } catch (error) {
   toastr.error(error.message);
 }
+console.log("Akses:", localStorage.getItem("akses"));
+console.log("Can Create:", access.hasAccess("tb_karyawan", "create"));
+console.log("Can Edit:", access.hasAccess("tb_karyawan", "edit"));
+console.log("Can Delete:", access.hasAccess("tb_karyawan", "delete"));
 
 const grid_container_karyawan = document.querySelector("#table_karyawan");
 if (grid_container_karyawan) {
@@ -42,17 +47,43 @@ if (grid_container_karyawan) {
       "role_id",
       {
         name: "Aksi",
-        formatter: () => {
-          return html(`
-        <button type="button"  id ="update_karyawan_button" class="btn btn-warning update_karyawan btn-sm">
-          <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
-          <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
-        </button>
-        
+        formatter: (_cell, row) => {
+          const current_user_id = localStorage.getItem("user_id");
+          const row_user_id = row.cells[10].data;
+          const edit =
+            access.hasAccess("tb_karyawan", "edit") &&
+            row_user_id !== current_user_id;
+          const can_delete =
+            access.hasAccess("tb_karyawan", "delete") &&
+            row_user_id !== current_user_id;
+          let button = "";
+
+          if (edit) {
+            button += `<button
+                type="button"
+                id="update_karyawan_button"
+                class="btn btn-warning update_karyawan btn-sm"
+              >
+                <span id="button_icon" class="button_icon">
+                  <i class="bi bi-pencil-square"></i>
+                </span>
+                <span
+                  id="spinner_update"
+                  class="spinner-border spinner-border-sm spinner_update"
+                  style="display: none;"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </button>`;
+          }
+          if (can_delete) {
+            button += `
         <button type="button" class="btn btn-danger delete_karyawan btn-sm">
-                    <i class="bi bi-trash-fill"></i>
+          <i class="bi bi-trash-fill"></i>
         </button>
-        `);
+        `;
+          }
+          return html(button);
         },
       },
     ],
@@ -60,7 +91,7 @@ if (grid_container_karyawan) {
       enabled: true,
       server: {
         url: (prev, keyword) => {
-          if (keyword.length >= 5 && keyword !== "") {
+          if (keyword.length >= 3 && keyword !== "") {
             const separator = prev.includes("?") ? "&" : "?";
             return `${prev}${separator}search=${encodeURIComponent(keyword)}`;
           } else {
@@ -94,7 +125,8 @@ if (grid_container_karyawan) {
           karyawan.npwp,
           karyawan.status,
           karyawan.role_id,
-          null, // Placeholder for the action buttons column
+          karyawan.user_id,
+          null,
         ]),
     },
   }).render(document.getElementById("table_karyawan"));
@@ -114,7 +146,10 @@ if (grid_container_karyawan) {
     const wrapper = document.createElement("div");
     wrapper.className =
       "d-flex justify-content-between align-items-center mb-3";
-    wrapper.appendChild(btn);
+    if (access.hasAccess("tb_karyawan", "create")) {
+      wrapper.appendChild(btn);
+    }
+
     wrapper.appendChild(search_Box);
 
     // Replace grid header content
@@ -191,7 +226,7 @@ async function handleDeleteKaryawan(button) {
       } else {
         Swal.fire(
           "Gagal",
-          response.error || "Gagal meenghapus karyawan.",
+          response.error || "Gagal menghapus karyawan.",
           "error"
         );
       }

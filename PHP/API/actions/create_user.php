@@ -18,7 +18,7 @@ try {
 
     echo json_encode([
         "success" => true,
-        "message" => "User saved successfully",
+        "message" => "Berhasil",
         "data" => ["user_id" => $id_user]
     ]);
 } catch (Exception $e) {

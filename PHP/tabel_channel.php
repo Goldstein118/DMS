@@ -7,7 +7,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <label class="form-label" for="nama_channel">Nama:</label>
+        <label class="form-label" for="nama_channel">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
          <input class="form-control" type="text" id="nama_channel" name="nama_channel" value=""><br>
       </div>
       <div class="modal-footer">
@@ -28,7 +28,7 @@
       <div class="modal-body">
         <label class="form-label" for="update_channel_id">Kode Channel:</label>
         <input class="form-control" type="text" id="update_channel_id" disabled><br><br>
-        <label class="form-label" for="update_nama_channel">Nama:</label>
+        <label class="form-label" for="update_nama_channel">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
         <input class="form-control" type="text" id="update_nama_channel" name="update_nama_channel" value=""><br>
       </div>
       <div class="modal-footer">

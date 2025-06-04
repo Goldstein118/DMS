@@ -12,17 +12,23 @@ function proses_check_box() {
   return results;
 }
 function event_check_box(field) {
-  let view = document.getElementById("check_view_" + field);
-  view.checked = !view.checked;
-
-  let create = document.getElementById("check_create_" + field);
-  create.checked = !create.checked;
-
-  let edit = document.getElementById("check_edit_" + field);
-  edit.checked = !edit.checked;
-
-  let delete_check_box = document.getElementById("check_delete_" + field);
-  delete_check_box.checked = !delete_check_box.checked;
+  ["view", "create", "edit", "delete"].forEach((action) => {
+    const checkbox = document.getElementById(`check_${action}_${field}`);
+    if (checkbox) {
+      checkbox.checked = !checkbox.checked;
+    }
+  });
+}
+function view_checkbox(field) {
+  ["create", "edit", "delete"].forEach((action) => {
+    const checkbox = document.getElementById(`check_${action}_${field}`);
+    checkbox.addEventListener("change", () => {
+      const view = document.getElementById(`check_view_${field}`);
+      if (checkbox.checked) {
+        view.checked = true;
+      }
+    });
+  });
 }
 const submit_role = document.getElementById("submit_role");
 if (submit_role) {
@@ -30,34 +36,30 @@ if (submit_role) {
   $("#modal_role").on("shown.bs.modal", function () {
     $("#name_role").trigger("focus");
   });
+
   document.addEventListener("DOMContentLoaded", () => {
-    let checkbox_karyawan = document.getElementById("check_all_karyawan");
-    checkbox_karyawan.addEventListener("click", () => {
-      event_check_box("karyawan");
+    const checkboxFields = [
+      "karyawan",
+      "user",
+      "role",
+      "supplier",
+      "customer",
+      "channel",
+    ];
+
+    checkboxFields.forEach((field) => {
+      const checkboxAll = document.getElementById(`check_all_${field}`);
+      if (checkboxAll) {
+        checkboxAll.addEventListener("click", () => event_check_box(field));
+      }
     });
 
-    let checkbox_user = document.getElementById("check_all_user");
-    checkbox_user.addEventListener("click", () => event_check_box("user"));
-
-    let checkbox_role = document.getElementById("check_all_role");
-    checkbox_role.addEventListener("click", () => event_check_box("role"));
-
-    let checkbox_supplier = document.getElementById("check_all_supplier");
-    checkbox_supplier.addEventListener("click", () =>
-      event_check_box("supplier")
-    );
-
-    let checkbox_customer = document.getElementById("check_all_customer");
-    checkbox_customer.addEventListener("click", () =>
-      event_check_box("customer")
-    );
-
-    let checkbox_channel = document.getElementById("check_all_channel");
-    checkbox_channel.addEventListener("click", () =>
-      event_check_box("channel")
-    );
+    checkboxFields.forEach((field) => {
+      view_checkbox(field);
+    });
   });
 }
+
 function validateField(field, pattern, errorMessage) {
   if (!pattern.test(field)) {
     toastr.error(errorMessage, {

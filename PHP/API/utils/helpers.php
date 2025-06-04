@@ -1,9 +1,9 @@
 <?php
+
 function generateCustomID($prefix, $table, $column, $conn)
 {
-    $month = date('m');
-    $year = date('y');
-    $like_pattern = "$prefix$month$year-%";
+    $year = date('y'); // Get last two digits of current year
+    $like_pattern = "$prefix$year-%";
 
     $stmt = $conn->prepare("SELECT MAX($column) AS last_id FROM $table WHERE $column LIKE ?");
     $stmt->bind_param("s", $like_pattern);
@@ -11,8 +11,10 @@ function generateCustomID($prefix, $table, $column, $conn)
     $result = $stmt->get_result()->fetch_assoc();
     $last = $result['last_id'] ?? null;
 
-    $next = $last ? str_pad(((int)substr($last, -3)) + 1, 3, '0', STR_PAD_LEFT) : '001';
-    return "$prefix$month$year-$next";
+    // Extract last 7 digits and increment
+    $next = $last ? str_pad(((int)substr($last, -7)) + 1, 7, '0', STR_PAD_LEFT) : '0000001';
+    
+    return "$prefix$year-$next";
 }
 
 function validate_1($data, $fields, $defaults = [])

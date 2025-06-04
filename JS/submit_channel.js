@@ -1,4 +1,4 @@
-import config from "../JS/config.js";
+import { apiRequest } from "./api.js";
 
 const submit_channel = document.getElementById("submit_channel");
 if (submit_channel) {
@@ -18,7 +18,7 @@ function validateField(field, pattern, errorMessage) {
   return true;
 }
 
-function submitChannel() {
+async function submitChannel() {
   const name_channel = document.getElementById("nama_channel").value;
 
   if (!name_channel || name_channel.trim() === "") {
@@ -27,39 +27,21 @@ function submitChannel() {
   }
   if (validateField(name_channel, /^[a-zA-Z\s]+$/, "Format nama tidak valid")) {
     const data_channel = {
-      action: "submit_channel",
+      user_id: `${localStorage.getItem("user_id")}`,
       name_channel,
     };
-    fetch(`${config.API_BASE_URL}/PHP/create.php`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data_channel),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((jsonData) => {
-        if (jsonData.success) {
-          document.getElementById("nama_channel").value = "";
-          $("#modal_channel").modal("hide");
-          Swal.fire({
-            title: "Berhasil",
-            icon: "success",
-          });
-        } else {
-          toastr.error(jsonData.message, {
-            timeOut: 500,
-            extendedTimeOut: 500,
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Error submitting channel:", error);
-        toastr.error(
-          "An error occurred while submitting the form. Please try again."
-        );
-      });
+
+    try {
+      const response = await apiRequest(
+        `/PHP/API/channel_API.php?action=create`,
+        "POST",
+        data_channel
+      );
+      swal.fire("Berhasil", response.message, "success");
+      document.getElementById("nama_channel").value = "";
+      $("#modal_channel").modal("hide");
+    } catch (error) {
+      toastr.error(error.message);
+    }
   }
 }

@@ -7,7 +7,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <label class="form-label" for="nama_brand">Nama:</label>
+        <label class="form-label" for="nama_brand">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
          <input class="form-control" type="text" id="nama_brand" name="nama_brand" value=""><br>
       </div>
       <div class="modal-footer">
@@ -28,7 +28,7 @@
       <div class="modal-body">
         <label class="form-label" for="update_brand_id">Kode Brand:</label>
         <input class="form-control" type="text" id="update_brand_id" disabled><br><br>
-        <label class="form-label" for="update_nama_brand">Nama:</label>
+        <label class="form-label" for="update_nama_brand">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
         <input class="form-control" type="text" id="update_nama_brand" name="update_nama_brand" value=""><br>
       </div>
       <div class="modal-footer">

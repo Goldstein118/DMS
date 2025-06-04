@@ -2,23 +2,23 @@ import config from "./config.js";
 import { Grid, html } from "../Vendor/gridjs.module.js";
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
-const grid_container_channel = document.querySelector("#table_channel");
-if (grid_container_channel) {
+const grid_container_brand = document.querySelector("#table_brand");
+if (grid_container_brand) {
   new Grid({
     columns: [
-      "Kode Channel",
+      "Kode Brand",
       "Nama",
       {
         name: "Aksi",
         formatter: () => {
-          const edit = access.hasAccess("tb_channel", "edit");
-          const can_delete = access.hasAccess("tb_channel", "delete");
+          const edit = access.hasAccess("tb_brand", "edit");
+          const can_delete = access.hasAccess("tb_brand", "delete");
           let button = "";
 
           if (edit) {
             button += `<button
                 type="button"
-                class="btn btn-warning update_channel btn-sm"
+                class="btn btn-warning update_brand btn-sm"
               >
                 <span id="button_icon" class="button_icon">
                   <i class="bi bi-pencil-square"></i>
@@ -35,7 +35,7 @@ if (grid_container_channel) {
           if (can_delete) {
             button += `<button
                 type="button"
-                class="btn btn-danger delete_channel btn-sm"
+                class="btn btn-danger delete_brand btn-sm"
               >
                 <i class="bi bi-trash-fill"></i>
               </button>`;
@@ -64,17 +64,16 @@ if (grid_container_channel) {
     server: {
       url: `${
         config.API_BASE_URL
-      }/PHP/API/channel_API.php?action=select&user_id=${localStorage.getItem(
+      }/PHP/API/brand_API.php?action=select&user_id=${localStorage.getItem(
         "user_id"
       )}`,
       method: "GET",
       headers: { "Content-Type": "application/json" },
-      then: (data) =>
-        data.map((channel) => [channel.channel_id, channel.nama, null]),
+      then: (data) => data.map((brand) => [brand.brand_id, brand.nama, null]),
     },
-  }).render(document.getElementById("table_channel"));
+  }).render(document.getElementById("table_brand"));
   setTimeout(() => {
-    const grid_header = document.querySelector("#table_channel .gridjs-head");
+    const grid_header = document.querySelector("#table_brand .gridjs-head");
     const search_Box = grid_header.querySelector(".gridjs-search");
 
     // Create the button
@@ -82,14 +81,14 @@ if (grid_container_channel) {
     btn.type = "button";
     btn.className = "btn btn-primary btn-sm";
     btn.setAttribute("data-bs-toggle", "modal");
-    btn.setAttribute("data-bs-target", "#modal_channel");
+    btn.setAttribute("data-bs-target", "#modal_brand");
     btn.innerHTML = '<i class="bi bi-plus-square"></i> Channel ';
 
     // Wrap both button and search bar in a flex container
     const wrapper = document.createElement("div");
     wrapper.className =
       "d-flex justify-content-between align-items-center mb-3";
-    if (access.hasAccess("tb_channel", "create")) {
+    if (access.hasAccess("tb_brand", "create")) {
       wrapper.appendChild(btn);
     }
 
@@ -98,7 +97,7 @@ if (grid_container_channel) {
     // Replace grid header content
     grid_header.innerHTML = "";
     grid_header.appendChild(wrapper);
-    const input = document.querySelector("#table_channel .gridjs-input");
+    const input = document.querySelector("#table_brand .gridjs-input");
     grid_header.style.display = "flex";
     grid_header.style.justifyContent = "flex-end";
 
@@ -113,10 +112,10 @@ if (grid_container_channel) {
 }
 function attachEventListeners() {
   document
-    .getElementById("table_channel")
+    .getElementById("table_brand")
     .addEventListener("click", function (event) {
-      const delete_btn = event.target.closest(".delete_channel");
-      const update_btn = event.target.closest(".update_channel");
+      const delete_btn = event.target.closest(".delete_brand");
+      const update_btn = event.target.closest(".update_brand");
 
       if (delete_btn) {
         handleDeleteChannel(delete_btn);
@@ -138,7 +137,7 @@ function validateField(field, pattern, errorMessage) {
 
 async function handleDeleteChannel(button) {
   const row = button.closest("tr");
-  const channel_id = row.cells[0].textContent;
+  const brand_id = row.cells[0].textContent;
   const result = await Swal.fire({
     title: "Apakah Anda Yakin?",
     text: "Anda tidak dapat mengembalikannya!",
@@ -152,25 +151,17 @@ async function handleDeleteChannel(button) {
   if (result.isConfirmed) {
     try {
       const response = await apiRequest(
-        `/PHP/API/channel_API.php?action=delete&user_id=${localStorage.getItem(
+        `/PHP/API/brand_API.php?action=delete&user_id=${localStorage.getItem(
           "user_id"
         )}`,
         "DELETE",
-        { channel_id: channel_id }
+        { brand_id: brand_id }
       );
       if (response.ok) {
         row.remove();
-        Swal.fire(
-          "Berhasil",
-          response.message || "Channel dihapus.",
-          "success"
-        );
+        Swal.fire("Berhasil", response.message || "Brand dihapus.", "success");
       } else {
-        Swal.fire(
-          "Gagal",
-          response.error || "Gagal menghapus channel.",
-          "error"
-        );
+        Swal.fire("Gagal", response.error || "Gagal menghapus brand.", "error");
       }
     } catch (error) {
       toastr.error(error.message);
@@ -185,44 +176,44 @@ async function handleUpdateChannel(button) {
   button_icon.style.display = "none";
   spinner.style.display = "inline-block";
 
-  const channel_id = row.cells[0].textContent;
+  const brand_id = row.cells[0].textContent;
   const current_nama = row.cells[1].textContent;
-  document.getElementById("update_channel_id").value = channel_id;
-  document.getElementById("update_nama_channel").value = current_nama;
+  document.getElementById("update_brand_id").value = brand_id;
+  document.getElementById("update_nama_brand").value = current_nama;
 
   await new Promise((resolve) => setTimeout(resolve, 500));
   button_icon.style.display = "inline-block";
   spinner.style.display = "none";
-  $("#modal_channel_update").modal("show");
+  $("#modal_brand_update").modal("show");
 }
 
-const submit_channel_update = document.getElementById("submit_channel_update");
-if (submit_channel_update) {
-  submit_channel_update.addEventListener("click", async function () {
+const submit_brand_update = document.getElementById("submit_brand_update");
+if (submit_brand_update) {
+  submit_brand_update.addEventListener("click", async function () {
     if (!window.currentRow) {
       toastr.error("no row selected for update.");
       return;
     }
     const row = window.currentRow;
-    const channel_id = document.getElementById("update_channel_id").value;
-    const nama_new = document.getElementById("update_nama_channel").value;
+    const brand_id = document.getElementById("update_brand_id").value;
+    const nama_new = document.getElementById("update_nama_brand").value;
     if (validateField(nama_new, /^[a-zA-Z\s]+$/, "Format nama tidak valid")) {
       try {
-        const data_channel_update = {
-          channel_id: channel_id,
+        const data_brand_update = {
+          brand_id: brand_id,
           nama: nama_new,
         };
 
         const response = await apiRequest(
-          `/PHP/API/channel_API.php?action=update&user_id=${localStorage.getItem(
+          `/PHP/API/brand_API.php?action=update&user_id=${localStorage.getItem(
             "user_id"
           )}`,
           "POST",
-          data_channel_update
+          data_brand_update
         );
         row.cells[1].textContent = nama_new;
 
-        $("#modal_channel_update").modal("hide");
+        $("#modal_brand_update").modal("hide");
         Swal.fire("Berhasil", response.message, "success");
       } catch (error) {
         toastr.error(error.message);

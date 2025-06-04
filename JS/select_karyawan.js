@@ -3,28 +3,6 @@ import { Grid, html } from "../Vendor/gridjs.module.js";
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 
-localStorage.setItem("user_id", "US0525-041");
-
-try {
-  const response = await apiRequest(
-    `/PHP/API/get_akses_data.php?user_id=${localStorage.getItem("user_id")}`
-  );
-  console.log(response);
-  if (response.level && response.akses) {
-    localStorage.setItem("level", response.level);
-    localStorage.setItem("akses", response.akses);
-    localStorage.setItem("nama", response.nama);
-  } else {
-    console.log(response);
-  }
-} catch (error) {
-  toastr.error(error.message);
-}
-console.log("Akses:", localStorage.getItem("akses"));
-console.log("Can Create:", access.hasAccess("tb_karyawan", "create"));
-console.log("Can Edit:", access.hasAccess("tb_karyawan", "edit"));
-console.log("Can Delete:", access.hasAccess("tb_karyawan", "delete"));
-
 const grid_container_karyawan = document.querySelector("#table_karyawan");
 if (grid_container_karyawan) {
   $(document).ready(function () {

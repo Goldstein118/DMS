@@ -84,7 +84,7 @@ include('sidebar.php');
 $page = $_GET['page'] ?? 'tabel_karyawan';
 
 // Whitelist allowed pages for security
-$allowed_pages = ['tabel_karyawan', 'tabel_role', 'tabel_user','tabel_supplier','tabel_customer','tabel_channel'];
+$allowed_pages = ['tabel_karyawan', 'tabel_role', 'tabel_user','tabel_supplier','tabel_customer','tabel_channel','tabel_brand'];
 
 if (in_array($page, $allowed_pages)) {
   include $page . '.php';
@@ -102,13 +102,13 @@ include('footer.php');
 switch ($page) {
   case 'tabel_karyawan':
     ?>
-    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_karyawan.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_karyawan.js?v=2.0.1"></script>
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_karyawan.js?v=2.0"></script>
     <?php
     break;
   case 'tabel_role':
     ?>
-    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_role.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_role.js?v=2.0.1"></script>
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_role.js?v=2.0"></script>
     <?php
     break;
@@ -136,8 +136,14 @@ switch ($page) {
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_channel.js?v=2.0"></script>
     <?php
     break;
+  case 'tabel_brand':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_brand.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_brand.js?v=2.0"></script>
+    <?php
+    break;
 }
 ?>
-  <script src="<?php echo $_ENV['BASE_URL']; ?>../JS/side_bar.js"></script>
+  <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/side_bar.js?v=2.0"></script>
 </body>
 </html>

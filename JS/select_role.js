@@ -156,21 +156,19 @@ function proses_check_box() {
   console.log(results);
   return results;
 }
+
 function event_check_box(field) {
-  let view = document.getElementById("check_view_" + field + "_update");
-  view.checked = !view.checked;
-
-  let create = document.getElementById("check_create_" + field + "_update");
-  create.checked = !create.checked;
-
-  let edit = document.getElementById("check_edit_" + field + "_update");
-  edit.checked = !edit.checked;
-
-  let delete_check_box = document.getElementById(
-    "check_delete_" + field + "_update"
-  );
-  delete_check_box.checked = !delete_check_box.checked;
+  const selectAll = document.getElementById(`check_all_${field}_update`);
+  if (!selectAll) return;
+  const checked = selectAll.checked;
+  ["view", "create", "edit", "delete"].forEach((action) => {
+    const checkbox = document.getElementById(`check_${action}_${field}_update`);
+    if (checkbox) {
+      checkbox.checked = checked;
+    }
+  });
 }
+
 function view_checkbox(field) {
   ["create", "edit", "delete"].forEach((action) => {
     const checkbox = document.getElementById(`check_${action}_${field}_update`);
@@ -238,34 +236,25 @@ async function handleUpdateRole(button) {
   document.getElementById("update_role_ID").value = role_ID;
   document.getElementById("update_role_name").value = currentNama;
 
-  let checkbox_karyawan = document.getElementById("check_all_karyawan_update");
-  checkbox_karyawan.addEventListener("click", () => {
-    event_check_box("karyawan");
+  const checkboxFields = [
+    "karyawan",
+    "user",
+    "role",
+    "supplier",
+    "customer",
+    "channel",
+  ];
+
+  checkboxFields.forEach((field) => {
+    const checkboxAll = document.getElementById(`check_all_${field}_update`);
+    if (checkboxAll) {
+      checkboxAll.addEventListener("change", () => event_check_box(field));
+    }
   });
 
-  let checkbox_user = document.getElementById("check_all_user_update");
-  checkbox_user.addEventListener("click", () => event_check_box("user"));
-
-  let checkbox_role = document.getElementById("check_all_role_update");
-  checkbox_role.addEventListener("click", () => event_check_box("role"));
-
-  let checkbox_supplier = document.getElementById("check_all_supplier_update");
-  checkbox_supplier.addEventListener("click", () =>
-    event_check_box("supplier")
-  );
-
-  let checkbox_customer = document.getElementById("check_all_customer_update");
-  checkbox_customer.addEventListener("click", () =>
-    event_check_box("customer")
-  );
-
-  let checkbox_channel = document.getElementById("check_all_channel_update");
-  checkbox_channel.addEventListener("click", () => event_check_box("channel"));
-  ["user", "role", "karyawan", "supplier", "customer", "channel"].forEach(
-    (table) => {
-      view_checkbox(table);
-    }
-  );
+  checkboxFields.forEach((field) => {
+    view_checkbox(field);
+  });
 
   await new Promise((resolve) => setTimeout(resolve, 500));
   button_icon.style.display = "inline-block";

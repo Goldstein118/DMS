@@ -2,59 +2,68 @@
 
 <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="mobileSidebar" style="width: 200px;">
   <div class="offcanvas-header">
-    <h9 class="offcanvas-title"><img src="../images/8.jpg" class="img-fluid d-block mx-auto my-3" style="max-height: 60px;" alt="DMS"></h9>
+
+    <img src="../images/8.jpg" class="img-fluid d-block mx-auto my-3" style="max-height: 60px;" alt="DMS">
+        <span id="welcomeText" class="fw-bold">Selamat Datang,</span>
+    <span id="username" class="text-muted small"></span>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
   </div>
+
   <div class="offcanvas-body d-flex flex-column h-100">
-    <ul class="list-unstyled ps-0">
-          <li class="mb-1">
-            <button
-              class="btn btn-toggle d-inline-flex align-items-center rounded border-0"
-              data-bs-toggle="collapse"
-              data-bs-target="#data-collapse"
-              aria-expanded="true">
-              <i
-                class="bi bi-chevron-down toggle-icon"
-                data-bs-target="#data-collapse"></i>
-              Data
-            </button>
-            <div class="collapse show" id="data-collapse">
-              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li>
-                  <a
-                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_karyawan"
-                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Karyawan</a>
-                </li>
-                <li>
-                  <a
-                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_user"
-                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel User</a>
-                </li>
-                <li>
-                  <a
-                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_role"
-                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Role</a>
-                </li>
-                <li>
-                  <a
-                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_supplier"
-                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Supplier</a>
-                </li>
-                <li>
-                  <a
-                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_customer"
-                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Customer</a>
-                </li>
-                  <li>
-                  <a
-                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_channel"
-                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Channel</a>
-                </li>
-              </ul>
-            </div>
-          </li>
+    <ul class="list-unstyled ps-0 flex-grow-1">
+      <li class="mb-1">
+        <button
+          class="btn btn-toggle d-inline-flex align-items-center rounded border-0"
+          data-bs-toggle="collapse"
+          data-bs-target="#data-collapse"
+          aria-expanded="true">
+          <i
+            class="bi bi-chevron-down toggle-icon"
+            data-bs-target="#data-collapse"></i>
+          Data
+        </button>
+        <div class="collapse show" id="data-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_karyawan"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_karyawan' ? 'active' : ''; ?>">Tabel Karyawan</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_user "
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_user' ? 'active' : ''; ?>">Tabel User</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_role"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_role' ? 'active' : ''; ?>">Tabel Role</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_supplier"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_supplier' ? 'active' : ''; ?>">Tabel Supplier</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_customer"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_customer' ? 'active' : ''; ?>">Tabel Customer</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_channel"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_channel' ? 'active' : ''; ?>">Tabel Channel</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_brand"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_brand' ? 'active' : ''; ?>">Tabel Brand</a>
+            </li>
+          </ul>
+        </div>
+      </li>
     </ul>
-    <button type="button" id="logout" class="btn btn-outline-danger btn-sm mt-auto"> <i class="bi bi-box-arrow-in-right"></i> Logout</button>
+    <button type="button" id="logout" class="logout-button mt-auto"> <i class="bi bi-box-arrow-in-right"></i> Logout</button>
   </div>
 </div>
 
@@ -65,56 +74,61 @@
     <span id="welcomeText" class="fw-bold">Selamat Datang,</span>
     <span id="username" class="text-muted small"></span>
   </div>
-        <div class="d-flex flex-column flex-grow-1">
-                <ul class="list-unstyled ps-0">
-          <li class="mb-1">
-            <button
-              class="btn btn-toggle d-inline-flex align-items-center rounded border-0"
-              data-bs-toggle="collapse"
-              data-bs-target="#data-collapse"
-              aria-expanded="true">
-              <i
-                class="bi bi-chevron-down toggle-icon"
-                data-bs-target="#data-collapse"></i>
-              Data
-            </button>
-            <div class="collapse show" id="data-collapse">
-              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li>
-                  <a
-                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_karyawan"
-                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Karyawan</a>
-                </li>
-                <li>
-                  <a
-                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_user"
-                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel User</a>
-                </li>
-                <li>
-                  <a
-                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_role"
-                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Role</a>
-                </li>
-                <li>
-                  <a
-                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_supplier"
-                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Supplier</a>
-                </li>
-                <li>
-                  <a
-                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_customer"
-                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Customer</a>
-                </li>
-                  <li>
-                  <a
-                    href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_channel"
-                    class="link-dark d-inline-flex text-decoration-none rounded">Tabel Channel</a>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-        <button type="button" id="logout" class="btn btn-outline-danger btn-sm mt-auto"> <i class="bi bi-box-arrow-in-right"></i> Logout</button>
+  <div class="d-flex flex-column flex-grow-1">
+    <ul class="list-unstyled ps-0 flex-grow-1">
+      <li class="mb-1">
+        <button
+          class="btn btn-toggle d-inline-flex align-items-center rounded border-0"
+          data-bs-toggle="collapse"
+          data-bs-target="#data-collapse"
+          aria-expanded="true">
+          <i
+            class="bi bi-chevron-down toggle-icon"
+            data-bs-target="#data-collapse"></i>
+          Data
+        </button>
+        <div class="collapse show" id="data-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_karyawan"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_karyawan' ? 'active' : ''; ?>">Tabel Karyawan</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_user"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_user' ? 'active' : ''; ?>">Tabel User</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_role"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_role' ? 'active' : ''; ?>">Tabel Role</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_supplier"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_supplier' ? 'active' : ''; ?>">Tabel Supplier</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_customer"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_customer' ? 'active' : ''; ?>">Tabel Customer</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_channel"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_channel' ? 'active' : ''; ?>">Tabel Channel</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_brand"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_brand' ? 'active' : ''; ?>">Tabel Brand</a>
+            </li>
+          </ul>
         </div>
-        
+      </li>
+    </ul>
+    <button type="button" id="logout" class="logout-button mt-auto"> <i class="bi bi-box-arrow-in-right"></i> Logout</button>
+  </div>
+
 </div>

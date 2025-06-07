@@ -1,5 +1,5 @@
 import { apiRequest } from "./api.js";
-
+import * as access from "./cek_access.js";
 const submit_supplier = document.getElementById("submit_supplier");
 if (submit_supplier) {
   submit_supplier.addEventListener("click", submitSupplier);
@@ -69,7 +69,7 @@ async function submitSupplier() {
   if (is_valid) {
     const supplier_no_telp = format_no_telp(supplier_phone);
     const supplier_data = {
-      user_id: `${localStorage.getItem("user_id")}`,
+      user_id: `${access.decryptItem("user_id")}`,
       supplier_nama,
       supplier_alamat,
       supplier_no_telp,

@@ -30,7 +30,26 @@ if (!$user_id) {
 // Handle based on action
 switch ($action) {
     case 'select':
+
+    $target = $_GET['target'] ?? $data['target'] ?? null;
+    $contextAction = $_GET['context'] ?? $data['context'] ?? null;
+
+    if ($target && $contextAction) {
+        $hasContextAccess = checkContextAccess($conn, $user_id, [
+            'action' => $contextAction,
+            'target' => $target,
+            'table'  => 'tb_user',
+        ]);
+
+        if (!$hasContextAccess) {
+            http_response_code(403);
+            echo json_encode(['error' => 'Access denied (context)']);
+            exit;
+        }
+    } else {
+        // No context info, fall back to normal access check
         checkAccess($conn, $user_id, 'tb_user', 4); // View access
+    }
         require __DIR__ . '/actions/select_user.php';
         break;
 

@@ -8,15 +8,14 @@
       </div>
       <div class="modal-body">
         <label class="form-label" for="karyawan_ID">Kode Karyawan:</label>
-        <select class="form-select" id="karyawan_ID"></select> <br><br>
+        <select class="form-select" id="karyawan_ID"></select> 
         <label class="form-label" for="level">Level :</label>
         <select class="form-select" id="level">
           <option value="user">User</option>
-          <option value ="owner">Owner</option>
+
         </select>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
         <button  id="submit_user" type="button" class="btn btn-primary">Simpan</button>
       </div>
     </div>
@@ -35,19 +34,18 @@
       </div>
       <div class="modal-body">
         <label class="form-label" for="update_user_ID">Kode User:</label>
-        <input class="form-control" type="text" id="update_user_ID" disabled><br><br>
+        <input class="form-control" type="text" id="update_user_ID" disabled>
         <label class="form-label" for="update_karyawan_ID">Kode Karyawan:</label>
         <select class="form-select" id="update_karyawan_ID">
           <option value=""></option>
-        </select> <br><br>
+        </select> 
         <label class="form-label" for="update_level">Level :</label>
         <select class="form-select" id="update_level">
           <option value="user">User</option>
-          <option value ="owner">Owner</option>
+
         </select>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
         <button  id="submit_user_update" type="button" class="btn btn-primary">Simpan</button>
       </div>
     </div>
@@ -55,7 +53,7 @@
 </div>
 <main class="col-12 col-lg-10 ms-auto px-1" >
   <div id="main"  class="table-responsive">
-        <h3>Tabel User</h3>
+        <h3>Data User</h3>
         <div id ="table_user"></div>
   </div>
 </main>

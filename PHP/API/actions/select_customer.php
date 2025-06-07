@@ -9,23 +9,29 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 $search = trim($search);
 
 if (strlen($search)>=3 && $search !==''){
-    $stmt = $conn->prepare("SELECT * FROM tb_customer WHERE customer_id LIKE CONCAT ('%',?,'%')
-    OR nama LIKE CONCAT ('%',?,'%')
-    OR alamat LIKE CONCAT ('%',?,'%')
-    OR no_telp LIKE CONCAT ('%',?,'%')
-    OR ktp LIKE CONCAT ('%',?,'%')
-    OR npwp LIKE CONCAT ('%',?,'%')
-    OR status LIKE CONCAT ('%',?,'%')
-    OR nitko LIKE CONCAT ('%',?,'%')
-    OR term_pembayaran LIKE CONCAT ('%',?,'%')
-    OR max_invoice LIKE CONCAT ('%',?,'%')
-    OR max_piutang LIKE CONCAT ('%',?,'%')
+    $stmt = $conn->prepare("SELECT c.customer_id, c.nama, c.alamat, c.no_telp, c.ktp, c.npwp, c.status,
+    c.nitko,c.term_pembayaran,c.max_invoice,c.max_piutang, c.channel_id ,ch.nama AS channel_nama FROM tb_customer c 
+    JOIN tb_channel ch ON c.channel_id = ch.channel_id WHERE c.customer_id LIKE CONCAT ('%',?,'%')
+    OR c.nama LIKE CONCAT ('%',?,'%')
+    OR c.alamat LIKE CONCAT ('%',?,'%')
+    OR c.no_telp LIKE CONCAT ('%',?,'%')
+    OR c.ktp LIKE CONCAT ('%',?,'%')
+    OR c.npwp LIKE CONCAT ('%',?,'%')
+    OR c.status LIKE CONCAT ('%',?,'%')
+    OR c.nitko LIKE CONCAT ('%',?,'%')
+    OR c.term_pembayaran LIKE CONCAT ('%',?,'%')
+    OR c.max_invoice LIKE CONCAT ('%',?,'%')
+    OR c.max_piutang LIKE CONCAT ('%',?,'%')
+    OR ch.nama LIKE CONCAT ('%',?,'%')
     ");
-    $stmt -> bind_param('sssssssssss',$search,$search,$search,$search,$search,$search,$search,$search,$search,$search,$search);
+    $stmt -> bind_param('ssssssssssss',$search,$search,$search,$search,$search,$search,$search,$search,$search,$search,$search,$search);
     $stmt->execute();
     $result = $stmt->get_result();
 }else {
-    $sql="SELECT * FROM tb_customer";
+    $sql="SELECT  c.customer_id, c.nama, c.alamat, c.no_telp, c.ktp, c.npwp, c.status,
+    c.nitko,c.term_pembayaran,c.max_invoice,c.max_piutang, c.channel_id ,ch.nama AS channel_nama 
+    FROM tb_customer c 
+    JOIN tb_channel ch ON c.channel_id = ch.channel_id";
     $result=$conn->query($sql);
 }
 

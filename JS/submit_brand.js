@@ -1,5 +1,5 @@
 import { apiRequest } from "./api.js";
-
+import * as access from "./cek_access.js";
 const submit_brand = document.getElementById("submit_brand");
 if (submit_brand) {
   submit_brand.addEventListener("click", submitChannel);
@@ -27,7 +27,7 @@ async function submitChannel() {
   }
   if (validateField(name_brand, /^[a-zA-Z\s]+$/, "Format nama tidak valid")) {
     const data_brand = {
-      user_id: `${localStorage.getItem("user_id")}`,
+      user_id: `${access.decryptItem("user_id")}`,
       name_brand,
     };
 

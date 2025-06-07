@@ -8,10 +8,9 @@
       </div>
       <div class="modal-body">
         <label class="form-label" for="nama_channel">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-         <input class="form-control" type="text" id="nama_channel" name="nama_channel" value=""><br>
+         <input class="form-control" type="text" id="nama_channel" name="nama_channel" value="">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
         <button  id="submit_channel" type="button" class="btn btn-primary">Simpan</button>
       </div>
     </div>
@@ -27,12 +26,11 @@
       </div>
       <div class="modal-body">
         <label class="form-label" for="update_channel_id">Kode Channel:</label>
-        <input class="form-control" type="text" id="update_channel_id" disabled><br><br>
+        <input class="form-control" type="text" id="update_channel_id" disabled>
         <label class="form-label" for="update_nama_channel">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-        <input class="form-control" type="text" id="update_nama_channel" name="update_nama_channel" value=""><br>
+        <input class="form-control" type="text" id="update_nama_channel" name="update_nama_channel" value="">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
         <button  id="submit_channel_update" type="button" class="btn btn-primary">Simpan</button>
       </div>
     </div>
@@ -41,7 +39,7 @@
 
 <main class="col-12 col-lg-10 ms-auto px-1" >
   <div id="main"  class="table-responsive">
-    <h3>Tabel Channel</h3>
+    <h3>Data Channel</h3>
         <div id ="table_channel"></div>
   </div>
 </main>

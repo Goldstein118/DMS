@@ -11,6 +11,13 @@ if (grid_container_user) {
       dropdownParent: $("#modal_user_update"),
     });
   });
+  if (access.isOwner()) {
+    const select = document.getElementById("update_level");
+    const options = document.createElement("option");
+    options.value = "owner";
+    options.textContent = "Owner";
+    select.appendChild(options);
+  }
   new Grid({
     columns: [
       "Username",
@@ -20,14 +27,26 @@ if (grid_container_user) {
       {
         name: "Aksi",
         formatter: (_cell, row) => {
-          const current_user_id = localStorage.getItem("user_id");
+          let edit;
+          let can_delete;
+          const current_user_id = access.decryptItem("user_id");
           const row_user_id = row.cells[0].data;
-          const edit =
-            access.hasAccess("tb_user", "edit") &&
-            row_user_id !== current_user_id;
-          const can_delete =
-            access.hasAccess("tb_user", "delete") &&
-            row_user_id !== current_user_id;
+
+          if (access.isOwner) {
+            edit = true;
+          } else {
+            edit =
+              access.hasAccess("tb_user", "edit") &&
+              row_user_id !== current_user_id;
+          }
+          if (access.isOwner) {
+            can_delete = true;
+          } else {
+            can_delete =
+              access.hasAccess("tb_user", "delete") &&
+              row_user_id !== current_user_id;
+          }
+
           let button = "";
 
           if (edit) {
@@ -76,7 +95,7 @@ if (grid_container_user) {
     server: {
       url: `${
         config.API_BASE_URL
-      }/PHP/API/user_API.php?action=select&user_id=${localStorage.getItem(
+      }/PHP/API/user_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
       )}`,
       method: "GET",
@@ -160,7 +179,7 @@ async function handleDeleteUser(button) {
   if (result.isConfirmed) {
     try {
       const response = await apiRequest(
-        `/PHP/API/user_API.php?action=delete&user_id=${localStorage.getItem(
+        `/PHP/API/user_API.php?action=delete&user_id=${access.decryptItem(
           "user_id"
         )}`,
         "DELETE",
@@ -174,7 +193,11 @@ async function handleDeleteUser(button) {
         Swal.fire("Gagal", response.error || "Gagal meenghapus user.", "error");
       }
     } catch (error) {
-      toastr.error(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.message,
+      });
     }
   }
 }
@@ -197,7 +220,7 @@ async function handleUpdateUser(button) {
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     const response = await apiRequest(
-      `/PHP/API/karyawan_API.php?action=select&user_id=${localStorage.getItem(
+      `/PHP/API/karyawan_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
       )}&target=tb_user&context=edit`
     );
@@ -232,10 +255,7 @@ const submit_user_update = document.getElementById("submit_user_update");
 if (submit_user_update) {
   submit_user_update.addEventListener("click", async function () {
     if (!window.currentRow) {
-      toastr.error("No row selected for update.", {
-        timeOut: 500,
-        extendedTimeOut: 500,
-      });
+      toastr.error("No row selected for update.");
       return;
     }
     const row = window.currentRow;
@@ -250,7 +270,7 @@ if (submit_user_update) {
     };
     try {
       const response = await apiRequest(
-        `/PHP/API/user_API.php?action=update&user_id=${localStorage.getItem(
+        `/PHP/API/user_API.php?action=update&user_id=${access.decryptItem(
           "user_id"
         )}`,
         "POST",
@@ -264,7 +284,11 @@ if (submit_user_update) {
       $("#modal_user_update").modal("hide");
       Swal.fire("Berhasil", response.message, "success");
     } catch (error) {
-      toastr.error(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.message,
+      });
     }
   });
 }

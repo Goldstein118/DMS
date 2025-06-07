@@ -5,7 +5,9 @@ function checkContextAccess($conn, $userId, $context) {
     $dependencyMap = [
         'tb_user'     => ['tb_karyawan'],
         'tb_karyawan' => ['tb_role'],
+        'tb_customer' =>['tb_channel'],
         'tb_produk'   => ['tb_kategori', 'tb_brand'],
+
         // Add more mappings as needed
     ];
 

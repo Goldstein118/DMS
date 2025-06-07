@@ -18,32 +18,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  localStorage.setItem("user_id", "US0525-041");
+  const secretKey = access.secretKey;
+  const encrypt_user_id = sjcl.encrypt(secretKey, "US0525-041");
+  localStorage.setItem("user_id", encrypt_user_id);
 
   try {
     const response = await apiRequest(
-      `/PHP/API/get_akses_data.php?user_id=${localStorage.getItem("user_id")}`
+      `/PHP/API/get_akses_data.php?user_id=${access.decryptItem("user_id")}`
     );
-    console.log(response);
     if (response.level && response.akses) {
-      localStorage.setItem("level", response.level);
-      localStorage.setItem("akses", response.akses);
-      localStorage.setItem("nama", response.nama);
+      localStorage.setItem("level", sjcl.encrypt(secretKey, response.level));
+      localStorage.setItem("akses", sjcl.encrypt(secretKey, response.akses));
+      localStorage.setItem("nama", sjcl.encrypt(secretKey, response.nama));
     } else {
       console.log(response);
     }
   } catch (error) {
     toastr.error(error.message);
   }
-  console.log("Akses:", localStorage.getItem("akses"));
-  console.log("Can Create:", access.hasAccess("tb_karyawan", "create"));
-  console.log("Can Edit:", access.hasAccess("tb_karyawan", "edit"));
-  console.log("Can Delete:", access.hasAccess("tb_karyawan", "delete"));
 
-  const name = localStorage.getItem("nama");
-  console.log("a");
-  if (name) {
-    document.getElementById("username").textContent = name;
-    console.log("b");
+  const nama = access.decryptItem("nama");
+
+  if (nama) {
+    document.getElementById("username").textContent = nama;
+    document.getElementById("username_mobile").textContent = nama;
   }
 });

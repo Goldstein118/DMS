@@ -58,6 +58,8 @@ include ("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
   <!--Grid.js -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/gridjs.umd.js"></script>
 
+  <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/sjcl.min.js"></script>
+
 
 
 </head>
@@ -84,7 +86,7 @@ include('sidebar.php');
 $page = $_GET['page'] ?? 'tabel_karyawan';
 
 // Whitelist allowed pages for security
-$allowed_pages = ['tabel_karyawan', 'tabel_role', 'tabel_user','tabel_supplier','tabel_customer','tabel_channel','tabel_brand'];
+$allowed_pages = ['tabel_karyawan', 'tabel_role', 'tabel_user','tabel_supplier','tabel_customer','tabel_channel','tabel_kategori','tabel_brand','tabel_produk'];
 
 if (in_array($page, $allowed_pages)) {
   include $page . '.php';
@@ -136,10 +138,22 @@ switch ($page) {
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_channel.js?v=2.0"></script>
     <?php
     break;
+  case 'tabel_kategori':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_kategori.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_kategori.js?v=2.0"></script>
+    <?php
+    break;
   case 'tabel_brand':
     ?>
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_brand.js?v=2.0"></script>
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_brand.js?v=2.0"></script>
+    <?php
+    break;
+  case 'tabel_produk':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_produk.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_produk.js?v=2.0"></script>
     <?php
     break;
 }

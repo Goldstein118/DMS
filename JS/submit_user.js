@@ -1,4 +1,5 @@
 import { apiRequest } from "./api.js";
+import * as access from "./cek_access.js";
 
 const submit_user = document.getElementById("submit_user");
 if (submit_user) {
@@ -11,15 +12,24 @@ if (submit_user) {
   $("#modal_user").on("shown.bs.modal", () => {
     fetch_karyawan();
   });
+  if (access.isOwner) {
+    const select = document.getElementById("level");
+    const options = document.createElement("option");
+    options.value = "owner";
+    options.textContent = "Owner";
+    select.appendChild(options);
+  }
 }
+
 async function fetch_karyawan() {
   const response = await apiRequest(
-    ` /PHP/API/karyawan_API.php?action=select&user_id=${localStorage.getItem(
+    ` /PHP/API/karyawan_API.php?action=select&user_id=${access.decryptItem(
       "user_id"
     )}&target=tb_user&context=create`
   );
   const karyawan_id = $("#karyawan_ID");
   karyawan_id.empty();
+  karyawan_id.append(new Option("Pilih Karyawan", "", false, false));
 
   response.data.forEach((karyawan) => {
     const option = new Option(
@@ -39,7 +49,7 @@ async function submitUser() {
   const karyawan_id = document.getElementById("karyawan_ID").value;
 
   const data_user = {
-    user_id: `${localStorage.getItem("user_id")}`,
+    user_id: `${access.decryptItem("user_id")}`,
     karyawan_id,
     level,
   };

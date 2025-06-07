@@ -42,7 +42,7 @@ switch ($action) {
         $hasContextAccess = checkContextAccess($conn, $user_id, [
             'action' => $contextAction,
             'target' => $target,
-            'table'  => 'tb_brand',
+            'table'  => 'tb_kategori',
         ]);
 
         if (!$hasContextAccess) {
@@ -52,24 +52,24 @@ switch ($action) {
         }
     } else {
         // No context info, fall back to normal access check
-        checkAccess($conn, $user_id, 'tb_brand', 28); // View access
+        checkAccess($conn, $user_id, 'tb_kategori', 24); // View access
     }
-        require __DIR__ . '/actions/select_brand.php';
+        require __DIR__ . '/actions/select_kategori.php';
         break;
 
     case 'create':
-        checkAccess($conn, $user_id, 'tb_brand', 29); // Create access
-        require  __DIR__ . '/actions/create_brand.php';
+        checkAccess($conn, $user_id, 'tb_kategori', 25); // Create access
+        require  __DIR__ . '/actions/create_kategori.php';
         break;
 
     case 'update':
-        checkAccess($conn, $user_id, 'tb_brand', 30); // Edit access
-        require  __DIR__ . '/actions/update_brand.php';
+        checkAccess($conn, $user_id, 'tb_kategori', 26); // Edit access
+        require  __DIR__ . '/actions/update_kategori.php';
         break;
 
     case 'delete':
-        checkAccess($conn, $user_id, 'tb_brand', 31); // Delete access
-        require  __DIR__ . '/actions/delete_brand.php';
+        checkAccess($conn, $user_id, 'tb_kategori', 27); // Delete access
+        require  __DIR__ . '/actions/delete_kategori.php';
         break;
 
     default:

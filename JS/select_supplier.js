@@ -55,7 +55,7 @@ if (gird_container_supplier) {
     server: {
       url: `${
         config.API_BASE_URL
-      }/PHP/API/supplier_API.php?action=select&user_id=${localStorage.getItem(
+      }/PHP/API/supplier_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
       )}`,
       method: "GET",
@@ -143,7 +143,7 @@ async function handleDeleteSupplier(button) {
   if (result.isConfirmed) {
     try {
       const response = await apiRequest(
-        `/PHP/API/supplier_API.php?action=delete&user_id=${localStorage.getItem(
+        `/PHP/API/supplier_API.php?action=delete&user_id=${access.decryptItem(
           "user_id"
         )}`,
         "DELETE",
@@ -164,7 +164,11 @@ async function handleDeleteSupplier(button) {
         );
       }
     } catch (error) {
-      toastr.error(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.message,
+      });
     }
   }
 }
@@ -288,7 +292,7 @@ if (submit_supplier_update) {
         };
 
         const response = await apiRequest(
-          `/PHP/API/supplier_API.php?action=update&user_id=${localStorage.getItem(
+          `/PHP/API/supplier_API.php?action=update&user_id=${access.decryptItem(
             "user_id"
           )}`,
           "POST",
@@ -305,7 +309,11 @@ if (submit_supplier_update) {
         $("#modal_supplier_update").modal("hide");
         Swal.fire("Berhasil", response.message, "success");
       } catch (error) {
-        toastr.error(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: error.message,
+        });
       }
     }
   });

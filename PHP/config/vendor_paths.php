@@ -14,6 +14,7 @@ return [
     'select2_js'       => "$vendorBase/select2.min.js",
     'toastr_css'       => "$vendorBase/toastr.min.css",
     'toaster_js'       => "$vendorBase/toastr.min.js",
+    'sjcl_js'          => "$vendorBase/sjcl.min.js",
 
     // Add more libraries here as needed
 ];

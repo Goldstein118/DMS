@@ -1,14 +1,14 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
 try {
-    $requiredFields = ['name_karyawan', 'role_id', 'divisi_karyawan', 'no_telp_karyawan', 'address_karyawan', 'nik_karyawan', 'npwp_karyawan', 'status_karyawan'];
+    $requiredFields = ['name_karyawan', 'role_id', 'departement_karyawan', 'no_telp_karyawan', 'address_karyawan', 'nik_karyawan', 'npwp_karyawan', 'status_karyawan'];
     $default = ['status_karyawan' => 'aktif'];
     $fields = validate_1($data, $requiredFields, $default);
 
     // Extract and validate fields
     $nama = $fields['name_karyawan'];
     $role_id = $fields['role_id'];
-    $divisi = $fields['divisi_karyawan'];
+    $departement = $fields['departement_karyawan'];
     $telp = $fields['no_telp_karyawan'];
     $alamat = $fields['address_karyawan'];
     $ktp = $fields['nik_karyawan'];
@@ -16,7 +16,6 @@ try {
     $status = $fields['status_karyawan'];
 
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
-    validate_2($divisi, '/^[a-zA-Z0-9,. ]+$/', "Invalid division format");
     validate_2($alamat, '/^[a-zA-Z0-9,. ]+$/', "Invalid address format");
     validate_2($telp, '/^[+]?[\d\s\-]+$/', "Invalid phone format");
     validate_2($ktp, '/^[0-9]+$/', "Invalid KTP format");
@@ -25,9 +24,9 @@ try {
     // Generate ID and insert
     $karyawan_id = generateCustomID('KA', 'tb_karyawan', 'karyawan_id', $conn);
 
-    $stmt = $conn->prepare("INSERT INTO tb_karyawan (karyawan_id, nama, divisi, no_telp, alamat, ktp, npwp, status, role_id) 
+    $stmt = $conn->prepare("INSERT INTO tb_karyawan (karyawan_id, nama, departement, no_telp, alamat, ktp, npwp, status, role_id) 
                                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssssss", $karyawan_id, $nama, $divisi, $telp, $alamat, $ktp, $npwp, $status, $role_id);
+    $stmt->bind_param("sssssssss", $karyawan_id, $nama, $departement, $telp, $alamat, $ktp, $npwp, $status, $role_id);
     if (!$stmt->execute()) {
         throw new Exception("DB insert error: " . $stmt->error);
     }

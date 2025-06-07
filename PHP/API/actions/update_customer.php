@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
 try {
-    $requiredFields = ['customer_id', 'nama', 'alamat', 'no_telp', 'ktp', 'npwp', 'status', 'nitko', 'term_pembayaran', 'max_invoice', 'max_piutang'];
+    $requiredFields = ['customer_id', 'nama', 'alamat', 'no_telp', 'ktp', 'npwp', 'status', 'nitko', 'term_pembayaran', 'max_invoice', 'max_piutang','channel_id'];
     $filed = validate_1($data, $requiredFields);
 
     $customer_id = $data['customer_id'];
@@ -15,6 +15,7 @@ try {
     $term_pembayaran = $data['term_pembayaran'];
     $max_invoice = $data['max_invoice'];
     $max_piutang = $data['max_piutang'];
+    $channel_id=$data['channel_id'];
 
 
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
@@ -27,8 +28,8 @@ try {
     validate_2($max_invoice, '/^[a-zA-Z0-9,. ]+$/', "Invalid max invoice fromat");
     validate_2($max_piutang, '/^[a-zA-Z0-9,. ]+$/', "Invalid max piutang formt");
 
-    $stmt = $conn->prepare("UPDATE tb_customer SET nama=?,no_telp=?, alamat=?, ktp=?, npwp=?, nitko=?, term_pembayaran=? ,max_invoice=? ,max_piutang =?,status=? WHERE customer_id=?");
-    $stmt->bind_param("sssssssssss", $nama, $no_telp, $alamat, $ktp, $npwp, $status, $nitko, $term_pembayaran, $max_invoice, $max_piutang, $customer_id);
+    $stmt = $conn->prepare("UPDATE tb_customer SET nama=?,no_telp=?, alamat=?, ktp=?, npwp=?, status=? ,nitko=?, term_pembayaran=? ,max_invoice=? ,max_piutang =?,channel_id =? WHERE customer_id=?");
+    $stmt->bind_param("ssssssssssss", $nama, $no_telp, $alamat, $ktp, $npwp, $status, $nitko, $term_pembayaran, $max_invoice, $max_piutang,$channel_id, $customer_id);
 
     if ($stmt->execute()) {
         error_log("Customer updated successfully: ID = $customer_id");

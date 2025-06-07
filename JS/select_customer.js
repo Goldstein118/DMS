@@ -2,8 +2,14 @@ import config from "./config.js";
 import { Grid, html } from "../Vendor/gridjs.module.js";
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
-const gird_container_customer = document.querySelector("#table_customer");
-if (gird_container_customer) {
+const grid_container_customer = document.querySelector("#table_customer");
+if (grid_container_customer) {
+  $(document).ready(function () {
+    $("#update_channel_id").select2({
+      allowClear: true,
+      dropdownParent: $("#modal_customer_update"),
+    });
+  });
   new Grid({
     columns: [
       "Kode Customer",
@@ -17,6 +23,8 @@ if (gird_container_customer) {
       "Term Pembayaran",
       "Maksimun Invoice",
       "Maksimun Nominal Piutang",
+      "Channel",
+      "Channel_id",
       {
         name: "Aksi",
         formatter: () => {
@@ -59,7 +67,7 @@ if (gird_container_customer) {
     server: {
       url: `${
         config.API_BASE_URL
-      }/PHP/API/customer_API.php?action=select&user_id=${localStorage.getItem(
+      }/PHP/API/customer_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
       )}`,
       method: "GET",
@@ -77,6 +85,8 @@ if (gird_container_customer) {
           customer.term_pembayaran,
           customer.max_invoice,
           customer.max_piutang,
+          customer.channel_nama,
+          customer.channel_id,
           null,
         ]),
     },
@@ -168,7 +178,7 @@ async function handleDeleteCustomer(button) {
   if (result.isConfirmed) {
     try {
       const response = await apiRequest(
-        `/PHP/API/customer_API.php?action=delete&user_id=${localStorage.getItem(
+        `/PHP/API/customer_API.php?action=delete&user_id=${access.decryptItem(
           "user_id"
         )}`,
         "DELETE",
@@ -189,7 +199,11 @@ async function handleDeleteCustomer(button) {
         );
       }
     } catch (error) {
-      toastr.error(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.message,
+      });
     }
   }
 }
@@ -214,6 +228,7 @@ async function handleUpdateCustomer(button) {
   const current_term_pembayaran = row.cells[8].textContent;
   const current_max_invoice = row.cells[9].textContent;
   const current_max_piutang = row.cells[10].textContent;
+  const current_channel_id = row.cells[12].textContent;
 
   document.getElementById("update_customer_id").value = customer_id;
   document.getElementById("update_name_customer").value = current_nama;
@@ -228,9 +243,34 @@ async function handleUpdateCustomer(button) {
   document.getElementById("update_max_invoice").value = current_max_invoice;
   document.getElementById("update_max_piutang").value = current_max_piutang;
   await new Promise((resolve) => setTimeout(resolve, 500));
-  button_icon.style.display = "inline-block";
-  spinner.style.display = "none";
-  $("#modal_customer_update").modal("show");
+  try {
+    const response = await apiRequest(
+      `/PHP/API/channel_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}&target=tb_customer&context=edit`
+    );
+    const channel_id_field = $("#update_channel_id");
+    channel_id_field.empty();
+    response.data.forEach((channel) => {
+      const option = new Option(
+        `${channel.channel_id} - ${channel.nama}`,
+        channel.channel_id,
+        false,
+        channel.channel_id === current_channel_id
+      );
+      channel_id_field.append(option);
+    });
+    channel_id_field.trigger("change");
+    button_icon.style.display = "inline-block";
+    spinner.style.display = "none";
+    $("#modal_customer_update").modal("show");
+  } catch (error) {
+    console.error("Error fetching channel:", error);
+    const button_icon = button.querySelector(".button_icon");
+    const spinner = button.querySelector(".spinner_update");
+    button_icon.style.display = "none";
+    spinner.style.display = "inline-block";
+  }
 }
 
 const submit_customer_update = document.getElementById(
@@ -262,6 +302,8 @@ if (submit_customer_update) {
       document.getElementById("update_max_invoice").value;
     const update_max_piutang =
       document.getElementById("update_max_piutang").value;
+    const channel_id_new = $("#update_channel_id").val();
+
     if (
       !update_nama ||
       update_nama.trim() === "" ||
@@ -337,10 +379,11 @@ if (submit_customer_update) {
         term_pembayaran: update_term_pembayaran,
         max_invoice: update_max_invoice,
         max_piutang: update_max_piutang,
+        channel_id: channel_id_new,
       };
       try {
         const response = await apiRequest(
-          `/PHP/API/customer_API.php?action=update&user_id=${localStorage.getItem(
+          `/PHP/API/customer_API.php?action=update&user_id=${access.decryptItem(
             "user_id"
           )}`,
           "POST",
@@ -357,11 +400,18 @@ if (submit_customer_update) {
         row.cells[8].textContent = update_term_pembayaran;
         row.cells[9].textContent = update_max_invoice;
         row.cells[10].textContent = update_max_piutang;
+        const channel_name = $("#update_channel_id option:selected").text();
+        const channel_name_only = channel_name.split(" - ")[1];
+        row.cells[11].textContent = channel_name_only;
 
         $("#modal_customer_update").modal("hide");
         Swal.fire("Berhasil", response.message, "success");
       } catch (error) {
-        toastr.error(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: error.message,
+        });
       }
     }
   });

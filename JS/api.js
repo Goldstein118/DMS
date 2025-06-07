@@ -24,12 +24,21 @@ export async function apiRequest(endpoint, method = "GET", body = null) {
     }
 
     if (response.status === 403) {
-      toastr.error(responseData.error || "Akses ditolak");
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: responseData.error || "Akses ditolak",
+      });
       throw new Error("Access Denied");
     }
 
     if (!response.ok) {
-      toastr.error(responseData.error || "Terjadi kesalahan server");
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: responseData.error || "Terjadi kesalahan server",
+      });
+
       throw new Error(responseData.error || "Server error");
     }
     if (Array.isArray(responseData)) {

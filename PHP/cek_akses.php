@@ -44,7 +44,7 @@ function checkAccess($conn, $userId, $table, $index, $targetUserId = null) {
 
     // Owner has full access
     if ($level === 'owner') {
-        return;
+        return true;
     }
 
 

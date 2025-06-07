@@ -16,7 +16,7 @@ if (grid_container_karyawan) {
       "Kode Karyawan",
       "Nama",
       "Role",
-      "Divisi",
+      "Departement",
       "Nomor Telepon",
       "Alamat",
       "NIK",
@@ -26,14 +26,24 @@ if (grid_container_karyawan) {
       {
         name: "Aksi",
         formatter: (_cell, row) => {
-          const current_user_id = localStorage.getItem("user_id");
+          const current_user_id = access.decryptItem("user_id");
           const row_user_id = row.cells[10].data;
-          const edit =
-            access.hasAccess("tb_karyawan", "edit") &&
-            row_user_id !== current_user_id;
-          const can_delete =
-            access.hasAccess("tb_karyawan", "delete") &&
-            row_user_id !== current_user_id;
+          let edit;
+          let can_delete;
+          if (access.isOwner()) {
+            edit = true;
+          } else {
+            edit =
+              access.hasAccess("tb_karyawan", "edit") &&
+              row_user_id !== current_user_id;
+          }
+          if (access.isOwner()) {
+            can_delete = true;
+          } else {
+            can_delete =
+              access.hasAccess("tb_karyawan", "delete") &&
+              row_user_id !== current_user_id;
+          }
           let button = "";
 
           if (edit) {
@@ -84,7 +94,7 @@ if (grid_container_karyawan) {
     server: {
       url: `${
         config.API_BASE_URL
-      }/PHP/API/karyawan_API.php?action=select&user_id=${localStorage.getItem(
+      }/PHP/API/karyawan_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
       )}`,
       method: "GET",
@@ -96,7 +106,7 @@ if (grid_container_karyawan) {
           karyawan.karyawan_id,
           karyawan.nama,
           karyawan.role_nama,
-          karyawan.divisi,
+          karyawan.departement,
           karyawan.no_telp,
           karyawan.alamat,
           karyawan.ktp,
@@ -188,7 +198,7 @@ async function handleDeleteKaryawan(button) {
   if (result.isConfirmed) {
     try {
       const response = await apiRequest(
-        `/PHP/API/karyawan_API.php?action=delete&user_id=${localStorage.getItem(
+        `/PHP/API/karyawan_API.php?action=delete&user_id=${access.decryptItem(
           "user_id"
         )}`,
         "DELETE",
@@ -209,7 +219,11 @@ async function handleDeleteKaryawan(button) {
         );
       }
     } catch (error) {
-      toastr.error(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.message,
+      });
     }
   }
 }
@@ -269,7 +283,7 @@ async function handleUpdateKaryawan(button) {
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     const response = await apiRequest(
-      `/PHP/API/role_API.php?action=select&user_id=${localStorage.getItem(
+      `/PHP/API/role_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
       )}&target=tb_karyawan&context=edit`
     );
@@ -348,11 +362,6 @@ if (submit_karyawan_update) {
         "Format nama tidak valid"
       ) &&
       validateField(
-        divisi_new,
-        /^[a-zA-Z0-9,. ]+$/,
-        "Format divisi tidak valid"
-      ) &&
-      validateField(
         alamat_new,
         /^[a-zA-Z0-9,. ]+$/,
         "Format alamat tidak valid"
@@ -372,7 +381,7 @@ if (submit_karyawan_update) {
           karyawan_id: karyawan_ID,
           nama: karyawan_nama_new,
           role_id: role_ID_new,
-          divisi: divisi_new,
+          departement: divisi_new,
           no_telp: no_telp_update,
           alamat: alamat_new,
           ktp: KTP_new,
@@ -380,7 +389,7 @@ if (submit_karyawan_update) {
           status: status_new,
         };
         const response = await apiRequest(
-          `/PHP/API/karyawan_API.php?action=update&user_id=${localStorage.getItem(
+          `/PHP/API/karyawan_API.php?action=update&user_id=${access.decryptItem(
             "user_id"
           )}`,
           "POST",
@@ -401,7 +410,11 @@ if (submit_karyawan_update) {
         $("#modal_karyawan_update").modal("hide");
         Swal.fire("Berhasil", response.message, "success");
       } catch (error) {
-        toastr.error(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: error.message,
+        });
       }
     }
   });

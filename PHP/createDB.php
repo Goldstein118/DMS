@@ -18,7 +18,7 @@ if (mysqli_query($conn, $sql)) {
 }
 mysqli_select_db($conn, "data_DB");
 $role = "CREATE TABLE IF NOT EXISTS tb_role (
-        role_id VARCHAR(10) PRIMARY KEY NOT NULL,
+        role_id VARCHAR(20) PRIMARY KEY NOT NULL,
         nama VARCHAR(100),
         akses VARCHAR(100)
     )";
@@ -28,10 +28,10 @@ if (!$conn->query($role)) {
 }
 
 $karyawan = "CREATE TABLE IF NOT EXISTS tb_karyawan (
-    karyawan_id VARCHAR(10) PRIMARY KEY NOT NULL,
+    karyawan_id VARCHAR(20) PRIMARY KEY NOT NULL,
     nama VARCHAR(100) NOT NULL,
-    role_id VARCHAR(10),
-    divisi VARCHAR(100),
+    role_id VARCHAR(20),
+    departement VARCHAR(20) DEFAULT 'lainnya',
     no_telp VARCHAR(20),
     alamat VARCHAR(100),
     ktp VARCHAR(100),
@@ -48,8 +48,8 @@ if ($conn->query($karyawan)) {
 }
 
 $user = "CREATE TABLE IF NOT EXISTS tb_user (
-    user_id VARCHAR(10) PRIMARY KEY NOT NULL, level VARCHAR(10) DEFAULT 'user',
-    karyawan_id VARCHAR(10), FOREIGN KEY (karyawan_id) REFERENCES tb_karyawan(karyawan_id) ON DELETE RESTRICT
+    user_id VARCHAR(20) PRIMARY KEY NOT NULL, level VARCHAR(10) DEFAULT 'user',
+    karyawan_id VARCHAR(20), FOREIGN KEY (karyawan_id) REFERENCES tb_karyawan(karyawan_id) ON DELETE RESTRICT
 
     )";
 if ($conn->query($user)) {
@@ -60,7 +60,7 @@ if ($conn->query($user)) {
 }
 
 $supplier = "CREATE TABLE IF NOT EXISTS tb_supplier (
-        supplier_id VARCHAR(10) PRIMARY KEY NOT NULL, 
+        supplier_id VARCHAR(20) PRIMARY KEY NOT NULL, 
         nama VARCHAR(100) NOT NULL,
         alamat VARCHAR(100),
         no_telp VARCHAR(20),
@@ -76,7 +76,7 @@ if ($conn->query($supplier)) {
 }
 
 $customer = "CREATE TABLE IF NOT EXISTS tb_customer (
-        customer_id VARCHAR(10) PRIMARY KEY NOT NULL, 
+        customer_id VARCHAR(20) PRIMARY KEY NOT NULL, 
         nama VARCHAR(100) NOT NULL,
         alamat VARCHAR(100),
         no_telp VARCHAR(20),
@@ -86,7 +86,10 @@ $customer = "CREATE TABLE IF NOT EXISTS tb_customer (
         nitko VARCHAR(100), 
         term_pembayaran VARCHAR(100),
         max_invoice VARCHAR(20), 
-        max_piutang VARCHAR(20)
+        max_piutang VARCHAR(20),
+        latidude DECIMAL(9,6),
+        longitude DECIMAL (9,6),
+        channel_id VARCHAR(20), FOREIGN KEY (channel_id) REFERENCES tb_channel(channel_id) ON DELETE RESTRICT
         )";
 if ($conn->query($customer)) {
     try {
@@ -94,8 +97,9 @@ if ($conn->query($customer)) {
         echo mysqli_error($conn);
     }
 }
+
 $channel = "CREATE TABLE IF NOT EXISTS tb_channel(
-            channel_id VARCHAR(10) PRIMARY KEY NOT NULL, 
+            channel_id VARCHAR(20) PRIMARY KEY NOT NULL, 
             nama VARCHAR(100)
 )";
 if ($conn->query($channel)) {
@@ -106,7 +110,7 @@ if ($conn->query($channel)) {
 }
 
 $kategori = "CREATE TABLE IF NOT EXISTS tb_kategori(
-kategori_id VARCHAR(10) PRIMARY KEY NOT NULL, 
+kategori_id VARCHAR(20) PRIMARY KEY NOT NULL, 
 nama VARCHAR(100)
 )";
 if ($conn->query($kategori)) {
@@ -116,7 +120,7 @@ if ($conn->query($kategori)) {
     }
 }
 $brand ="CREATE TABLE IF NOT EXISTS tb_brand(
-brand_id VARCHAR(10) PRIMARY KEY NOT NULL,
+brand_id VARCHAR(20) PRIMARY KEY NOT NULL,
 nama VARCHAR(100)
 )";
 if ($conn->query($brand)) {
@@ -127,13 +131,13 @@ if ($conn->query($brand)) {
 }
 
 $produk = "CREATE TABLE IF NOT EXISTS tb_produk(
-produk_id VARCHAR(10) PRIMARY KEY NOT NULL, 
+produk_id VARCHAR(20) PRIMARY KEY NOT NULL, 
 nama VARCHAR(100),
 no_sku VARCHAR(100),
 status VARCHAR(20) DEFAULT 'aktif',
 harga_minimal VARCHAR(20),
-kategori_id VARCHAR(10),
-brand_id VARCHAR(10),
+kategori_id VARCHAR(20),
+brand_id VARCHAR(20),
 FOREIGN KEY (kategori_id) REFERENCES tb_kategori(kategori_id) ON DELETE RESTRICT,
 FOREIGN KEY (brand_id) REFERENCES tb_brand(brand_id) ON DELETE RESTRICT
 )";
@@ -144,7 +148,21 @@ if ($conn->query($produk)) {
         echo mysqli_error($conn);
     }
 }
+
+
+$divisi ="CREATE TABLE IF NOT EXISTS tb_divisi(
+divisi_id VARCHAR(20) PRIMARY KEY NOT NULL,
+nama VARCHAR (50),
+bank VARCHAR(20),
+nama_rekening VARCHAR (50),
+no_rekening VARCHAR (30))";
+
+if($conn->query($divisi)){
+    try{
+
+    }catch(Error){
+        echo mysqli_error($conn);
+    }
+}
 mysqli_close($conn);
-
-
 ?>

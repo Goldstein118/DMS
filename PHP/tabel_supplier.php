@@ -9,18 +9,18 @@
         </div>
         <div class="modal-body">
           <label class="form-label">Nama:</label>
-          <input class="form-control" type="text" id="supplier_nama" name="supplier_nama" value=""><br><br>
+          <input class="form-control" type="text" id="supplier_nama" name="supplier_nama" value="">
           <label class="form-label">Alamat:</label>
-          <input class="form-control" type="text" id="supplier_alamat"><br><br>
+          <input class="form-control" type="text" id="supplier_alamat">
           <label class="form-label" for="phone">Nomor Telepon:</label>
           <div class = "input-group mb-3">
           <span class="input-group-text" id="basic-addon1">+62</span>
           <input class="form-control" type="text" id="supplier_no_telp" name="supplier_no_telp" aria-describedby="basic-addon1"value="">
-          </div><br><br>
+          </div>
           <label class="form-label">NIK:</label>
-          <input class="form-control" type="text" id="supplier_ktp"><br><br>
+          <input class="form-control" type="text" id="supplier_ktp">
           <label class="form-label">NPWP:</label>
-          <input class="form-control" type="text" id="supplier_npwp"><br><br>
+          <input class="form-control" type="text" id="supplier_npwp">
           <label class="form-label">Status:</label>
           <select class ="form-select" id ="supplier_status">
           <option value = "aktif">Aktif</option>
@@ -28,7 +28,6 @@
           </select>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
           <button id="submit_supplier" type="button" class="btn btn-primary">Simpan</button>
         </div>
       </div>
@@ -44,20 +43,20 @@
         </div>
         <div class="modal-body">
           <label class = "form-label">Kode Supplier</label>
-          <input class="form-control" type ="text" id = "update_supplier_id" disabled><br><br>
+          <input class="form-control" type ="text" id = "update_supplier_id" disabled>
           <label class="form-label">Nama:</label>
-          <input class="form-control" type="text" id="update_supplier_nama"><br><br>
+          <input class="form-control" type="text" id="update_supplier_nama">
           <label class="form-label">Alamat:</label>
-          <input class="form-control" type="text" id="update_supplier_alamat"><br><br>          
+          <input class="form-control" type="text" id="update_supplier_alamat">          
           <label class="form-label" for="phone">Nomor Telepon:</label>
           <div class = "input-group mb-3">
           <span class="input-group-text" id="basic-addon1">+62</span>
           <input class="form-control" type="text" id="update_supplier_no_telp" name="update_supplier_no_telp" aria-describedby="basic-addon1"value="">
-          </div><br><br>
+          </div>
           <label class="form-label">NIK:</label>
-          <input class="form-control" type="text" id="update_supplier_ktp"><br><br>
+          <input class="form-control" type="text" id="update_supplier_ktp">
           <label class="form-label">NPWP:</label>
-          <input class="form-control" type="text" id="update_supplier_npwp"><br><br>
+          <input class="form-control" type="text" id="update_supplier_npwp">
           <label class="form-label">Status:</label>
           <select class ="form-select" id ="update_supplier_status">
           <option value = "aktif">Aktif</option>
@@ -65,7 +64,6 @@
           </select>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
           <button id="submit_supplier_update" type="button" class="btn btn-primary">Simpan</button>
         </div>
       </div>
@@ -74,7 +72,7 @@
 <main class="col-12 col-lg-10 ms-auto px-1">
       <!-- Main content -->
       <div id="main"  class="table-responsive">
-        <h3>Tabel Supplier</h3>
+        <h3>Data Supplier</h3>
           <div id="table_supplier"></div>
       </div>
   </main>

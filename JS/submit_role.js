@@ -1,4 +1,5 @@
 import { apiRequest } from "./api.js";
+import * as access from "./cek_access.js";
 function proses_check_box() {
   const checkboxes = document.querySelectorAll("#modal_role .perm-checkbox");
   let results = [];
@@ -89,7 +90,7 @@ function submitRole() {
     validateField(akses_role, /^[0-9]+$/, "Format akses tidak valid");
 
   const data_role = {
-    user_id: `${localStorage.getItem("user_id")}`,
+    user_id: `${access.decryptItem("user_id")}`,
     name_role,
     akses_role,
   };

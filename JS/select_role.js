@@ -12,15 +12,26 @@ document.addEventListener("DOMContentLoaded", () => {
         "Akses",
         {
           name: "Aksi",
-          formatter: (cells, row) => {
-            const current_user_id = localStorage.getItem("user_id");
+          formatter: (_cells, row) => {
+            const current_user_id = access.decryptItem("user_id");
             const row_user_id = row.cells[3].data;
-            const edit =
-              access.hasAccess("tb_role", "edit") &&
-              row_user_id !== current_user_id;
-            const can_delete =
-              access.hasAccess("tb_role", "delete") &&
-              row_user_id !== current_user_id;
+            let edit;
+            let can_delete;
+            if (access.isOwner()) {
+              edit = true;
+            } else {
+              edit =
+                access.hasAccess("tb_role", "edit") &&
+                row_user_id !== current_user_id;
+            }
+            if (access.isOwner) {
+              can_delete = true;
+            } else {
+              can_delete =
+                access.hasAccess("tb_role", "delete") &&
+                row_user_id !== current_user_id;
+            }
+
             let button = "";
 
             if (edit) {
@@ -57,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
       server: {
         url: `${
           config.API_BASE_URL
-        }/PHP/API/role_API.php?action=select&user_id=${localStorage.getItem(
+        }/PHP/API/role_API.php?action=select&user_id=${access.decryptItem(
           "user_id"
         )}`,
         method: "GET",
@@ -197,7 +208,7 @@ async function handleDeleteRole(button) {
   if (result.isConfirmed) {
     try {
       const response = await apiRequest(
-        `/PHP/API/role_API.php?action=delete&user_id=${localStorage.getItem(
+        `/PHP/API/role_API.php?action=delete&user_id=${access.decryptItem(
           "user_id"
         )}`,
         "DELETE",
@@ -216,7 +227,11 @@ async function handleDeleteRole(button) {
         );
       }
     } catch (error) {
-      toastr.error(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.message,
+      });
     }
   }
 }
@@ -308,7 +323,7 @@ if (submit_role_update) {
       };
       try {
         const response = await apiRequest(
-          `/PHP/API/role_API.php?action=update&user_id=${localStorage.getItem(
+          `/PHP/API/role_API.php?action=update&user_id=${access.decryptItem(
             "user_id"
           )}`,
           "POST",
@@ -321,7 +336,11 @@ if (submit_role_update) {
         $("#modal_role_update").modal("hide");
         Swal.fire("Berhasil", response.message, "success");
       } catch (error) {
-        toastr.error(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: error.message,
+        });
       }
     }
   });

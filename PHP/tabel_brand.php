@@ -8,10 +8,9 @@
       </div>
       <div class="modal-body">
         <label class="form-label" for="nama_brand">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-         <input class="form-control" type="text" id="nama_brand" name="nama_brand" value=""><br>
+         <input class="form-control" type="text" id="nama_brand" name="nama_brand" value="">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
         <button  id="submit_brand" type="button" class="btn btn-primary">Simpan</button>
       </div>
     </div>
@@ -27,12 +26,11 @@
       </div>
       <div class="modal-body">
         <label class="form-label" for="update_brand_id">Kode Brand:</label>
-        <input class="form-control" type="text" id="update_brand_id" disabled><br><br>
+        <input class="form-control" type="text" id="update_brand_id" disabled>
         <label class="form-label" for="update_nama_brand">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-        <input class="form-control" type="text" id="update_nama_brand" name="update_nama_brand" value=""><br>
+        <input class="form-control" type="text" id="update_nama_brand" name="update_nama_brand" value="">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
         <button  id="submit_brand_update" type="button" class="btn btn-primary">Simpan</button>
       </div>
     </div>
@@ -41,7 +39,7 @@
 
 <main class="col-12 col-lg-10 ms-auto px-1" >
   <div id="main"  class="table-responsive">
-    <h3>Tabel Brand</h3>
+    <h3>Data Brand</h3>
         <div id ="table_brand"></div>
   </div>
 </main>

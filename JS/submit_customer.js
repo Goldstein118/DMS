@@ -1,11 +1,17 @@
 import { apiRequest } from "./api.js";
-
+import * as access from "./cek_access.js";
 const submit_customer = document.getElementById("submit_customer");
 if (submit_customer) {
   submit_customer.addEventListener("click", submitCustomer);
   $(document).ready(function () {
     $("#modal_customer").on("shown.bs.modal", function () {
       $("#name_customer").trigger("focus");
+      fetch_channel();
+    });
+    $("#channel_id").select2({
+      placeholder: "Pilih channel",
+      allowClear: true,
+      dropdownParent: $("#modal_customer"),
     });
   });
 }
@@ -30,6 +36,28 @@ function format_no_telp(str) {
   return result;
 }
 
+async function fetch_channel() {
+  const response = await apiRequest(
+    `/PHP/API/channel_API.php?action=select&user_id=${access.decryptItem(
+      "user_id"
+    )}&target=tb_customer&context=create`
+  );
+  const channel_id = $("#channel_id");
+  channel_id.empty();
+  channel_id.append(new Option("Pilih Channel", "", false, false));
+
+  response.data.forEach((channel) => {
+    const option = new Option(
+      `${channel.channel_id} - ${channel.nama}`,
+      channel.channel_id,
+      false,
+      false
+    );
+    channel_id.append(option);
+  });
+  channel_id.trigger("change");
+}
+
 async function submitCustomer() {
   // Collect form data
   const name_customer = document.getElementById("name_customer").value;
@@ -42,7 +70,7 @@ async function submitCustomer() {
   const term_payment = document.getElementById("term_payment").value;
   const max_invoice = document.getElementById("max_invoice").value;
   const max_piutang = document.getElementById("max_piutang").value;
-
+  const channel_id = document.getElementById("channel_id").value;
   // Validate form data
   if (
     !name_customer ||
@@ -104,7 +132,7 @@ async function submitCustomer() {
     no_telp_customer = format_no_telp(no_telp_customer);
 
     const data_customer = {
-      user_id: `${localStorage.getItem("user_id")}`,
+      user_id: `${access.decryptItem("user_id")}`,
       name_customer,
       alamat_customer,
       no_telp_customer,
@@ -115,11 +143,12 @@ async function submitCustomer() {
       max_invoice,
       max_piutang,
       status_customer,
+      channel_id,
     };
 
     try {
       const response = await apiRequest(
-        `/PHP/API/customer_API.php?action=create&user_id=user_id: ${localStorage.getItem(
+        `/PHP/API/customer_API.php?action=create&user_id=user_id: ${access.decryptItem(
           "user_id"
         )}`,
         "POST",

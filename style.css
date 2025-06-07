@@ -241,7 +241,9 @@ body::-webkit-scrollbar {
 #table_user th:nth-child(3),
 #table_user td:nth-child(3),
 #table_role th:nth-child(3),
-#table_role td:nth-child(3) {
+#table_role td:nth-child(3),
+#table_customer th:nth-child(13),
+#table_customer td:nth-child(13) {
   display: none !important;
 }
 
@@ -313,7 +315,7 @@ li a.link-dark.active:hover {
   background-color: #e9ecef;
   color: var(--text-color) !important;
 }
-.form-check-label {
+.form-check {
   font-weight: normal !important;
 }
 
@@ -321,10 +323,6 @@ li a.link-dark.active:hover {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 0.5rem 1rem;
-}
-
-.permission-group {
-  margin-bottom: 1.5rem;
 }
 
 .label-check-box {
@@ -338,5 +336,4 @@ li a.link-dark.active:hover {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem 1.5rem;
 }

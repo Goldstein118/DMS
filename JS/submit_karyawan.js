@@ -1,3 +1,4 @@
+import * as access from "./cek_access.js";
 import { apiRequest } from "./api.js";
 
 const submit_karyawan = document.getElementById("submit_karyawan");
@@ -19,7 +20,7 @@ if (submit_karyawan) {
 async function fetch_roles() {
   try {
     const response = await apiRequest(
-      `/PHP/API/role_API.php?action=select&user_id=${localStorage.getItem(
+      `/PHP/API/role_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
       )}&target=tb_karyawan&context=create`
     );
@@ -35,7 +36,9 @@ function populateRoleDropdown(data) {
   select.append(new Option("Pilih Role", "", false, false));
 
   data.forEach((item) => {
-    select.append(new Option(item.nama, item.role_id, false, false));
+    select.append(
+      new Option(`${item.role_id} - ${item.nama}`, item.role_id, false, false)
+    );
   });
 
   select.trigger("change");
@@ -63,7 +66,7 @@ function format_no_telp(str) {
 async function submitKaryawan() {
   // Collect form data
   const name_karyawan = document.getElementById("name_karyawan").value;
-  const divisi_karyawan = document.getElementById("divisi_karyawan").value;
+  const departement_karyawan = document.getElementById("divisi_karyawan").value;
   let phone_karyawan = document.getElementById("phone_karyawan").value;
   const address_karyawan = document.getElementById("address_karyawan").value;
   const nik_karyawan = document.getElementById("nik_karyawan").value;
@@ -75,8 +78,8 @@ async function submitKaryawan() {
   if (
     !name_karyawan ||
     name_karyawan.trim() === "" ||
-    !divisi_karyawan ||
-    divisi_karyawan.trim() === "" ||
+    !departement_karyawan ||
+    departement_karyawan.trim() === "" ||
     !phone_karyawan ||
     phone_karyawan.trim() === "" ||
     !address_karyawan ||
@@ -91,11 +94,6 @@ async function submitKaryawan() {
   }
   const is_valid =
     validateField(name_karyawan, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
-    validateField(
-      divisi_karyawan,
-      /^[a-zA-Z0-9,. ]+$/,
-      "Format divisi tidak valid"
-    ) &&
     validateField(
       address_karyawan,
       /^[a-zA-Z0-9,. ]+$/,
@@ -113,9 +111,9 @@ async function submitKaryawan() {
     const no_telp_karyawan = format_no_telp(phone_karyawan);
 
     const data_karyawan = {
-      user_id: `${localStorage.getItem("user_id")}`,
+      user_id: `${access.decryptItem("user_id")}`,
       name_karyawan,
-      divisi_karyawan,
+      departement_karyawan,
       no_telp_karyawan,
       address_karyawan,
       nik_karyawan,

@@ -64,7 +64,7 @@ if (grid_container_brand) {
     server: {
       url: `${
         config.API_BASE_URL
-      }/PHP/API/brand_API.php?action=select&user_id=${localStorage.getItem(
+      }/PHP/API/brand_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
       )}`,
       method: "GET",
@@ -82,7 +82,7 @@ if (grid_container_brand) {
     btn.className = "btn btn-primary btn-sm";
     btn.setAttribute("data-bs-toggle", "modal");
     btn.setAttribute("data-bs-target", "#modal_brand");
-    btn.innerHTML = '<i class="bi bi-plus-square"></i> Channel ';
+    btn.innerHTML = '<i class="bi bi-plus-square"></i> Brand ';
 
     // Wrap both button and search bar in a flex container
     const wrapper = document.createElement("div");
@@ -104,7 +104,7 @@ if (grid_container_brand) {
     search_Box.style.display = "flex";
     search_Box.style.justifyContent = "flex-end";
     search_Box.style.marginLeft = "auto";
-    input.placeholder = "Cari Channel...";
+    input.placeholder = "Cari Brand...";
     document.getElementById("loading_spinner").style.visibility = "hidden";
     $("#loading_spinner").fadeOut();
     attachEventListeners();
@@ -118,9 +118,9 @@ function attachEventListeners() {
       const update_btn = event.target.closest(".update_brand");
 
       if (delete_btn) {
-        handleDeleteChannel(delete_btn);
+        handleDeleteBrand(delete_btn);
       } else if (update_btn) {
-        handleUpdateChannel(update_btn);
+        handleUpdateBrand(update_btn);
       }
     });
 }
@@ -135,7 +135,7 @@ function validateField(field, pattern, errorMessage) {
   return true;
 }
 
-async function handleDeleteChannel(button) {
+async function handleDeleteBrand(button) {
   const row = button.closest("tr");
   const brand_id = row.cells[0].textContent;
   const result = await Swal.fire({
@@ -151,7 +151,7 @@ async function handleDeleteChannel(button) {
   if (result.isConfirmed) {
     try {
       const response = await apiRequest(
-        `/PHP/API/brand_API.php?action=delete&user_id=${localStorage.getItem(
+        `/PHP/API/brand_API.php?action=delete&user_id=${access.decryptItem(
           "user_id"
         )}`,
         "DELETE",
@@ -164,11 +164,15 @@ async function handleDeleteChannel(button) {
         Swal.fire("Gagal", response.error || "Gagal menghapus brand.", "error");
       }
     } catch (error) {
-      toastr.error(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.message,
+      });
     }
   }
 }
-async function handleUpdateChannel(button) {
+async function handleUpdateBrand(button) {
   const row = button.closest("tr");
   window.currentRow = row;
   const button_icon = button.querySelector(".button_icon");
@@ -205,7 +209,7 @@ if (submit_brand_update) {
         };
 
         const response = await apiRequest(
-          `/PHP/API/brand_API.php?action=update&user_id=${localStorage.getItem(
+          `/PHP/API/brand_API.php?action=update&user_id=${access.decryptItem(
             "user_id"
           )}`,
           "POST",
@@ -216,7 +220,11 @@ if (submit_brand_update) {
         $("#modal_brand_update").modal("hide");
         Swal.fire("Berhasil", response.message, "success");
       } catch (error) {
-        toastr.error(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: error.message,
+        });
       }
     }
   });

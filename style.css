@@ -243,7 +243,11 @@ body::-webkit-scrollbar {
 #table_role th:nth-child(3),
 #table_role td:nth-child(3),
 #table_customer th:nth-child(13),
-#table_customer td:nth-child(13) {
+#table_customer td:nth-child(13),
+#table_produk th:nth-child(9),
+#table_produk th:nth-child(8),
+#table_produk td:nth-child(9),
+#table_produk td:nth-child(8) {
   display: none !important;
 }
 

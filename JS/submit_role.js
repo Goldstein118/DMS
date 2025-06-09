@@ -46,6 +46,10 @@ if (submit_role) {
       "supplier",
       "customer",
       "channel",
+      "kategori",
+      "brand",
+      "produk",
+      "divisi",
     ];
 
     checkboxFields.forEach((field) => {

@@ -164,5 +164,23 @@ if($conn->query($divisi)){
         echo mysqli_error($conn);
     }
 }
+
+$gambar ="CREATE TABLE IF NOT EXISTS tb_gambar (
+    gambar_id VARCHAR(20) PRIMARY KEY NOT NULL,
+    tipe ENUM('ktp', 'npwp') NOT NULL,
+    customer_id VARCHAR(20) NOT NULL,
+    internal_link VARCHAR(255),
+    external_link VARCHAR(255),
+    blob_data LONGBLOB,
+    FOREIGN KEY (customer_id) REFERENCES tb_customer(customer_id) ON DELETE RESTRICT
+)";
+if ($conn->query($gambar)){
+    try{
+
+    }catch(Error){
+    echo mysqli_error($conn);
+    }
+}
+
 mysqli_close($conn);
 ?>

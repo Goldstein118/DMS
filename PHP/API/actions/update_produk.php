@@ -1,13 +1,13 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
 try{
-    $requiredFields = ['produk_id','name_produk','kategori_id','brand_id','no_sku','status_produk','harga_minimal'];
+    $requiredFields = ['produk_id','nama','kategori_id','brand_id','no_sku','status','harga_minimal'];
     $default = ['status_produk' => 'aktif'];
     $fields = validate_1($data, $requiredFields, $default);
 
     // Extract and validate fields
     $produk_id=$fields['produk_id'];
-    $nama = $fields['name_produk'];
+    $nama = $fields['nama'];
     $kategori_id = $fields['kategori_id'];
     $brand_id = $fields['brand_id'];
     $no_sku = $fields['no_sku'];
@@ -19,7 +19,7 @@ try{
     validate_2($harga_minimal, '/^[a-zA-Z0-9,. ]+$/', "Invalid no harga minimal format");
 
 
-$stmt = $conn->prepare("UPDATE tb_produk SET nama = ?,no_sku=?,status =?,harga_minimal =?, kategori_id,brand_id WHERE produk_id = ?");
+$stmt = $conn->prepare("UPDATE tb_produk SET nama = ?,no_sku=?,status =?,harga_minimal =?, kategori_id =?,brand_id=? WHERE produk_id = ?");
 $stmt->bind_param("sssssss", $nama,$no_sku, $status,$harga_minimal ,$kategori_id,$brand_id,$produk_id);
 if ($stmt->execute()) {
     error_log("Produk updated successfully: ID = $produk_id");

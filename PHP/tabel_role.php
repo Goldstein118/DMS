@@ -464,6 +464,53 @@
                       <hr />
                     </div>
 
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Divisi</p>
+                      
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_all_divisi" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_divisi" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_divisi" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_divisi" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_divisi" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
                   </div>
                 </div>
               </div>
@@ -948,6 +995,53 @@
                             class="form-check-input perm-checkbox"
                             type="checkbox"
                             id="check_delete_produk_update" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                      <div class="permission-group">
+                      <p class="label-check-box">Data Divisi</p>
+                      
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_all_divisi_update" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_divisi_update" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_divisi_update" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_divisi_update" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_divisi_update" />
                           Delete
                         </label>
                       </div>

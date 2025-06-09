@@ -4,13 +4,14 @@ export async function apiRequest(endpoint, method = "GET", body = null) {
   try {
     const options = {
       method,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: {},
     };
 
-    if (body) {
+    if (body && !(body instanceof FormData)) {
+      options.headers["Content-Type"] = "application/json";
       options.body = JSON.stringify(body);
+    } else if (body instanceof FormData) {
+      options.body = body;
     }
 
     const response = await fetch(`${config.API_BASE_URL}${endpoint}`, options);

@@ -70,6 +70,12 @@
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_produk"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_produk' ? 'active' : ''; ?>"> Produk</a>
             </li>
+
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_divisi"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_divisi' ? 'active' : ''; ?>"> Divisi</a>
+            </li>
           </ul>
         </div>
       </li>
@@ -145,6 +151,12 @@
               <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_produk"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_produk' ? 'active' : ''; ?>"> Produk</a>
+            </li>
+
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_divisi"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_divisi' ? 'active' : ''; ?>"> Divisi</a>
             </li>
           </ul>
         </div>

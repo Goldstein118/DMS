@@ -17,8 +17,8 @@ if (gird_container_supplier) {
       {
         name: "Aksi",
         formatter: () => {
-          const edit = access.hasAccess("tb_karyawan", "edit");
-          const can_delete = access.hasAccess("tb_karyawan", "delete");
+          const edit = access.hasAccess("tb_supplier", "edit");
+          const can_delete = access.hasAccess("tb_supplier", "delete");
           let button = "";
 
           if (edit) {
@@ -91,7 +91,7 @@ if (gird_container_supplier) {
     const wrapper = document.createElement("div");
     wrapper.className =
       "d-flex justify-content-between align-items-center mb-3";
-    if (access.hasAccess("tb_karyawan", "create")) {
+    if (access.hasAccess("tb_supplier", "create")) {
       wrapper.appendChild(btn);
     }
 
@@ -159,7 +159,7 @@ async function handleDeleteSupplier(button) {
       } else {
         Swal.fire(
           "Gagal",
-          response.error || "Gagal menghapus karyawan.",
+          response.error || "Gagal menghapus supplier.",
           "error"
         );
       }

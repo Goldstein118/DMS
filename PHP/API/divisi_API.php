@@ -7,19 +7,17 @@ header('Access-Control-Allow-Origin: *'); // Allow requests from any origin
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow specific HTTP methods
 header('Access-Control-Allow-Headers: Content-Type'); // Allow specific headers
 header('Content-Type: application/json');
-if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
-    $rawInput = file_get_contents("php://input");
-    $data = json_decode($rawInput, true) ?? [];
-} else {
-    $data = $_POST; 
-}
 
 
+$rawInput=file_get_contents("php://input");
+
+$data = json_decode($rawInput, true) ?? [];
 error_log("Incoming data: " . print_r($data, true));
 
 $user_id = $data['user_id'] ?? $_GET['user_id'] ?? $_POST['user_id']??null;
 
 
+// Get the action from query or body
 $action =$data['action']?? $_GET['action'] ?? $_POST['action'] ?? null;
 
 
@@ -44,7 +42,7 @@ switch ($action) {
         $hasContextAccess = checkContextAccess($conn, $user_id, [
             'action' => $contextAction,
             'target' => $target,
-            'table'  => 'tb_customer',
+            'table'  => 'tb_divisi',
         ]);
 
         if (!$hasContextAccess) {
@@ -54,24 +52,24 @@ switch ($action) {
         }
     } else {
         // No context info, fall back to normal access check
-        checkAccess($conn, $user_id, 'tb_customer', 16); // View access
+        checkAccess($conn, $user_id, 'tb_divisi', 36); // View access
     }
-        require __DIR__ . '/actions/select_customer.php';
+        require __DIR__ . '/actions/select_divisi.php';
         break;
 
     case 'create':
-        checkAccess($conn, $user_id, 'tb_customer', 17); // Create access
-        require  __DIR__ . '/actions/create_customer.php';
+        checkAccess($conn, $user_id, 'tb_divisi', 37); // Create access
+        require  __DIR__ . '/actions/create_divisi.php';
         break;
 
     case 'update':
-        checkAccess($conn, $user_id, 'tb_customer', 18); // Edit access
-        require  __DIR__ . '/actions/update_customer.php';
+        checkAccess($conn, $user_id, 'tb_divisi', 38); // Edit access
+        require  __DIR__ . '/actions/update_divisi.php';
         break;
 
     case 'delete':
-        checkAccess($conn, $user_id, 'tb_customer', 19); // Delete access
-        require  __DIR__ . '/actions/delete_customer.php';
+        checkAccess($conn, $user_id, 'tb_divisi', 39); // Delete access
+        require  __DIR__ . '/actions/delete_divisi.php';
         break;
 
     default:
@@ -79,4 +77,5 @@ switch ($action) {
         echo json_encode(["error" => "Invalid action"]);
         break;
 }
+
 ?>

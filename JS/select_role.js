@@ -247,10 +247,6 @@ async function handleUpdateRole(button) {
   const currentNama = row.cells[1].textContent;
   const currentAkses = row.cells[2].textContent;
   console.log(currentAkses);
-
-  document.getElementById("update_role_ID").value = role_ID;
-  document.getElementById("update_role_name").value = currentNama;
-
   const checkboxFields = [
     "karyawan",
     "user",
@@ -258,7 +254,14 @@ async function handleUpdateRole(button) {
     "supplier",
     "customer",
     "channel",
+    "kategori",
+    "brand",
+    "produk",
+    "divisi",
   ];
+
+  document.getElementById("update_role_ID").value = role_ID;
+  document.getElementById("update_role_name").value = currentNama;
 
   checkboxFields.forEach((field) => {
     const checkboxAll = document.getElementById(`check_all_${field}_update`);

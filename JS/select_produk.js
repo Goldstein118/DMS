@@ -210,29 +210,44 @@ async function handleDeleteProduk(button) {
 }
 
 function populateDropdown(data, field_id, field) {
-  const select = $(`#${field}`);
+  const select = $(`#update_${field}`);
   select.empty();
   data.forEach((item) => {
     if (field == "kategori") {
-      const option = new Option(
-        `${item.kategori_id} - ${item.nama}`,
-        item.kategori_id,
-        false,
-        item.kategori_id == field_id
+      select.append(
+        new Option(
+          `${item.kategori_id} - ${item.nama}`,
+          item.kategori_id,
+          false,
+          item.kategori_id == field_id
+        )
       );
-      select.append(option);
     } else if (field == "brand") {
-      const option = new Option(
-        `${item.brand_id} - ${item.nama}`,
-        item.brand_id,
-        false,
-        item.brand_id == field_id
+      select.append(
+        new Option(
+          `${item.brand_id} - ${item.nama}`,
+          item.brand_id,
+          false,
+          item.brand_id == field_id
+        )
       );
-      select.append(option);
     }
   });
 
   select.trigger("change");
+}
+
+async function fetch_fk(field, field_id) {
+  try {
+    const response = await apiRequest(
+      `/PHP/API/${field}_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}&target=tb_produk&context=edit`
+    );
+    populateDropdown(response.data, field_id, field);
+  } catch (error) {
+    toastr.error("Gagal mengambil data : " + error.message);
+  }
 }
 
 async function handleUpdateProduk(button) {
@@ -245,11 +260,11 @@ async function handleUpdateProduk(button) {
 
   const produk_id = row.cells[0].textContent;
   const nama = row.cells[1].textContent;
-  const kategori_id = row.cells[8].textContent;
-  const brand_id = row.cells[9].textContent;
-  const no_sku = row.cells[5].textContent;
-  const status = row.cells[6].textContent;
-  const harga_minimal = row.cells[7].textContent;
+  const kategori_id = row.cells[7].textContent;
+  const brand_id = row.cells[8].textContent;
+  const no_sku = row.cells[4].textContent;
+  const status = row.cells[5].textContent;
+  const harga_minimal = row.cells[6].textContent;
 
   // Populate the modal fields
   document.getElementById("update_produk_id").value = produk_id;
@@ -260,18 +275,8 @@ async function handleUpdateProduk(button) {
 
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
-    const response = await apiRequest(
-      `/PHP/API/kategori_API.php?action=select&user_id=${access.decryptItem(
-        "user_id"
-      )}&target=tb_produk&context=edit`
-    );
-    populateDropdown(response.data, kategori_id, "kategori");
-    const data = await apiRequest(
-      `/PHP/API/brand_API.php?action=select&user_id=${access.decryptItem(
-        "user_id"
-      )}&target=tb_produk&context=edit`
-    );
-    populateDropdown(response.data, brand_id, "brand");
+    fetch_fk("kategori", kategori_id);
+    fetch_fk("brand", brand_id);
 
     button_icon.style.display = "inline-block";
     spinner.style.display = "none";
@@ -295,7 +300,7 @@ function validateField(field, pattern, errorMessage) {
   return true;
 }
 
-const submit_produk_update = document.getElementById("submit_produk_update");
+const submit_produk_update = document.getElementById("update_submit_produk");
 if (submit_produk_update) {
   submit_produk_update.addEventListener("click", async function () {
     if (!window.currentRow) {
@@ -307,7 +312,7 @@ if (submit_produk_update) {
     const produk_id = document.getElementById("update_produk_id").value;
     const nama_new = document.getElementById("update_name_produk").value;
     const no_sku_new = document.getElementById("update_no_sku").value;
-    const status_new = document.getElementById("update_status").value;
+    const status_new = document.getElementById("update_status_produk").value;
     const harga_minimal_new = document.getElementById(
       "update_harga_minimal"
     ).value;

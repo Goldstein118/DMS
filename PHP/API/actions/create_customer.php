@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
-
+$upload_dir = __DIR__ . '/../uploads/';
+$base_url = 'https://yourdomain.com/uploads/'; 
 
 try {
     $requiredFields = ['name_customer', 'alamat_customer', 'no_telp_customer', 'nik_customer', 'npwp_customer', 'nitko', 'term_payment', 'max_invoice', 'max_piutang', 'status_customer','channel_id'];
@@ -36,8 +37,51 @@ try {
     );
 
 
+    function resizeImage($file, $maxWidth = 800, $maxHeight = 800) {
+        $imgInfo = getimagesize($file);
+        list($width, $height) = $imgInfo;
+        $src = imagecreatefromstring(file_get_contents($file));
+        $scale = min($maxWidth / $width, $maxHeight / $height);
+        $newWidth = $width * $scale;
+        $newHeight = $height * $scale;
+
+        $dst = imagecreatetruecolor($newWidth, $newHeight);
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+        ob_start();
+        imagejpeg($dst, null, 85);
+        return ob_get_clean();
+    }
+
+    foreach (['ktp_image' => 'ktp', 'npwp_image' => 'npwp'] as $field => $tipe) {
+        if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
+            $blobData = resizeImage($_FILES[$field]['tmp_name']);
+            $filename = uniqid($tipe . '_') . '.jpg';
+            $filepath = $upload_dir . $filename;
+            $external_link = $base_url . $filename;
+
+            file_put_contents($filepath, $blobData);
+
+            // Insert into tb_gambar
+            $gambar_id = generateCustomID('IMG', 'tb_gambar', 'gambar_id', $conn);
+            executeInsert(
+                $conn,
+                "INSERT INTO tb_gambar (gambar_id, tipe, customer_id, internal_link, external_link, blob_data) VALUES (?, ?, ?, ?, ?, ?)",
+                [$gambar_id, $tipe, $customer_id, $filepath, $external_link, $blobData],
+                "ssssss"
+            );
+        }
+    }
+
     echo json_encode(["success" => true, "message" => "Berhasil", "data" => ["customer_id" => $customer_id]]);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(["success" => false, "error" => $e->getMessage()]);
 }
+
+
+
+
+
+
+

@@ -86,7 +86,7 @@ include('sidebar.php');
 $page = $_GET['page'] ?? 'tabel_karyawan';
 
 // Whitelist allowed pages for security
-$allowed_pages = ['tabel_karyawan', 'tabel_role', 'tabel_user','tabel_supplier','tabel_customer','tabel_channel','tabel_kategori','tabel_brand','tabel_produk'];
+$allowed_pages = ['tabel_karyawan', 'tabel_role', 'tabel_user','tabel_supplier','tabel_customer','tabel_channel','tabel_kategori','tabel_brand','tabel_produk','tabel_divisi'];
 
 if (in_array($page, $allowed_pages)) {
   include $page . '.php';
@@ -154,6 +154,12 @@ switch ($page) {
     ?>
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_produk.js?v=2.0"></script>
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_produk.js?v=2.0"></script>
+    <?php
+    break;
+  case 'tabel_divisi':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_divisi.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_divisi.js?v=2.0"></script>
     <?php
     break;
 }

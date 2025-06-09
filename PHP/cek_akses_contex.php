@@ -21,6 +21,7 @@ function checkContextAccess($conn, $userId, $context) {
         'tb_kategori' => 24,
         'tb_brand'    => 28,
         'tb_produk'   => 32,
+        'tb_divisi'   => 36
         // Add more tables and their base indices here
     ];
 

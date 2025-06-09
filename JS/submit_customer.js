@@ -36,30 +36,10 @@ function format_no_telp(str) {
   return result;
 }
 
-async function fetch_channel() {
-  const response = await apiRequest(
-    `/PHP/API/channel_API.php?action=select&user_id=${access.decryptItem(
-      "user_id"
-    )}&target=tb_customer&context=create`
-  );
-  const channel_id = $("#channel_id");
-  channel_id.empty();
-  channel_id.append(new Option("Pilih Channel", "", false, false));
-
-  response.data.forEach((channel) => {
-    const option = new Option(
-      `${channel.channel_id} - ${channel.nama}`,
-      channel.channel_id,
-      false,
-      false
-    );
-    channel_id.append(option);
-  });
-  channel_id.trigger("change");
-}
-
 async function submitCustomer() {
-  // Collect form data
+  const form = document.getElementById("form_customer");
+  const formData = new FormData(form);
+
   const name_customer = document.getElementById("name_customer").value;
   let no_telp_customer = document.getElementById("no_telp_customer").value;
   const alamat_customer = document.getElementById("alamat_customer").value;
@@ -71,32 +51,23 @@ async function submitCustomer() {
   const max_invoice = document.getElementById("max_invoice").value;
   const max_piutang = document.getElementById("max_piutang").value;
   const channel_id = document.getElementById("channel_id").value;
-  // Validate form data
+
   if (
     !name_customer ||
-    name_customer.trim() === "" ||
     !no_telp_customer ||
-    no_telp_customer.trim() === "" ||
     !alamat_customer ||
-    alamat_customer.trim() === "" ||
     !nik_customer ||
-    nik_customer.trim() === "" ||
     !npwp_customer ||
-    npwp_customer.trim() === "" ||
     !status_customer ||
-    status_customer.trim() === "" ||
     !nitko ||
-    nitko.trim() === "" ||
     !term_payment ||
-    term_payment.trim() === "" ||
     !max_invoice ||
-    max_invoice.trim() === "" ||
-    !max_piutang ||
-    max_piutang.trim() === ""
+    !max_piutang
   ) {
     toastr.error("Harap isi semua kolom sebelum submit.");
     return;
   }
+
   const is_valid =
     validateField(name_customer, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
     validateField(
@@ -128,47 +99,44 @@ async function submitCustomer() {
       "Format max piutang tidak valid"
     );
 
-  if (is_valid) {
-    no_telp_customer = format_no_telp(no_telp_customer);
+  if (!is_valid) return;
 
-    const data_customer = {
-      user_id: `${access.decryptItem("user_id")}`,
-      name_customer,
-      alamat_customer,
-      no_telp_customer,
-      nik_customer,
-      npwp_customer,
-      nitko,
-      term_payment,
-      max_invoice,
-      max_piutang,
-      status_customer,
-      channel_id,
-    };
+  // Format nomor telepon
+  no_telp_customer = format_no_telp(no_telp_customer);
 
-    try {
-      const response = await apiRequest(
-        `/PHP/API/customer_API.php?action=create&user_id=user_id: ${access.decryptItem(
-          "user_id"
-        )}`,
-        "POST",
-        data_customer
-      );
-      document.getElementById("name_customer").value = "";
-      document.getElementById("no_telp_customer").value = "";
-      document.getElementById("alamat_customer").value = "";
-      document.getElementById("nik_customer").value = "";
-      document.getElementById("npwp_customer").value = "";
-      document.getElementById("status_customer").value = "";
-      document.getElementById("nitko").value = "";
-      document.getElementById("term_payment").value = "";
-      document.getElementById("max_invoice").value = "";
-      document.getElementById("max_piutang").value = "";
+  // Manually append fields to formData (in case not already in form)
+  formData.set("name_customer", name_customer);
+  formData.set("alamat_customer", alamat_customer);
+  formData.set("no_telp_customer", no_telp_customer);
+  formData.set("nik_customer", nik_customer);
+  formData.set("npwp_customer", npwp_customer);
+  formData.set("status_customer", status_customer);
+  formData.set("nitko", nitko);
+  formData.set("term_payment", term_payment);
+  formData.set("max_invoice", max_invoice);
+  formData.set("max_piutang", max_piutang);
+  formData.set("channel_id", channel_id);
+  formData.set("action", "create");
+  formData.set("user_id", access.decryptItem("user_id"));
 
-      $("#modal_customer").modal("hide");
-      swal.fire("Berhasil", response.message, "success");
-    } catch (error) {
-      toastr.error(error.message);
+  try {
+    const response = await apiRequest(
+      "/PHP/API/customer_API.php",
+      "POST",
+      formData
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || "Terjadi kesalahan");
     }
+
+    form.reset();
+    $("#modal_customer").modal("hide");
+    Swal.fire("Berhasil", result.message, "success");
+  } catch (error) {
+    console.error("Submit error:", error);
+    toastr.error(error.message || "Submit gagal");
   }
 }

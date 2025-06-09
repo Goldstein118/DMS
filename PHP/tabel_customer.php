@@ -8,6 +8,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <form id="form_customer" enctype="multipart/form-data">  
           <label class="form-label" for="name">Nama:</label>
           <input class="form-control" type="text" id="name_customer" name="name_customer" value="">
           <label class="form-label" for="address">Alamat:</label>
@@ -37,6 +38,12 @@
           <label class = "form-label" for="channel_id">Kode Channel:</label>
           <select class="form-select" id="channel_id">
           </select>
+          <label class="form-label" for="ktp_image">Upload KTP Image:</label>
+          <input class="form-control" type="file" name="ktp_image" id="ktp_image" accept="image/*">
+          <label class="form-label" for="npwp_image">Upload NPWP Image:</label>
+          <input class="form-control" type="file" name="npwp_image" id="npwp_image" accept="image/*">
+          </form>
+
         </div>
         <div class="modal-footer">
           <button id="submit_customer" type="button" class="btn btn-primary">Submit</button>
@@ -86,6 +93,10 @@
           <label class = "form-label" for="update_channel_id">Kode Channel:</label>
           <select class="form-select" id="update_channel_id">
           </select>
+          <label class="form-label" for="update_ktp_image">Upload KTP Image:</label>
+          <input class="form-control" type="file" name="update_ktp_image" id="update_ktp_image" accept="image/*">
+          <label class="form-label" for="update_npwp_image">Upload NPWP Image:</label>
+          <input class="form-control" type="file" name="update_npwp_image" id="update_npwp_image" accept="image/*">
         </div>
         <div class="modal-footer">
           <button id="submit_customer_update" type="button" class="btn btn-primary">Simpan</button>

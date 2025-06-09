@@ -28,7 +28,8 @@ try {
     validate_2($max_invoice, '/^[a-zA-Z0-9,. ]+$/', "Invalid max invoice fromat");
     validate_2($max_piutang, '/^[a-zA-Z0-9,. ]+$/', "Invalid max piutang formt");
 
-    $stmt = $conn->prepare("UPDATE tb_customer SET nama=?,no_telp=?, alamat=?, ktp=?, npwp=?, status=? ,nitko=?, term_pembayaran=? ,max_invoice=? ,max_piutang =?,channel_id =? WHERE customer_id=?");
+    $stmt = $conn->prepare("UPDATE tb_customer SET nama=?,no_telp=?, alamat=?, ktp=?, npwp=?, status=? ,nitko=?,term_pembayaran=? ,
+                            max_invoice=? ,max_piutang =?,channel_id =? WHERE customer_id=?");
     $stmt->bind_param("ssssssssssss", $nama, $no_telp, $alamat, $ktp, $npwp, $status, $nitko, $term_pembayaran, $max_invoice, $max_piutang,$channel_id, $customer_id);
 
     if ($stmt->execute()) {

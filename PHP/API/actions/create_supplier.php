@@ -28,6 +28,11 @@ try {
         [$supplier_id, $supplier_nama, $supplier_alamat, $supplier_no_telp, $supplier_ktp, $supplier_npwp, $supplier_status],
         "sssssss"
     );
+    echo json_encode([
+        "success" => true,
+        "message" => "Berhasil",
+        "data" => ["supplier_id" => $supplier_id]
+    ]);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(["success" => false, "error" => $e->getMessage()]);

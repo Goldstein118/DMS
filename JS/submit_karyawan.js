@@ -44,6 +44,9 @@ function populateRoleDropdown(data) {
   select.trigger("change");
 }
 function validateField(field, pattern, errorMessage) {
+  if (!field || field.trim() === "") {
+    return true;
+  }
   if (!pattern.test(field)) {
     toastr.error(errorMessage, {
       timeOut: 500,
@@ -80,16 +83,12 @@ async function submitKaryawan() {
     name_karyawan.trim() === "" ||
     !departement_karyawan ||
     departement_karyawan.trim() === "" ||
-    !phone_karyawan ||
-    phone_karyawan.trim() === "" ||
-    !address_karyawan ||
-    address_karyawan.trim() === "" ||
-    !nik_karyawan ||
-    nik_karyawan.trim() === "" ||
     !role_id ||
-    role_id.trim() === ""
+    role_id.trim() === "" ||
+    !status_karyawan ||
+    status_karyawan.trim() === ""
   ) {
-    toastr.error("Harap isi semua kolom sebelum submit.");
+    toastr.error("Kolom * wajib diisi.");
     return;
   }
   const is_valid =

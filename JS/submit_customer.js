@@ -6,8 +6,19 @@ if (submit_customer) {
   $(document).ready(function () {
     $("#modal_customer").on("shown.bs.modal", function () {
       $("#name_customer").trigger("focus");
-      fetch_channel();
     });
+    fetch_channel();
+    document
+      .getElementById("ktp_image")
+      .addEventListener("change", function () {
+        access.validateImageFile(this);
+      });
+
+    document
+      .getElementById("npwp_image")
+      .addEventListener("change", function () {
+        access.validateImageFile(this);
+      });
     $("#channel_id").select2({
       placeholder: "Pilih channel",
       allowClear: true,
@@ -34,6 +45,31 @@ function format_no_telp(str) {
   let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
   let result = "+62 " + format;
   return result;
+}
+
+async function fetch_channel() {
+  try {
+    const response = await apiRequest(
+      `/PHP/API/channel_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}&target=tb_customer&context=create`
+    );
+    const select = $("#channel_id");
+    select.empty();
+    select.append(new Option("Pilih Channel", "", false, false));
+    response.data.forEach((channel) => {
+      const option = new Option(
+        `${channel.channel_id} - ${channel.nama}`,
+        channel.channel_id,
+        false,
+        false
+      );
+      select.append(option);
+    });
+    select.trigger("change");
+  } catch (error) {
+    console.error("error:", error);
+  }
 }
 
 async function submitCustomer() {
@@ -104,7 +140,6 @@ async function submitCustomer() {
   // Format nomor telepon
   no_telp_customer = format_no_telp(no_telp_customer);
 
-  // Manually append fields to formData (in case not already in form)
   formData.set("name_customer", name_customer);
   formData.set("alamat_customer", alamat_customer);
   formData.set("no_telp_customer", no_telp_customer);
@@ -126,15 +161,13 @@ async function submitCustomer() {
       formData
     );
 
-    const result = await response.json();
-
-    if (!response.ok || !result.success) {
+    if (!response.ok) {
       throw new Error(result.error || "Terjadi kesalahan");
     }
 
     form.reset();
     $("#modal_customer").modal("hide");
-    Swal.fire("Berhasil", result.message, "success");
+    Swal.fire("Berhasil", response.message, "success");
   } catch (error) {
     console.error("Submit error:", error);
     toastr.error(error.message || "Submit gagal");

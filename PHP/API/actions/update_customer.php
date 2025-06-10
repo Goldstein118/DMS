@@ -1,50 +1,131 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
+
+$upload_dir = __DIR__ . '/../../../uploads';
+$base_url = 'http://localhost/DMS/uploads/';
+
+function resizeImage($file, $maxWidth = 1280, $maxHeight = 720)
+{
+    $imgInfo = getimagesize($file);
+    if (!$imgInfo) return false;
+
+    list($width, $height) = $imgInfo;
+    if ($width <= $maxWidth && $height <= $maxHeight) {
+        return file_get_contents($file);
+    }
+
+    $src = imagecreatefromstring(file_get_contents($file));
+    if (!$src) return false;
+
+    $scale = min($maxWidth / $width, $maxHeight / $height);
+    $newWidth = (int) ($width * $scale);
+    $newHeight = (int) ($height * $scale);
+
+    $dst = imagecreatetruecolor($newWidth, $newHeight);
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+    ob_start();
+    imagejpeg($dst, null, 85);
+    $imageData = ob_get_clean();
+
+    imagedestroy($src);
+    imagedestroy($dst);
+
+    return $imageData;
+}
+
+function handleImageUpload($field, $tipe, $customer_id, $conn, $upload_dir, $base_url)
+{
+    if (
+        isset($_FILES[$field]) &&
+        $_FILES[$field]['error'] === UPLOAD_ERR_OK &&
+        is_uploaded_file($_FILES[$field]['tmp_name'])
+    ) {
+        $file = $_FILES[$field]['tmp_name'];
+
+        $imgInfo = getimagesize($file);
+        if (!$imgInfo) throw new Exception("Invalid image for $field.");
+
+        $mime = mime_content_type($file);
+        $allowed = ['image/jpeg', 'image/png', 'image/jpg'];
+        if (!in_array($mime, $allowed)) throw new Exception("Unsupported format for $field.");
+
+        $blobData = resizeImage($file);
+        $filename = uniqid($tipe . '_') . '.jpg';
+        $filepath = $upload_dir . '/' . $filename;
+        $external_link = $base_url . $filename;
+
+        file_put_contents($filepath, $blobData);
+        $internal_link = $filepath;
+
+
+        $check = $conn->prepare("SELECT gambar_id, internal_link FROM tb_gambar WHERE customer_id=? AND tipe=?");
+        $check->bind_param("ss", $customer_id, $tipe);
+        $check->execute();
+        $result = $check->get_result();
+
+        if ($result->num_rows > 0) {
+            $old = $result->fetch_assoc();
+            $old_path = $old['internal_link'];
+            if (file_exists($old_path)) {
+                unlink($old_path); // Delete old file from the server
+            }
+            $stmt = $conn->prepare("UPDATE tb_gambar SET internal_link=?, external_link=?, blob_data=? WHERE customer_id=? AND tipe=?");
+            $stmt->bind_param("sssss", $internal_link, $external_link, $blobData, $customer_id, $tipe);
+        } else {
+            $gambar_id = generateCustomID('IMG', 'tb_gambar', 'gambar_id', $conn);
+            $stmt = $conn->prepare("INSERT INTO tb_gambar (gambar_id, tipe, customer_id, internal_link, external_link, blob_data) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssss", $gambar_id, $tipe, $customer_id, $internal_link, $external_link, $blobData);
+        }
+
+        $stmt->execute();
+        $stmt->close();
+    }
+}
+
 try {
-    $requiredFields = ['customer_id', 'nama', 'alamat', 'no_telp', 'ktp', 'npwp', 'status', 'nitko', 'term_pembayaran', 'max_invoice', 'max_piutang','channel_id'];
-    $filed = validate_1($data, $requiredFields);
+    $requiredFields = ['customer_id', 'nama', 'alamat', 'no_telp', 'ktp', 'npwp', 'status', 'nitko', 'term_pembayaran', 'max_invoice', 'max_piutang', 'channel_id'];
+    $fields = validate_1($data, $requiredFields);
 
-    $customer_id = $data['customer_id'];
-    $nama = $data['nama'];
-    $no_telp = $data['no_telp'];
-    $alamat = $data['alamat'];
-    $ktp = $data['ktp'];
-    $npwp = $data['npwp'];
-    $status = $data['status'];
-    $nitko = $data['nitko'];
-    $term_pembayaran = $data['term_pembayaran'];
-    $max_invoice = $data['max_invoice'];
-    $max_piutang = $data['max_piutang'];
-    $channel_id=$data['channel_id'];
-
+    $customer_id = $fields['customer_id'];
+    $nama = $fields['nama'];
+    $alamat = $fields['alamat'];
+    $no_telp = $fields['no_telp'];
+    $ktp = $fields['ktp'];
+    $npwp = $fields['npwp'];
+    $status = $fields['status'];
+    $nitko = $fields['nitko'];
+    $term_pembayaran = $fields['term_pembayaran'];
+    $max_invoice = $fields['max_invoice'];
+    $max_piutang = $fields['max_piutang'];
+    $channel_id = $fields['channel_id'];
 
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
     validate_2($alamat, '/^[a-zA-Z0-9,. ]+$/', "Invalid address format");
-    validate_2($no_telp, '/^[+]?[\d\s\-()]+$/', "Invalid phone number format");
+    validate_2($no_telp, '/^[+]?[\d\s\-()]+$/', "Invalid phone format");
     validate_2($ktp, '/^[0-9]+$/', "Invalid KTP format");
     validate_2($npwp, '/^[0-9 .-]+$/', "Invalid NPWP format");
     validate_2($nitko, '/^[a-zA-Z0-9,. ]+$/', "Invalid NITKO format");
     validate_2($term_pembayaran, '/^[a-zA-Z0-9,. ]+$/', "Invalid term pembayaran format");
-    validate_2($max_invoice, '/^[a-zA-Z0-9,. ]+$/', "Invalid max invoice fromat");
-    validate_2($max_piutang, '/^[a-zA-Z0-9,. ]+$/', "Invalid max piutang formt");
+    validate_2($max_invoice, '/^[a-zA-Z0-9,. ]+$/', "Invalid max invoice format");
+    validate_2($max_piutang, '/^[a-zA-Z0-9,. ]+$/', "Invalid max piutang format");
 
-    $stmt = $conn->prepare("UPDATE tb_customer SET nama=?,no_telp=?, alamat=?, ktp=?, npwp=?, status=? ,nitko=?,term_pembayaran=? ,
-                            max_invoice=? ,max_piutang =?,channel_id =? WHERE customer_id=?");
-    $stmt->bind_param("ssssssssssss", $nama, $no_telp, $alamat, $ktp, $npwp, $status, $nitko, $term_pembayaran, $max_invoice, $max_piutang,$channel_id, $customer_id);
+    $stmt = $conn->prepare("UPDATE tb_customer SET nama=?, alamat=?, no_telp=?, ktp=?, npwp=?, status=?, nitko=?, term_pembayaran=?, max_invoice=?, max_piutang=?, channel_id=? WHERE customer_id=?");
+    $stmt->bind_param("ssssssssssss", $nama, $alamat, $no_telp, $ktp, $npwp, $status, $nitko, $term_pembayaran, $max_invoice, $max_piutang, $channel_id, $customer_id);
 
-    if ($stmt->execute()) {
-        error_log("Customer updated successfully: ID = $customer_id");
-        http_response_code(200);
-        echo json_encode(["success" => true, "message" => "Customer berhasil terupdate"]);
-    } else {
-        error_log("Failed to execute statement: " . $stmt->error);
-        http_response_code(500);
-        echo json_encode(["success" => false, "error" => "An internal server error occurred"]);
+    if (!$stmt->execute()) {
+        throw new Exception("Failed to update customer: " . $stmt->error);
     }
+    $stmt->close();
+
+    // Process image uploads
+    handleImageUpload('ktp_file', 'ktp', $customer_id, $conn, $upload_dir, $base_url);
+    handleImageUpload('npwp_file', 'npwp', $customer_id, $conn, $upload_dir, $base_url);
+
+    echo json_encode(["success" => true, "message" => "Customer dan gambar berhasil diperbarui"]);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(["success" => false, "error" => $e->getMessage()]);
 }
 
-$stmt->close();
 $conn->close();

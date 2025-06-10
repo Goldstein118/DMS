@@ -67,3 +67,21 @@ export function decryptItem(key) {
     return null;
   }
 }
+export function validateImageFile(input) {
+  const allowedTypes = ["image/jpeg", "image/png"];
+  const maxSizeMB = 2;
+  const file = input.files[0];
+
+  if (!file) return;
+
+  if (!allowedTypes.includes(file.type)) {
+    toastr.error("Hanya file JPG dan PNG yang diperbolehkan.");
+    input.value = "";
+    return;
+  }
+
+  if (file.size > maxSizeMB * 1024 * 1024) {
+    toastr.error("Ukuran file maksimal 2MB.");
+    input.value = "";
+  }
+}

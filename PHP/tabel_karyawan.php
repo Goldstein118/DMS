@@ -7,12 +7,13 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <label class="form-label" for="name_karyawan">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-          <input class="form-control" type="text" id="name_karyawan" name="name_karyawan" value="">
+
+        <label class="form-label" for="name_karyawan">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+        <input class="form-control" type="text" id="name_karyawan" name="name_karyawan" value="">
           <label class="form-label" for="role_select">Role:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="role_select">
           </select>
-          <label class="form-label" for="divisi">Departement:</label>
+          <label class="form-label" for="divisi">Departement:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class ="form-select" id="divisi_karyawan">
           <option value="sales">Sales</option>
           <option value="admin">Admin</option>
@@ -20,8 +21,7 @@
           <option value="finance">Finance</option>
           <option value="lainnya">Lainnya</option>
           </select>
-          
-          <label class="form-label" for="phone">Nomor Telepon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <label class="form-label" for="phone">Nomor Telepon:</label>
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">+62</span>
             <input class="form-control" type="text" id="phone_karyawan" name="phone_karyawan" aria-describedby="basic-addon1" value="">
@@ -63,7 +63,7 @@
           <select class="form-select" id="update_role_select">
             <option value="">Pilih Role</option>
           </select>
-          <label class="form-label" for="update_divisi_karyawan">Divisi:</label>
+          <label class="form-label" for="update_divisi_karyawan">Departement:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class ="form-select" id="update_divisi_karyawan">
           <option value="sales">Sales</option>
           <option value="admin">Admin</option>
@@ -72,7 +72,7 @@
           <option value="lainnya">Lainnya</option>
           </select>
           
-          <label class="form-label" for="phone">Nomor Telepon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <label class="form-label" for="phone">Nomor Telepon:</label>
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">+62</span>
             <input class="form-control" type="text" id="update_phone_karyawan" name="phone_karyawan_update" aria-describedby="basic-addon1" value="">

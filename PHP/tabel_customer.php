@@ -39,9 +39,9 @@
           <select class="form-select" id="channel_id">
           </select>
           <label class="form-label" for="ktp_image">Upload KTP Image:</label>
-          <input class="form-control" type="file" name="ktp_image" id="ktp_image" accept="image/*">
+          <input class="form-control" type="file" name="ktp_image" id="ktp_image" accept=".jpg,.jpeg,.png">
           <label class="form-label" for="npwp_image">Upload NPWP Image:</label>
-          <input class="form-control" type="file" name="npwp_image" id="npwp_image" accept="image/*">
+          <input class="form-control" type="file" name="npwp_image" id="npwp_image" accept=".jpg,.jpeg,.png">
           </form>
 
         </div>
@@ -54,7 +54,7 @@
 
   <!-- modal_customer_update-->
   <div class="modal fade" id="modal_customer_update"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalCenterTitle">Edit Customer</h5>
@@ -62,6 +62,7 @@
 
         </div>
         <div class="modal-body">
+          <form id="form_customer" enctype="multipart/form-data">
           <label class="form-label" for="update_customer_id">Kode Customer:</label>
           <input class="form-control" type="text" id="update_customer_id" disabled>
           <label class="form-label" for="update_name_customer">Name:</label>
@@ -94,9 +95,10 @@
           <select class="form-select" id="update_channel_id">
           </select>
           <label class="form-label" for="update_ktp_image">Upload KTP Image:</label>
-          <input class="form-control" type="file" name="update_ktp_image" id="update_ktp_image" accept="image/*">
+          <input class="form-control" type="file" name="update_ktp_image" id="update_ktp_image" accept=".jpg,.jpeg,.png">
           <label class="form-label" for="update_npwp_image">Upload NPWP Image:</label>
-          <input class="form-control" type="file" name="update_npwp_image" id="update_npwp_image" accept="image/*">
+          <input class="form-control" type="file" name="update_npwp_image" id="update_npwp_image" accept=".jpg,.jpeg,.png">
+          </form>
         </div>
         <div class="modal-footer">
           <button id="submit_customer_update" type="button" class="btn btn-primary">Simpan</button>

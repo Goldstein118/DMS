@@ -25,6 +25,7 @@ if (grid_container_customer) {
       "Maksimun Nominal Piutang",
       "Channel",
       "Channel_id",
+      "Link Gambar",
       {
         name: "Aksi",
         formatter: () => {
@@ -87,6 +88,18 @@ if (grid_container_customer) {
           customer.max_piutang,
           customer.channel_nama,
           customer.channel_id,
+          html(`
+   ${
+     customer.ktp_link
+       ? `<a class = "link-dark d-inline-flex text-decoration-none rounded" href="${customer.ktp_link}" target="_blank"><i class="bi bi-person-vcard-fill"> KTP</i></a>`
+       : `<i class="bi bi-x-circle">  KTP</i>`
+   }<br>
+  ${
+    customer.npwp_link
+      ? `<a class = "link-dark d-inline-flex text-decoration-none rounded" href="${customer.npwp_link}" target="_blank"><i class="bi bi-person-vcard-fill">  NPWP</i></a>`
+      : `<i class="bi bi-x-circle">  NPWP</i>`
+  }
+`),
           null,
         ]),
     },
@@ -162,6 +175,7 @@ function format_no_telp(str) {
   let result = "+62 " + format;
   return result;
 }
+
 async function handleDeleteCustomer(button) {
   const row = button.closest("tr");
   const customer_id = row.cells[0].textContent;
@@ -367,51 +381,57 @@ if (submit_customer_update) {
     if (is_valid) {
       const update_no_telp = format_no_telp(update_phone);
 
-      const data_customer_update = {
-        customer_id: customer_id,
-        nama: update_nama,
-        alamat: update_alamat,
-        no_telp: update_no_telp,
-        ktp: update_ktp,
-        npwp: update_npwp,
-        status: update_status,
-        nitko: update_nitko,
-        term_pembayaran: update_term_pembayaran,
-        max_invoice: update_max_invoice,
-        max_piutang: update_max_piutang,
-        channel_id: channel_id_new,
-      };
+      const formData = new FormData();
+      formData.append("customer_id", customer_id);
+      formData.append("nama", update_nama);
+      formData.append("alamat", update_alamat);
+      formData.append("no_telp", update_no_telp);
+      formData.append("ktp", update_ktp);
+      formData.append("npwp", update_npwp);
+      formData.append("status", update_status);
+      formData.append("nitko", update_nitko);
+      formData.append("term_pembayaran", update_term_pembayaran);
+      formData.append("max_invoice", update_max_invoice);
+      formData.append("max_piutang", update_max_piutang);
+      formData.append("channel_id", channel_id_new);
+
+      // Files
+      const ktpFile = document.getElementById("update_ktp_image").files[0];
+      const npwpFile = document.getElementById("update_npwp_image").files[0];
+      if (ktpFile) formData.append("ktp_file", ktpFile);
+      if (npwpFile) formData.append("npwp_file", npwpFile);
+
+      // Send using fetch (not your apiRequest helper if it's JSON-only)
       try {
         const response = await apiRequest(
           `/PHP/API/customer_API.php?action=update&user_id=${access.decryptItem(
             "user_id"
           )}`,
           "POST",
-          data_customer_update
+          formData
         );
 
-        row.cells[1].textContent = update_nama;
-        row.cells[2].textContent = update_alamat;
-        row.cells[3].textContent = update_no_telp;
-        row.cells[4].textContent = update_ktp;
-        row.cells[5].textContent = update_npwp;
-        row.cells[6].textContent = update_status;
-        row.cells[7].textContent = update_nitko;
-        row.cells[8].textContent = update_term_pembayaran;
-        row.cells[9].textContent = update_max_invoice;
-        row.cells[10].textContent = update_max_piutang;
-        const channel_name = $("#update_channel_id option:selected").text();
-        const channel_name_only = channel_name.split(" - ")[1];
-        row.cells[11].textContent = channel_name_only;
-
-        $("#modal_customer_update").modal("hide");
-        Swal.fire("Berhasil", response.message, "success");
+        if (response.ok) {
+          row.cells[1].textContent = update_nama;
+          row.cells[2].textContent = update_alamat;
+          row.cells[3].textContent = update_no_telp;
+          row.cells[4].textContent = update_ktp;
+          row.cells[5].textContent = update_npwp;
+          row.cells[6].textContent = update_status;
+          row.cells[7].textContent = update_nitko;
+          row.cells[8].textContent = update_term_pembayaran;
+          row.cells[9].textContent = update_max_invoice;
+          row.cells[10].textContent = update_max_piutang;
+          const channel_name = $("#update_channel_id option:selected").text();
+          const channel_name_only = channel_name.split(" - ")[1];
+          row.cells[11].textContent = channel_name_only;
+          Swal.fire("Berhasil", response.message, "success");
+          $("#modal_customer_update").modal("hide");
+        } else {
+          Swal.fire("Gagal", result.error || "Update gagal.", "error");
+        }
       } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Gagal",
-          text: error.message,
-        });
+        Swal.fire("Error", error.message, "error");
       }
     }
   });

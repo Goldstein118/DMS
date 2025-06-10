@@ -28,10 +28,16 @@ if (strlen($search)>=3 && $search !==''){
     $stmt->execute();
     $result = $stmt->get_result();
 }else {
-    $sql="SELECT  c.customer_id, c.nama, c.alamat, c.no_telp, c.ktp, c.npwp, c.status,
-    c.nitko,c.term_pembayaran,c.max_invoice,c.max_piutang, c.channel_id ,ch.nama AS channel_nama 
+
+
+    $sql="SELECT c.customer_id, c.nama, c.alamat, c.no_telp, c.ktp, c.npwp, c.status,
+    c.nitko, c.term_pembayaran, c.max_invoice, c.max_piutang, c.channel_id, ch.nama AS channel_nama,
+    g_ktp.external_link AS ktp_link, g_npwp.external_link AS npwp_link
     FROM tb_customer c 
-    JOIN tb_channel ch ON c.channel_id = ch.channel_id";
+    JOIN tb_channel ch ON c.channel_id = ch.channel_id
+    LEFT JOIN tb_gambar g_ktp ON g_ktp.customer_id = c.customer_id AND g_ktp.tipe = 'ktp'
+    LEFT JOIN tb_gambar g_npwp ON g_npwp.customer_id = c.customer_id AND g_npwp.tipe = 'npwp'";
+
     $result=$conn->query($sql);
 }
 

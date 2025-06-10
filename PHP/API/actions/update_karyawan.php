@@ -1,17 +1,18 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
 try{
-$requiredFields = ['karyawan_id', 'nama', 'role_id', 'departement', 'no_telp', 'alamat', 'ktp', 'npwp', 'status'];
-
+$requiredFields = ['karyawan_id', 'nama', 'role_id', 'departement','status'];
 $field = validate_1($data, $requiredFields);
+
+
 $karyawan_id = $data['karyawan_id'];
 $nama = $data['nama'];
 $role_ID = $data['role_id'];
 $departement = $data['departement'];
-$noTelp = $data['no_telp'];
-$alamat = $data['alamat'];
-$ktp_npwp = $data['ktp'];
-$npwp = $data['npwp'];
+$noTelp = $data['no_telp'] ?? '';
+$alamat = $data['alamat'] ?? '';
+$ktp_npwp = $data['ktp'] ?? '';
+$npwp = $data['npwp'] ?? '';
 $status = $data['status'];
 
 

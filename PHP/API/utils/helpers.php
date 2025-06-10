@@ -17,10 +17,10 @@ function generateCustomID($prefix, $table, $column, $conn)
     return "$prefix$year-$next";
 }
 
-function validate_1($data, $fields, $defaults = [])
+function validate_1($data, $requiredFields, $defaults = [])
 {
     $output = [];
-    foreach ($fields as $f) {
+    foreach ($requiredFields as $f) {
         if (!isset($data[$f]) || trim($data[$f]) === '') {
             http_response_code(400);
             echo json_encode(["success" => false, "error" => "Missing or empty: $f"]);
@@ -28,22 +28,33 @@ function validate_1($data, $fields, $defaults = [])
         }
         $output[$f] = trim($data[$f]);
     }
+
+    // Include optional fields (even if empty)
+    foreach ($data as $key => $val) {
+        if (!array_key_exists($key, $output)) {
+            $output[$key] = trim($val);
+        }
+    }
+
     foreach ($defaults as $key => $val) {
         if (!isset($output[$key]) || $output[$key] === '') {
             $output[$key] = $val;
         }
     }
+
     return $output;
 }
 
+
 function validate_2($value, $pattern, $errorMsg)
 {
-    if (!preg_match($pattern, $value)) {
+    if (trim($value) !== '' && !preg_match($pattern, $value)) {
         http_response_code(400);
         echo json_encode(["success" => false, "error" => $errorMsg]);
         exit;
     }
 }
+
 
 function executeInsert($conn, $query, $params, $types)
 {

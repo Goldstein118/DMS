@@ -301,6 +301,9 @@ async function handleUpdateKaryawan(button) {
   }
 }
 function validateField(field, pattern, errorMessage) {
+  if (!field || field.trim() === "") {
+    return true;
+  }
   if (!pattern.test(field)) {
     toastr.error(errorMessage, {
       timeOut: 500,
@@ -340,18 +343,10 @@ if (submit_karyawan_update) {
       role_ID_new.trim() === "" ||
       !divisi_new ||
       divisi_new.trim() === "" ||
-      !noTelp_new ||
-      noTelp_new.trim() === "" ||
-      !alamat_new ||
-      alamat_new.trim() === "" ||
-      !KTP_new ||
-      KTP_new.trim() === "" ||
-      !npwp_new ||
-      npwp_new.trim() === "" ||
       !status_new ||
       status_new.trim() === ""
     ) {
-      toastr.error("Harap isi semua kolom sebelum simpan.");
+      toastr.error("Kolom * wajib diisi.");
       return;
     }
 

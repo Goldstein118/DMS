@@ -278,7 +278,7 @@ body::-webkit-scrollbar {
   flex: 0 0 auto; /* prevent stretching */
 }
 .bi-asterisk {
-  font-size: 7px !important;
+  font-size: 6px !important;
   vertical-align: 0.7rem !important;
 }
 .logout-button {
@@ -340,4 +340,14 @@ li a.link-dark.active:hover {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+}
+.bi-person-vcard-fill::before {
+  color: #0d6efd;
+}
+.bi-x-circle::before {
+  color: #dc3545;
+}
+
+.bi-person-vcard-fill:hover {
+  color: rgb(0, 128, 255);
 }

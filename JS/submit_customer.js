@@ -26,8 +26,24 @@ if (submit_customer) {
     });
   });
 }
+function format_angka(str) {
+  if (str === null || str === undefined || str === "") {
+    return str;
+  }
+
+  const cleaned = str.toString().replace(/[.,\s]/g, "");
+
+  if (!/^\d+$/.test(cleaned)) {
+    return str;
+  }
+
+  return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
 
 function validateField(field, pattern, errorMessage) {
+  if (!field || field.trim() === "") {
+    return true;
+  }
   if (!pattern.test(field)) {
     toastr.error(errorMessage, {
       timeOut: 500,
@@ -38,13 +54,17 @@ function validateField(field, pattern, errorMessage) {
   return true;
 }
 function format_no_telp(str) {
-  if (7 > str.length) {
-    return "Invalid index";
+  if (!str || str.trim() === "") {
+    let result = str;
+    return result;
+  } else {
+    if (7 > str.length) {
+      return "Invalid index";
+    }
+    let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
+    let result = "+62 " + format;
+    return result;
   }
-
-  let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
-  let result = "+62 " + format;
-  return result;
 }
 
 async function fetch_channel() {
@@ -86,21 +106,19 @@ async function submitCustomer() {
   const term_payment = document.getElementById("term_payment").value;
   const max_invoice = document.getElementById("max_invoice").value;
   const max_piutang = document.getElementById("max_piutang").value;
+  const longitude = document.getElementById("longitude").value;
+  const latidude = document.getElementById("latidude").value;
   const channel_id = document.getElementById("channel_id").value;
 
   if (
     !name_customer ||
-    !no_telp_customer ||
-    !alamat_customer ||
-    !nik_customer ||
-    !npwp_customer ||
+    name_customer.trim() === "" ||
     !status_customer ||
-    !nitko ||
-    !term_payment ||
-    !max_invoice ||
-    !max_piutang
+    status_customer.trim() === "" ||
+    !channel_id ||
+    channel_id.trim() === ""
   ) {
-    toastr.error("Harap isi semua kolom sebelum submit.");
+    toastr.error("Kolom * wajib diisi.");
     return;
   }
 
@@ -131,13 +149,22 @@ async function submitCustomer() {
     ) &&
     validateField(
       max_piutang,
-      /^[a-zA-Z0-9 ]+$/,
+      /^[0-9. ]+$/,
       "Format max piutang tidak valid"
+    ) &&
+    validateField(
+      longitude,
+      /^[-+]?((1[0-7]\d|\d{1,2})(\.\d{1,6})?|180(\.0{1,6})?)$/,
+      "Format longitude tidak valid"
+    ) &&
+    validateField(
+      latidude,
+      /^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/,
+      "Format latidude tidak valid"
     );
 
   if (!is_valid) return;
 
-  // Format nomor telepon
   no_telp_customer = format_no_telp(no_telp_customer);
 
   formData.set("name_customer", name_customer);
@@ -149,7 +176,9 @@ async function submitCustomer() {
   formData.set("nitko", nitko);
   formData.set("term_payment", term_payment);
   formData.set("max_invoice", max_invoice);
-  formData.set("max_piutang", max_piutang);
+  formData.set("max_piutang", format_angka(max_piutang));
+  formData.set("longitude", longitude);
+  formData.set("latidude", latidude);
   formData.set("channel_id", channel_id);
   formData.set("action", "create");
   formData.set("user_id", access.decryptItem("user_id"));

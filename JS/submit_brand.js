@@ -22,7 +22,7 @@ async function submitChannel() {
   const name_brand = document.getElementById("nama_brand").value;
 
   if (!name_brand || name_brand.trim() === "") {
-    toastr.error("Harap isi semua kolom sebelum submit.");
+    toastr.error("Kolom * wajib diisi.");
     return;
   }
   if (validateField(name_brand, /^[a-zA-Z\s]+$/, "Format nama tidak valid")) {

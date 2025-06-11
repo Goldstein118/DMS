@@ -165,7 +165,31 @@ function attachEventListeners() {
       }
     });
 }
+function format_angka(str) {
+  if (str === null || str === undefined || str === "") {
+    return str;
+  }
 
+  const cleaned = str.toString().replace(/[.,\s]/g, "");
+
+  if (!/^\d+$/.test(cleaned)) {
+    return str;
+  }
+
+  return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function unformat_angka(formattedString) {
+  if (
+    formattedString === null ||
+    formattedString === undefined ||
+    formattedString === ""
+  ) {
+    return formattedString;
+  }
+
+  return formattedString.toString().replace(/[.,\s]/g, "");
+}
 async function handleDeleteProduk(button) {
   const row = button.closest("tr");
   const produk_id = row.cells[0].textContent;
@@ -264,7 +288,8 @@ async function handleUpdateProduk(button) {
   const brand_id = row.cells[8].textContent;
   const no_sku = row.cells[4].textContent;
   const status = row.cells[5].textContent;
-  const harga_minimal = row.cells[6].textContent;
+  let harga_minimal = row.cells[6].textContent;
+  harga_minimal = unformat_angka(harga_minimal);
 
   // Populate the modal fields
   document.getElementById("update_produk_id").value = produk_id;
@@ -290,6 +315,9 @@ async function handleUpdateProduk(button) {
   }
 }
 function validateField(field, pattern, errorMessage) {
+  if (!field || field.trim() === "") {
+    return true;
+  }
   if (!pattern.test(field)) {
     toastr.error(errorMessage, {
       timeOut: 500,
@@ -313,23 +341,15 @@ if (submit_produk_update) {
     const nama_new = document.getElementById("update_name_produk").value;
     const no_sku_new = document.getElementById("update_no_sku").value;
     const status_new = document.getElementById("update_status_produk").value;
-    const harga_minimal_new = document.getElementById(
+    let harga_minimal_new = document.getElementById(
       "update_harga_minimal"
     ).value;
+    harga_minimal_new = unformat_angka(harga_minimal_new);
     const kategori_id_new = $("#update_kategori").val();
     const brand_id_new = $("#update_brand").val();
 
-    if (
-      !nama_new ||
-      nama_new.trim() === "" ||
-      !no_sku_new ||
-      no_sku_new.trim() === "" ||
-      !harga_minimal_new ||
-      harga_minimal_new.trim() === "" ||
-      !status_new ||
-      status_new.trim() === ""
-    ) {
-      toastr.error("Harap isi semua kolom sebelum simpan.");
+    if (!nama_new || nama_new.trim() === "") {
+      toastr.error("Kolom * wajib diisi.");
       return;
     }
 
@@ -337,12 +357,12 @@ if (submit_produk_update) {
       validateField(nama_new, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
       validateField(
         no_sku_new,
-        /^[a-zA-Z0-9,. ]+$/,
+        /^[a-zA-Z0-9,.\- ]+$/,
         "Format no sku tidak valid"
       ) &&
       validateField(
-        no_sku_new,
-        /^[a-zA-Z0-9,. ]+$/,
+        harga_minimal_new,
+        /^[0-9. ]+$/,
         "Format harga minimal tidak valid"
       );
     if (is_valid) {
@@ -352,7 +372,7 @@ if (submit_produk_update) {
           nama: nama_new,
           no_sku: no_sku_new,
           status: status_new,
-          harga_minimal: harga_minimal_new,
+          harga_minimal: format_angka(harga_minimal_new),
           kategori_id: kategori_id_new,
           brand_id: brand_id_new,
         };
@@ -376,7 +396,7 @@ if (submit_produk_update) {
 
         row.cells[4].textContent = no_sku_new;
         row.cells[5].textContent = status_new;
-        row.cells[6].textContent = harga_minimal_new;
+        row.cells[6].textContent = format_angka(harga_minimal_new);
 
         $("#update_modal_produk").modal("hide");
         Swal.fire("Berhasil", response.message, "success");

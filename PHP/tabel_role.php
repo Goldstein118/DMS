@@ -24,7 +24,7 @@
               type="text"
               id="name_role"
               name="name_role" />
-              <label class="form-label" for="name_role">Data Akses:</label>
+              <label class="form-label" for="name_role">Data Akses:<i class="bi bi-asterisk text-danger align-middle "></i></label>
             <div class="accordion" id="accordion_main">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="heading_main">
@@ -559,7 +559,7 @@
               class="form-control"
               type="text"
               id="update_role_name" />
-              <label class="form-label" for="name_role">Data Akses:</label>
+              <label class="form-label" for="name_role">Data Akses:<i class="bi bi-asterisk text-danger align-middle "></i></label>
             <div class="accordion" id="accordion_main_update">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="heading_main">

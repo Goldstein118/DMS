@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
 try{
-    $requiredFields = ['produk_id','nama','kategori_id','brand_id','no_sku','status','harga_minimal'];
+    $requiredFields = ['produk_id','nama','kategori_id','brand_id','status'];
     $default = ['status_produk' => 'aktif'];
     $fields = validate_1($data, $requiredFields, $default);
 
@@ -10,13 +10,13 @@ try{
     $nama = $fields['nama'];
     $kategori_id = $fields['kategori_id'];
     $brand_id = $fields['brand_id'];
-    $no_sku = $fields['no_sku'];
+    $no_sku = $fields['no_sku']??'';
     $status = $fields['status_produk'];
-    $harga_minimal = $fields['harga_minimal'];
+    $harga_minimal = $fields['harga_minimal']??'';
 
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
-    validate_2($no_sku, '/^[a-zA-Z0-9,. ]+$/', "Invalid no sku format");
-    validate_2($harga_minimal, '/^[a-zA-Z0-9,. ]+$/', "Invalid no harga minimal format");
+    validate_2($no_sku, '/^[a-zA-Z0-9,.- ]+$/', "Invalid no sku format");
+    validate_2($harga_minimal, '/^[0-9. ]+$/', "Invalid no harga minimal format");
 
 
 $stmt = $conn->prepare("UPDATE tb_produk SET nama = ?,no_sku=?,status =?,harga_minimal =?, kategori_id =?,brand_id=? WHERE produk_id = ?");

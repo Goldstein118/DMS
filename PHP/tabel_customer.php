@@ -9,7 +9,7 @@
         </div>
         <div class="modal-body">
           <form id="form_customer" enctype="multipart/form-data">  
-          <label class="form-label" for="name">Nama:</label>
+          <label class="form-label" for="name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="name_customer" name="name_customer" value="">
           <label class="form-label" for="address">Alamat:</label>
           <input class="form-control" type="text" id="alamat_customer" name="alamat_customer" value="">
@@ -22,7 +22,7 @@
           <input class="form-control" type="text" id="nik_customer" name="nik_customer" value="">
           <label class="form-label" for="npwp_customer">NPWP:</label>
           <input class="form-control" type="text" id="npwp_customer" name="npwp_customer" value="">
-          <label class="form-label" for="status_customer">Status:</label>
+          <label class="form-label" for="status_customer">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="status_customer">
             <option value="aktif">Aktif</option>
             <option value="non aktif">Non Aktif</option>
@@ -35,7 +35,11 @@
           <input class ="form-control" type ="text" id ="max_invoice" name="max_invoice"aria-describedby="basic-addon1"value="">
           <label class="form-label" for="max_piutang">Max Piutang:</label>
           <input class ="form-control" type ="text" id ="max_piutang" name="max_piutang"aria-describedby="basic-addon1"value="">
-          <label class = "form-label" for="channel_id">Kode Channel:</label>
+          <label class = "form-label" for="longitude">Longitude:</label>
+          <input class ="form-control" type="text" id ="longitude" name="longitude"aria-describedby="basic-addon1"value="">
+          <label class = "form-label" for="latidude">Latidude:</label>
+          <input class ="form-control" type="text" id ="latidude" name="latidude"aria-describedby="basic-addon1"value="">
+          <label class = "form-label" for="channel_id">Kode Channel:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="channel_id">
           </select>
           <label class="form-label" for="ktp_image">Upload KTP Image:</label>
@@ -65,7 +69,7 @@
           <form id="form_customer" enctype="multipart/form-data">
           <label class="form-label" for="update_customer_id">Kode Customer:</label>
           <input class="form-control" type="text" id="update_customer_id" disabled>
-          <label class="form-label" for="update_name_customer">Name:</label>
+          <label class="form-label" for="update_name_customer">Name:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="update_name_customer" name="name_customer_update">
           <label class="form-label" for="update_address_customer">Alamat:</label>
           <input class="form-control" type="text" id="update_address_customer" name="address_customer_update">
@@ -78,7 +82,7 @@
           <input class="form-control" type="text" id="update_nik_customer" name="nik_customer_update">
           <label class="form-label" for="update_npwp_customer">NPWP:</label>
           <input class="form-control" type="text" id="update_npwp_customer" name="npwp_customer" value="">
-          <label class="form-label" for="update_status_customer">Status:</label> 
+          <label class="form-label" for="update_status_customer">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label> 
           <select class="form-select" id="update_status_customer">
             <option value="aktif">Aktif</option>
             <option value="non aktif">Non Aktif</option>
@@ -91,7 +95,11 @@
           <input class ="form-control" type ="text" id ="update_max_invoice" name="update_max_invoice"aria-describedby="basic-addon1"value="">
           <label class="form-label" for="update_max_piutang">Max Piutang:</label>
           <input class ="form-control" type ="text" id ="update_max_piutang" name="update_max_piutang"aria-describedby="basic-addon1"value="">
-          <label class = "form-label" for="update_channel_id">Kode Channel:</label>
+          <label class = "form-label" for="update_longitude">Longitude:</label>
+          <input class ="form-control" type="text" id ="update_longitude" name="update_longitude"aria-describedby="basic-addon1"value="">
+          <label class = "form-label" for="update_latidude">Latidude:</label>
+          <input class ="form-control" type="text" id ="update_latidude" name="update_latidude"aria-describedby="basic-addon1"value="">
+          <label class = "form-label" for="update_channel_id">Kode Channel:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="update_channel_id">
           </select>
           <label class="form-label" for="update_ktp_image">Upload KTP Image:</label>

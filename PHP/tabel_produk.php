@@ -7,15 +7,15 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <label class="form-label" for="name">Nama:</label>
+          <label class="form-label" for="name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="name_produk" name="name_produk" value="">
-          <label class="form-label" for="kategori">Kategori:</label>
+          <label class="form-label" for="kategori">Kategori:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="kategori"></select>
-          <label class="form-label" for="brand">Brand:</label>
+          <label class="form-label" for="brand">Brand:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="brand"></select>
           <label class="form-label" for="no_sku">No SKU:</label>
           <input class ="form-control" type ="text" id ="no_sku" name="no_sku"aria-describedby="basic-addon1"value="">
-          <label class="form-label" for="status_produk">Status:</label>
+          <label class="form-label" for="status_produk">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="status_produk">
             <option value="aktif">Aktif</option>
             <option value="non aktif">Non Aktif</option>
@@ -41,15 +41,15 @@
         <div class="modal-body">
           <label class="form-label" for="update_produk_id">Kode Produk:</label>
           <input class="form-control" type="text" id="update_produk_id" name="update_produk_id" value="" disabled>
-          <label class="form-label" for="update_name">Nama:</label>
+          <label class="form-label" for="update_name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="update_name_produk" name="update_name_produk" value="">
-          <label class="form-label" for="update_kategori">Kategori:</label>
+          <label class="form-label" for="update_kategori">Kategori:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="update_kategori"></select>
-          <label class="form-label" for="update_brand">Brand:</label>
+          <label class="form-label" for="update_brand">Brand:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="update_brand"></select>
           <label class="form-label" for="update_no_sku">No SKU:</label>
           <input class ="form-control" type ="text" id ="update_no_sku" name="update_no_sku"aria-describedby="basic-addon1"value="">
-          <label class="form-label" for="update_status_produk">Status:</label>
+          <label class="form-label" for="update_status_produk">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="update_status_produk">
             <option value="aktif">Aktif</option>
             <option value="non aktif">Non Aktif</option>

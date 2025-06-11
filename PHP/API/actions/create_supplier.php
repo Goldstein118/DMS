@@ -1,15 +1,15 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
 try {
-    $requiredFields = ['supplier_nama', 'supplier_alamat', 'supplier_no_telp', 'supplier_ktp', 'supplier_npwp', 'supplier_status'];
+    $requiredFields = ['supplier_nama','supplier_status'];
     $default = ['supplier_status' => 'aktif'];
     $fields = validate_1($data, $requiredFields, $default);
 
     $supplier_nama = $fields['supplier_nama'];
-    $supplier_alamat = $fields['supplier_alamat'];
-    $supplier_no_telp = $fields['supplier_no_telp'];
-    $supplier_ktp = $fields['supplier_ktp'];
-    $supplier_npwp = $fields['supplier_npwp'];
+    $supplier_alamat = $fields['supplier_alamat'] ??'';
+    $supplier_no_telp = $fields['supplier_no_telp']??'';
+    $supplier_ktp = $fields['supplier_ktp']??'';
+    $supplier_npwp = $fields['supplier_npwp']??'';
     $supplier_status = $fields['supplier_status'];
 
     validate_2($supplier_nama, '/^[a-zA-Z\s]+$/', "Invalid name format");

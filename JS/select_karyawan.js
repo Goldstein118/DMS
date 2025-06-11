@@ -172,13 +172,17 @@ function attachEventListeners() {
     });
 }
 function format_no_telp(str) {
-  if (7 > str.length) {
-    return "Invalid index";
+  if (str.trim() === "") {
+    let result = str;
+    return result;
+  } else {
+    if (7 > str.length) {
+      return "Invalid index";
+    }
+    let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
+    let result = "+62 " + format;
+    return result;
   }
-
-  let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
-  let result = "+62 " + format;
-  return result;
 }
 // Attach delete listeners
 async function handleDeleteKaryawan(button) {

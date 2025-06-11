@@ -7,12 +7,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <label class="form-label" for="karyawan_ID">Kode Karyawan:</label>
+        <label class="form-label" for="karyawan_ID">Kode Karyawan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
         <select class="form-select" id="karyawan_ID"></select> 
-        <label class="form-label" for="level">Level :</label>
+        <label class="form-label" for="level">Level:<i class="bi bi-asterisk text-danger align-middle "></i></label>
         <select class="form-select" id="level">
           <option value="user">User</option>
-
         </select>
       </div>
       <div class="modal-footer">
@@ -35,11 +34,11 @@
       <div class="modal-body">
         <label class="form-label" for="update_user_ID">Kode User:</label>
         <input class="form-control" type="text" id="update_user_ID" disabled>
-        <label class="form-label" for="update_karyawan_ID">Kode Karyawan:</label>
+        <label class="form-label" for="update_karyawan_ID">Kode Karyawan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
         <select class="form-select" id="update_karyawan_ID">
           <option value=""></option>
         </select> 
-        <label class="form-label" for="update_level">Level :</label>
+        <label class="form-label" for="update_level">Level:<i class="bi bi-asterisk text-danger align-middle "></i></label>
         <select class="form-select" id="update_level">
           <option value="user">User</option>
 

@@ -84,20 +84,22 @@ function handleImageUpload($field, $tipe, $customer_id, $conn, $upload_dir, $bas
 }
 
 try {
-    $requiredFields = ['customer_id', 'nama', 'alamat', 'no_telp', 'ktp', 'npwp', 'status', 'nitko', 'term_pembayaran', 'max_invoice', 'max_piutang', 'channel_id'];
+    $requiredFields = ['customer_id', 'nama', 'status', 'channel_id'];
     $fields = validate_1($data, $requiredFields);
 
     $customer_id = $fields['customer_id'];
     $nama = $fields['nama'];
-    $alamat = $fields['alamat'];
-    $no_telp = $fields['no_telp'];
-    $ktp = $fields['ktp'];
-    $npwp = $fields['npwp'];
+    $alamat = $fields['alamat']??'';
+    $no_telp = $fields['no_telp']??'';
+    $ktp = $fields['ktp']??'';
+    $npwp = $fields['npwp']??'';
     $status = $fields['status'];
-    $nitko = $fields['nitko'];
-    $term_pembayaran = $fields['term_pembayaran'];
-    $max_invoice = $fields['max_invoice'];
-    $max_piutang = $fields['max_piutang'];
+    $nitko = $fields['nitko']??'';
+    $term_pembayaran = $fields['term_pembayaran']??'';
+    $max_invoice = $fields['max_invoice']??'';
+    $max_piutang = $fields['max_piutang']??'';
+    $longitude = ($fields['longitude'] ?? '') !== '' ? $fields['longitude'] : null;
+    $latidude = ($fields['latidude'] ?? '') !== '' ? $fields['latidude'] : null;
     $channel_id = $fields['channel_id'];
 
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
@@ -108,10 +110,14 @@ try {
     validate_2($nitko, '/^[a-zA-Z0-9,. ]+$/', "Invalid NITKO format");
     validate_2($term_pembayaran, '/^[a-zA-Z0-9,. ]+$/', "Invalid term pembayaran format");
     validate_2($max_invoice, '/^[a-zA-Z0-9,. ]+$/', "Invalid max invoice format");
-    validate_2($max_piutang, '/^[a-zA-Z0-9,. ]+$/', "Invalid max piutang format");
+    validate_2($max_piutang, '/^[0-9. ]+$/', "Invalid max piutang format");
+    validate_2($longitude,'/^[-+]?((1[0-7]\d|\d{1,2})(\.\d{1,6})?|180(\.0{1,6})?)$/',"Invalid Longitude Format");
+    validate_2($latidude,'/^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/',"Invalid Latidude Format");
 
-    $stmt = $conn->prepare("UPDATE tb_customer SET nama=?, alamat=?, no_telp=?, ktp=?, npwp=?, status=?, nitko=?, term_pembayaran=?, max_invoice=?, max_piutang=?, channel_id=? WHERE customer_id=?");
-    $stmt->bind_param("ssssssssssss", $nama, $alamat, $no_telp, $ktp, $npwp, $status, $nitko, $term_pembayaran, $max_invoice, $max_piutang, $channel_id, $customer_id);
+    $stmt = $conn->prepare("UPDATE tb_customer SET nama=?, alamat=?, no_telp=?, ktp=?, npwp=?, status=?, nitko=?, 
+    term_pembayaran=?, max_invoice=?, max_piutang=?,longitude=?,latidude=?, channel_id=? WHERE customer_id=?");
+    $stmt->bind_param("ssssssssssddss", $nama, $alamat, $no_telp, $ktp, $npwp, $status, $nitko, $term_pembayaran, $max_invoice,
+    $max_piutang, $longitude,$latidude,$channel_id, $customer_id);
 
     if (!$stmt->execute()) {
         throw new Exception("Failed to update customer: " . $stmt->error);

@@ -45,15 +45,18 @@ function validate_1($data, $requiredFields, $defaults = [])
     return $output;
 }
 
-
 function validate_2($value, $pattern, $errorMsg)
 {
-    if (trim($value) !== '' && !preg_match($pattern, $value)) {
+    $val = is_string($value) ? trim($value) : trim((string)($value ?? ''));
+
+    if ($val !== '' && !preg_match($pattern, $val)) {
         http_response_code(400);
         echo json_encode(["success" => false, "error" => $errorMsg]);
         exit;
     }
 }
+
+
 
 
 function executeInsert($conn, $query, $params, $types)

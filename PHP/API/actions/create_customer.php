@@ -4,18 +4,21 @@ $upload_dir = __DIR__ . '/../../../uploads';
 $base_url = 'http://localhost/DMS/uploads/'; 
 
 try {
-    $requiredFields = ['name_customer', 'alamat_customer', 'no_telp_customer', 'nik_customer', 'npwp_customer', 'nitko', 'term_payment', 'max_invoice', 'max_piutang', 'status_customer','channel_id'];
+    $requiredFields = ['name_customer', 'status_customer','channel_id'];
     $default = ['status_customer' => 'aktif'];
     $fields = validate_1($data, $requiredFields, $default);
     $nama_customer = $fields['name_customer'];
-    $alamat_customer = $fields['alamat_customer'];
-    $no_telp_customer = $fields['no_telp_customer'];
-    $ktp_customer = $fields['nik_customer'];
-    $npwp_customer = $fields['npwp_customer'];
-    $nitko = $fields['nitko'];
-    $term_payment = $fields['term_payment'];
-    $max_invoice = $fields['max_invoice'];
-    $max_piutang = $fields['max_piutang'];
+    $alamat_customer = $fields['alamat_customer']??'';
+    $no_telp_customer = $fields['no_telp_customer']??'';
+    $ktp_customer = $fields['nik_customer']??'';
+    $npwp_customer = $fields['npwp_customer']??'';
+    $nitko = $fields['nitko']??'';
+    $term_payment = $fields['term_payment']??'';
+    $max_invoice = $fields['max_invoice']??'';
+    $max_piutang = $fields['max_piutang']??'';
+    $longitude = ($fields['longitude'] ?? '') !== '' ? $fields['longitude'] : null;
+    $latidude = ($fields['latidude'] ?? '') !== '' ? $fields['latidude'] : null;
+
     $status_customer = $fields['status_customer'];
     $channel_id = $fields['channel_id'];
 
@@ -27,13 +30,17 @@ try {
     validate_2($nitko, '/^[a-zA-Z0-9, .-]+$/', "Invalid nitko format");
     validate_2($term_payment, '/^[a-zA-Z0-9 ]+$/', "Invalid term payment format");
     validate_2($max_invoice, '/^[a-zA-Z0-9 ]+$/', "Invalid max invoice format");
-    validate_2($max_piutang, '/^[a-zA-Z0-9 ]+$/', "Invalid msx piutang format");
+    validate_2($max_piutang, '/^[0-9. ]+$/', "Invalid max piutang format");
+    validate_2($longitude,'/^[-+]?((1[0-7]\d|\d{1,2})(\.\d{1,6})?|180(\.0{1,6})?)$/',"Invalid Longitude Format");
+    validate_2($latidude,'/^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/',"Invalid Latidude Format");
     $customer_id = generateCustomID('CU', 'tb_customer', 'customer_id', $conn);
     executeInsert(
         $conn,
-        "INSERT INTO tb_customer (customer_id,nama,alamat,no_telp,ktp,npwp,status,nitko,term_pembayaran,max_invoice,max_piutang,channel_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-        [$customer_id, $nama_customer, $alamat_customer, $no_telp_customer, $ktp_customer, $npwp_customer, $status_customer, $nitko, $term_payment, $max_invoice, $max_piutang,$channel_id],
-        "ssssssssssss"
+        "INSERT INTO tb_customer (customer_id,nama,alamat,no_telp,ktp,npwp,status,nitko,term_pembayaran,max_invoice,max_piutang,longitude,latidude,channel_id) 
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        [$customer_id, $nama_customer, $alamat_customer, $no_telp_customer, $ktp_customer, $npwp_customer, $status_customer, $nitko,
+        $term_payment, $max_invoice, $max_piutang,$longitude,$latidude,$channel_id],
+        "sssssssssssdds"
     );
 
 
@@ -112,60 +119,6 @@ try {
         );
     }
 }
-function getImageUrl($gambar_id, $conn) {
-
-    $placeholder = '/uploads/placeholder.jpg';
-
-    // Query to get image info by ID
-    $sql = "SELECT internal_link, blob_data FROM tb_gambar WHERE gambar_id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $gambar_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows === 0) {
-
-        return $placeholder;
-    }
-
-    $row = $result->fetch_assoc();
-    $internal_link = $row['internal_link'];
-    $blob_data = $row['blob_data'];
-
-
-    if (file_exists($internal_link) && is_readable($internal_link)) {
-        return convertFilePathToUrl($internal_link); 
-    }
-
-    // Try to regenerate the image from blob data
-    if (!empty($blob_data)) {
-        // Save blob data back to the local file path
-        if (file_put_contents($internal_link, $blob_data) !== false) {
-            return convertFilePathToUrl($internal_link);
-        }
-    }
-
-    // If all else fails, return placeholder
-    return $placeholder;
-}
-
-function convertFilePathToUrl($filePath) {
-
-    $documentRoot = realpath($_SERVER['DOCUMENT_ROOT']); // e.g. C:/laragon/www
-
-    // Normalize paths for Windows and Unix
-    $realPath = realpath($filePath);
-    if (!$realPath) return '/uploads/placeholder.jpg'; // fallback
-
-    if (strpos($realPath, $documentRoot) === 0) {
-        $relativePath = str_replace('\\', '/', substr($realPath, strlen($documentRoot)));
-        return $relativePath;
-    }
-
-
-    return '/uploads/placeholder.jpg';
-}
-
 
     echo json_encode(["success" => true, "message" => "Berhasil", "data" => ["customer_id" => $customer_id]]);
 } catch (Exception $e) {

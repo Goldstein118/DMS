@@ -35,6 +35,19 @@ async function fetch_fk(field) {
     toastr.error("Gagal mengambil data : " + error.message);
   }
 }
+function format_angka(str) {
+  if (str === null || str === undefined || str === "") {
+    return str;
+  }
+
+  const cleaned = str.toString().replace(/[.,\s]/g, "");
+
+  if (!/^\d+$/.test(cleaned)) {
+    return str;
+  }
+
+  return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
 
 function populateDropdown(data, field) {
   const select = $(`#${field}`);
@@ -68,6 +81,9 @@ function populateDropdown(data, field) {
   select.trigger("change");
 }
 function validateField(field, pattern, errorMessage) {
+  if (!field || field.trim() === "") {
+    return true;
+  }
   if (!pattern.test(field)) {
     toastr.error(errorMessage, {
       timeOut: 500,
@@ -85,26 +101,28 @@ async function submitProduk() {
   const brand_id = document.getElementById("brand").value;
   const no_sku = document.getElementById("no_sku").value;
   const status_produk = document.getElementById("status_produk").value;
-  const harga_minimal = document.getElementById("harga_minimal").value;
+  let harga_minimal = document.getElementById("harga_minimal").value;
+  harga_minimal = format_angka(harga_minimal);
 
-  // Validate form data
   if (
     !name_produk ||
     name_produk.trim() === "" ||
-    !no_sku ||
-    no_sku.trim() === "" ||
-    !harga_minimal ||
-    harga_minimal.trim() === ""
+    !kategori_id ||
+    kategori_id.trim() === "" ||
+    !brand_id ||
+    brand_id.trim() === "" ||
+    !status_produk ||
+    status_produk.trim() === ""
   ) {
-    toastr.error("Harap isi semua kolom sebelum submit.");
+    toastr.error("Kolom * wajib diisi.");
     return;
   }
   const is_valid =
     validateField(name_produk, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
-    validateField(no_sku, /^[a-zA-Z0-9,. ]+$/, "Format no sku tidak valid") &&
+    validateField(no_sku, /^[a-zA-Z0-9,.\- ]+$/, "Format no sku tidak valid") &&
     validateField(
       harga_minimal,
-      /^[a-zA-Z0-9,. ]+$/,
+      /^[0-9. ]+$/,
       "Format harga minmal tidak valid"
     );
 

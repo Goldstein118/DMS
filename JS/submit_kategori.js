@@ -22,7 +22,7 @@ async function submitChannel() {
   const name_kategori = document.getElementById("nama_kategori").value;
 
   if (!name_kategori || name_kategori.trim() === "") {
-    toastr.error("Harap isi semua kolom sebelum submit.");
+    toastr.error("Kolom * wajib diisi.");
     return;
   }
   if (

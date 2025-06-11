@@ -8,13 +8,13 @@
           </button>
         </div>
         <div class="modal-body">
-          <label class="form-label">Nama:</label>
+          <label class="form-label">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="divisi_nama" name="divisi_nama" value="">
-          <label class="form-label">Nama Bank:</label>
+          <label class="form-label">Nama Bank:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="nama_bank">
-          <label class="form-label">Nama Rekening:</label>
+          <label class="form-label">Nama Rekening:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="nama_rekening">
-          <label class="form-label">Nomor Rekening:</label>
+          <label class="form-label">Nomor Rekening:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="nomor_rekening">
         </div>
         <div class="modal-footer">
@@ -32,15 +32,15 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <label class = "form-label">Kode Divisi</label>
+          <label class = "form-label">Kode Divisi:</label>
           <input class="form-control" type ="text" id = "update_divisi_id" disabled>
-          <label class="form-label">Nama:</label>
+          <label class="form-label">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="update_divisi_nama">
-          <label class="form-label">Nama Bank:</label>
+          <label class="form-label">Nama Bank:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="update_nama_bank">
-          <label class="form-label">Nama Rekening:</label>
+          <label class="form-label">Nama Rekening:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="update_nama_rekening">
-          <label class="form-label">Nomor Rekening:</label>
+          <label class="form-label">Nomor Rekening:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="update_nomor_rekening">
         </div>
         <div class="modal-footer">

@@ -8,6 +8,9 @@ if (submit_supplier) {
   });
 }
 function validateField(field, pattern, errorMessage) {
+  if (!field || field.trim() === "") {
+    return true;
+  }
   if (!pattern.test(field)) {
     toastr.error(errorMessage, {
       timeOut: 500,
@@ -18,13 +21,17 @@ function validateField(field, pattern, errorMessage) {
   return true;
 }
 function format_no_telp(str) {
-  if (7 > str.length) {
-    return "Invalid index";
+  if (!str || str.trim() === "") {
+    let result = str;
+    return result;
+  } else {
+    if (7 > str.length) {
+      return "Invalid index";
+    }
+    let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
+    let result = "+62 " + format;
+    return result;
   }
-
-  let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
-  let result = "+62 " + format;
-  return result;
 }
 async function submitSupplier() {
   const supplier_nama = document.getElementById("supplier_nama").value;
@@ -37,18 +44,10 @@ async function submitSupplier() {
   if (
     !supplier_nama ||
     supplier_nama.trim() === "" ||
-    !supplier_alamat ||
-    supplier_alamat.trim() === "" ||
-    !supplier_phone ||
-    supplier_phone.trim() === "" ||
-    !supplier_ktp ||
-    supplier_ktp.trim() === "" ||
-    !supplier_npwp ||
-    supplier_npwp.trim() === "" ||
     !supplier_status ||
     supplier_status.trim() === ""
   ) {
-    toastr.error("Harap isi semua kolom sebelum submit.");
+    toastr.error("Kolom * wajib diisi.");
     return;
   }
   const is_valid =

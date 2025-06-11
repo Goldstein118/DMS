@@ -34,7 +34,7 @@ async function submitdivisi() {
     !nomor_rekening ||
     nomor_rekening.trim() === ""
   ) {
-    toastr.error("Harap isi semua kolom sebelum submit.");
+    toastr.error("Kolom * wajib diisi..");
     return;
   }
   const is_valid =

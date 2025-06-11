@@ -8,7 +8,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <label class="form-label">Nama:</label>
+          <label class="form-label">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="supplier_nama" name="supplier_nama" value="">
           <label class="form-label">Alamat:</label>
           <input class="form-control" type="text" id="supplier_alamat">
@@ -21,7 +21,7 @@
           <input class="form-control" type="text" id="supplier_ktp">
           <label class="form-label">NPWP:</label>
           <input class="form-control" type="text" id="supplier_npwp">
-          <label class="form-label">Status:</label>
+          <label class="form-label">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class ="form-select" id ="supplier_status">
           <option value = "aktif">Aktif</option>
           <option value = "non aktif">Non Aktif</option>
@@ -42,9 +42,9 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <label class = "form-label">Kode Supplier</label>
+          <label class = "form-label">Kode Supplier:</label>
           <input class="form-control" type ="text" id = "update_supplier_id" disabled>
-          <label class="form-label">Nama:</label>
+          <label class="form-label">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="update_supplier_nama">
           <label class="form-label">Alamat:</label>
           <input class="form-control" type="text" id="update_supplier_alamat">          
@@ -57,7 +57,7 @@
           <input class="form-control" type="text" id="update_supplier_ktp">
           <label class="form-label">NPWP:</label>
           <input class="form-control" type="text" id="update_supplier_npwp">
-          <label class="form-label">Status:</label>
+          <label class="form-label">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class ="form-select" id ="update_supplier_status">
           <option value = "aktif">Aktif</option>
           <option value = "non aktif">Non Aktif</option>

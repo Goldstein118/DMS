@@ -48,6 +48,11 @@ async function submitUser() {
   const level = document.getElementById("level").value;
   const karyawan_id = document.getElementById("karyawan_ID").value;
 
+  if (!karyawan_id || karyawan_id.trim() === "") {
+    toastr.error("Kolom * wajib diisi.");
+    return;
+  }
+
   const data_user = {
     user_id: `${access.decryptItem("user_id")}`,
     karyawan_id,

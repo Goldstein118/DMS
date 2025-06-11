@@ -205,6 +205,9 @@ async function handleUpdateSupplier(button) {
   $("#modal_supplier_update").modal("show");
 }
 function validateField(field, pattern, errorMessage) {
+  if (!field || field.trim() === "") {
+    return true;
+  }
   if (!pattern.test(field)) {
     toastr.error(errorMessage, {
       timeOut: 500,
@@ -215,13 +218,17 @@ function validateField(field, pattern, errorMessage) {
   return true;
 }
 function format_no_telp(str) {
-  if (7 > str.length) {
-    return "Invalid index";
+  if (!str || str.trim() === "") {
+    let result = str;
+    return result;
+  } else {
+    if (7 > str.length) {
+      return "Invalid index";
+    }
+    let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
+    let result = "+62 " + format;
+    return result;
   }
-
-  let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
-  let result = "+62 " + format;
-  return result;
 }
 const submit_supplier_update = document.getElementById(
   "submit_supplier_update"
@@ -250,14 +257,6 @@ if (submit_supplier_update) {
     if (
       !update_nama ||
       update_nama.trim() === "" ||
-      !update_alamat ||
-      update_alamat.trim() === "" ||
-      !update_no_telp ||
-      update_no_telp.trim() === "" ||
-      !update_ktp ||
-      update_ktp.trim() === "" ||
-      !update_npwp ||
-      update_npwp.trim() === "" ||
       !update_status ||
       update_status.trim() === ""
     ) {

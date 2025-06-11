@@ -231,7 +231,7 @@ if (submit_divisi_update) {
       !update_nomor_rekening ||
       update_nomor_rekening.trim() === ""
     ) {
-      toastr.error("Harap isi semua kolom sebelum simpan.");
+      toastr.error("Kolom * wajib diisi.");
       return;
     }
     const is_valid =

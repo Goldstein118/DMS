@@ -23,6 +23,7 @@ if (grid_container_customer) {
       "Term Pembayaran",
       "Maksimun Invoice",
       "Maksimun Nominal Piutang",
+      "Titik Koordinat",
       "Channel",
       "Channel_id",
       "Link Gambar",
@@ -86,6 +87,19 @@ if (grid_container_customer) {
           customer.term_pembayaran,
           customer.max_invoice,
           customer.max_piutang,
+          html(`
+          ${
+            customer.longitude
+              ? `<span>Longitude: ${customer.longitude}</span>`
+              : `<span>Longitude:</span>`
+          }<br>
+          <br>
+          ${
+            customer.latidude
+              ? `<span>Latidude: ${customer.latidude}</span>`
+              : `<span>Latidude:</span>`
+          }
+            `),
           customer.channel_nama,
           customer.channel_id,
           html(`
@@ -142,6 +156,32 @@ if (grid_container_customer) {
     attachEventListeners();
   }, 200);
 }
+function format_angka(str) {
+  if (str === null || str === undefined || str === "") {
+    return str;
+  }
+
+  const cleaned = str.toString().replace(/[.,\s]/g, "");
+
+  if (!/^\d+$/.test(cleaned)) {
+    return str;
+  }
+
+  return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function unformat_angka(formattedString) {
+  if (
+    formattedString === null ||
+    formattedString === undefined ||
+    formattedString === ""
+  ) {
+    return formattedString;
+  }
+
+  return formattedString.toString().replace(/[.,\s]/g, "");
+}
+
 function attachEventListeners() {
   document
     .getElementById("table_customer")
@@ -157,6 +197,9 @@ function attachEventListeners() {
     });
 }
 function validateField(field, pattern, errorMessage) {
+  if (!field || field.trim() === "") {
+    return true;
+  }
   if (!pattern.test(field)) {
     toastr.error(errorMessage, {
       timeOut: 500,
@@ -167,13 +210,17 @@ function validateField(field, pattern, errorMessage) {
   return true;
 }
 function format_no_telp(str) {
-  if (7 > str.length) {
-    return "Invalid index";
+  if (!str || str.trim() === "") {
+    let result = str;
+    return result;
+  } else {
+    if (7 > str.length) {
+      return "Invalid index";
+    }
+    let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
+    let result = "+62 " + format;
+    return result;
   }
-
-  let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
-  let result = "+62 " + format;
-  return result;
 }
 
 async function handleDeleteCustomer(button) {
@@ -224,6 +271,7 @@ async function handleDeleteCustomer(button) {
 
 async function handleUpdateCustomer(button) {
   const row = button.closest("tr");
+
   window.currentRow = row;
   const button_icon = button.querySelector(".button_icon");
   const spinner = button.querySelector(".spinner_update");
@@ -241,8 +289,18 @@ async function handleUpdateCustomer(button) {
   const current_nitko = row.cells[7].textContent;
   const current_term_pembayaran = row.cells[8].textContent;
   const current_max_invoice = row.cells[9].textContent;
-  const current_max_piutang = row.cells[10].textContent;
-  const current_channel_id = row.cells[12].textContent;
+  let current_max_piutang = row.cells[10].textContent;
+  current_max_piutang = unformat_angka(current_max_piutang);
+
+  const titik_koordinat = row.cells[11].textContent;
+
+  const longMatch = titik_koordinat.match(/Longitude:\s*(-?\d+(\.\d+)?)/);
+  const latMatch = titik_koordinat.match(/Latidude:\s*(-?\d+(\.\d+)?)/);
+
+  const longitude = longMatch ? longMatch[1].trim() : null;
+  const latidude = latMatch ? latMatch[1].trim() : null;
+
+  const current_channel_id = row.cells[13].textContent;
 
   document.getElementById("update_customer_id").value = customer_id;
   document.getElementById("update_name_customer").value = current_nama;
@@ -256,6 +314,8 @@ async function handleUpdateCustomer(button) {
     current_term_pembayaran;
   document.getElementById("update_max_invoice").value = current_max_invoice;
   document.getElementById("update_max_piutang").value = current_max_piutang;
+  document.getElementById("update_longitude").value = longitude;
+  document.getElementById("update_latidude").value = latidude;
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     const response = await apiRequest(
@@ -314,31 +374,21 @@ if (submit_customer_update) {
     ).value;
     const update_max_invoice =
       document.getElementById("update_max_invoice").value;
-    const update_max_piutang =
+    let update_max_piutang =
       document.getElementById("update_max_piutang").value;
+    update_max_piutang = unformat_angka(update_max_piutang);
+    const update_longitude = document.getElementById("update_longitude").value;
+    const update_latidude = document.getElementById("update_latidude").value;
+
     const channel_id_new = $("#update_channel_id").val();
 
     if (
       !update_nama ||
       update_nama.trim() === "" ||
-      !update_alamat ||
-      update_alamat.trim() === "" ||
-      !update_phone ||
-      update_phone.trim() === "" ||
-      !update_ktp ||
-      update_ktp.trim() === "" ||
-      !update_npwp ||
-      update_npwp.trim() === "" ||
       !update_status ||
       update_status.trim() === "" ||
-      !update_nitko ||
-      update_nitko.trim() === "" ||
-      !update_max_invoice ||
-      update_max_invoice.trim() === "" ||
-      !update_max_piutang ||
-      update_max_piutang.trim() === "" ||
-      !update_term_pembayaran ||
-      update_term_pembayaran.trim() === ""
+      !channel_id_new ||
+      channel_id_new.trim() === ""
     ) {
       toastr.error("Harap isi semua kolom debelum simpan.");
       return;
@@ -369,13 +419,23 @@ if (submit_customer_update) {
       ) &&
       validateField(
         update_max_piutang,
-        /^[a-zA-Z0-9,. ]+$/,
-        "Format max piutang tidka valid"
+        /^[0-9. ]+$/,
+        "Format max piutang tidak valid"
       ) &&
       validateField(
         update_term_pembayaran,
         /^[a-zA-Z0-9,. ]+$/,
         "Format term pembayaran tidak valid"
+      ) &&
+      validateField(
+        update_longitude,
+        /^[-+]?((1[0-7]\d|\d{1,2})(\.\d{1,6})?|180(\.0{1,6})?)$/,
+        "Format longitude tidak valid"
+      ) &&
+      validateField(
+        update_latidude,
+        /^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/,
+        "Format latidude tidak valid"
       );
 
     if (is_valid) {
@@ -392,7 +452,9 @@ if (submit_customer_update) {
       formData.append("nitko", update_nitko);
       formData.append("term_pembayaran", update_term_pembayaran);
       formData.append("max_invoice", update_max_invoice);
-      formData.append("max_piutang", update_max_piutang);
+      formData.append("max_piutang", format_angka(update_max_piutang));
+      formData.append("longitude", update_longitude);
+      formData.append("latidude", update_latidude);
       formData.append("channel_id", channel_id_new);
 
       // Files
@@ -421,10 +483,11 @@ if (submit_customer_update) {
           row.cells[7].textContent = update_nitko;
           row.cells[8].textContent = update_term_pembayaran;
           row.cells[9].textContent = update_max_invoice;
-          row.cells[10].textContent = update_max_piutang;
+          row.cells[10].textContent = format_angka(update_max_piutang);
           const channel_name = $("#update_channel_id option:selected").text();
           const channel_name_only = channel_name.split(" - ")[1];
-          row.cells[11].textContent = channel_name_only;
+          row.cells[12].textContent = channel_name_only;
+          row.cells[11].innerHTML = `<span>Longitude: ${update_longitude}<br><br>Latidude: ${update_latidude}</span>`;
           Swal.fire("Berhasil", response.message, "success");
           $("#modal_customer_update").modal("hide");
         } else {

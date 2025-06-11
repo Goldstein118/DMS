@@ -301,7 +301,7 @@ if (submit_role_update) {
       !newAkses ||
       newAkses.trim() === ""
     ) {
-      toastr.error("Harap isi semua kolom sebelum simpan.");
+      toastr.error("Kolom * wajib diisi.");
       return;
     }
     function validateField(field, pattern, errorMessage) {

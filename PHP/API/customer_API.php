@@ -73,7 +73,6 @@ switch ($action) {
         checkAccess($conn, $user_id, 'tb_customer', 19); // Delete access
         require  __DIR__ . '/actions/delete_customer.php';
         break;
-
     default:
         http_response_code(400);
         echo json_encode(["error" => "Invalid action"]);

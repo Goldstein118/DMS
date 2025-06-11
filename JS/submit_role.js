@@ -86,7 +86,7 @@ function submitRole() {
     !akses_role ||
     akses_role.trim() === ""
   ) {
-    toastr.error("Harap isi semua kolom sebelum submit.");
+    toastr.error("Kolom * wajib diisi.");
     return;
   }
   const is_valid =

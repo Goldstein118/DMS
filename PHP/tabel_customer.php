@@ -29,10 +29,10 @@
           </select>
           <label class="form-label" for="nitko">Nitko:</label>
           <input class ="form-control" type ="text" id ="nitko" name="nitko"aria-describedby="basic-addon1"value="">
-          <label class="form-label" for="term_payment">Term Payment:</label>
-          <input class ="form-control" type ="text" id ="term_payment" name="term_payment"aria-describedby="basic-addon1"value="">
+          <label class="form-label" for="term_payment">Term Payment(Hari):</label>
+          <input class ="form-control" type ="number" id ="term_payment" name="term_payment"aria-describedby="basic-addon1"value="">
           <label class="form-label" for="max_invoice">Max Invoice:</label>
-          <input class ="form-control" type ="text" id ="max_invoice" name="max_invoice"aria-describedby="basic-addon1"value="">
+          <input class ="form-control" type ="number" id ="max_invoice" name="max_invoice"aria-describedby="basic-addon1"value="">
           <label class="form-label" for="max_piutang">Max Piutang:</label>
           <input class ="form-control" type ="text" id ="max_piutang" name="max_piutang"aria-describedby="basic-addon1"value="">
           <label class = "form-label" for="longitude">Longitude:</label>
@@ -89,10 +89,10 @@
           </select>
           <label class="form-label" for="update_nitko">Nitko:</label>
           <input class ="form-control" type ="text" id ="update_nitko" name="update_nitko"aria-describedby="basic-addon1"value="">
-          <label class="form-label" for="update_term_payment">Term Payment:</label>
-          <input class ="form-control" type ="text" id ="update_term_payment" name="update_term_payment"aria-describedby="basic-addon1"value="">
+          <label class="form-label" for="update_term_payment">Term Payment(Hari):</label>
+          <input class ="form-control" type ="number" id ="update_term_payment" name="update_term_payment"aria-describedby="basic-addon1"value="">
           <label class="form-label" for="update_max_invoice">Max Invoice:</label>
-          <input class ="form-control" type ="text" id ="update_max_invoice" name="update_max_invoice"aria-describedby="basic-addon1"value="">
+          <input class ="form-control" type ="number" id ="update_max_invoice" name="update_max_invoice"aria-describedby="basic-addon1"value="">
           <label class="form-label" for="update_max_piutang">Max Piutang:</label>
           <input class ="form-control" type ="text" id ="update_max_piutang" name="update_max_piutang"aria-describedby="basic-addon1"value="">
           <label class = "form-label" for="update_longitude">Longitude:</label>

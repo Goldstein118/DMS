@@ -15,7 +15,7 @@ if (grid_container_produk) {
       dropdownParent: $("#update_modal_produk"),
     });
   });
-  new Grid({
+  window.produk_grid = new Grid({
     columns: [
       "Kode produk",
       "Nama",
@@ -97,6 +97,7 @@ if (grid_container_produk) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
       },
       then: (data) =>
         data.map((produk) => [
@@ -112,7 +113,8 @@ if (grid_container_produk) {
           null,
         ]),
     },
-  }).render(document.getElementById("table_produk"));
+  });
+  window.produk_grid.render(document.getElementById("table_produk"));
   setTimeout(() => {
     const grid_header = document.querySelector("#table_produk .gridjs-head");
     const search_Box = grid_header.querySelector(".gridjs-search");
@@ -175,8 +177,9 @@ function format_angka(str) {
   if (!/^\d+$/.test(cleaned)) {
     return str;
   }
+  const result = cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-  return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return result + ",00";
 }
 
 function unformat_angka(formattedString) {
@@ -188,7 +191,10 @@ function unformat_angka(formattedString) {
     return formattedString;
   }
 
-  return formattedString.toString().replace(/[.,\s]/g, "");
+  return formattedString
+    .toString()
+    .replace(/[.,\s]/g, "")
+    .replace(/,00$/, "");
 }
 async function handleDeleteProduk(button) {
   const row = button.closest("tr");
@@ -362,7 +368,7 @@ if (submit_produk_update) {
       ) &&
       validateField(
         harga_minimal_new,
-        /^[0-9. ]+$/,
+        /^[0-9., ]+$/,
         "Format harga minimal tidak valid"
       );
     if (is_valid) {
@@ -383,23 +389,25 @@ if (submit_produk_update) {
           "POST",
           data_produk_update
         );
+        if (response.ok) {
+          row.cells[1].textContent = nama_new;
 
-        row.cells[1].textContent = nama_new;
+          const kategori = $("#update_kategori option:selected").text();
+          const kategori_nama = kategori.split(" - ")[1];
+          row.cells[2].textContent = kategori_nama;
 
-        const kategori = $("#update_kategori option:selected").text();
-        const kategori_nama = kategori.split(" - ")[1];
-        row.cells[2].textContent = kategori_nama;
+          const brand = $("#update_brand option:selected").text();
+          const brand_nama = brand.split(" - ")[1];
+          row.cells[3].textContent = brand_nama;
 
-        const brand = $("#update_brand option:selected").text();
-        const brand_nama = brand.split(" - ")[1];
-        row.cells[3].textContent = brand_nama;
+          row.cells[4].textContent = no_sku_new;
+          row.cells[5].textContent = status_new;
+          row.cells[6].textContent = format_angka(harga_minimal_new);
 
-        row.cells[4].textContent = no_sku_new;
-        row.cells[5].textContent = status_new;
-        row.cells[6].textContent = format_angka(harga_minimal_new);
-
-        $("#update_modal_produk").modal("hide");
-        Swal.fire("Berhasil", response.message, "success");
+          $("#update_modal_produk").modal("hide");
+          Swal.fire("Berhasil", response.message, "success");
+          window.produk_grid.forceRender();
+        }
       } catch (error) {
         Swal.fire({
           icon: "error",

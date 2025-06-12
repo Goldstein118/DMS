@@ -7,7 +7,7 @@
     <span id="username_mobile" class="text-muted small"></span></div>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
   </div>
-
+<hr>
   <div class="offcanvas-body d-flex flex-column h-100">
     <ul class="list-unstyled ps-0 flex-grow-1">
       <li class="mb-1">

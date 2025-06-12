@@ -10,6 +10,28 @@
   --border-radius: 5px;
   --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/DMS/Vendor/fonts/Roboto/static/Roboto-Regular.ttf") format("woff2"),
+    url("/DMS/Vendor/fonts/Roboto/static/Roboto-Regular.ttf") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/DMS/Vendor/fonts/Roboto/static/Roboto-Bold.ttf") format("woff2"),
+    url("/DMS/Vendor/fonts/Roboto/static/Roboto-Bold.ttf") format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Then use it like normal */
+body {
+  font-family: "Roboto", sans-serif;
+}
+
 @media (max-width: 576px) {
   .sidebar {
     display: none !important;
@@ -144,6 +166,8 @@ body {
   height: 100%;
   overflow-x: hidden !important;
   overflow-y: hidden !important;
+  font-family: "Roboto", sans-serif;
+  font-variant-numeric: tabular-nums;
 }
 main .d-flex {
   flex-wrap: nowrap;
@@ -295,6 +319,10 @@ body::-webkit-scrollbar {
 .logout-button:hover {
   color: red;
 }
+.btn-group-sm > .btn,
+.btn-sm {
+  margin-right: 2.5px;
+}
 .sidebar ul,
 .offcanvas-body ul {
   overflow-y: auto;
@@ -350,4 +378,7 @@ li a.link-dark.active:hover {
 
 .bi-person-vcard-fill:hover {
   color: rgb(0, 128, 255);
+}
+h3 {
+  padding-top: inherit;
 }

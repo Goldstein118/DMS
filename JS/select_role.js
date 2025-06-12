@@ -5,7 +5,7 @@ import * as access from "./cek_access.js";
 document.addEventListener("DOMContentLoaded", () => {
   const grid_container_role = document.querySelector("#table_role");
   if (grid_container_role) {
-    new Grid({
+    window.role_grid = new Grid({
       columns: [
         "Kode Role",
         "Nama",
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 access.hasAccess("tb_role", "edit") &&
                 row_user_id !== current_user_id;
             }
-            if (access.isOwner) {
+            if (access.isOwner()) {
               can_delete = true;
             } else {
               can_delete =
@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
         },
         then: (data) =>
           data.map((role) => [
@@ -84,7 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
             null, // Placeholder for the action buttons column
           ]),
       },
-    }).render(document.getElementById("table_role"));
+    });
+    window.role_grid.render(document.getElementById("table_role"));
     setTimeout(() => {
       const grid_header = document.querySelector("#table_role .gridjs-head");
       const search_Box = grid_header.querySelector(".gridjs-search");
@@ -295,6 +297,7 @@ if (submit_role_update) {
     const role_ID = document.getElementById("update_role_ID").value;
     const newNama = document.getElementById("update_role_name").value;
     const newAkses = proses_check_box();
+    console.log(newAkses);
     if (
       !newNama ||
       newNama.trim() === "" ||
@@ -332,12 +335,14 @@ if (submit_role_update) {
           "POST",
           data_role_update
         );
+        if (response.ok) {
+          row.cells[1].textContent = newNama;
+          row.cells[2].textContent = newAkses;
 
-        row.cells[1].textContent = newNama;
-        row.cells[2].textContent = newAkses;
-
-        $("#modal_role_update").modal("hide");
-        Swal.fire("Berhasil", response.message, "success");
+          $("#modal_role_update").modal("hide");
+          Swal.fire("Berhasil", response.message, "success");
+          window.role_grid.forceRender();
+        }
       } catch (error) {
         Swal.fire({
           icon: "error",

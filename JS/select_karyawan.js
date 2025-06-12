@@ -11,7 +11,8 @@ if (grid_container_karyawan) {
       dropdownParent: $("#modal_karyawan_update"),
     });
   });
-  new Grid({
+
+  window.karyawan_grid = new Grid({
     columns: [
       "Kode Karyawan",
       "Nama",
@@ -100,6 +101,7 @@ if (grid_container_karyawan) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
       },
       then: (data) =>
         data.map((karyawan) => [
@@ -117,7 +119,8 @@ if (grid_container_karyawan) {
           null,
         ]),
     },
-  }).render(document.getElementById("table_karyawan"));
+  });
+  window.karyawan_grid.render(document.getElementById("table_karyawan"));
   setTimeout(() => {
     const grid_header = document.querySelector("#table_karyawan .gridjs-head");
     const search_Box = grid_header.querySelector(".gridjs-search");
@@ -394,20 +397,22 @@ if (submit_karyawan_update) {
           "POST",
           data_karyawan_update
         );
+        if (response.ok) {
+          row.cells[1].textContent = karyawan_nama_new;
+          const role_name_new = $("#update_role_select option:selected").text();
+          const role_name_only = role_name_new.split(" - ")[1];
+          row.cells[2].textContent = role_name_only;
+          row.cells[3].textContent = divisi_new;
+          row.cells[4].textContent = no_telp_update;
+          row.cells[5].textContent = alamat_new;
+          row.cells[6].textContent = KTP_new;
+          row.cells[7].textContent = npwp_new;
+          row.cells[8].textContent = status_new;
 
-        row.cells[1].textContent = karyawan_nama_new;
-        const role_name_new = $("#update_role_select option:selected").text();
-        const role_name_only = role_name_new.split(" - ")[1];
-        row.cells[2].textContent = role_name_only;
-        row.cells[3].textContent = divisi_new;
-        row.cells[4].textContent = no_telp_update;
-        row.cells[5].textContent = alamat_new;
-        row.cells[6].textContent = KTP_new;
-        row.cells[7].textContent = npwp_new;
-        row.cells[8].textContent = status_new;
-
-        $("#modal_karyawan_update").modal("hide");
-        Swal.fire("Berhasil", response.message, "success");
+          $("#modal_karyawan_update").modal("hide");
+          Swal.fire("Berhasil", response.message, "success");
+          window.karyawan_grid.forceRender();
+        }
       } catch (error) {
         Swal.fire({
           icon: "error",

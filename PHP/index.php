@@ -28,10 +28,7 @@ include ("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
     <!-- Toastr CSS -->
   <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/toastr.min.css" rel="stylesheet">
-    
   
-
-
   <!-- Custom CSS -->
   <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>../style.css?v=2.0">
 

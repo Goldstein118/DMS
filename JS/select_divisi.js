@@ -5,7 +5,7 @@ import * as access from "./cek_access.js";
 
 const gird_container_divisi = document.querySelector("#table_divisi");
 if (gird_container_divisi) {
-  new Grid({
+  window.divisi_grid = new Grid({
     columns: [
       "Kode divisi",
       "Nama",
@@ -59,6 +59,7 @@ if (gird_container_divisi) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
       },
       then: (data) =>
         data.map((divisi) => [
@@ -70,7 +71,8 @@ if (gird_container_divisi) {
           null, // Placeholder for the action buttons column
         ]),
     },
-  }).render(document.getElementById("table_divisi"));
+  });
+  window.divisi_grid.render(document.getElementById("table_divisi"));
   setTimeout(() => {
     const grid_header = document.querySelector("#table_divisi .gridjs-head");
     const search_Box = grid_header.querySelector(".gridjs-search");
@@ -268,14 +270,16 @@ if (submit_divisi_update) {
           "POST",
           data_divisi_update
         );
+        if (response.ok) {
+          row.cells[1].textContent = update_nama;
+          row.cells[2].textContent = update_nama_bank;
+          row.cells[3].textContent = update_nama_rekening;
+          row.cells[4].textContent = update_nomor_rekening;
 
-        row.cells[1].textContent = update_nama;
-        row.cells[2].textContent = update_nama_bank;
-        row.cells[3].textContent = update_nama_rekening;
-        row.cells[4].textContent = update_nomor_rekening;
-
-        $("#modal_divisi_update").modal("hide");
-        Swal.fire("Berhasil", response.message, "success");
+          $("#modal_divisi_update").modal("hide");
+          Swal.fire("Berhasil", response.message, "success");
+          window.divisi_grid.forceRender();
+        }
       } catch (error) {
         Swal.fire({
           icon: "error",

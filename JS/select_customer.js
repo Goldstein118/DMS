@@ -10,7 +10,7 @@ if (grid_container_customer) {
       dropdownParent: $("#modal_customer_update"),
     });
   });
-  new Grid({
+  window.customer_grid = new Grid({
     columns: [
       "Kode Customer",
       "Nama",
@@ -20,7 +20,7 @@ if (grid_container_customer) {
       "NPWP",
       "Status",
       "NITKO",
-      "Term Pembayaran",
+      "Term Pembayaran (Hari)",
       "Maksimun Invoice",
       "Maksimun Nominal Piutang",
       "Titik Koordinat",
@@ -73,7 +73,10 @@ if (grid_container_customer) {
         "user_id"
       )}`,
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
       then: (data) =>
         data.map((customer) => [
           customer.customer_id,
@@ -117,7 +120,8 @@ if (grid_container_customer) {
           null,
         ]),
     },
-  }).render(document.getElementById("table_customer"));
+  });
+  window.customer_grid.render(document.getElementById("table_customer"));
   setTimeout(() => {
     const grid_header = document.querySelector("#table_customer .gridjs-head");
     const search_Box = grid_header.querySelector(".gridjs-search");
@@ -166,8 +170,9 @@ function format_angka(str) {
   if (!/^\d+$/.test(cleaned)) {
     return str;
   }
+  const result = cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-  return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return result + ",00";
 }
 
 function unformat_angka(formattedString) {
@@ -179,7 +184,10 @@ function unformat_angka(formattedString) {
     return formattedString;
   }
 
-  return formattedString.toString().replace(/[.,\s]/g, "");
+  return formattedString
+    .toString()
+    .replace(/[.,\s]/g, "")
+    .replace(/,00$/, "");
 }
 
 function attachEventListeners() {
@@ -414,17 +422,17 @@ if (submit_customer_update) {
       ) &&
       validateField(
         update_max_invoice,
-        /^[a-zA-Z0-9,. ]+$/,
+        /^[0-9]+$/,
         "Format max invoice tidak valid"
       ) &&
       validateField(
         update_max_piutang,
-        /^[0-9. ]+$/,
+        /^[0-9., ]+$/,
         "Format max piutang tidak valid"
       ) &&
       validateField(
         update_term_pembayaran,
-        /^[a-zA-Z0-9,. ]+$/,
+        /^[0-9]+$/,
         "Format term pembayaran tidak valid"
       ) &&
       validateField(
@@ -490,6 +498,7 @@ if (submit_customer_update) {
           row.cells[11].innerHTML = `<span>Longitude: ${update_longitude}<br><br>Latidude: ${update_latidude}</span>`;
           Swal.fire("Berhasil", response.message, "success");
           $("#modal_customer_update").modal("hide");
+          window.customer_grid.forceRender();
         } else {
           Swal.fire("Gagal", result.error || "Update gagal.", "error");
         }

@@ -2,15 +2,20 @@ import config from "./config.js";
 
 export async function apiRequest(endpoint, method = "GET", body = null) {
   try {
+    const headers = {
+      "X-Requested-With": "XMLHttpRequest", // Always required by .htaccess
+    };
+
     const options = {
       method,
-      headers: {},
+      headers,
     };
 
     if (body && !(body instanceof FormData)) {
-      options.headers["Content-Type"] = "application/json";
+      headers["Content-Type"] = "application/json";
       options.body = JSON.stringify(body);
     } else if (body instanceof FormData) {
+      // DO NOT set Content-Type manually — browser handles it
       options.body = body;
     }
 
@@ -39,9 +44,9 @@ export async function apiRequest(endpoint, method = "GET", body = null) {
         title: "Gagal",
         text: responseData.error || "Terjadi kesalahan server",
       });
-
       throw new Error(responseData.error || "Server error");
     }
+
     if (Array.isArray(responseData)) {
       return {
         ok: true,
@@ -49,6 +54,7 @@ export async function apiRequest(endpoint, method = "GET", body = null) {
         data: responseData,
       };
     }
+
     return { ...responseData, ok: true, status: response.status };
   } catch (error) {
     console.error("API Request Error:", error.message);

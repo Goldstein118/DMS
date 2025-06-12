@@ -15,8 +15,8 @@ try{
     $harga_minimal = $fields['harga_minimal']??'';
 
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
-    validate_2($no_sku, '/^[a-zA-Z0-9,.- ]+$/', "Invalid no sku format");
-    validate_2($harga_minimal, '/^[0-9. ]+$/', "Invalid no harga minimal format");
+    validate_2($no_sku, '/^[a-zA-Z0-9,.\- ]+$/', "Invalid no sku format");
+    validate_2($harga_minimal, '/^[0-9., ]+$/', "Invalid no harga minimal format");
 
 
 $stmt = $conn->prepare("UPDATE tb_produk SET nama = ?,no_sku=?,status =?,harga_minimal =?, kategori_id =?,brand_id=? WHERE produk_id = ?");

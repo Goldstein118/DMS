@@ -108,9 +108,9 @@ try {
     validate_2($ktp, '/^[0-9]+$/', "Invalid KTP format");
     validate_2($npwp, '/^[0-9 .-]+$/', "Invalid NPWP format");
     validate_2($nitko, '/^[a-zA-Z0-9,. ]+$/', "Invalid NITKO format");
-    validate_2($term_pembayaran, '/^[a-zA-Z0-9,. ]+$/', "Invalid term pembayaran format");
-    validate_2($max_invoice, '/^[a-zA-Z0-9,. ]+$/', "Invalid max invoice format");
-    validate_2($max_piutang, '/^[0-9. ]+$/', "Invalid max piutang format");
+    validate_2($term_pembayaran, '/^[0-9]+$/', "Invalid term pembayaran format");
+    validate_2($max_invoice, '/^[0-9]+$/', "Invalid max invoice format");
+    validate_2($max_piutang, '/^[0-9., ]+$/', "Invalid max piutang format");
     validate_2($longitude,'/^[-+]?((1[0-7]\d|\d{1,2})(\.\d{1,6})?|180(\.0{1,6})?)$/',"Invalid Longitude Format");
     validate_2($latidude,'/^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/',"Invalid Latidude Format");
 

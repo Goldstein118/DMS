@@ -106,9 +106,12 @@ function submitRole() {
         "POST",
         data_role
       );
-      Swal.fire("Berhasil", response.message, "success");
-      document.getElementById("name_role").value = "";
-      $("#modal_role").modal("hide");
+      if (response.ok) {
+        Swal.fire("Berhasil", response.message, "success");
+        document.getElementById("name_role").value = "";
+        $("#modal_role").modal("hide");
+        window.role_grid.forceRender();
+      }
     } catch (error) {
       toastr.error(error.message);
     }

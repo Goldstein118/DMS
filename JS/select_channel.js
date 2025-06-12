@@ -4,7 +4,7 @@ import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 const grid_container_channel = document.querySelector("#table_channel");
 if (grid_container_channel) {
-  new Grid({
+  window.channel_grid = new Grid({
     columns: [
       "Kode Channel",
       "Nama",
@@ -68,11 +68,15 @@ if (grid_container_channel) {
         "user_id"
       )}`,
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
       then: (data) =>
         data.map((channel) => [channel.channel_id, channel.nama, null]),
     },
-  }).render(document.getElementById("table_channel"));
+  });
+  window.channel_grid.render(document.getElementById("table_channel"));
   setTimeout(() => {
     const grid_header = document.querySelector("#table_channel .gridjs-head");
     const search_Box = grid_header.querySelector(".gridjs-search");
@@ -224,10 +228,13 @@ if (submit_channel_update) {
           "POST",
           data_channel_update
         );
-        row.cells[1].textContent = nama_new;
+        if (response.ok) {
+          row.cells[1].textContent = nama_new;
 
-        $("#modal_channel_update").modal("hide");
-        Swal.fire("Berhasil", response.message, "success");
+          $("#modal_channel_update").modal("hide");
+          Swal.fire("Berhasil", response.message, "success");
+          window.channel_grid.forceRender();
+        }
       } catch (error) {
         Swal.fire({
           icon: "error",

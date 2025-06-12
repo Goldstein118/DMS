@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       localStorage.setItem("level", sjcl.encrypt(secretKey, response.level));
       localStorage.setItem("akses", sjcl.encrypt(secretKey, response.akses));
       localStorage.setItem("nama", sjcl.encrypt(secretKey, response.nama));
+      console.log(access.decryptItem("akses"));
     } else {
       console.log(response);
     }

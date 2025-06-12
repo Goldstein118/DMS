@@ -130,16 +130,19 @@ async function submitKaryawan() {
         "POST",
         data_karyawan
       );
-      swal.fire("Berhasil", response.message, "success");
-      document.getElementById("name_karyawan").value = "";
-      document.getElementById("divisi_karyawan").value = "";
-      document.getElementById("phone_karyawan").value = "";
-      document.getElementById("address_karyawan").value = "";
-      document.getElementById("nik_karyawan").value = "";
-      document.getElementById("npwp_karyawan").value = "";
-      document.getElementById("status_karyawan").value = "";
-      $("#role_select").val(null).trigger("change");
-      $("#modal_karyawan").modal("hide");
+      if (response.ok) {
+        swal.fire("Berhasil", response.message, "success");
+        document.getElementById("name_karyawan").value = "";
+        document.getElementById("divisi_karyawan").value = "";
+        document.getElementById("phone_karyawan").value = "";
+        document.getElementById("address_karyawan").value = "";
+        document.getElementById("nik_karyawan").value = "";
+        document.getElementById("npwp_karyawan").value = "";
+        document.getElementById("status_karyawan").value = "";
+        $("#role_select").val(null).trigger("change");
+        $("#modal_karyawan").modal("hide");
+        window.karyawan_grid.forceRender();
+      }
     } catch (error) {
       toastr.error(error.message);
     }

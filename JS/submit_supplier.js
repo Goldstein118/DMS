@@ -83,15 +83,17 @@ async function submitSupplier() {
         "POST",
         supplier_data
       );
-
-      document.getElementById("supplier_nama").value = "";
-      document.getElementById("supplier_alamat").value = "";
-      document.getElementById("supplier_no_telp").value = "";
-      document.getElementById("supplier_ktp").value = "";
-      document.getElementById("supplier_npwp").value = "";
-      document.getElementById("supplier_status").value = "";
-      $("#modal_supplier").modal("hide");
-      swal.fire("Berhasil", response.message, "success");
+      if (response.ok) {
+        document.getElementById("supplier_nama").value = "";
+        document.getElementById("supplier_alamat").value = "";
+        document.getElementById("supplier_no_telp").value = "";
+        document.getElementById("supplier_ktp").value = "";
+        document.getElementById("supplier_npwp").value = "";
+        document.getElementById("supplier_status").value = "";
+        $("#modal_supplier").modal("hide");
+        swal.fire("Berhasil", response.message, "success");
+        window.supplier_grid.forceRender();
+      }
     } catch (error) {
       toastr.error(error.message);
     }

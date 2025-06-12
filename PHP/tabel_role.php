@@ -49,7 +49,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input"
                             type="checkbox"
                             id="check_all_karyawan" />
                           Select All
@@ -96,7 +96,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_user" />
                           Select All
@@ -143,7 +143,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_role" />
                           Select All
@@ -189,7 +189,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_supplier" />
                           Select All
@@ -236,7 +236,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_customer" />
                           Select All
@@ -282,7 +282,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_channel" />
                           Select All
@@ -329,7 +329,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_kategori" />
                           Select All
@@ -376,7 +376,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_brand" />
                           Select All
@@ -423,7 +423,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_produk" />
                           Select All
@@ -470,7 +470,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_divisi" />
                           Select All
@@ -584,7 +584,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_karyawan_update" />
                           Select All
@@ -631,7 +631,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_user_update" />
                           Select All
@@ -678,7 +678,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_role_update" />
                           Select All
@@ -725,7 +725,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_supplier_update" />
                           Select All
@@ -772,7 +772,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_customer_update" />
                           Select All
@@ -819,7 +819,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_channel_update" />
                           Select All
@@ -866,7 +866,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input"
                             type="checkbox"
                             id="check_all_kategori_update" />
                           Select All
@@ -913,7 +913,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_brand_update" />
                           Select All
@@ -960,7 +960,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input "
                             type="checkbox"
                             id="check_all_produk_update" />
                           Select All
@@ -1007,7 +1007,7 @@
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
-                            class="form-check-input perm-checkbox"
+                            class="form-check-input"
                             type="checkbox"
                             id="check_all_divisi_update" />
                           Select All

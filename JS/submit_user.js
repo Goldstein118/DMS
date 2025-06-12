@@ -65,10 +65,13 @@ async function submitUser() {
       "POST",
       data_user
     );
-    document.getElementById("level").value = "user";
-    $("#karyawan_ID").val(null).trigger("change");
-    $("#modal_user").modal("hide");
-    Swal.fire("Berhasil", response.message, "success");
+    if (response.ok) {
+      document.getElementById("level").value = "user";
+      $("#karyawan_ID").val(null).trigger("change");
+      $("#modal_user").modal("hide");
+      Swal.fire("Berhasil", response.message, "success");
+      window.user_grid.forceRender();
+    }
   } catch (error) {
     toastr.error(error.message);
   }

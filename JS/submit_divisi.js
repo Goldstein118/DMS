@@ -66,13 +66,15 @@ async function submitdivisi() {
         "POST",
         divisi_data
       );
-
-      document.getElementById("divisi_nama").value = "";
-      document.getElementById("nama_bank").value = "";
-      document.getElementById("nama_rekening").value = "";
-      document.getElementById("nomor_rekening").value = "";
-      $("#modal_divisi").modal("hide");
-      swal.fire("Berhasil", response.message, "success");
+      if (response.ok) {
+        document.getElementById("divisi_nama").value = "";
+        document.getElementById("nama_bank").value = "";
+        document.getElementById("nama_rekening").value = "";
+        document.getElementById("nomor_rekening").value = "";
+        $("#modal_divisi").modal("hide");
+        swal.fire("Berhasil", response.message, "success");
+        window.divisi_grid.forceRender();
+      }
     } catch (error) {
       toastr.error(error.message);
     }

@@ -39,9 +39,12 @@ async function submitChannel() {
         "POST",
         data_kategori
       );
-      swal.fire("Berhasil", response.message, "success");
-      document.getElementById("nama_kategori").value = "";
-      $("#modal_kategori").modal("hide");
+      if (response.ok) {
+        swal.fire("Berhasil", response.message, "success");
+        document.getElementById("nama_kategori").value = "";
+        $("#modal_kategori").modal("hide");
+        window.kategori_grid.forceRender();
+      }
     } catch (error) {
       toastr.error(error.message);
     }

@@ -4,7 +4,7 @@ import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 const grid_container_kategori = document.querySelector("#table_kategori");
 if (grid_container_kategori) {
-  new Grid({
+  window.kategori_grid = new Grid({
     columns: [
       "Kode Kategori",
       "Nama",
@@ -68,7 +68,10 @@ if (grid_container_kategori) {
         "user_id"
       )}`,
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
       then: (data) =>
         data.map((kategori) => [kategori.kategori_id, kategori.nama, null]),
     },
@@ -226,10 +229,13 @@ if (submit_kategori_update) {
           "POST",
           data_kategori_update
         );
-        row.cells[1].textContent = nama_new;
+        if (response.ok) {
+          row.cells[1].textContent = nama_new;
 
-        $("#modal_kategori_update").modal("hide");
-        Swal.fire("Berhasil", response.message, "success");
+          $("#modal_kategori_update").modal("hide");
+          Swal.fire("Berhasil", response.message, "success");
+          window.kategori_grid.forceRender();
+        }
       } catch (error) {
         Swal.fire({
           icon: "error",

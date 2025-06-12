@@ -4,7 +4,7 @@ import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 const grid_container_brand = document.querySelector("#table_brand");
 if (grid_container_brand) {
-  new Grid({
+  window.brand_grid = new Grid({
     columns: [
       "Kode Brand",
       "Nama",
@@ -68,10 +68,14 @@ if (grid_container_brand) {
         "user_id"
       )}`,
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
       then: (data) => data.map((brand) => [brand.brand_id, brand.nama, null]),
     },
-  }).render(document.getElementById("table_brand"));
+  });
+  window.brand_grid.render(document.getElementById("table_brand"));
   setTimeout(() => {
     const grid_header = document.querySelector("#table_brand .gridjs-head");
     const search_Box = grid_header.querySelector(".gridjs-search");
@@ -215,10 +219,14 @@ if (submit_brand_update) {
           "POST",
           data_brand_update
         );
-        row.cells[1].textContent = nama_new;
 
-        $("#modal_brand_update").modal("hide");
-        Swal.fire("Berhasil", response.message, "success");
+        if (response.ok) {
+          row.cells[1].textContent = nama_new;
+
+          $("#modal_brand_update").modal("hide");
+          Swal.fire("Berhasil", response.message, "success");
+          window.brand_grid.forceRender();
+        }
       } catch (error) {
         Swal.fire({
           icon: "error",

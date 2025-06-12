@@ -1,0 +1,22 @@
+Options -Indexes
+
+DirectoryIndex PHP/index.php index.php index.html
+
+<If "%{REQUEST_URI} =~ m#^/DMS/PHP/API/#">
+Order Deny,Allow
+Deny from all
+
+    # Allow if request made via AJAX/fetch
+    SetEnvIfNoCase X-Requested-With "XMLHttpRequest" allow_ajax
+    Allow from env=allow_ajax
+
+</If>
+<FilesMatch "^(cek_akses|cek_akses_contex|db|createDB|env_loader)\.php$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+<Files ~ "^.*\.([Ee][Nn][Vv])">
+ order allow,deny
+ deny from all
+ satisfy all
+</Files>

@@ -8,8 +8,10 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 $search = trim($search);
 
 if (strlen($search)>=3 && $search !=='') {
-    $stmt = $conn->prepare("SELECT karyawan.karyawan_id, karyawan.nama, karyawan.role_id, role.nama AS role_nama, karyawan.departement, karyawan.no_telp, karyawan.alamat, karyawan.ktp, karyawan.npwp,karyawan.status
-    FROM tb_karyawan karyawan JOIN tb_role role ON karyawan.role_id = role.role_id WHERE karyawan.karyawan_id LIKE CONCAT ('%',?,'%')
+    $stmt = $conn->prepare("SELECT karyawan.karyawan_id, karyawan.nama, karyawan.role_id, role.nama AS role_nama, karyawan.departement, karyawan.no_telp, karyawan.alamat, karyawan.ktp, karyawan.npwp,karyawan.status,u.user_id
+    FROM tb_karyawan karyawan JOIN tb_role role ON karyawan.role_id = role.role_id 
+    JOIN tb_user u ON u.karyawan_id = karyawan.karyawan_id
+    WHERE karyawan.karyawan_id LIKE CONCAT ('%',?,'%')
     OR karyawan.nama LIKE CONCAT ('%',?,'%')
     OR role.nama LIKE CONCAT ('%',?,'%') 
     OR karyawan.departement LIKE CONCAT ('%',?,'%')

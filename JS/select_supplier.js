@@ -5,7 +5,7 @@ import * as access from "./cek_access.js";
 
 const gird_container_supplier = document.querySelector("#table_supplier");
 if (gird_container_supplier) {
-  new Grid({
+  window.supplier_grid = new Grid({
     columns: [
       "Kode Supplier",
       "Nama",
@@ -61,6 +61,7 @@ if (gird_container_supplier) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
       },
       then: (data) =>
         data.map((supplier) => [
@@ -74,7 +75,8 @@ if (gird_container_supplier) {
           null, // Placeholder for the action buttons column
         ]),
     },
-  }).render(document.getElementById("table_supplier"));
+  });
+  window.supplier_grid.render(document.getElementById("table_supplier"));
   setTimeout(() => {
     const grid_header = document.querySelector("#table_supplier .gridjs-head");
     const search_Box = grid_header.querySelector(".gridjs-search");
@@ -297,16 +299,18 @@ if (submit_supplier_update) {
           "POST",
           data_supplier_update
         );
+        if (response.ok) {
+          row.cells[1].textContent = update_nama;
+          row.cells[2].textContent = update_alamat;
+          row.cells[3].textContent = new_no_telp;
+          row.cells[4].textContent = update_ktp;
+          row.cells[5].textContent = update_npwp;
+          row.cells[6].textContent = update_status;
 
-        row.cells[1].textContent = update_nama;
-        row.cells[2].textContent = update_alamat;
-        row.cells[3].textContent = new_no_telp;
-        row.cells[4].textContent = update_ktp;
-        row.cells[5].textContent = update_npwp;
-        row.cells[6].textContent = update_status;
-
-        $("#modal_supplier_update").modal("hide");
-        Swal.fire("Berhasil", response.message, "success");
+          $("#modal_supplier_update").modal("hide");
+          Swal.fire("Berhasil", response.message, "success");
+          window.supplier_grid.forceRender();
+        }
       } catch (error) {
         Swal.fire({
           icon: "error",

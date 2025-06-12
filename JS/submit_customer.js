@@ -26,20 +26,19 @@ if (submit_customer) {
     });
   });
 }
-function format_angka(str) {
-  if (str === null || str === undefined || str === "") {
-    return str;
+function format_no_telp(str) {
+  if (!str || str.trim() === "") {
+    let result = str;
+    return result;
+  } else {
+    if (7 > str.length) {
+      return "Invalid index";
+    }
+    let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
+    let result = "+62 " + format;
+    return result;
   }
-
-  const cleaned = str.toString().replace(/[.,\s]/g, "");
-
-  if (!/^\d+$/.test(cleaned)) {
-    return str;
-  }
-
-  return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
-
 function validateField(field, pattern, errorMessage) {
   if (!field || field.trim() === "") {
     return true;
@@ -53,18 +52,19 @@ function validateField(field, pattern, errorMessage) {
   }
   return true;
 }
-function format_no_telp(str) {
-  if (!str || str.trim() === "") {
-    let result = str;
-    return result;
-  } else {
-    if (7 > str.length) {
-      return "Invalid index";
-    }
-    let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
-    let result = "+62 " + format;
-    return result;
+function format_angka(str) {
+  if (str === null || str === undefined || str === "") {
+    return str;
   }
+
+  const cleaned = str.toString().replace(/[.,\s]/g, "");
+
+  if (!/^\d+$/.test(cleaned)) {
+    return str;
+  }
+  const result = cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+  return result + ",00";
 }
 
 async function fetch_channel() {
@@ -105,7 +105,7 @@ async function submitCustomer() {
   const nitko = document.getElementById("nitko").value;
   const term_payment = document.getElementById("term_payment").value;
   const max_invoice = document.getElementById("max_invoice").value;
-  const max_piutang = document.getElementById("max_piutang").value;
+  let max_piutang = document.getElementById("max_piutang").value;
   const longitude = document.getElementById("longitude").value;
   const latidude = document.getElementById("latidude").value;
   const channel_id = document.getElementById("channel_id").value;
@@ -139,17 +139,13 @@ async function submitCustomer() {
     validateField(nitko, /^[a-zA-Z0-9, .-]+$/, "Format nitko tidak valid") &&
     validateField(
       term_payment,
-      /^[a-zA-Z0-9 ]+$/,
+      /^[0-9]+$/,
       "Format term payment tidak valid"
     ) &&
-    validateField(
-      max_invoice,
-      /^[a-zA-Z0-9 ]+$/,
-      "Format max invoice tidak valid"
-    ) &&
+    validateField(max_invoice, /^[0-9]+$/, "Format max invoice tidak valid") &&
     validateField(
       max_piutang,
-      /^[0-9. ]+$/,
+      /^[0-9., ]+$/,
       "Format max piutang tidak valid"
     ) &&
     validateField(
@@ -190,13 +186,12 @@ async function submitCustomer() {
       formData
     );
 
-    if (!response.ok) {
-      throw new Error(result.error || "Terjadi kesalahan");
+    if (response.ok) {
+      form.reset();
+      $("#modal_customer").modal("hide");
+      Swal.fire("Berhasil", response.message, "success");
+      window.customer_grid.forceRender();
     }
-
-    form.reset();
-    $("#modal_customer").modal("hide");
-    Swal.fire("Berhasil", response.message, "success");
   } catch (error) {
     console.error("Submit error:", error);
     toastr.error(error.message || "Submit gagal");

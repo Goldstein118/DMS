@@ -18,7 +18,7 @@ if (grid_container_user) {
     options.textContent = "Owner";
     select.appendChild(options);
   }
-  new Grid({
+  window.user_grid = new Grid({
     columns: [
       "Username",
       "Nama Karyawan",
@@ -30,16 +30,18 @@ if (grid_container_user) {
           let edit;
           let can_delete;
           const current_user_id = access.decryptItem("user_id");
+          console.log(current_user_id);
           const row_user_id = row.cells[0].data;
+          console.log(row_user_id);
 
-          if (access.isOwner) {
+          if (access.isOwner()) {
             edit = true;
           } else {
             edit =
               access.hasAccess("tb_user", "edit") &&
               row_user_id !== current_user_id;
           }
-          if (access.isOwner) {
+          if (access.isOwner()) {
             can_delete = true;
           } else {
             can_delete =
@@ -101,6 +103,7 @@ if (grid_container_user) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
       },
       then: (data) =>
         data.map((user) => [
@@ -111,7 +114,8 @@ if (grid_container_user) {
           null,
         ]),
     },
-  }).render(document.getElementById("table_user"));
+  });
+  window.user_grid.render(document.getElementById("table_user"));
   setTimeout(() => {
     const grid_header = document.querySelector("#table_user .gridjs-head");
     const search_Box = grid_header.querySelector(".gridjs-search");
@@ -276,13 +280,17 @@ if (submit_user_update) {
         "POST",
         data_user_update
       );
-
-      const karyawan_name_new = $("#update_karyawan_ID option:selected").text();
-      const karyawan_name_only = karyawan_name_new.split(" - ")[1];
-      row.cells[1].textContent = karyawan_name_only;
-      row.cells[3].textContent = level;
-      $("#modal_user_update").modal("hide");
-      Swal.fire("Berhasil", response.message, "success");
+      if (response.ok) {
+        const karyawan_name_new = $(
+          "#update_karyawan_ID option:selected"
+        ).text();
+        const karyawan_name_only = karyawan_name_new.split(" - ")[1];
+        row.cells[1].textContent = karyawan_name_only;
+        row.cells[3].textContent = level;
+        $("#modal_user_update").modal("hide");
+        Swal.fire("Berhasil", response.message, "success");
+        window.user_grid.forceRender();
+      }
     } catch (error) {
       Swal.fire({
         icon: "error",

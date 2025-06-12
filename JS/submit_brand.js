@@ -37,9 +37,12 @@ async function submitChannel() {
         "POST",
         data_brand
       );
-      swal.fire("Berhasil", response.message, "success");
-      document.getElementById("nama_brand").value = "";
-      $("#modal_brand").modal("hide");
+      if (response.ok) {
+        swal.fire("Berhasil", response.message, "success");
+        document.getElementById("nama_brand").value = "";
+        $("#modal_brand").modal("hide");
+        window.brand_grid.forceRender();
+      }
     } catch (error) {
       toastr.error(error.message);
     }

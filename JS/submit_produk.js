@@ -45,10 +45,10 @@ function format_angka(str) {
   if (!/^\d+$/.test(cleaned)) {
     return str;
   }
+  const result = cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-  return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return result + ",00";
 }
-
 function populateDropdown(data, field) {
   const select = $(`#${field}`);
   select.empty();
@@ -122,7 +122,7 @@ async function submitProduk() {
     validateField(no_sku, /^[a-zA-Z0-9,.\- ]+$/, "Format no sku tidak valid") &&
     validateField(
       harga_minimal,
-      /^[0-9. ]+$/,
+      /^[0-9., ]+$/,
       "Format harga minmal tidak valid"
     );
 
@@ -142,13 +142,16 @@ async function submitProduk() {
         "POST",
         data_produk
       );
-      swal.fire("Berhasil", response.message, "success");
-      document.getElementById("name_produk").value = "";
-      document.getElementById("no_sku").value = "";
-      document.getElementById("harga_minimal").value = "";
-      $("#kategori").val(null).trigger("change");
-      $("#brand").val(null).trigger("change");
-      $("#modal_produk").modal("hide");
+      if (response.ok) {
+        swal.fire("Berhasil", response.message, "success");
+        document.getElementById("name_produk").value = "";
+        document.getElementById("no_sku").value = "";
+        document.getElementById("harga_minimal").value = "";
+        $("#kategori").val(null).trigger("change");
+        $("#brand").val(null).trigger("change");
+        $("#modal_produk").modal("hide");
+        window.produk_grid.forceRender();
+      }
     } catch (error) {
       toastr.error(error.message);
     }

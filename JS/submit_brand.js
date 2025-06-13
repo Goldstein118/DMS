@@ -7,16 +7,6 @@ if (submit_brand) {
     $("#nama_brand").trigger("focus");
   });
 }
-function validateField(field, pattern, errorMessage) {
-  if (!pattern.test(field)) {
-    toastr.error(errorMessage, {
-      timeOut: 500,
-      extendedTimeOut: 500,
-    });
-    return false;
-  }
-  return true;
-}
 
 async function submitChannel() {
   const name_brand = document.getElementById("nama_brand").value;
@@ -25,7 +15,9 @@ async function submitChannel() {
     toastr.error("Kolom * wajib diisi.");
     return;
   }
-  if (validateField(name_brand, /^[a-zA-Z\s]+$/, "Format nama tidak valid")) {
+  if (
+    helper.validateField(name_brand, /^[a-zA-Z\s]+$/, "Format nama tidak valid")
+  ) {
     const data_brand = {
       user_id: `${access.decryptItem("user_id")}`,
       name_brand,
@@ -42,6 +34,9 @@ async function submitChannel() {
         document.getElementById("nama_brand").value = "";
         $("#modal_brand").modal("hide");
         window.brand_grid.forceRender();
+        setTimeout(() => {
+          helper.custom_grid_header("brand");
+        }, 200);
       }
     } catch (error) {
       toastr.error(error.message);

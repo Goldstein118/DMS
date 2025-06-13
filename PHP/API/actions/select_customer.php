@@ -86,7 +86,7 @@ if (strlen($search) >= 3 && $search !== '') {
             g_ktp.gambar_id AS ktp_id,
             g_npwp.gambar_id AS npwp_id
         FROM tb_customer c
-        JOIN tb_channel ch ON c.channel_id = ch.channel_id
+        LEFT JOIN tb_channel ch ON c.channel_id = ch.channel_id
         LEFT JOIN tb_gambar g_ktp ON g_ktp.customer_id = c.customer_id AND g_ktp.tipe = 'ktp'
         LEFT JOIN tb_gambar g_npwp ON g_npwp.customer_id = c.customer_id AND g_npwp.tipe = 'npwp'
         WHERE c.customer_id LIKE CONCAT('%', ?, '%')
@@ -114,7 +114,7 @@ if (strlen($search) >= 3 && $search !== '') {
         g_ktp.gambar_id AS ktp_id,
         g_npwp.gambar_id AS npwp_id
         FROM tb_customer c
-        JOIN tb_channel ch ON c.channel_id = ch.channel_id
+        LEFT JOIN tb_channel ch ON c.channel_id = ch.channel_id
         LEFT JOIN tb_gambar g_ktp ON g_ktp.customer_id = c.customer_id AND g_ktp.tipe = 'ktp'
         LEFT JOIN tb_gambar g_npwp ON g_npwp.customer_id = c.customer_id AND g_npwp.tipe = 'npwp'";
 

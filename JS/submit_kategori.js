@@ -1,21 +1,12 @@
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
+import * as helper from "./helper.js";
 const submit_kategori = document.getElementById("submit_kategori");
 if (submit_kategori) {
   submit_kategori.addEventListener("click", submitChannel);
   $("#modal_kategori").on("shown.bs.modal", function () {
     $("#nama_kategori").trigger("focus");
   });
-}
-function validateField(field, pattern, errorMessage) {
-  if (!pattern.test(field)) {
-    toastr.error(errorMessage, {
-      timeOut: 500,
-      extendedTimeOut: 500,
-    });
-    return false;
-  }
-  return true;
 }
 
 async function submitChannel() {
@@ -26,7 +17,11 @@ async function submitChannel() {
     return;
   }
   if (
-    validateField(name_kategori, /^[a-zA-Z\s]+$/, "Format nama tidak valid")
+    helper.validateField(
+      name_kategori,
+      /^[a-zA-Z\s]+$/,
+      "Format nama tidak valid"
+    )
   ) {
     const data_kategori = {
       user_id: `${access.decryptItem("user_id")}`,
@@ -44,6 +39,9 @@ async function submitChannel() {
         document.getElementById("nama_kategori").value = "";
         $("#modal_kategori").modal("hide");
         window.kategori_grid.forceRender();
+        setTimeout(() => {
+          helper.custom_grid_header("kategori");
+        }, 200);
       }
     } catch (error) {
       toastr.error(error.message);

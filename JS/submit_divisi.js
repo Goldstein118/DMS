@@ -1,21 +1,12 @@
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
+import * as helper from "./helper.js";
 const submit_divisi = document.getElementById("submit_divisi");
 if (submit_divisi) {
   submit_divisi.addEventListener("click", submitdivisi);
   $("#modal_divisi").on("shown.bs.modal", function () {
     $("#divisi_nama").trigger("focus");
   });
-}
-function validateField(field, pattern, errorMessage) {
-  if (!pattern.test(field)) {
-    toastr.error(errorMessage, {
-      timeOut: 500,
-      extendedTimeOut: 500,
-    });
-    return false;
-  }
-  return true;
 }
 
 async function submitdivisi() {
@@ -38,14 +29,22 @@ async function submitdivisi() {
     return;
   }
   const is_valid =
-    validateField(divisi_nama, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
-    validateField(nama_bank, /^[a-zA-Z\s]+$/, "Format nama bank tidak valid") &&
-    validateField(
+    helper.validateField(
+      divisi_nama,
+      /^[a-zA-Z\s]+$/,
+      "Format nama tidak valid"
+    ) &&
+    helper.validateField(
+      nama_bank,
+      /^[a-zA-Z\s]+$/,
+      "Format nama bank tidak valid"
+    ) &&
+    helper.validateField(
       nama_rekening,
       /^[a-zA-Z\s.]+$/,
       "Format nama rekening tidak valid"
     ) &&
-    validateField(
+    helper.validateField(
       nomor_rekening,
       /^[0-9]+$/,
       "Format nomor rekening tidak valid"
@@ -74,6 +73,9 @@ async function submitdivisi() {
         $("#modal_divisi").modal("hide");
         swal.fire("Berhasil", response.message, "success");
         window.divisi_grid.forceRender();
+        setTimeout(() => {
+          helper.custom_grid_header("divisi");
+        }, 200);
       }
     } catch (error) {
       toastr.error(error.message);

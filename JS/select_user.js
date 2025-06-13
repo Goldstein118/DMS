@@ -2,7 +2,7 @@ import config from "./config.js";
 import { Grid, html } from "../Vendor/gridjs.module.js";
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
-
+import * as helper from "./helper.js";
 const grid_container_user = document.querySelector("#table_user");
 if (grid_container_user) {
   $(document).ready(function () {
@@ -30,9 +30,7 @@ if (grid_container_user) {
           let edit;
           let can_delete;
           const current_user_id = access.decryptItem("user_id");
-          console.log(current_user_id);
           const row_user_id = row.cells[0].data;
-          console.log(row_user_id);
 
           if (access.isOwner()) {
             edit = true;
@@ -117,56 +115,11 @@ if (grid_container_user) {
   });
   window.user_grid.render(document.getElementById("table_user"));
   setTimeout(() => {
-    const grid_header = document.querySelector("#table_user .gridjs-head");
-    const search_Box = grid_header.querySelector(".gridjs-search");
-
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "btn btn-primary btn-sm";
-    btn.setAttribute("data-bs-toggle", "modal");
-    btn.setAttribute("data-bs-target", "#modal_user");
-    btn.innerHTML = '<i class="bi bi-person-plus-fill"></i> User';
-
-    const wrapper = document.createElement("div");
-    wrapper.className =
-      "d-flex justify-content-between align-items-center mb-3";
-    if (access.hasAccess("tb_karyawan", "create")) {
-      wrapper.appendChild(btn);
-    }
-
-    wrapper.appendChild(search_Box);
-
-    grid_header.innerHTML = "";
-    grid_header.appendChild(wrapper);
-    const input = document.querySelector("#table_user .gridjs-input");
-    grid_header.style.display = "flex";
-    grid_header.style.justifyContent = "flex-end";
-
-    search_Box.style.display = "flex";
-    search_Box.style.justifyContent = "flex-end";
-    search_Box.style.marginLeft = "auto";
-    input.placeholder = "Cari User...";
-    document.getElementById("loading_spinner").style.visibility = "hidden";
-    $("#loading_spinner").fadeOut();
-    attachEventListeners();
+    helper.custom_grid_header("user", handle_delete, handle_update);
   }, 200);
 }
 
-function attachEventListeners() {
-  document
-    .getElementById("table_user")
-    .addEventListener("click", function (event) {
-      const delete_btn = event.target.closest(".delete_user");
-      const update_btn = event.target.closest(".update_user");
-
-      if (delete_btn) {
-        handleDeleteUser(delete_btn);
-      } else if (update_btn) {
-        handleUpdateUser(update_btn);
-      }
-    });
-}
-async function handleDeleteUser(button) {
+async function handle_delete(button) {
   const row = button.closest("tr");
   const userID = row.cells[0].textContent;
   const result = await Swal.fire({
@@ -206,7 +159,7 @@ async function handleDeleteUser(button) {
   }
 }
 
-async function handleUpdateUser(button) {
+async function handle_update(button) {
   const row = button.closest("tr");
   window.currentRow = row;
   const button_icon = button.querySelector(".button_icon");
@@ -268,9 +221,9 @@ if (submit_user_update) {
     const karyawan_ID_new = $("#update_karyawan_ID").val();
 
     const data_user_update = {
-      user_id: User_ID,
+      User_ID,
       karyawan_id: karyawan_ID_new,
-      level: level,
+      level,
     };
     try {
       const response = await apiRequest(
@@ -290,6 +243,9 @@ if (submit_user_update) {
         $("#modal_user_update").modal("hide");
         Swal.fire("Berhasil", response.message, "success");
         window.user_grid.forceRender();
+        setTimeout(() => {
+          helper.custom_grid_header("user", handle_delete, handle_update);
+        }, 200);
       }
     } catch (error) {
       Swal.fire({

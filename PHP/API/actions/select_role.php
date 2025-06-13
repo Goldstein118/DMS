@@ -9,8 +9,8 @@ $search = trim($search);
 
 if ($search !== ''&& strlen($search)>=3) {
     $stmt = $conn->prepare("SELECT r.role_id, r.nama, r.akses , u.user_id FROM tb_role r 
-    JOIN tb_karyawan k ON r.role_id = k.role_id
-    JOIN tb_user u ON u.karyawan_id=k.karyawan_id
+     JOIN tb_karyawan k ON r.role_id = k.role_id
+     JOIN tb_user u ON u.karyawan_id=k.karyawan_id
     WHERE r.nama LIKE CONCAT ('%',?,'%')
     OR r.role_id LIKE CONCAT ('%',?,'%')
     ");
@@ -19,8 +19,8 @@ if ($search !== ''&& strlen($search)>=3) {
     $result = $stmt->get_result();
 } else {
     $sql_role = "SELECT r.role_id,r.nama,r.akses,u.user_id FROM tb_role r
-                JOIN tb_karyawan k ON r.role_id = k.role_id
-                JOIN tb_user u ON u.karyawan_id=k.karyawan_id";
+                LEFT JOIN tb_karyawan k ON r.role_id = k.role_id
+                 LEFT JOIN tb_user u ON u.karyawan_id=k.karyawan_id";
     $result = $conn->query($sql_role);
 }
 

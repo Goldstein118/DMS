@@ -1,36 +1,7 @@
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
-function proses_check_box() {
-  const checkboxes = document.querySelectorAll("#modal_role .perm-checkbox");
-  let results = [];
+import * as helper from "./helper.js";
 
-  checkboxes.forEach((checkbox) => {
-    const value = checkbox.checked ? 1 : 0;
-    results.push(value);
-  });
-  results = results.join("");
-  console.log(results);
-  return results;
-}
-function event_check_box(field) {
-  ["view", "create", "edit", "delete"].forEach((action) => {
-    const checkbox = document.getElementById(`check_${action}_${field}`);
-    if (checkbox) {
-      checkbox.checked = !checkbox.checked;
-    }
-  });
-}
-function view_checkbox(field) {
-  ["create", "edit", "delete"].forEach((action) => {
-    const checkbox = document.getElementById(`check_${action}_${field}`);
-    checkbox.addEventListener("change", () => {
-      const view = document.getElementById(`check_view_${field}`);
-      if (checkbox.checked) {
-        view.checked = true;
-      }
-    });
-  });
-}
 const submit_role = document.getElementById("submit_role");
 if (submit_role) {
   submit_role.addEventListener("click", submitRole);
@@ -55,28 +26,20 @@ if (submit_role) {
     checkboxFields.forEach((field) => {
       const checkboxAll = document.getElementById(`check_all_${field}`);
       if (checkboxAll) {
-        checkboxAll.addEventListener("click", () => event_check_box(field));
+        checkboxAll.addEventListener("click", () =>
+          helper.event_check_box(field, "create")
+        );
       }
     });
 
     checkboxFields.forEach((field) => {
-      view_checkbox(field);
+      helper.view_checkbox(field, "create");
     });
   });
 }
 
-function validateField(field, pattern, errorMessage) {
-  if (!pattern.test(field)) {
-    toastr.error(errorMessage, {
-      timeOut: 500,
-      extendedTimeOut: 500,
-    });
-    return false;
-  }
-  return true;
-}
-function submitRole() {
-  const akses_role = proses_check_box();
+async function submitRole() {
+  const akses_role = helper.proses_check_box();
   // Collect form data
   const name_role = document.getElementById("name_role").value;
 
@@ -90,8 +53,12 @@ function submitRole() {
     return;
   }
   const is_valid =
-    validateField(name_role, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
-    validateField(akses_role, /^[0-9]+$/, "Format akses tidak valid");
+    helper.validateField(
+      name_role,
+      /^[a-zA-Z\s]+$/,
+      "Format nama tidak valid"
+    ) &&
+    helper.validateField(akses_role, /^[0-9]+$/, "Format akses tidak valid");
 
   const data_role = {
     user_id: `${access.decryptItem("user_id")}`,
@@ -101,19 +68,26 @@ function submitRole() {
 
   if (is_valid) {
     try {
-      const response = apiRequest(
+      const response = await apiRequest(
         "/PHP/API/role_API.php?action=create",
         "POST",
         data_role
       );
       if (response.ok) {
-        Swal.fire("Berhasil", response.message, "success");
         document.getElementById("name_role").value = "";
+        Swal.fire("Berhasil", response.message, "success");
         $("#modal_role").modal("hide");
         window.role_grid.forceRender();
+        setTimeout(() => {
+          helper.custom_grid_header("role");
+        }, 200);
       }
     } catch (error) {
-      toastr.error(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.message,
+      });
     }
   }
 }

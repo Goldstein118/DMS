@@ -2,7 +2,7 @@ import config from "../JS/config.js";
 import { Grid, html } from "../Vendor/gridjs.module.js";
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
-
+import * as helper from "./helper.js";
 const gird_container_divisi = document.querySelector("#table_divisi");
 if (gird_container_divisi) {
   window.divisi_grid = new Grid({
@@ -74,58 +74,11 @@ if (gird_container_divisi) {
   });
   window.divisi_grid.render(document.getElementById("table_divisi"));
   setTimeout(() => {
-    const grid_header = document.querySelector("#table_divisi .gridjs-head");
-    const search_Box = grid_header.querySelector(".gridjs-search");
-
-    // Create the button
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "btn btn-primary btn_sm";
-    btn.setAttribute("data-bs-toggle", "modal");
-    btn.setAttribute("data-bs-target", "#modal_divisi");
-    btn.innerHTML = '<i class="bi bi-plus-square"></i> divisi ';
-
-    // Wrap both button and search bar in a flex container
-    const wrapper = document.createElement("div");
-    wrapper.className =
-      "d-flex justify-content-between align-items-center mb-3";
-    if (access.hasAccess("tb_divisi", "create")) {
-      wrapper.appendChild(btn);
-    }
-
-    wrapper.appendChild(search_Box);
-
-    // Replace grid header content
-    grid_header.innerHTML = "";
-    grid_header.appendChild(wrapper);
-    const input = document.querySelector("#table_divisi .gridjs-input");
-    grid_header.style.display = "flex";
-    grid_header.style.justifyContent = "flex-end";
-
-    search_Box.style.display = "flex";
-    search_Box.style.justifyContent = "flex-end";
-    search_Box.style.marginLeft = "auto";
-    input.placeholder = "Cari divisi...";
-    document.getElementById("loading_spinner").style.visibility = "hidden";
-    $("#loading_spinner").fadeOut();
-    attachEventListeners();
+    helper.custom_grid_header("divisi", handle_delete, handle_update);
   }, 200);
 }
-function attachEventListeners() {
-  document
-    .getElementById("table_divisi")
-    .addEventListener("click", function (event) {
-      const delete_btn = event.target.closest(".delete_divisi");
-      const update_btn = event.target.closest(".update_divisi");
-      if (delete_btn) {
-        handleDeletedivisi(delete_btn);
-      } else if (update_btn) {
-        handleUpdatedivisi(update_btn);
-      }
-    });
-}
 
-async function handleDeletedivisi(button) {
+async function handle_delete(button) {
   const row = button.closest("tr");
   const divisi_id = row.cells[0].textContent;
   const result = await Swal.fire({
@@ -167,7 +120,7 @@ async function handleDeletedivisi(button) {
   }
 }
 
-async function handleUpdatedivisi(button) {
+async function handle_update(button) {
   const row = button.closest("tr");
   window.currentRow = row;
   const button_icon = button.querySelector(".button_icon");
@@ -192,16 +145,6 @@ async function handleUpdatedivisi(button) {
   button_icon.style.display = "inline-block";
   spinner.style.display = "none";
   $("#modal_divisi_update").modal("show");
-}
-function validateField(field, pattern, errorMessage) {
-  if (!pattern.test(field)) {
-    toastr.error(errorMessage, {
-      timeOut: 500,
-      extendedTimeOut: 500,
-    });
-    return false;
-  }
-  return true;
 }
 
 const submit_divisi_update = document.getElementById("submit_divisi_update");
@@ -237,18 +180,22 @@ if (submit_divisi_update) {
       return;
     }
     const is_valid =
-      validateField(update_nama, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
-      validateField(
+      helper.validateField(
+        update_nama,
+        /^[a-zA-Z\s]+$/,
+        "Format nama tidak valid"
+      ) &&
+      helper.validateField(
         update_nama_bank,
         /^[a-zA-Z\s]+$/,
         "Format nama bank tidak valid"
       ) &&
-      validateField(
+      helper.validateField(
         update_nama_rekening,
         /^[a-zA-Z\s.]+$/,
         "Format nama rekening tidak valid"
       ) &&
-      validateField(
+      helper.validateField(
         update_nomor_rekening,
         /^[0-9]+$/,
         "Format nomor rekening tidak valid"
@@ -279,6 +226,9 @@ if (submit_divisi_update) {
           $("#modal_divisi_update").modal("hide");
           Swal.fire("Berhasil", response.message, "success");
           window.divisi_grid.forceRender();
+          setTimeout(() => {
+            helper.custom_grid_header("divisi", handle_delete, handle_update);
+          }, 200);
         }
       } catch (error) {
         Swal.fire({

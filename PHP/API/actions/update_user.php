@@ -1,10 +1,10 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
 try{
-    $requiredFields = ['user_id', 'karyawan_id','level'];
+    $requiredFields = ['User_ID', 'karyawan_id','level'];
     
     $field=validate_1($data,$requiredFields);
-    $user_ID = $data['user_id'];
+    $user_ID = $data['User_ID'];
     $karyawan_ID = $data['karyawan_id'];
     $level = $data['level'];
 

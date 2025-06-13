@@ -1,6 +1,6 @@
 import * as access from "./cek_access.js";
 import { apiRequest } from "./api.js";
-
+import * as helper from "./helper.js";
 const submit_produk = document.getElementById("submit_produk");
 if (submit_produk) {
   submit_produk.addEventListener("click", submitProduk);
@@ -35,20 +35,7 @@ async function fetch_fk(field) {
     toastr.error("Gagal mengambil data : " + error.message);
   }
 }
-function format_angka(str) {
-  if (str === null || str === undefined || str === "") {
-    return str;
-  }
 
-  const cleaned = str.toString().replace(/[.,\s]/g, "");
-
-  if (!/^\d+$/.test(cleaned)) {
-    return str;
-  }
-  const result = cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-  return result + ",00";
-}
 function populateDropdown(data, field) {
   const select = $(`#${field}`);
   select.empty();
@@ -80,19 +67,6 @@ function populateDropdown(data, field) {
 
   select.trigger("change");
 }
-function validateField(field, pattern, errorMessage) {
-  if (!field || field.trim() === "") {
-    return true;
-  }
-  if (!pattern.test(field)) {
-    toastr.error(errorMessage, {
-      timeOut: 500,
-      extendedTimeOut: 500,
-    });
-    return false;
-  }
-  return true;
-}
 
 async function submitProduk() {
   // Collect form data
@@ -102,7 +76,7 @@ async function submitProduk() {
   const no_sku = document.getElementById("no_sku").value;
   const status_produk = document.getElementById("status_produk").value;
   let harga_minimal = document.getElementById("harga_minimal").value;
-  harga_minimal = format_angka(harga_minimal);
+  harga_minimal = helper.format_angka(harga_minimal);
 
   if (
     !name_produk ||
@@ -118,9 +92,17 @@ async function submitProduk() {
     return;
   }
   const is_valid =
-    validateField(name_produk, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
-    validateField(no_sku, /^[a-zA-Z0-9,.\- ]+$/, "Format no sku tidak valid") &&
-    validateField(
+    helper.validateField(
+      name_produk,
+      /^[a-zA-Z\s]+$/,
+      "Format nama tidak valid"
+    ) &&
+    helper.validateField(
+      no_sku,
+      /^[a-zA-Z0-9,.\- ]+$/,
+      "Format no sku tidak valid"
+    ) &&
+    helper.validateField(
       harga_minimal,
       /^[0-9., ]+$/,
       "Format harga minmal tidak valid"
@@ -151,6 +133,9 @@ async function submitProduk() {
         $("#brand").val(null).trigger("change");
         $("#modal_produk").modal("hide");
         window.produk_grid.forceRender();
+        setTimeout(() => {
+          helper.custom_grid_header("produk");
+        }, 200);
       }
     } catch (error) {
       toastr.error(error.message);

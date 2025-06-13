@@ -41,7 +41,6 @@
         <label class="form-label" for="update_level">Level:<i class="bi bi-asterisk text-danger align-middle "></i></label>
         <select class="form-select" id="update_level">
           <option value="user">User</option>
-
         </select>
       </div>
       <div class="modal-footer">

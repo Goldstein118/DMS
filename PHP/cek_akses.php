@@ -1,5 +1,5 @@
 <?php
-function checkAccess($conn, $userId, $table, $index, $targetUserId = null) {
+function checkAccess($conn, $userId, $table, $index, $target_user_id = null) {
     $accessMap = [
         'tb_karyawan' => 0,
         'tb_user' => 4,
@@ -12,6 +12,11 @@ function checkAccess($conn, $userId, $table, $index, $targetUserId = null) {
         'tb_produk' => 32,
         'tb_divisi'=>36
     ];
+
+
+
+
+// Proceed to update the user with ID = $target_user_id
 
     if (!isset($accessMap[$table])) {
         http_response_code(400);
@@ -52,7 +57,7 @@ function checkAccess($conn, $userId, $table, $index, $targetUserId = null) {
     // Regular access check
     if (strlen($aksesString) <= $startIndex || $aksesString[$startIndex] !== '1') {
         http_response_code(403);
-        echo json_encode(["error" => "Access denied"]);
+        echo json_encode(["error" => $level , $aksesString. `Access denied`]);
         exit;
     }
 }

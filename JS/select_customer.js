@@ -2,6 +2,7 @@ import config from "./config.js";
 import { Grid, html } from "../Vendor/gridjs.module.js";
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
+import * as helper from "./helper.js";
 const grid_container_customer = document.querySelector("#table_customer");
 if (grid_container_customer) {
   $(document).ready(function () {
@@ -123,115 +124,11 @@ if (grid_container_customer) {
   });
   window.customer_grid.render(document.getElementById("table_customer"));
   setTimeout(() => {
-    const grid_header = document.querySelector("#table_customer .gridjs-head");
-    const search_Box = grid_header.querySelector(".gridjs-search");
-
-    // Create the button
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "btn btn-primary btn-sm";
-    btn.setAttribute("data-bs-toggle", "modal");
-    btn.setAttribute("data-bs-target", "#modal_customer");
-    btn.innerHTML = '<i class="bi bi-plus-square"></i> Customer ';
-
-    // Wrap both button and search bar in a flex container
-    const wrapper = document.createElement("div");
-    wrapper.className =
-      "d-flex justify-content-between align-items-center mb-3";
-    if (access.hasAccess("tb_customer", "create")) {
-      wrapper.appendChild(btn);
-    }
-
-    wrapper.appendChild(search_Box);
-
-    // Replace grid header content
-    grid_header.innerHTML = "";
-    grid_header.appendChild(wrapper);
-    const input = document.querySelector("#table_customer .gridjs-input");
-    grid_header.style.display = "flex";
-    grid_header.style.justifyContent = "flex-end";
-
-    search_Box.style.display = "flex";
-    search_Box.style.justifyContent = "flex-end";
-    search_Box.style.marginLeft = "auto";
-    input.placeholder = "Cari Customer...";
-    document.getElementById("loading_spinner").style.visibility = "hidden";
-    $("#loading_spinner").fadeOut();
-    attachEventListeners();
+    helper.custom_grid_header("customer", handle_delete, handle_update);
   }, 200);
 }
-function format_angka(str) {
-  if (str === null || str === undefined || str === "") {
-    return str;
-  }
 
-  const cleaned = str.toString().replace(/[.,\s]/g, "");
-
-  if (!/^\d+$/.test(cleaned)) {
-    return str;
-  }
-  const result = cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-  return result + ",00";
-}
-
-function unformat_angka(formattedString) {
-  if (
-    formattedString === null ||
-    formattedString === undefined ||
-    formattedString === ""
-  ) {
-    return formattedString;
-  }
-
-  return formattedString
-    .toString()
-    .replace(/[.,\s]/g, "")
-    .replace(/,00$/, "");
-}
-
-function attachEventListeners() {
-  document
-    .getElementById("table_customer")
-    .addEventListener("click", function (event) {
-      const delete_btn = event.target.closest(".delete_customer");
-      const update_btn = event.target.closest(".update_customer");
-
-      if (delete_btn) {
-        handleDeleteCustomer(delete_btn);
-      } else if (update_btn) {
-        handleUpdateCustomer(update_btn);
-      }
-    });
-}
-function validateField(field, pattern, errorMessage) {
-  if (!field || field.trim() === "") {
-    return true;
-  }
-  if (!pattern.test(field)) {
-    toastr.error(errorMessage, {
-      timeOut: 500,
-      extendedTimeOut: 500,
-    });
-    return false;
-  }
-  return true;
-}
-function format_no_telp(str) {
-  if (!str || str.trim() === "") {
-    let result = str;
-    return result;
-  } else {
-    if (7 > str.length) {
-      return "Invalid index";
-    }
-    let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
-    let result = "+62 " + format;
-    return result;
-  }
-}
-
-async function handleDeleteCustomer(button) {
+async function handle_delete(button) {
   const row = button.closest("tr");
   const customer_id = row.cells[0].textContent;
   const result = await Swal.fire({
@@ -277,7 +174,7 @@ async function handleDeleteCustomer(button) {
   }
 }
 
-async function handleUpdateCustomer(button) {
+async function handle_update(button) {
   const row = button.closest("tr");
 
   window.currentRow = row;
@@ -298,7 +195,7 @@ async function handleUpdateCustomer(button) {
   const current_term_pembayaran = row.cells[8].textContent;
   const current_max_invoice = row.cells[9].textContent;
   let current_max_piutang = row.cells[10].textContent;
-  current_max_piutang = unformat_angka(current_max_piutang);
+  current_max_piutang = helper.unformat_angka(current_max_piutang);
 
   const titik_koordinat = row.cells[11].textContent;
 
@@ -309,6 +206,15 @@ async function handleUpdateCustomer(button) {
   const latidude = latMatch ? latMatch[1].trim() : null;
 
   const current_channel_id = row.cells[13].textContent;
+
+  const ktpFileInput = row.querySelector('input[name="ktp_image"]');
+  const npwpFileInput = row.querySelector('input[name="npwp_image"]');
+
+  const ktpFileName = ktpFileInput?.files[0]?.name || "No file selected";
+  const npwpFileName = npwpFileInput?.files[0]?.name || "No file selected";
+
+  console.log("KTP File Name:", ktpFileName);
+  console.log("NPWP File Name:", npwpFileName);
 
   document.getElementById("update_customer_id").value = customer_id;
   document.getElementById("update_name_customer").value = current_nama;
@@ -384,7 +290,7 @@ if (submit_customer_update) {
       document.getElementById("update_max_invoice").value;
     let update_max_piutang =
       document.getElementById("update_max_piutang").value;
-    update_max_piutang = unformat_angka(update_max_piutang);
+    update_max_piutang = helper.unformat_angka(update_max_piutang);
     const update_longitude = document.getElementById("update_longitude").value;
     const update_latidude = document.getElementById("update_latidude").value;
 
@@ -402,52 +308,60 @@ if (submit_customer_update) {
       return;
     }
     const is_valid =
-      validateField(update_nama, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
-      validateField(
+      helper.validateField(
+        update_nama,
+        /^[a-zA-Z\s]+$/,
+        "Format nama tidak valid"
+      ) &&
+      helper.validateField(
         update_alamat,
         /^[a-zA-Z0-9,. ]+$/,
         "Format alamat tidak valid"
       ) &&
-      validateField(
+      helper.validateField(
         update_phone,
         /^[0-9]{9,13}$/,
         "Format nomor telepon tidak valid"
       ) &&
-      validateField(update_ktp, /^[0-9]+$/, "Format NIK tidak valid") &&
-      validateField(update_npwp, /^[0-9 .-]+$/, "Format NPWP tidak valid") &&
-      validateField(
+      helper.validateField(update_ktp, /^[0-9]+$/, "Format NIK tidak valid") &&
+      helper.validateField(
+        update_npwp,
+        /^[0-9 .-]+$/,
+        "Format NPWP tidak valid"
+      ) &&
+      helper.validateField(
         update_nitko,
         /^[a-zA-Z0-9,. ]+$/,
         "Format NITKO tidak valid"
       ) &&
-      validateField(
+      helper.validateField(
         update_max_invoice,
         /^[0-9]+$/,
         "Format max invoice tidak valid"
       ) &&
-      validateField(
+      helper.validateField(
         update_max_piutang,
         /^[0-9., ]+$/,
         "Format max piutang tidak valid"
       ) &&
-      validateField(
+      helper.validateField(
         update_term_pembayaran,
         /^[0-9]+$/,
         "Format term pembayaran tidak valid"
       ) &&
-      validateField(
+      helper.validateField(
         update_longitude,
         /^[-+]?((1[0-7]\d|\d{1,2})(\.\d{1,6})?|180(\.0{1,6})?)$/,
         "Format longitude tidak valid"
       ) &&
-      validateField(
+      helper.validateField(
         update_latidude,
         /^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/,
         "Format latidude tidak valid"
       );
 
     if (is_valid) {
-      const update_no_telp = format_no_telp(update_phone);
+      const update_no_telp = helper.format_no_telp(update_phone);
 
       const formData = new FormData();
       formData.append("customer_id", customer_id);
@@ -460,7 +374,7 @@ if (submit_customer_update) {
       formData.append("nitko", update_nitko);
       formData.append("term_pembayaran", update_term_pembayaran);
       formData.append("max_invoice", update_max_invoice);
-      formData.append("max_piutang", format_angka(update_max_piutang));
+      formData.append("max_piutang", helper.format_angka(update_max_piutang));
       formData.append("longitude", update_longitude);
       formData.append("latidude", update_latidude);
       formData.append("channel_id", channel_id_new);
@@ -471,7 +385,6 @@ if (submit_customer_update) {
       if (ktpFile) formData.append("ktp_file", ktpFile);
       if (npwpFile) formData.append("npwp_file", npwpFile);
 
-      // Send using fetch (not your apiRequest helper if it's JSON-only)
       try {
         const response = await apiRequest(
           `/PHP/API/customer_API.php?action=update&user_id=${access.decryptItem(
@@ -491,7 +404,7 @@ if (submit_customer_update) {
           row.cells[7].textContent = update_nitko;
           row.cells[8].textContent = update_term_pembayaran;
           row.cells[9].textContent = update_max_invoice;
-          row.cells[10].textContent = format_angka(update_max_piutang);
+          row.cells[10].textContent = helper.format_angka(update_max_piutang);
           const channel_name = $("#update_channel_id option:selected").text();
           const channel_name_only = channel_name.split(" - ")[1];
           row.cells[12].textContent = channel_name_only;
@@ -499,6 +412,9 @@ if (submit_customer_update) {
           Swal.fire("Berhasil", response.message, "success");
           $("#modal_customer_update").modal("hide");
           window.customer_grid.forceRender();
+          setTimeout(() => {
+            helper.custom_grid_header("customer", handle_delete, handle_update);
+          }, 200);
         } else {
           Swal.fire("Gagal", result.error || "Update gagal.", "error");
         }

@@ -1,5 +1,6 @@
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
+import * as helper from "./helper.js";
 
 const submit_user = document.getElementById("submit_user");
 if (submit_user) {
@@ -71,6 +72,9 @@ async function submitUser() {
       $("#modal_user").modal("hide");
       Swal.fire("Berhasil", response.message, "success");
       window.user_grid.forceRender();
+      setTimeout(() => {
+        helper.custom_grid_header("user");
+      }, 200);
     }
   } catch (error) {
     toastr.error(error.message);

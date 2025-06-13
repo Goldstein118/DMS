@@ -2,6 +2,8 @@ import config from "./config.js";
 import { Grid, html } from "../Vendor/gridjs.module.js";
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
+
+import * as helper from "./helper.js";
 const grid_container_channel = document.querySelector("#table_channel");
 if (grid_container_channel) {
   window.channel_grid = new Grid({
@@ -78,69 +80,10 @@ if (grid_container_channel) {
   });
   window.channel_grid.render(document.getElementById("table_channel"));
   setTimeout(() => {
-    const grid_header = document.querySelector("#table_channel .gridjs-head");
-    const search_Box = grid_header.querySelector(".gridjs-search");
-
-    // Create the button
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "btn btn-primary btn-sm";
-    btn.setAttribute("data-bs-toggle", "modal");
-    btn.setAttribute("data-bs-target", "#modal_channel");
-    btn.innerHTML = '<i class="bi bi-plus-square"></i> Channel ';
-
-    // Wrap both button and search bar in a flex container
-    const wrapper = document.createElement("div");
-    wrapper.className =
-      "d-flex justify-content-between align-items-center mb-3";
-    if (access.hasAccess("tb_channel", "create")) {
-      wrapper.appendChild(btn);
-    }
-
-    wrapper.appendChild(search_Box);
-
-    // Replace grid header content
-    grid_header.innerHTML = "";
-    grid_header.appendChild(wrapper);
-    const input = document.querySelector("#table_channel .gridjs-input");
-    grid_header.style.display = "flex";
-    grid_header.style.justifyContent = "flex-end";
-
-    search_Box.style.display = "flex";
-    search_Box.style.justifyContent = "flex-end";
-    search_Box.style.marginLeft = "auto";
-    input.placeholder = "Cari Channel...";
-    document.getElementById("loading_spinner").style.visibility = "hidden";
-    $("#loading_spinner").fadeOut();
-    attachEventListeners();
+    helper.custom_grid_header("channel", handle_delete, handle_update);
   }, 200);
 }
-function attachEventListeners() {
-  document
-    .getElementById("table_channel")
-    .addEventListener("click", function (event) {
-      const delete_btn = event.target.closest(".delete_channel");
-      const update_btn = event.target.closest(".update_channel");
-
-      if (delete_btn) {
-        handleDeleteChannel(delete_btn);
-      } else if (update_btn) {
-        handleUpdateChannel(update_btn);
-      }
-    });
-}
-function validateField(field, pattern, errorMessage) {
-  if (!pattern.test(field)) {
-    toastr.error(errorMessage, {
-      timeOut: 500,
-      extendedTimeOut: 500,
-    });
-    return false;
-  }
-  return true;
-}
-
-async function handleDeleteChannel(button) {
+async function handle_delete(button) {
   const row = button.closest("tr");
   const channel_id = row.cells[0].textContent;
   const result = await Swal.fire({
@@ -185,7 +128,7 @@ async function handleDeleteChannel(button) {
     }
   }
 }
-async function handleUpdateChannel(button) {
+async function handle_update(button) {
   const row = button.closest("tr");
   window.currentRow = row;
   const button_icon = button.querySelector(".button_icon");
@@ -214,7 +157,9 @@ if (submit_channel_update) {
     const row = window.currentRow;
     const channel_id = document.getElementById("update_channel_id").value;
     const nama_new = document.getElementById("update_nama_channel").value;
-    if (validateField(nama_new, /^[a-zA-Z\s]+$/, "Format nama tidak valid")) {
+    if (
+      helper.validateField(nama_new, /^[a-zA-Z\s]+$/, "Format nama tidak valid")
+    ) {
       try {
         const data_channel_update = {
           channel_id: channel_id,
@@ -234,6 +179,9 @@ if (submit_channel_update) {
           $("#modal_channel_update").modal("hide");
           Swal.fire("Berhasil", response.message, "success");
           window.channel_grid.forceRender();
+          setTimeout(() => {
+            helper.custom_grid_header("channel", handle_delete, handle_update);
+          }, 200);
         }
       } catch (error) {
         Swal.fire({

@@ -1,5 +1,6 @@
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
+import * as helper from "./helper.js";
 const submit_supplier = document.getElementById("submit_supplier");
 if (submit_supplier) {
   submit_supplier.addEventListener("click", submitSupplier);
@@ -7,32 +8,7 @@ if (submit_supplier) {
     $("#supplier_nama").trigger("focus");
   });
 }
-function validateField(field, pattern, errorMessage) {
-  if (!field || field.trim() === "") {
-    return true;
-  }
-  if (!pattern.test(field)) {
-    toastr.error(errorMessage, {
-      timeOut: 500,
-      extendedTimeOut: 500,
-    });
-    return false;
-  }
-  return true;
-}
-function format_no_telp(str) {
-  if (!str || str.trim() === "") {
-    let result = str;
-    return result;
-  } else {
-    if (7 > str.length) {
-      return "Invalid index";
-    }
-    let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
-    let result = "+62 " + format;
-    return result;
-  }
-}
+
 async function submitSupplier() {
   const supplier_nama = document.getElementById("supplier_nama").value;
   const supplier_alamat = document.getElementById("supplier_alamat").value;
@@ -51,22 +27,30 @@ async function submitSupplier() {
     return;
   }
   const is_valid =
-    validateField(supplier_nama, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
-    validateField(
+    helper.validateField(
+      supplier_nama,
+      /^[a-zA-Z\s]+$/,
+      "Format nama tidak valid"
+    ) &&
+    helper.validateField(
       supplier_alamat,
       /^[a-zA-Z0-9,. ]+$/,
       "Format alamat tidak valid"
     ) &&
-    validateField(
+    helper.validateField(
       supplier_phone,
       /^[0-9]{9,13}$/,
       "Format nomor telepon tidak valid"
     ) &&
-    validateField(supplier_ktp, /^[0-9]+$/, "Format NIK tidak valid") &&
-    validateField(supplier_npwp, /^[0-9 .-]+$/, "Format NPWP tidak valid");
+    helper.validateField(supplier_ktp, /^[0-9]+$/, "Format NIK tidak valid") &&
+    helper.validateField(
+      supplier_npwp,
+      /^[0-9 .-]+$/,
+      "Format NPWP tidak valid"
+    );
 
   if (is_valid) {
-    const supplier_no_telp = format_no_telp(supplier_phone);
+    const supplier_no_telp = helper.format_no_telp(supplier_phone);
     const supplier_data = {
       user_id: `${access.decryptItem("user_id")}`,
       supplier_nama,
@@ -93,6 +77,9 @@ async function submitSupplier() {
         $("#modal_supplier").modal("hide");
         swal.fire("Berhasil", response.message, "success");
         window.supplier_grid.forceRender();
+        setTimeout(() => {
+          helper.custom_grid_header("supplier");
+        }, 200);
       }
     } catch (error) {
       toastr.error(error.message);

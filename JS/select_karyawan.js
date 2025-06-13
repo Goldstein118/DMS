@@ -2,6 +2,7 @@ import config from "./config.js";
 import { Grid, html } from "../Vendor/gridjs.module.js";
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
+import * as helper from "./helper.js";
 
 const grid_container_karyawan = document.querySelector("#table_karyawan");
 if (grid_container_karyawan) {
@@ -122,73 +123,12 @@ if (grid_container_karyawan) {
   });
   window.karyawan_grid.render(document.getElementById("table_karyawan"));
   setTimeout(() => {
-    const grid_header = document.querySelector("#table_karyawan .gridjs-head");
-    const search_Box = grid_header.querySelector(".gridjs-search");
-
-    // Create the button
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "btn btn-primary btn-sm";
-    btn.setAttribute("data-bs-toggle", "modal");
-    btn.setAttribute("data-bs-target", "#modal_karyawan");
-    btn.innerHTML = '<i class="bi bi-person-plus-fill"></i> Karyawan';
-
-    // Wrap both button and search bar in a flex container
-    const wrapper = document.createElement("div");
-    wrapper.className =
-      "d-flex justify-content-between align-items-center mb-3";
-    if (access.hasAccess("tb_karyawan", "create")) {
-      wrapper.appendChild(btn);
-    }
-
-    wrapper.appendChild(search_Box);
-
-    // Replace grid header content
-    grid_header.innerHTML = "";
-    grid_header.appendChild(wrapper);
-    const input = document.querySelector("#table_karyawan .gridjs-input");
-    grid_header.style.display = "flex";
-    grid_header.style.justifyContent = "flex-end";
-
-    search_Box.style.display = "flex";
-    search_Box.style.justifyContent = "flex-end";
-    search_Box.style.marginLeft = "auto";
-    input.placeholder = "Cari Karyawan...";
-    document.getElementById("loading_spinner").style.visibility = "hidden";
-    $("#loading_spinner").fadeOut();
-    attachEventListeners();
+    helper.custom_grid_header("karyawan", handle_delete, handle_update);
   }, 200);
 }
 
-function attachEventListeners() {
-  document
-    .getElementById("table_karyawan")
-    .addEventListener("click", function (event) {
-      const delete_btn = event.target.closest(".delete_karyawan");
-      const update_btn = event.target.closest(".update_karyawan");
-
-      if (delete_btn) {
-        handleDeleteKaryawan(delete_btn);
-      } else if (update_btn) {
-        handleUpdateKaryawan(update_btn);
-      }
-    });
-}
-function format_no_telp(str) {
-  if (str.trim() === "") {
-    let result = str;
-    return result;
-  } else {
-    if (7 > str.length) {
-      return "Invalid index";
-    }
-    let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
-    let result = "+62 " + format;
-    return result;
-  }
-}
 // Attach delete listeners
-async function handleDeleteKaryawan(button) {
+async function handle_delete(button) {
   const row = button.closest("tr");
   const karyawan_ID = row.cells[0].textContent;
 
@@ -251,7 +191,7 @@ function populateRoleDropdown(data, currentrole_id) {
   role_ID_Field.trigger("change");
 }
 
-async function handleUpdateKaryawan(button) {
+async function handle_update(button) {
   const row = button.closest("tr");
   window.currentRow = row;
   const button_icon = button.querySelector(".button_icon");
@@ -307,19 +247,7 @@ async function handleUpdateKaryawan(button) {
     spinner.style.display = "inline-block";
   }
 }
-function validateField(field, pattern, errorMessage) {
-  if (!field || field.trim() === "") {
-    return true;
-  }
-  if (!pattern.test(field)) {
-    toastr.error(errorMessage, {
-      timeOut: 500,
-      extendedTimeOut: 500,
-    });
-    return false;
-  }
-  return true;
-}
+
 const submit_karyawan_update = document.getElementById(
   "submit_karyawan_update"
 );
@@ -358,25 +286,25 @@ if (submit_karyawan_update) {
     }
 
     const is_valid =
-      validateField(
+      helper.validateField(
         karyawan_nama_new,
         /^[a-zA-Z\s]+$/,
         "Format nama tidak valid"
       ) &&
-      validateField(
+      helper.validateField(
         alamat_new,
         /^[a-zA-Z0-9,. ]+$/,
         "Format alamat tidak valid"
       ) &&
-      validateField(
+      helper.validateField(
         noTelp_new,
         /^[0-9]{9,13}$/,
         "Format nomor telepon tidak valid"
       ) &&
-      validateField(KTP_new, /^[0-9]+$/, "Format NIK tidak valid") &&
-      validateField(npwp_new, /^[0-9 .-]+$/, "Format NPWP tidak valid");
+      helper.validateField(KTP_new, /^[0-9]+$/, "Format NIK tidak valid") &&
+      helper.validateField(npwp_new, /^[0-9 .-]+$/, "Format NPWP tidak valid");
     if (is_valid) {
-      const no_telp_update = format_no_telp(noTelp_new);
+      const no_telp_update = helper.format_no_telp(noTelp_new);
 
       try {
         const data_karyawan_update = {
@@ -412,6 +340,9 @@ if (submit_karyawan_update) {
           $("#modal_karyawan_update").modal("hide");
           Swal.fire("Berhasil", response.message, "success");
           window.karyawan_grid.forceRender();
+          setTimeout(() => {
+            helper.custom_grid_header("karyawan", handle_delete, handle_update);
+          }, 200);
         }
       } catch (error) {
         Swal.fire({

@@ -1,5 +1,6 @@
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
+import * as helper from "./helper.js";
 const submit_customer = document.getElementById("submit_customer");
 if (submit_customer) {
   submit_customer.addEventListener("click", submitCustomer);
@@ -25,46 +26,6 @@ if (submit_customer) {
       dropdownParent: $("#modal_customer"),
     });
   });
-}
-function format_no_telp(str) {
-  if (!str || str.trim() === "") {
-    let result = str;
-    return result;
-  } else {
-    if (7 > str.length) {
-      return "Invalid index";
-    }
-    let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
-    let result = "+62 " + format;
-    return result;
-  }
-}
-function validateField(field, pattern, errorMessage) {
-  if (!field || field.trim() === "") {
-    return true;
-  }
-  if (!pattern.test(field)) {
-    toastr.error(errorMessage, {
-      timeOut: 500,
-      extendedTimeOut: 500,
-    });
-    return false;
-  }
-  return true;
-}
-function format_angka(str) {
-  if (str === null || str === undefined || str === "") {
-    return str;
-  }
-
-  const cleaned = str.toString().replace(/[.,\s]/g, "");
-
-  if (!/^\d+$/.test(cleaned)) {
-    return str;
-  }
-  const result = cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-  return result + ",00";
 }
 
 async function fetch_channel() {
@@ -123,37 +84,53 @@ async function submitCustomer() {
   }
 
   const is_valid =
-    validateField(name_customer, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
-    validateField(
+    helper.validateField(
+      name_customer,
+      /^[a-zA-Z\s]+$/,
+      "Format nama tidak valid"
+    ) &&
+    helper.validateField(
       alamat_customer,
       /^[a-zA-Z0-9, .-]+$/,
       "Format alamat tidak valid"
     ) &&
-    validateField(
+    helper.validateField(
       no_telp_customer,
       /^[0-9]{9,13}$/,
       "Format nomor telepon tidak valid"
     ) &&
-    validateField(nik_customer, /^[0-9]+$/, "Format NIK tidak valid") &&
-    validateField(npwp_customer, /^[0-9 .-]+$/, "Format NPWP tidak valid") &&
-    validateField(nitko, /^[a-zA-Z0-9, .-]+$/, "Format nitko tidak valid") &&
-    validateField(
+    helper.validateField(nik_customer, /^[0-9]+$/, "Format NIK tidak valid") &&
+    helper.validateField(
+      npwp_customer,
+      /^[0-9 .-]+$/,
+      "Format NPWP tidak valid"
+    ) &&
+    helper.validateField(
+      nitko,
+      /^[a-zA-Z0-9, .-]+$/,
+      "Format nitko tidak valid"
+    ) &&
+    helper.validateField(
       term_payment,
       /^[0-9]+$/,
       "Format term payment tidak valid"
     ) &&
-    validateField(max_invoice, /^[0-9]+$/, "Format max invoice tidak valid") &&
-    validateField(
+    helper.validateField(
+      max_invoice,
+      /^[0-9]+$/,
+      "Format max invoice tidak valid"
+    ) &&
+    helper.validateField(
       max_piutang,
       /^[0-9., ]+$/,
       "Format max piutang tidak valid"
     ) &&
-    validateField(
+    helper.validateField(
       longitude,
       /^[-+]?((1[0-7]\d|\d{1,2})(\.\d{1,6})?|180(\.0{1,6})?)$/,
       "Format longitude tidak valid"
     ) &&
-    validateField(
+    helper.validateField(
       latidude,
       /^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/,
       "Format latidude tidak valid"
@@ -161,7 +138,7 @@ async function submitCustomer() {
 
   if (!is_valid) return;
 
-  no_telp_customer = format_no_telp(no_telp_customer);
+  no_telp_customer = helper.format_no_telp(no_telp_customer);
 
   formData.set("name_customer", name_customer);
   formData.set("alamat_customer", alamat_customer);
@@ -172,7 +149,7 @@ async function submitCustomer() {
   formData.set("nitko", nitko);
   formData.set("term_payment", term_payment);
   formData.set("max_invoice", max_invoice);
-  formData.set("max_piutang", format_angka(max_piutang));
+  formData.set("max_piutang", helper.format_angka(max_piutang));
   formData.set("longitude", longitude);
   formData.set("latidude", latidude);
   formData.set("channel_id", channel_id);
@@ -191,6 +168,9 @@ async function submitCustomer() {
       $("#modal_customer").modal("hide");
       Swal.fire("Berhasil", response.message, "success");
       window.customer_grid.forceRender();
+      setTimeout(() => {
+        helper.custom_grid_header("customer");
+      }, 200);
     }
   } catch (error) {
     console.error("Submit error:", error);

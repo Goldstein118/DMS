@@ -2,7 +2,7 @@ import config from "./config.js";
 import { Grid, html } from "../Vendor/gridjs.module.js";
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
-
+import * as helper from "./helper.js";
 const grid_container_produk = document.querySelector("#table_produk");
 if (grid_container_produk) {
   $(document).ready(function () {
@@ -116,87 +116,11 @@ if (grid_container_produk) {
   });
   window.produk_grid.render(document.getElementById("table_produk"));
   setTimeout(() => {
-    const grid_header = document.querySelector("#table_produk .gridjs-head");
-    const search_Box = grid_header.querySelector(".gridjs-search");
-
-    // Create the button
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "btn btn-primary btn-sm";
-    btn.setAttribute("data-bs-toggle", "modal");
-    btn.setAttribute("data-bs-target", "#modal_produk");
-    btn.innerHTML = '<i class="bi bi-person-plus-fill"></i> Produk';
-
-    // Wrap both button and search bar in a flex container
-    const wrapper = document.createElement("div");
-    wrapper.className =
-      "d-flex justify-content-between align-items-center mb-3";
-    if (access.hasAccess("tb_produk", "create")) {
-      wrapper.appendChild(btn);
-    }
-
-    wrapper.appendChild(search_Box);
-
-    // Replace grid header content
-    grid_header.innerHTML = "";
-    grid_header.appendChild(wrapper);
-    const input = document.querySelector("#table_produk .gridjs-input");
-    grid_header.style.display = "flex";
-    grid_header.style.justifyContent = "flex-end";
-
-    search_Box.style.display = "flex";
-    search_Box.style.justifyContent = "flex-end";
-    search_Box.style.marginLeft = "auto";
-    input.placeholder = "Cari Produk...";
-    document.getElementById("loading_spinner").style.visibility = "hidden";
-    $("#loading_spinner").fadeOut();
-    attachEventListeners();
+    helper.custom_grid_header("produk", handle_delete, handle_update);
   }, 200);
 }
-function attachEventListeners() {
-  document
-    .getElementById("table_produk")
-    .addEventListener("click", function (event) {
-      const delete_btn = event.target.closest(".delete_produk");
-      const update_btn = event.target.closest(".update_produk");
 
-      if (delete_btn) {
-        handleDeleteProduk(delete_btn);
-      } else if (update_btn) {
-        handleUpdateProduk(update_btn);
-      }
-    });
-}
-function format_angka(str) {
-  if (str === null || str === undefined || str === "") {
-    return str;
-  }
-
-  const cleaned = str.toString().replace(/[.,\s]/g, "");
-
-  if (!/^\d+$/.test(cleaned)) {
-    return str;
-  }
-  const result = cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-  return result + ",00";
-}
-
-function unformat_angka(formattedString) {
-  if (
-    formattedString === null ||
-    formattedString === undefined ||
-    formattedString === ""
-  ) {
-    return formattedString;
-  }
-
-  return formattedString
-    .toString()
-    .replace(/[.,\s]/g, "")
-    .replace(/,00$/, "");
-}
-async function handleDeleteProduk(button) {
+async function handle_delete(button) {
   const row = button.closest("tr");
   const produk_id = row.cells[0].textContent;
 
@@ -280,7 +204,7 @@ async function fetch_fk(field, field_id) {
   }
 }
 
-async function handleUpdateProduk(button) {
+async function handle_update(button) {
   const row = button.closest("tr");
   window.currentRow = row;
   const button_icon = button.querySelector(".button_icon");
@@ -295,7 +219,7 @@ async function handleUpdateProduk(button) {
   const no_sku = row.cells[4].textContent;
   const status = row.cells[5].textContent;
   let harga_minimal = row.cells[6].textContent;
-  harga_minimal = unformat_angka(harga_minimal);
+  harga_minimal = helper.unformat_angka(harga_minimal);
 
   // Populate the modal fields
   document.getElementById("update_produk_id").value = produk_id;
@@ -350,7 +274,7 @@ if (submit_produk_update) {
     let harga_minimal_new = document.getElementById(
       "update_harga_minimal"
     ).value;
-    harga_minimal_new = unformat_angka(harga_minimal_new);
+    harga_minimal_new = helper.unformat_angka(harga_minimal_new);
     const kategori_id_new = $("#update_kategori").val();
     const brand_id_new = $("#update_brand").val();
 
@@ -378,7 +302,7 @@ if (submit_produk_update) {
           nama: nama_new,
           no_sku: no_sku_new,
           status: status_new,
-          harga_minimal: format_angka(harga_minimal_new),
+          harga_minimal: helper.format_angka(harga_minimal_new),
           kategori_id: kategori_id_new,
           brand_id: brand_id_new,
         };
@@ -402,11 +326,14 @@ if (submit_produk_update) {
 
           row.cells[4].textContent = no_sku_new;
           row.cells[5].textContent = status_new;
-          row.cells[6].textContent = format_angka(harga_minimal_new);
+          row.cells[6].textContent = helper.format_angka(harga_minimal_new);
 
           $("#update_modal_produk").modal("hide");
           Swal.fire("Berhasil", response.message, "success");
           window.produk_grid.forceRender();
+          setTimeout(() => {
+            helper.custom_grid_header("produk", handle_delete, handle_update);
+          }, 200);
         }
       } catch (error) {
         Swal.fire({

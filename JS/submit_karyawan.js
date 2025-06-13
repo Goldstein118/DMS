@@ -1,6 +1,6 @@
 import * as access from "./cek_access.js";
 import { apiRequest } from "./api.js";
-
+import * as helper from "./helper.js";
 const submit_karyawan = document.getElementById("submit_karyawan");
 if (submit_karyawan) {
   submit_karyawan.addEventListener("click", submitKaryawan);
@@ -43,32 +43,6 @@ function populateRoleDropdown(data) {
 
   select.trigger("change");
 }
-function validateField(field, pattern, errorMessage) {
-  if (!field || field.trim() === "") {
-    return true;
-  }
-  if (!pattern.test(field)) {
-    toastr.error(errorMessage, {
-      timeOut: 500,
-      extendedTimeOut: 500,
-    });
-    return false;
-  }
-  return true;
-}
-function format_no_telp(str) {
-  if (!str || str.trim() === "") {
-    let result = str;
-    return result;
-  } else {
-    if (7 > str.length) {
-      return "Invalid index";
-    }
-    let format = str.slice(0, 3) + "-" + str.slice(3, 7) + "-" + str.slice(7);
-    let result = "+62 " + format;
-    return result;
-  }
-}
 
 async function submitKaryawan() {
   // Collect form data
@@ -96,22 +70,30 @@ async function submitKaryawan() {
     return;
   }
   const is_valid =
-    validateField(name_karyawan, /^[a-zA-Z\s]+$/, "Format nama tidak valid") &&
-    validateField(
+    helper.validateField(
+      name_karyawan,
+      /^[a-zA-Z\s]+$/,
+      "Format nama tidak valid"
+    ) &&
+    helper.validateField(
       address_karyawan,
       /^[a-zA-Z0-9,. ]+$/,
       "Format alamat tidak valid"
     ) &&
-    validateField(
+    helper.validateField(
       phone_karyawan,
       /^[0-9]{9,13}$/,
       "Format nomor telepon tidak valid"
     ) &&
-    validateField(nik_karyawan, /^[0-9]+$/, "Format NIK tidak valid") &&
-    validateField(npwp_karyawan, /^[0-9 .-]+$/, "Format NPWP tidak valid");
+    helper.validateField(nik_karyawan, /^[0-9]+$/, "Format NIK tidak valid") &&
+    helper.validateField(
+      npwp_karyawan,
+      /^[0-9 .-]+$/,
+      "Format NPWP tidak valid"
+    );
 
   if (is_valid) {
-    const no_telp_karyawan = format_no_telp(phone_karyawan);
+    const no_telp_karyawan = helper.format_no_telp(phone_karyawan);
 
     const data_karyawan = {
       user_id: `${access.decryptItem("user_id")}`,
@@ -142,6 +124,9 @@ async function submitKaryawan() {
         $("#role_select").val(null).trigger("change");
         $("#modal_karyawan").modal("hide");
         window.karyawan_grid.forceRender();
+        setTimeout(() => {
+          helper.custom_grid_header("karyawan");
+        }, 200);
       }
     } catch (error) {
       toastr.error(error.message);

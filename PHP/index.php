@@ -162,5 +162,6 @@ switch ($page) {
 }
 ?>
   <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/side_bar.js?v=2.0"></script>
+  <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/helper.js?v=2.0"></script>
 </body>
 </html>

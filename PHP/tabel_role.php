@@ -19,11 +19,7 @@
           </div>
           <div class="modal-body">
             <label class="form-label" for="name_role">Nama:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-            <input
-              class="form-control"
-              type="text"
-              id="name_role"
-              name="name_role" />
+            <input class="form-control" type="text" id="name_role" name="name_role" />
               <label class="form-label" for="name_role">Data Akses:<i class="bi bi-asterisk text-danger align-middle "></i></label>
             <div class="accordion" id="accordion_main">
               <div class="accordion-item">

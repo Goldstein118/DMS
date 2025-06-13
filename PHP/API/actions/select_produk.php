@@ -10,8 +10,9 @@ $search = trim($search);
 if (strlen($search)>=3 && $search !=='') {
     $stmt = $conn->prepare("SELECT p.produk_id,p.nama,p.no_sku,p.status,p.harga_minimal,p.kategori_id,k.nama 
     AS kategori_nama,p.brand_id,b.nama AS brand_nama FROM
-    tb_produk p JOIN tb_kategori k ON p.kategori_id = k.kategori_id
-    JOIN tb_brand b ON p.brand_id = b.brand_id WHERE p.produk_id LIKE CONCAT ('%',?,'%')
+    tb_produk p 
+    LEFT JOIN tb_kategori k ON p.kategori_id = k.kategori_id
+    LEFT JOIN tb_brand b ON p.brand_id = b.brand_id WHERE p.produk_id LIKE CONCAT ('%',?,'%')
     OR p.nama LIKE CONCAT ('%',?,'%')
     OR p.no_sku LIKE CONCAT ('%',?,'%')
     OR p.status LIKE CONCAT ('%',?,'%')
@@ -24,8 +25,9 @@ if (strlen($search)>=3 && $search !=='') {
     $result = $stmt->get_result();
 } else {
     $sql = "SELECT p.produk_id,p.nama,p.no_sku,p.status,p.harga_minimal,p.kategori_id,k.nama AS kategori_nama,p.brand_id,b.nama AS brand_nama FROM
-    tb_produk p JOIN tb_kategori k ON p.kategori_id = k.kategori_id
-    JOIN tb_brand b ON p.brand_id = b.brand_id";
+    tb_produk p 
+    LEFT JOIN tb_kategori k ON p.kategori_id = k.kategori_id
+    LEFT JOIN tb_brand b ON p.brand_id = b.brand_id";
 $result = $conn->query($sql);
 }
 

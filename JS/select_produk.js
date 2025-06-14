@@ -227,7 +227,7 @@ async function handle_update(button) {
   document.getElementById("update_no_sku").value = no_sku;
   document.getElementById("update_status_produk").value = status;
   document.getElementById("update_harga_minimal").value = harga_minimal;
-
+  helper.format_nominal("update_harga_minimal");
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     fetch_fk("kategori", kategori_id);

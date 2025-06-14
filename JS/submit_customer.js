@@ -9,6 +9,9 @@ if (submit_customer) {
       $("#name_customer").trigger("focus");
     });
     fetch_channel();
+    helper.format_nominal("max_piutang");
+    helper.preview("ktp_image", "ktp");
+    helper.preview("npwp_image", "npwp");
     document
       .getElementById("ktp_image")
       .addEventListener("change", function () {

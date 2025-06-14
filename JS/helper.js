@@ -205,8 +205,78 @@ export function unformat_angka(formattedString) {
     return formattedString;
   }
 
-  return formattedString
-    .toString()
-    .replace(/[.,\s]/g, "")
-    .replace(/,00$/, "");
+  return formattedString.toString().replace(/,00$/, "");
+}
+export function format_nominal(element_id) {
+  var nominal = document.getElementById(element_id);
+  nominal.addEventListener(
+    "keyup",
+    function () {
+      if (nominal.value === "") {
+        return true;
+      } else {
+        var n = parseInt(this.value.replace(/\D/g, ""), 10);
+        nominal.value = n.toLocaleString("id-ID");
+      }
+    },
+    false
+  );
+}
+export function load_file_link(inputId, displayId, originalLink) {
+  const inputElement = document.getElementById(inputId);
+  const displayElement = document.getElementById(displayId);
+
+  // Clone to remove old event listeners if needed
+  const newInput = inputElement.cloneNode(true);
+  inputElement.replaceWith(newInput);
+
+  newInput.addEventListener("change", function (e) {
+    const file = e.target.files[0];
+
+    if (file) {
+      const blobUrl = URL.createObjectURL(file);
+      displayElement.innerHTML = `<a href="${blobUrl}" target="_blank">Lihat</a>`;
+    } else if (originalLink) {
+      displayElement.innerHTML = `<a href="${originalLink}" target="_blank">Lihat</a>`;
+    } else {
+      displayElement.innerHTML = "Belum ada file";
+    }
+  });
+}
+
+export async function load_input_file_name(url, element_id, file_name) {
+  if (!url) {
+    const input = document.querySelector(element_id);
+    input.value = "";
+    return;
+  }
+  try {
+    const response = await fetch(url);
+    const imgBlob = await response.blob();
+
+    const fileName = file_name;
+    const file = new File([imgBlob], fileName, {
+      type: "image/jpeg",
+      lastModified: new Date().getTime(),
+    });
+
+    const container = new DataTransfer();
+    container.items.add(file);
+    document.querySelector(element_id).files = container.files;
+  } catch (error) {
+    console.error(`load_input_file_name error for ${element_id}:`, error);
+  }
+}
+export function preview(element_id, img_id) {
+  const file_input = document.getElementById(element_id);
+  const frame = document.getElementById(img_id);
+
+  file_input.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      frame.src = URL.createObjectURL(file);
+    } else {
+      frame.src = "";
+    }
+  });
 }

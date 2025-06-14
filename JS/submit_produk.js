@@ -8,6 +8,7 @@ if (submit_produk) {
     $("#modal_produk").on("shown.bs.modal", function () {
       fetch_fk("kategori");
       fetch_fk("brand");
+      helper.format_nominal("harga_minimal");
       $("#name_produk").trigger("focus");
       $("#kategori").select2({
         placeholder: "Pilih Kategori",

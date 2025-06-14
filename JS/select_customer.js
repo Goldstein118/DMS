@@ -207,14 +207,28 @@ async function handle_update(button) {
 
   const current_channel_id = row.cells[13].textContent;
 
-  const ktpFileInput = row.querySelector('input[name="ktp_image"]');
-  const npwpFileInput = row.querySelector('input[name="npwp_image"]');
+  const ktp_link = row.cells[14]
+    ?.querySelector('a[href*="ktp"]')
+    ?.getAttribute("href");
+  const npwp_link = row.cells[14]
+    ?.querySelector('a[href*="npwp"]')
+    ?.getAttribute("href");
+  const ktp_filename = ktp_link ? ktp_link.split("/").pop() : "Belum ada file";
 
-  const ktpFileName = ktpFileInput?.files[0]?.name || "No file selected";
-  const npwpFileName = npwpFileInput?.files[0]?.name || "No file selected";
+  const npwp_filename = npwp_link
+    ? npwp_link.split("/").pop()
+    : "Belum ada file";
 
-  console.log("KTP File Name:", ktpFileName);
-  console.log("NPWP File Name:", npwpFileName);
+  document.getElementById("update_ktp_link").innerHTML = ktp_link
+    ? `<a href="${ktp_link}" target="_blank">Lihat</a>`
+    : ktp_filename;
+
+  document.getElementById("update_npwp_link").innerHTML = npwp_link
+    ? `<a href="${npwp_link}" target="_blank">Lihat</a>`
+    : npwp_filename;
+
+  helper.load_input_file_name(ktp_link, "#update_ktp_image", ktp_filename);
+  helper.load_input_file_name(npwp_link, "#update_npwp_image", npwp_filename);
 
   document.getElementById("update_customer_id").value = customer_id;
   document.getElementById("update_name_customer").value = current_nama;
@@ -230,6 +244,11 @@ async function handle_update(button) {
   document.getElementById("update_max_piutang").value = current_max_piutang;
   document.getElementById("update_longitude").value = longitude;
   document.getElementById("update_latidude").value = latidude;
+
+  helper.load_file_link("update_ktp_image", "update_ktp_link", ktp_link);
+  helper.load_file_link("update_npwp_image", "update_npwp_link", npwp_link);
+  helper.format_nominal("update_max_piutang");
+
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     const response = await apiRequest(

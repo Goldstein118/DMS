@@ -17,7 +17,7 @@ try {
     $max_invoice = $fields['max_invoice']??'';
     $max_piutang = $fields['max_piutang']??'';
     $longitude = ($fields['longitude'] ?? '') !== '' ? $fields['longitude'] : null;
-    $latidude = ($fields['latidude'] ?? '') !== '' ? $fields['latidude'] : null;
+    $latitude = ($fields['latitude'] ?? '') !== '' ? $fields['latitude'] : null;
 
     $status_customer = $fields['status_customer'];
     $channel_id = $fields['channel_id'];
@@ -32,14 +32,14 @@ try {
     validate_2($max_invoice, '/^[0-9]+$/', "Invalid max invoice format");
     validate_2($max_piutang, '/^[0-9., ]+$/', "Invalid max piutang format");
     validate_2($longitude,'/^[-+]?((1[0-7]\d|\d{1,2})(\.\d{1,6})?|180(\.0{1,6})?)$/',"Invalid Longitude Format");
-    validate_2($latidude,'/^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/',"Invalid Latidude Format");
+    validate_2($latitude,'/^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/',"Invalid Latidude Format");
     $customer_id = generateCustomID('CU', 'tb_customer', 'customer_id', $conn);
     executeInsert(
         $conn,
-        "INSERT INTO tb_customer (customer_id,nama,alamat,no_telp,ktp,npwp,status,nitko,term_pembayaran,max_invoice,max_piutang,longitude,latidude,channel_id) 
+        "INSERT INTO tb_customer (customer_id,nama,alamat,no_telp,ktp,npwp,status,nitko,term_pembayaran,max_invoice,max_piutang,longitude,latitude,channel_id) 
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         [$customer_id, $nama_customer, $alamat_customer, $no_telp_customer, $ktp_customer, $npwp_customer, $status_customer, $nitko,
-        $term_payment, $max_invoice, $max_piutang,$longitude,$latidude,$channel_id],
+        $term_payment, $max_invoice, $max_piutang,$longitude,$latitude,$channel_id],
         "sssssssssssdds"
     );
 

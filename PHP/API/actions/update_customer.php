@@ -4,6 +4,32 @@ require_once __DIR__ . '/../utils/helpers.php';
 $upload_dir = __DIR__ . '/../../../uploads';
 $base_url = 'http://localhost/DMS/uploads/';
 
+
+
+function handle_image_remove($tipe, $customer_id, $conn)
+{
+    $check = $conn->prepare("SELECT gambar_id, internal_link FROM tb_gambar WHERE customer_id=? AND tipe=?");
+    $check->bind_param("ss", $customer_id, $tipe);
+    $check->execute();
+    $result = $check->get_result();
+
+    if ($result->num_rows > 0) {
+        $old = $result->fetch_assoc();
+        $old_path = $old['internal_link'];
+        if (file_exists($old_path)) {
+            unlink($old_path);
+        }
+
+        $stmt = $conn->prepare("DELETE FROM tb_gambar WHERE customer_id=? AND tipe=?");
+        $stmt->bind_param("ss", $customer_id, $tipe);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    $check->close();
+}
+
+
 function resizeImage($file, $maxWidth = 1280, $maxHeight = 720)
 {
     $imgInfo = getimagesize($file);
@@ -89,17 +115,17 @@ try {
 
     $customer_id = $fields['customer_id'];
     $nama = $fields['nama'];
-    $alamat = $fields['alamat']??'';
-    $no_telp = $fields['no_telp']??'';
-    $ktp = $fields['ktp']??'';
-    $npwp = $fields['npwp']??'';
+    $alamat = $fields['alamat'] ?? '';
+    $no_telp = $fields['no_telp'] ?? '';
+    $ktp = $fields['ktp'] ?? '';
+    $npwp = $fields['npwp'] ?? '';
     $status = $fields['status'];
-    $nitko = $fields['nitko']??'';
-    $term_pembayaran = $fields['term_pembayaran']??'';
-    $max_invoice = $fields['max_invoice']??'';
-    $max_piutang = $fields['max_piutang']??'';
+    $nitko = $fields['nitko'] ?? '';
+    $term_pembayaran = $fields['term_pembayaran'] ?? '';
+    $max_invoice = $fields['max_invoice'] ?? '';
+    $max_piutang = $fields['max_piutang'] ?? '';
     $longitude = ($fields['longitude'] ?? '') !== '' ? $fields['longitude'] : null;
-    $latidude = ($fields['latidude'] ?? '') !== '' ? $fields['latidude'] : null;
+    $latitude = ($fields['latitude'] ?? '') !== '' ? $fields['latitude'] : null;
     $channel_id = $fields['channel_id'];
 
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
@@ -111,13 +137,34 @@ try {
     validate_2($term_pembayaran, '/^[0-9]+$/', "Invalid term pembayaran format");
     validate_2($max_invoice, '/^[0-9]+$/', "Invalid max invoice format");
     validate_2($max_piutang, '/^[0-9., ]+$/', "Invalid max piutang format");
-    validate_2($longitude,'/^[-+]?((1[0-7]\d|\d{1,2})(\.\d{1,6})?|180(\.0{1,6})?)$/',"Invalid Longitude Format");
-    validate_2($latidude,'/^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/',"Invalid Latidude Format");
+    validate_2($longitude, '/^[-+]?((1[0-7]\d|\d{1,2})(\.\d{1,6})?|180(\.0{1,6})?)$/', "Invalid Longitude Format");
+    validate_2($latitude, '/^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/', "Invalid Latidude Format");
+    if (isset($data['remove_ktp_file']) && $data['remove_ktp_file'] === 'true') {
+        handle_image_remove('ktp', $customer_id, $conn);
+    }
 
+    if (isset($data['remove_npwp_file']) && $data['remove_npwp_file'] === 'true') {
+        handle_image_remove('npwp', $customer_id, $conn);
+    }
     $stmt = $conn->prepare("UPDATE tb_customer SET nama=?, alamat=?, no_telp=?, ktp=?, npwp=?, status=?, nitko=?, 
-    term_pembayaran=?, max_invoice=?, max_piutang=?,longitude=?,latidude=?, channel_id=? WHERE customer_id=?");
-    $stmt->bind_param("ssssssssssddss", $nama, $alamat, $no_telp, $ktp, $npwp, $status, $nitko, $term_pembayaran, $max_invoice,
-    $max_piutang, $longitude,$latidude,$channel_id, $customer_id);
+    term_pembayaran=?, max_invoice=?, max_piutang=?,longitude=?,latitude=?, channel_id=? WHERE customer_id=?");
+    $stmt->bind_param(
+        "ssssssssssddss",
+        $nama,
+        $alamat,
+        $no_telp,
+        $ktp,
+        $npwp,
+        $status,
+        $nitko,
+        $term_pembayaran,
+        $max_invoice,
+        $max_piutang,
+        $longitude,
+        $latitude,
+        $channel_id,
+        $customer_id
+    );
 
     if (!$stmt->execute()) {
         throw new Exception("Failed to update customer: " . $stmt->error);

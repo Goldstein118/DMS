@@ -27,7 +27,7 @@ if (grid_container_customer) {
       "Titik Koordinat",
       "Channel",
       "Channel_id",
-      "Link Gambar",
+
       {
         name: "Aksi",
         formatter: () => {
@@ -84,40 +84,42 @@ if (grid_container_customer) {
           customer.nama,
           customer.alamat,
           customer.no_telp,
-          customer.ktp,
-          customer.npwp,
+          html(`
+          ${customer.ktp}
+          ${
+            customer.ktp_link
+              ? `<a class = "link-dark d-inline-flex text-decoration-none rounded" 
+                 href="${customer.ktp_link}" target="_blank" data-bs-custom-class="custom-tooltip" data-bs-toggle="tooltip" 
+                 data-bs-title="Lihat KTP"><i class="bi bi-person-vcard-fill"></i></a>`
+              : ``
+          }
+          `),
+          html(`
+          ${customer.npwp}
+          ${
+            customer.npwp_link
+              ? `<a class = "link-dark d-inline-flex text-decoration-none rounded" href="${customer.npwp_link}" target="_blank" data-bs-custom-class="custom-tooltip" data-bs-toggle="tooltip" 
+                data-bs-title="Lihat NPWP"><i class="bi bi-person-vcard-fill"></i></a>`
+              : ``
+          }
+          `),
+
           customer.status,
           customer.nitko,
           customer.term_pembayaran,
           customer.max_invoice,
           customer.max_piutang,
+
           html(`
           ${
-            customer.longitude
-              ? `<span>Longitude: ${customer.longitude}</span>`
-              : `<span>Longitude:</span>`
-          }<br>
-          <br>
-          ${
-            customer.latidude
-              ? `<span>Latidude: ${customer.latidude}</span>`
-              : `<span>Latidude:</span>`
+            customer.latitude && customer.longitude
+              ? `<a target="_blank" href ="https://maps.google.com?q=${customer.latitude},${customer.longitude}">${customer.latitude}, ${customer.longitude}</a>`
+              : `<span></span>`
           }
-            `),
+
+          `),
           customer.channel_nama,
           customer.channel_id,
-          html(`
-   ${
-     customer.ktp_link
-       ? `<a class = "link-dark d-inline-flex text-decoration-none rounded" href="${customer.ktp_link}" target="_blank"><i class="bi bi-person-vcard-fill"> KTP</i></a>`
-       : `<i class="bi bi-x-circle">  KTP</i>`
-   }<br>
-  ${
-    customer.npwp_link
-      ? `<a class = "link-dark d-inline-flex text-decoration-none rounded" href="${customer.npwp_link}" target="_blank"><i class="bi bi-person-vcard-fill">  NPWP</i></a>`
-      : `<i class="bi bi-x-circle">  NPWP</i>`
-  }
-`),
           null,
         ]),
     },
@@ -125,6 +127,12 @@ if (grid_container_customer) {
   window.customer_grid.render(document.getElementById("table_customer"));
   setTimeout(() => {
     helper.custom_grid_header("customer", handle_delete, handle_update);
+    const tooltipTriggerList = document.querySelectorAll(
+      '[data-bs-toggle="tooltip"]'
+    );
+    const tooltipList = [...tooltipTriggerList].map(
+      (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+    );
   }, 200);
 }
 
@@ -188,8 +196,35 @@ async function handle_update(button) {
   const current_alamat = row.cells[2].textContent;
   let no_telp = row.cells[3].textContent;
   const current_phone = no_telp.replace(/\+62|-|\s/g, "");
-  const current_ktp = row.cells[4].textContent;
-  const current_npwp = row.cells[5].textContent;
+
+  const ktpCell = row.cells[4];
+  let current_ktp = "";
+  let ktp_link = "";
+
+  if (ktpCell) {
+    const div = document.createElement("div");
+    div.innerHTML = ktpCell.innerHTML;
+
+    current_ktp = div.childNodes[0]?.textContent.trim() || "";
+
+    const aTag = div.querySelector('a[href*="ktp"]');
+    ktp_link = aTag ? aTag.getAttribute("href") : "";
+  }
+
+  const npwpCell = row.cells[5];
+  let current_npwp = "";
+  let npwp_link = "";
+
+  if (npwpCell) {
+    const div = document.createElement("div");
+    div.innerHTML = npwpCell.innerHTML;
+
+    current_npwp = div.childNodes[0]?.textContent.trim() || "";
+
+    const aTagNpwp = div.querySelector('a[href*="npwp"]');
+    npwp_link = aTagNpwp ? aTagNpwp.getAttribute("href") : "";
+  }
+
   const current_status = row.cells[6].textContent;
   const current_nitko = row.cells[7].textContent;
   const current_term_pembayaran = row.cells[8].textContent;
@@ -197,24 +232,23 @@ async function handle_update(button) {
   let current_max_piutang = row.cells[10].textContent;
   current_max_piutang = helper.unformat_angka(current_max_piutang);
 
-  const titik_koordinat = row.cells[11].textContent;
+  const koordinatCell = row.cells[11];
+  let latitude = null;
+  let longitude = null;
 
-  const longMatch = titik_koordinat.match(/Longitude:\s*(-?\d+(\.\d+)?)/);
-  const latMatch = titik_koordinat.match(/Latidude:\s*(-?\d+(\.\d+)?)/);
+  if (koordinatCell) {
+    const text = koordinatCell.textContent.trim(); // e.g. "55.689500, 155.691700"
+    const parts = text.split(",");
 
-  const longitude = longMatch ? longMatch[1].trim() : null;
-  const latidude = latMatch ? latMatch[1].trim() : null;
+    if (parts.length === 2) {
+      latitude = parts[0].trim();
+      longitude = parts[1].trim();
+    }
+  }
 
   const current_channel_id = row.cells[13].textContent;
 
-  const ktp_link = row.cells[14]
-    ?.querySelector('a[href*="ktp"]')
-    ?.getAttribute("href");
-  const npwp_link = row.cells[14]
-    ?.querySelector('a[href*="npwp"]')
-    ?.getAttribute("href");
   const ktp_filename = ktp_link ? ktp_link.split("/").pop() : "Belum ada file";
-
   const npwp_filename = npwp_link
     ? npwp_link.split("/").pop()
     : "Belum ada file";
@@ -243,10 +277,20 @@ async function handle_update(button) {
   document.getElementById("update_max_invoice").value = current_max_invoice;
   document.getElementById("update_max_piutang").value = current_max_piutang;
   document.getElementById("update_longitude").value = longitude;
-  document.getElementById("update_latidude").value = latidude;
+  document.getElementById("update_latitude").value = latitude;
 
-  helper.load_file_link("update_ktp_image", "update_ktp_link", ktp_link);
-  helper.load_file_link("update_npwp_image", "update_npwp_link", npwp_link);
+  helper.load_file_link(
+    "update_ktp_image",
+    "update_ktp_link",
+    ktp_link,
+    "clear_ktp"
+  );
+  helper.load_file_link(
+    "update_npwp_image",
+    "update_npwp_link",
+    npwp_link,
+    "clear_npwp"
+  );
   helper.format_nominal("update_max_piutang");
 
   await new Promise((resolve) => setTimeout(resolve, 500));
@@ -297,7 +341,7 @@ if (submit_customer_update) {
     ).value;
     let update_phone = document.getElementById("update_phone_customer").value;
     const update_ktp = document.getElementById("update_nik_customer").value;
-    const update_npwp = document.getElementById("update_npwp_customer").value;
+    let update_npwp = document.getElementById("update_npwp_customer").value;
     const update_status = document.getElementById(
       "update_status_customer"
     ).value;
@@ -311,7 +355,7 @@ if (submit_customer_update) {
       document.getElementById("update_max_piutang").value;
     update_max_piutang = helper.unformat_angka(update_max_piutang);
     const update_longitude = document.getElementById("update_longitude").value;
-    const update_latidude = document.getElementById("update_latidude").value;
+    const update_latitude = document.getElementById("update_latitude").value;
 
     const channel_id_new = $("#update_channel_id").val();
 
@@ -340,18 +384,22 @@ if (submit_customer_update) {
       helper.validateField(
         update_phone,
         /^[0-9]{9,13}$/,
-        "Format nomor telepon tidak valid"
+        "Nomor Telepon harus terdiri dari 10-12 digit angka"
       ) &&
-      helper.validateField(update_ktp, /^[0-9]+$/, "Format NIK tidak valid") &&
+      helper.validateField(
+        update_ktp,
+        /^[0-9]{16}$/,
+        "NIK harus terdiri dari 16 digit angka"
+      ) &&
       helper.validateField(
         update_npwp,
-        /^[0-9 .-]+$/,
-        "Format NPWP tidak valid"
+        /^[0-9]{15,16}$/,
+        "NPWP harus terdiri dari 15-16 digit angka"
       ) &&
       helper.validateField(
         update_nitko,
-        /^[a-zA-Z0-9,. ]+$/,
-        "Format NITKO tidak valid"
+        /^[0-9]{22}$/,
+        "NITKO harus terdiri dari 22 digit angka"
       ) &&
       helper.validateField(
         update_max_invoice,
@@ -374,13 +422,14 @@ if (submit_customer_update) {
         "Format longitude tidak valid"
       ) &&
       helper.validateField(
-        update_latidude,
+        update_latitude,
         /^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/,
-        "Format latidude tidak valid"
+        "Format latitude tidak valid"
       );
 
     if (is_valid) {
       const update_no_telp = helper.format_no_telp(update_phone);
+      update_npwp = helper.format_npwp(update_npwp);
 
       const formData = new FormData();
       formData.append("customer_id", customer_id);
@@ -395,14 +444,24 @@ if (submit_customer_update) {
       formData.append("max_invoice", update_max_invoice);
       formData.append("max_piutang", helper.format_angka(update_max_piutang));
       formData.append("longitude", update_longitude);
-      formData.append("latidude", update_latidude);
+      formData.append("latitude", update_latitude);
       formData.append("channel_id", channel_id_new);
 
       // Files
       const ktpFile = document.getElementById("update_ktp_image").files[0];
       const npwpFile = document.getElementById("update_npwp_image").files[0];
-      if (ktpFile) formData.append("ktp_file", ktpFile);
-      if (npwpFile) formData.append("npwp_file", npwpFile);
+
+      if (ktpFile) {
+        formData.append("ktp_file", ktpFile);
+      } else {
+        formData.append("remove_ktp_file", "true"); // signal to delete
+      }
+
+      if (npwpFile) {
+        formData.append("npwp_file", npwpFile);
+      } else {
+        formData.append("remove_npwp_file", "true"); // signal to delete
+      }
 
       try {
         const response = await apiRequest(
@@ -427,12 +486,18 @@ if (submit_customer_update) {
           const channel_name = $("#update_channel_id option:selected").text();
           const channel_name_only = channel_name.split(" - ")[1];
           row.cells[12].textContent = channel_name_only;
-          row.cells[11].innerHTML = `<span>Longitude: ${update_longitude}<br><br>Latidude: ${update_latidude}</span>`;
+          row.cells[11].innerHTML = `<span>Longitude: ${update_longitude}<br><br>Latidude: ${update_latitude}</span>`;
           Swal.fire("Berhasil", response.message, "success");
           $("#modal_customer_update").modal("hide");
           window.customer_grid.forceRender();
           setTimeout(() => {
             helper.custom_grid_header("customer", handle_delete, handle_update);
+            const tooltipTriggerList = document.querySelectorAll(
+              '[data-bs-toggle="tooltip"]'
+            );
+            const tooltipList = [...tooltipTriggerList].map(
+              (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+            );
           }, 200);
         } else {
           Swal.fire("Gagal", result.error || "Update gagal.", "error");

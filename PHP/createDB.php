@@ -87,7 +87,7 @@ $customer = "CREATE TABLE IF NOT EXISTS tb_customer (
         term_pembayaran VARCHAR(100),
         max_invoice VARCHAR(20), 
         max_piutang VARCHAR(20),
-        latidude DECIMAL(9,6),
+        latitude DECIMAL(9,6),
         longitude DECIMAL (9,6),
         channel_id VARCHAR(20), FOREIGN KEY (channel_id) REFERENCES tb_channel(channel_id) ON DELETE RESTRICT
         )";
@@ -119,7 +119,7 @@ if ($conn->query($kategori)) {
         mysqli_error($conn);
     }
 }
-$brand ="CREATE TABLE IF NOT EXISTS tb_brand(
+$brand = "CREATE TABLE IF NOT EXISTS tb_brand(
 brand_id VARCHAR(20) PRIMARY KEY NOT NULL,
 nama VARCHAR(100)
 )";
@@ -150,22 +150,21 @@ if ($conn->query($produk)) {
 }
 
 
-$divisi ="CREATE TABLE IF NOT EXISTS tb_divisi(
+$divisi = "CREATE TABLE IF NOT EXISTS tb_divisi(
 divisi_id VARCHAR(20) PRIMARY KEY NOT NULL,
 nama VARCHAR (50),
 bank VARCHAR(20),
 nama_rekening VARCHAR (50),
 no_rekening VARCHAR (30))";
 
-if($conn->query($divisi)){
-    try{
-
-    }catch(Error){
+if ($conn->query($divisi)) {
+    try {
+    } catch (Error) {
         echo mysqli_error($conn);
     }
 }
 
-$gambar ="CREATE TABLE IF NOT EXISTS tb_gambar (
+$gambar = "CREATE TABLE IF NOT EXISTS tb_gambar (
     gambar_id VARCHAR(20) PRIMARY KEY NOT NULL,
     tipe ENUM('ktp', 'npwp') NOT NULL,
     customer_id VARCHAR(20) NOT NULL,
@@ -174,13 +173,31 @@ $gambar ="CREATE TABLE IF NOT EXISTS tb_gambar (
     blob_data LONGBLOB,
     FOREIGN KEY (customer_id) REFERENCES tb_customer(customer_id) ON DELETE RESTRICT
 )";
-if ($conn->query($gambar)){
-    try{
-
-    }catch(Error){
-    echo mysqli_error($conn);
+if ($conn->query($gambar)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
     }
 }
 
+$gudang = "CREATE TABLE IF NOT EXISTS tb_gudang(
+gudang_id VARCHAR (20) PRIMARY KEY NOT NULL,
+nama VARCHAR(50),
+status VARCHAR(20) DEFAULT 'aktif'
+)";
+if ($conn->query($gudang)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+$pricelist ="CREATE TABLE IF NOT EXISTS tb_pricelist(
+pricelist_id VARCHAR(20) PRIMARY KEY NOT NULL,
+nama VARCHAR (50),
+harga_default VARCHAR(10) DEFAULT 'ya',
+status VARCHAR(20) DEFAULT 'aktif',
+tanggal_berlaku DATE
+
+)";
 mysqli_close($conn);
-?>

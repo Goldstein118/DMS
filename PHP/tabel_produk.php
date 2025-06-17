@@ -7,20 +7,20 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <label class="form-label" for="name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <label class="form-label mb-0 mt-2" for="name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="name_produk" name="name_produk" value="">
-          <label class="form-label" for="kategori">Kategori:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <label class="form-label mb-0 mt-2" for="kategori">Kategori:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="kategori"></select>
-          <label class="form-label" for="brand">Brand:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <label class="form-label mb-0 mt-2" for="brand">Brand:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="brand"></select>
-          <label class="form-label" for="no_sku">No SKU:</label>
+          <label class="form-label mb-0 mt-2" for="no_sku">No SKU:</label>
           <input class ="form-control" type ="text" id ="no_sku" name="no_sku"aria-describedby="basic-addon1"value="">
-          <label class="form-label" for="status_produk">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <label class="form-label mb-0 mt-2" for="status_produk">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="status_produk">
             <option value="aktif">Aktif</option>
             <option value="non aktif">Non Aktif</option>
           </select>
-          <label class="form-label" for="harga_minimal">Harga Minimal:</label>
+          <label class="form-label mb-0 mt-2" for="harga_minimal">Harga Minimal:</label>
           <input class ="form-control" type ="text" id ="harga_minimal" name="harga_minimal"aria-describedby="basic-addon1"value="">
         </div>
         <div class="modal-footer">
@@ -39,22 +39,22 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <label class="form-label" for="update_produk_id">Kode Produk:</label>
+          <label class="form-label mb-0 mt-2" for="update_produk_id">Kode Produk:</label>
           <input class="form-control" type="text" id="update_produk_id" name="update_produk_id" value="" disabled>
-          <label class="form-label" for="update_name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <label class="form-label mb-0 mt-2" for="update_name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="update_name_produk" name="update_name_produk" value="">
-          <label class="form-label" for="update_kategori">Kategori:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <label class="form-label mb-0 mt-2" for="update_kategori">Kategori:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="update_kategori"></select>
-          <label class="form-label" for="update_brand">Brand:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <label class="form-label mb-0 mt-2" for="update_brand">Brand:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="update_brand"></select>
-          <label class="form-label" for="update_no_sku">No SKU:</label>
+          <label class="form-label mb-0 mt-2" for="update_no_sku">No SKU:</label>
           <input class ="form-control" type ="text" id ="update_no_sku" name="update_no_sku"aria-describedby="basic-addon1"value="">
-          <label class="form-label" for="update_status_produk">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <label class="form-label mb-0 mt-2" for="update_status_produk">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="update_status_produk">
             <option value="aktif">Aktif</option>
             <option value="non aktif">Non Aktif</option>
           </select>
-          <label class="form-label" for="update_harga_minimal">Harga Minimal:</label>
+          <label class="form-label mb-0 mt-2" for="update_harga_minimal">Harga Minimal:</label>
           <input class ="form-control" type ="text" id ="update_harga_minimal" name="update_harga_minimal"aria-describedby="basic-addon1"value="">
         </div>
         <div class="modal-footer">

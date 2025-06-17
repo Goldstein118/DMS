@@ -10,7 +10,8 @@ function checkAccess($conn, $userId, $table, $index, $target_user_id = null) {
         'tb_kategori' => 24,
         'tb_brand' => 28,
         'tb_produk' => 32,
-        'tb_divisi'=>36
+        'tb_divisi'=>36,
+        'tb_gudang'=>40
     ];
 
 

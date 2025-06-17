@@ -14,7 +14,7 @@ async function submitSupplier() {
   const supplier_alamat = document.getElementById("supplier_alamat").value;
   let supplier_phone = document.getElementById("supplier_no_telp").value;
   const supplier_ktp = document.getElementById("supplier_ktp").value;
-  const supplier_npwp = document.getElementById("supplier_npwp").value;
+  let supplier_npwp = document.getElementById("supplier_npwp").value;
   const supplier_status = document.getElementById("supplier_status").value;
 
   if (
@@ -40,17 +40,22 @@ async function submitSupplier() {
     helper.validateField(
       supplier_phone,
       /^[0-9]{9,13}$/,
-      "Format nomor telepon tidak valid"
+      "Nomor Telepon harus terdiri dari 10-12 digit angka"
     ) &&
-    helper.validateField(supplier_ktp, /^[0-9]+$/, "Format NIK tidak valid") &&
+    helper.validateField(
+      supplier_ktp,
+      /^[0-9]{16}$/,
+      "NIK harus terdiri dari 16 digit angka"
+    ) &&
     helper.validateField(
       supplier_npwp,
-      /^[0-9 .-]+$/,
-      "Format NPWP tidak valid"
+      /^[0-9]{15,16}$/,
+      "NPWP harus terdiri dari 15-16 digit angka"
     );
 
   if (is_valid) {
     const supplier_no_telp = helper.format_no_telp(supplier_phone);
+    supplier_npwp = helper.format_npwp(supplier_npwp);
     const supplier_data = {
       user_id: `${access.decryptItem("user_id")}`,
       supplier_nama,

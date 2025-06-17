@@ -7,7 +7,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <label class="form-label" for="nama_kategori">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+        <label class="form-label mb-0 mt-2" for="nama_kategori">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
          <input class="form-control" type="text" id="nama_kategori" name="nama_kategori" value="">
       </div>
       <div class="modal-footer">
@@ -25,9 +25,9 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <label class="form-label" for="update_kategori_id">Kode Kategori:</label>
+        <label class="form-label mb-0 mt-2" for="update_kategori_id">Kode Kategori:</label>
         <input class="form-control" type="text" id="update_kategori_id" disabled>
-        <label class="form-label" for="update_nama_kategori">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+        <label class="form-label mb-0 mt-2" for="update_nama_kategori">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
         <input class="form-control" type="text" id="update_nama_kategori" name="update_nama_kategori" value="">
       </div>
       <div class="modal-footer">

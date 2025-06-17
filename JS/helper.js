@@ -181,19 +181,30 @@ export function view_checkbox(field, aksi) {
     });
   }
 }
+export function format_npwp(npwp) {
+  if (npwp.length == 15) {
+    let result = "0" + npwp;
+    console.log(result + "result");
+    return result;
+  } else {
+    return npwp;
+  }
+}
+
 export function format_angka(str) {
-  if (str === null || str === undefined || str === "") {
-    return str;
-  }
+  if (str === null || str === undefined || str === "") return str;
 
-  const cleaned = str.toString().replace(/[.,\s]/g, "");
+  // Remove non-digit characters (no decimals allowed in input)
+  const cleaned = str.toString().replace(/\D/g, "");
 
-  if (!/^\d+$/.test(cleaned)) {
-    return str;
-  }
-  const result = cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const number = Number(cleaned);
+  if (isNaN(number)) return str;
 
-  return result + ",00";
+  // Format with thousands separator and fixed 2 decimals
+  return number.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 export function unformat_angka(formattedString) {
@@ -205,7 +216,7 @@ export function unformat_angka(formattedString) {
     return formattedString;
   }
 
-  return formattedString.toString().replace(/,00$/, "");
+  return formattedString.toString().replace(/.00$/, "");
 }
 export function format_nominal(element_id) {
   var nominal = document.getElementById(element_id);
@@ -216,32 +227,54 @@ export function format_nominal(element_id) {
         return true;
       } else {
         var n = parseInt(this.value.replace(/\D/g, ""), 10);
-        nominal.value = n.toLocaleString("id-ID");
+        nominal.value = n.toLocaleString();
       }
     },
     false
   );
 }
-export function load_file_link(inputId, displayId, originalLink) {
+
+export function load_file_link(
+  inputId,
+  displayId,
+  originalLink,
+  clearBtnId = null
+) {
   const inputElement = document.getElementById(inputId);
   const displayElement = document.getElementById(displayId);
 
-  // Clone to remove old event listeners if needed
+  // Replace input element to clear previous event listeners
   const newInput = inputElement.cloneNode(true);
   inputElement.replaceWith(newInput);
 
-  newInput.addEventListener("change", function (e) {
-    const file = e.target.files[0];
-
+  const updateDisplay = (file) => {
     if (file) {
       const blobUrl = URL.createObjectURL(file);
       displayElement.innerHTML = `<a href="${blobUrl}" target="_blank">Lihat</a>`;
     } else if (originalLink) {
       displayElement.innerHTML = `<a href="${originalLink}" target="_blank">Lihat</a>`;
     } else {
-      displayElement.innerHTML = "Belum ada file";
+      displayElement.innerHTML = `<a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Belum ada file</a>`;
     }
+  };
+
+  newInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    updateDisplay(file);
   });
+
+  // Optional: Add "clear" button support
+  if (clearBtnId) {
+    const clearBtn = document.getElementById(clearBtnId);
+    clearBtn?.addEventListener("click", () => {
+      newInput.value = "";
+      originalLink = null;
+      updateDisplay(null);
+    });
+  }
+
+  // Initial load
+  updateDisplay(null);
 }
 
 export async function load_input_file_name(url, element_id, file_name) {
@@ -269,14 +302,28 @@ export async function load_input_file_name(url, element_id, file_name) {
 }
 export function preview(element_id, img_id) {
   const file_input = document.getElementById(element_id);
-  const frame = document.getElementById(img_id);
-
   file_input.addEventListener("change", (event) => {
     const file = event.target.files[0];
     if (file) {
+      let frame = document.getElementById(img_id);
+      if (!frame) {
+        frame = document.createElement("img");
+        frame.id = img_id;
+        frame.style.width = "100px";
+        frame.style.height = "100px";
+        frame.style.objectFit = "cover";
+        file_input.parentElement.appendChild(frame);
+      }
       frame.src = URL.createObjectURL(file);
+      frame.style.display = "block";
     } else {
-      frame.src = "";
+      let frame = document.getElementById(img_id);
+      if (!frame) {
+        return;
+      } else {
+        frame.style.display = "none";
+        frame.src = "";
+      }
     }
   });
 }

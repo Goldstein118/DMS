@@ -71,7 +71,7 @@ async function submitCustomer() {
   const max_invoice = document.getElementById("max_invoice").value;
   let max_piutang = document.getElementById("max_piutang").value;
   const longitude = document.getElementById("longitude").value;
-  const latidude = document.getElementById("latidude").value;
+  const latitude = document.getElementById("latitude").value;
   const channel_id = document.getElementById("channel_id").value;
 
   if (
@@ -100,18 +100,22 @@ async function submitCustomer() {
     helper.validateField(
       no_telp_customer,
       /^[0-9]{9,13}$/,
-      "Format nomor telepon tidak valid"
+      "Nomor Telepon harus terdiri dari 10-12 digit angka"
     ) &&
-    helper.validateField(nik_customer, /^[0-9]+$/, "Format NIK tidak valid") &&
+    helper.validateField(
+      nik_customer,
+      /^[0-9]{16}$/,
+      "NIK harus terdiri dari 16 digit angka"
+    ) &&
     helper.validateField(
       npwp_customer,
-      /^[0-9 .-]+$/,
-      "Format NPWP tidak valid"
+      /^[0-9]{15,16}$/,
+      "NPWP harus terdiri dari 15-16 digit angka"
     ) &&
     helper.validateField(
       nitko,
-      /^[a-zA-Z0-9, .-]+$/,
-      "Format nitko tidak valid"
+      /^[0-9]{22}$/,
+      "NITKO harus terdiri dari 22 digit angka"
     ) &&
     helper.validateField(
       term_payment,
@@ -134,13 +138,13 @@ async function submitCustomer() {
       "Format longitude tidak valid"
     ) &&
     helper.validateField(
-      latidude,
+      latitude,
       /^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/,
-      "Format latidude tidak valid"
+      "Format latitude tidak valid"
     );
 
   if (!is_valid) return;
-
+  npwp_customer = helper.format_npwp(npwp_customer);
   no_telp_customer = helper.format_no_telp(no_telp_customer);
 
   formData.set("name_customer", name_customer);
@@ -154,7 +158,7 @@ async function submitCustomer() {
   formData.set("max_invoice", max_invoice);
   formData.set("max_piutang", helper.format_angka(max_piutang));
   formData.set("longitude", longitude);
-  formData.set("latidude", latidude);
+  formData.set("latitude", latitude);
   formData.set("channel_id", channel_id);
   formData.set("action", "create");
   formData.set("user_id", access.decryptItem("user_id"));
@@ -173,6 +177,12 @@ async function submitCustomer() {
       window.customer_grid.forceRender();
       setTimeout(() => {
         helper.custom_grid_header("customer");
+        const tooltipTriggerList = document.querySelectorAll(
+          '[data-bs-toggle="tooltip"]'
+        );
+        const tooltipList = [...tooltipTriggerList].map(
+          (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+        );
       }, 200);
     }
   } catch (error) {

@@ -1,5 +1,6 @@
 import * as access from "./cek_access.js";
 import { apiRequest } from "./api.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
   document.querySelectorAll(".btn-toggle").forEach((btn) => {
     const icon = btn.querySelector(".toggle-icon");

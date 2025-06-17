@@ -52,7 +52,7 @@ async function submitKaryawan() {
   const address_karyawan = document.getElementById("address_karyawan").value;
   const nik_karyawan = document.getElementById("nik_karyawan").value;
   const role_id = document.getElementById("role_select").value;
-  const npwp_karyawan = document.getElementById("npwp_karyawan").value;
+  let npwp_karyawan = document.getElementById("npwp_karyawan").value;
   const status_karyawan = document.getElementById("status_karyawan").value;
 
   // Validate form data
@@ -85,16 +85,20 @@ async function submitKaryawan() {
       /^[0-9]{9,13}$/,
       "Format nomor telepon tidak valid"
     ) &&
-    helper.validateField(nik_karyawan, /^[0-9]+$/, "Format NIK tidak valid") &&
+    helper.validateField(
+      nik_karyawan,
+      /^[0-9]{16}$/,
+      "NIK harus terdiri dari 16 digit angka"
+    ) &&
     helper.validateField(
       npwp_karyawan,
-      /^[0-9 .-]+$/,
-      "Format NPWP tidak valid"
+      /^[0-9]{15,16}$/,
+      "NPWP harus terdiri dari 15-16 digit angka"
     );
 
   if (is_valid) {
     const no_telp_karyawan = helper.format_no_telp(phone_karyawan);
-
+    npwp_karyawan = helper.format_npwp(npwp_karyawan);
     const data_karyawan = {
       user_id: `${access.decryptItem("user_id")}`,
       name_karyawan,

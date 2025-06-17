@@ -18,9 +18,9 @@
               aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <label class="form-label" for="name_role">Nama:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+            <label class="form-label mb-0 mt-2" for="name_role">Nama:<i class="bi bi-asterisk text-danger align-middle"></i></label>
             <input class="form-control" type="text" id="name_role" name="name_role" />
-              <label class="form-label" for="name_role">Data Akses:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+              <label class="form-label mb-0 mt-2" for="name_role">Data Akses:<i class="bi bi-asterisk text-danger align-middle "></i></label>
             <div class="accordion" id="accordion_main">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="heading_main">
@@ -544,18 +544,18 @@
               aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <label class="form-label">Kode Role:</label>
+            <label class="form-label mb-0 mt-2">Kode Role:</label>
             <input
               class="form-control"
               type="text"
               id="update_role_ID"
               disabled />
-            <label class="form-label">Nama:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+            <label class="form-label mb-0 mt-2">Nama:<i class="bi bi-asterisk text-danger align-middle"></i></label>
             <input
               class="form-control"
               type="text"
               id="update_role_name" />
-              <label class="form-label" for="name_role">Data Akses:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+              <label class="form-label mb-0 mt-2" for="name_role">Data Akses:<i class="bi bi-asterisk text-danger align-middle "></i></label>
             <div class="accordion" id="accordion_main_update">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="heading_main">

@@ -269,7 +269,7 @@ if (submit_karyawan_update) {
     let noTelp_new = document.getElementById("update_phone_karyawan").value;
     const alamat_new = document.getElementById("update_address_karyawan").value;
     const KTP_new = document.getElementById("update_nik_karyawan").value;
-    const npwp_new = document.getElementById("update_npwp_karyawan").value;
+    let npwp_new = document.getElementById("update_npwp_karyawan").value;
     const status_new = document.getElementById("update_status_karyawan").value;
     if (
       !karyawan_nama_new ||
@@ -299,13 +299,21 @@ if (submit_karyawan_update) {
       helper.validateField(
         noTelp_new,
         /^[0-9]{9,13}$/,
-        "Format nomor telepon tidak valid"
+        "Nomor Telepon harus terdiri dari 10-12 digit angka"
       ) &&
-      helper.validateField(KTP_new, /^[0-9]+$/, "Format NIK tidak valid") &&
-      helper.validateField(npwp_new, /^[0-9 .-]+$/, "Format NPWP tidak valid");
+      helper.validateField(
+        KTP_new,
+        /^[0-9]{16}$/,
+        "NIK harus terdiri dari 16 digit angka"
+      ) &&
+      helper.validateField(
+        npwp_new,
+        /^[0-9]{15,16}$/,
+        "NPWP harus terdiri dari 15-16 digit angka"
+      );
     if (is_valid) {
       const no_telp_update = helper.format_no_telp(noTelp_new);
-
+      npwp_new = helper.format_npwp(npwp_new);
       try {
         const data_karyawan_update = {
           karyawan_id: karyawan_ID,

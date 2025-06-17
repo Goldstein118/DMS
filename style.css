@@ -51,15 +51,11 @@ input,
 select,
 textarea {
   width: 100%;
-  padding: 12px;
-  margin: 8px 0;
+
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   box-sizing: border-box;
   font-size: 0.875rem;
-}
-.input-group-text {
-  margin: 8px 0;
 }
 
 input:focus,
@@ -136,7 +132,7 @@ tr:nth-of-type(even) td {
 }
 
 .select2-selection {
-  height: 40px !important;
+  min-height: 40px !important;
   padding: 5px;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
@@ -180,13 +176,11 @@ main {
 }
 
 .sidebar {
-  padding: 1rem;
-  background-color: #fff;
+  max-width: 160px;
   border-right: 1px solid #dee2e6;
-  max-width: 200px;
 }
 #main {
-  padding: 10px;
+  padding: 0.5rem;
   flex: 1;
   overflow-y: hidden !important;
   overflow-x: hidden;
@@ -236,13 +230,6 @@ footer {
   margin-left: 1.25rem;
 }
 
-.sidebar {
-  height: 100vh;
-  padding: 1rem;
-  background-color: #fff;
-  border-right: 1px solid #dee2e6;
-}
-
 /* Chrome, Safari, Opera */
 body::-webkit-scrollbar {
   display: none;
@@ -274,6 +261,17 @@ body::-webkit-scrollbar {
 #table_produk td:nth-child(8) {
   display: none !important;
 }
+#table_karyawan td:nth-child(5),
+#table_supplier td:nth-child(4),
+#table_customer td:nth-child(12),
+#table_customer td:nth-child(11),
+#table_customer td:nth-child(10),
+#table_customer td:nth-child(9),
+#table_customer td:nth-child(4),
+#table_produk td:nth-child(7),
+#table_divisi td:nth-child(5) {
+  text-align: right;
+}
 
 .ms-auto {
   margin-right: auto !important;
@@ -289,9 +287,7 @@ body::-webkit-scrollbar {
 #menu {
   display: inline-block;
 }
-.form-check .form-check-input {
-  float: none !important;
-}
+
 .accordion-body {
   display: grid;
   gap: 10px; /* space between accordions */
@@ -321,7 +317,7 @@ body::-webkit-scrollbar {
 }
 .btn-group-sm > .btn,
 .btn-sm {
-  margin-right: 2.5px;
+  margin-right: 0.125rem;
 }
 .sidebar ul,
 .offcanvas-body ul {
@@ -369,16 +365,12 @@ li a.link-dark.active:hover {
   flex-wrap: wrap;
   align-items: center;
 }
+h3 {
+  padding-top: inherit;
+}
 .bi-person-vcard-fill::before {
   color: #0d6efd;
 }
-.bi-x-circle::before {
-  color: #dc3545;
-}
-
-.bi-person-vcard-fill:hover {
-  color: rgb(0, 128, 255);
-}
-h3 {
-  padding-top: inherit;
+.custom-tooltip {
+  font-size: xx-small;
 }

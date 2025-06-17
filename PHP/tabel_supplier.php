@@ -8,20 +8,20 @@
           </button>
         </div>
         <div class="modal-body">
-          <label class="form-label">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <label class="form-label mb-0 mt-2">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="supplier_nama" name="supplier_nama" value="">
-          <label class="form-label">Alamat:</label>
+          <label class="form-label mb-0 mt-2">Alamat:</label>
           <input class="form-control" type="text" id="supplier_alamat">
-          <label class="form-label" for="phone">Nomor Telepon:</label>
-          <div class = "input-group mb-3">
+          <label class="form-label mb-0 mt-2" for="supplier_no_telp">Nomor Telepon:</label>
+          <div class = "input-group">
           <span class="input-group-text" id="basic-addon1">+62</span>
           <input class="form-control" type="text" id="supplier_no_telp" name="supplier_no_telp" aria-describedby="basic-addon1"value="">
           </div>
-          <label class="form-label">NIK:</label>
-          <input class="form-control" type="text" id="supplier_ktp">
-          <label class="form-label">NPWP:</label>
+          <label class="form-label mb-0 mt-2">NIK:</label>
+          <input class="form-control " type="text" id="supplier_ktp">
+          <label class="form-label mb-0 mt-2">NPWP:</label>
           <input class="form-control" type="text" id="supplier_npwp">
-          <label class="form-label">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <label class="form-label mb-0 mt-2">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class ="form-select" id ="supplier_status">
           <option value = "aktif">Aktif</option>
           <option value = "non aktif">Non Aktif</option>
@@ -42,21 +42,21 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <label class = "form-label">Kode Supplier:</label>
+          <label class = "form-label mb-0 mt-2">Kode Supplier:</label>
           <input class="form-control" type ="text" id = "update_supplier_id" disabled>
-          <label class="form-label">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <label class="form-label mb-0 mt-2">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <input class="form-control" type="text" id="update_supplier_nama">
-          <label class="form-label">Alamat:</label>
+          <label class="form-label mb-0 mt-2">Alamat:</label>
           <input class="form-control" type="text" id="update_supplier_alamat">          
-          <label class="form-label" for="phone">Nomor Telepon:</label>
-          <div class = "input-group mb-3">
+          <label class="form-label mb-0 mt-2" for="update_supplier_no_telp">Nomor Telepon:</label>
+          <div class = "input-group">
           <span class="input-group-text" id="basic-addon1">+62</span>
           <input class="form-control" type="text" id="update_supplier_no_telp" name="update_supplier_no_telp" aria-describedby="basic-addon1"value="">
           </div>
-          <label class="form-label">NIK:</label>
+          <label class="form-label mb-0 mt-2">NIK:</label>
           <input class="form-control" type="text" id="update_supplier_ktp">
-          <label class="form-label">NPWP:</label>
-          <input class="form-control" type="text" id="update_supplier_npwp">
+          <label class="form-label mb-0 mt-2">NPWP:</label>
+          <input class="form-control mb-0 mt-2" type="text" id="update_supplier_npwp">
           <label class="form-label">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class ="form-select" id ="update_supplier_status">
           <option value = "aktif">Aktif</option>

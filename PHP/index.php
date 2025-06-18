@@ -28,6 +28,7 @@ include ("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
     <!-- Toastr CSS -->
   <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/toastr.min.css" rel="stylesheet">
+
   
   <!-- Custom CSS -->
   <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>../style.css?v=2.0">
@@ -84,7 +85,7 @@ $page = $_GET['page'] ?? 'tabel_karyawan';
 
 // Whitelist allowed pages for security
 $allowed_pages = ['tabel_karyawan', 'tabel_role', 'tabel_user','tabel_supplier','tabel_customer','tabel_channel',
-                  'tabel_kategori','tabel_brand','tabel_produk','tabel_divisi','tabel_gudang'];
+                  'tabel_kategori','tabel_brand','tabel_produk','tabel_divisi','tabel_gudang','tabel_pricelist'];
 
 if (in_array($page, $allowed_pages)) {
   include $page . '.php';
@@ -164,6 +165,13 @@ switch ($page) {
     ?>
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_gudang.js?v=2.0"></script>
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_gudang.js?v=2.0"></script>
+    <?php
+    break;
+  
+  case 'tabel_pricelist':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_pricelist.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_pricelist.js?v=2.0"></script>
     <?php
     break;
 }

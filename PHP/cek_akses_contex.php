@@ -7,6 +7,7 @@ function checkContextAccess($conn, $userId, $context) {
         'tb_karyawan' => ['tb_role'],
         'tb_customer' =>['tb_channel'],
         'tb_produk'   => ['tb_kategori', 'tb_brand'],
+        'tb_pricelist'=>['tb_produk']
 
         // Add more mappings as needed
     ];
@@ -22,7 +23,8 @@ function checkContextAccess($conn, $userId, $context) {
         'tb_brand'    => 28,
         'tb_produk'   => 32,
         'tb_divisi'   => 36,
-        'tb_gudang'   => 40
+        'tb_gudang'   => 40,
+        'tb_pricelist'=>44
         // Add more tables and their base indices here
     ];
 

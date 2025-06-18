@@ -83,6 +83,12 @@
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_gudang"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_gudang' ? 'active' : ''; ?>"> Gudang</a>
             </li>
+
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_pricelist"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_pricelist' ? 'active' : ''; ?>"> Pricelist</a>
+            </li>
           </ul>
         </div>
       </li>
@@ -187,6 +193,11 @@
               <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_gudang"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_gudang' ? 'active' : ''; ?>"> Gudang</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_pricelist"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_pricelist' ? 'active' : ''; ?>"> Pricelist</a>
             </li>
           </ul>
         </div>

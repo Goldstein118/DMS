@@ -29,6 +29,7 @@ const accessMap = {
   tb_produk: 32,
   tb_divisi: 36,
   tb_gudang: 40,
+  tb_pricelist: 44,
 };
 
 const actionIndex = {

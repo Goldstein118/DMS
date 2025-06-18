@@ -51,7 +51,6 @@ input,
 select,
 textarea {
   width: 100%;
-
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   box-sizing: border-box;
@@ -373,4 +372,8 @@ h3 {
 }
 .custom-tooltip {
   font-size: xx-small;
+}
+#produk_select {
+  min-height: 0px !important;
+  padding: 0px;
 }

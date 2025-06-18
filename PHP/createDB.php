@@ -198,6 +198,28 @@ nama VARCHAR (50),
 harga_default VARCHAR(10) DEFAULT 'ya',
 status VARCHAR(20) DEFAULT 'aktif',
 tanggal_berlaku DATE
-
 )";
+
+if ($conn->query($pricelist)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+$detail_pricelist ="CREATE TABLE IF NOT EXISTS tb_detail_pricelist(
+detail_pricelist_id VARCHAR(20) PRIMARY KEY NOT NULL,
+harga VARCHAR(20),
+pricelist_id VARCHAR(20),
+produk_id VARCHAR(20),
+FOREIGN KEY (pricelist_id) REFERENCES tb_pricelist(pricelist_id) ON DELETE RESTRICT,
+FOREIGN KEY (produk_id) REFERENCES tb_produk(produk_id) ON DELETE RESTRICT 
+)";
+
+if ($conn->query($detail_pricelist)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
 mysqli_close($conn);

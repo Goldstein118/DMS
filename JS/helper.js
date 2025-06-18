@@ -114,7 +114,6 @@ export function proses_check_box(action) {
       results.push(value);
     });
     results = results.join("");
-    console.log("Update");
     return results;
   } else {
     const checkboxes = document.querySelectorAll("#modal_role .perm-checkbox");
@@ -125,7 +124,6 @@ export function proses_check_box(action) {
       results.push(value);
     });
     results = results.join("");
-    console.log("create");
     return results;
   }
 }
@@ -181,30 +179,22 @@ export function view_checkbox(field, aksi) {
     });
   }
 }
+export function format_angka(str) {
+  if (str === null || str === undefined || str === "") {
+    return str;
+  }
+
+  if (!/^\d+$/.test(str)) {
+    return str + ".00";
+  }
+}
 export function format_npwp(npwp) {
   if (npwp.length == 15) {
     let result = "0" + npwp;
-    console.log(result + "result");
     return result;
   } else {
     return npwp;
   }
-}
-
-export function format_angka(str) {
-  if (str === null || str === undefined || str === "") return str;
-
-  // Remove non-digit characters (no decimals allowed in input)
-  const cleaned = str.toString().replace(/\D/g, "");
-
-  const number = Number(cleaned);
-  if (isNaN(number)) return str;
-
-  // Format with thousands separator and fixed 2 decimals
-  return number.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
 }
 
 export function unformat_angka(formattedString) {
@@ -216,18 +206,19 @@ export function unformat_angka(formattedString) {
     return formattedString;
   }
 
-  return formattedString.toString().replace(/.00$/, "");
+  return formattedString.toString().replace(/\.00$/, "");
 }
 export function format_nominal(element_id) {
   var nominal = document.getElementById(element_id);
   nominal.addEventListener(
     "keyup",
     function () {
-      if (nominal.value === "") {
-        return true;
+      if (!nominal.value || nominal.value.trim() === "") {
+        nominal.value = "";
+        return;
       } else {
         var n = parseInt(this.value.replace(/\D/g, ""), 10);
-        nominal.value = n.toLocaleString();
+        nominal.value = n.toLocaleString("en-US");
       }
     },
     false

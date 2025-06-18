@@ -430,7 +430,7 @@ if (submit_customer_update) {
     if (is_valid) {
       const update_no_telp = helper.format_no_telp(update_phone);
       update_npwp = helper.format_npwp(update_npwp);
-
+      update_max_piutang = helper.format_angka(update_max_piutang);
       const formData = new FormData();
       formData.append("customer_id", customer_id);
       formData.append("nama", update_nama);
@@ -442,7 +442,7 @@ if (submit_customer_update) {
       formData.append("nitko", update_nitko);
       formData.append("term_pembayaran", update_term_pembayaran);
       formData.append("max_invoice", update_max_invoice);
-      formData.append("max_piutang", helper.format_angka(update_max_piutang));
+      formData.append("max_piutang", update_max_piutang);
       formData.append("longitude", update_longitude);
       formData.append("latitude", update_latitude);
       formData.append("channel_id", channel_id_new);
@@ -482,7 +482,7 @@ if (submit_customer_update) {
           row.cells[7].textContent = update_nitko;
           row.cells[8].textContent = update_term_pembayaran;
           row.cells[9].textContent = update_max_invoice;
-          row.cells[10].textContent = helper.format_angka(update_max_piutang);
+          row.cells[10].textContent = update_max_piutang;
           const channel_name = $("#update_channel_id option:selected").text();
           const channel_name_only = channel_name.split(" - ")[1];
           row.cells[12].textContent = channel_name_only;

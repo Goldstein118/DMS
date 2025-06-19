@@ -58,6 +58,11 @@ if (grid_container_pricelist) {
         </button>
         `;
           }
+          button += `
+        <button type="button" class="btn btn btn-info view_pricelist btn-sm" data-bs-toggle= "modal" data-bs-target ="#view_modal_pricelist">
+          <i class="bi bi-eye"></i>
+        </button>
+        `;
           return html(button);
         },
       },
@@ -102,14 +107,73 @@ if (grid_container_pricelist) {
   });
   window.pricelist_grid.render(document.getElementById("table_pricelist"));
   setTimeout(() => {
-    helper.custom_grid_header("pricelist", handle_delete, handle_update);
+    helper.custom_grid_header(
+      "pricelist",
+      handle_delete,
+      handle_update,
+      handle_view
+    );
   }, 200);
+}
+async function handle_view(button) {
+  const row = button.closest("tr");
+  const pricelist_id = row.cells[0].textContent;
+  const result = await apiRequest(
+    `/PHP/API/pricelist_API.php?action=select&user_id=${access.decryptItem(
+      "user_id"
+    )}`,
+    "POST",
+    { pricelist_id }
+  );
+  const tableBody = document.getElementById("view_detail_pricelist_tbody");
+  tableBody.innerHTML = ""; // Clear previous rows
+
+  if (result) {
+    result.data.forEach((detail) => {
+      const tr = document.createElement("tr");
+
+      // Create columns
+      const tdProduk = document.createElement("td");
+      tdProduk.textContent = detail.produk_nama;
+
+      const tdHarga = document.createElement("td");
+      tdHarga.textContent = detail.harga;
+
+      const tdPriceNama = document.createElement("td");
+      tdPriceNama.textContent = detail.price_nama;
+
+      const tdActions = document.createElement("td");
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "btn btn-danger btn-sm delete_detail_pricelist";
+      deleteButton.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+      tdActions.appendChild(deleteButton);
+
+      // Append all tds to tr
+      tr.appendChild(tdProduk);
+      tr.appendChild(tdHarga);
+      tr.appendChild(tdPriceNama);
+      tr.appendChild(tdActions);
+
+      // Append tr to tbody
+      tableBody.appendChild(tr);
+    });
+  } else {
+    // Optional: show message if no data found
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 4;
+    td.className = "text-center text-muted";
+    td.textContent = "No details found for this pricelist.";
+    tr.appendChild(td);
+    tableBody.appendChild(tr);
+  }
 }
 
 // Attach delete listeners
 async function handle_delete(button) {
   const row = button.closest("tr");
-  const pricelist_ID = row.cells[0].textContent;
+  const pricelist_id = row.cells[0].textContent;
 
   const result = await Swal.fire({
     title: "Apakah Anda Yakin?",
@@ -128,13 +192,13 @@ async function handle_delete(button) {
           "user_id"
         )}`,
         "DELETE",
-        { pricelist_ID }
+        { pricelist_id }
       );
       if (response.ok) {
         row.remove();
         Swal.fire(
           "Berhasil",
-          response.message || "Karyawan dihapus.",
+          response.message || "Pricelist dihapus.",
           "success"
         );
       } else {

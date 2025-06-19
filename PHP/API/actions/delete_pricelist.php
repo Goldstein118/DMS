@@ -11,9 +11,13 @@ $pricelist_id = trim($data['pricelist_id']);
 
     $stmt = $conn->prepare("DELETE FROM tb_pricelist WHERE pricelist_id = ?");
     $stmt->bind_param("s", $pricelist_id);
-    $execute= $stmt->execute(); 
-    
-    if($execute&&$stmt->affected_rows>0){
+    $execute= $stmt->execute();
+    $stmt_detail = $conn->prepare("DELETE FROM tb_detail_pricelist WHERE pricelist_id=?");
+    $stmt_detail->bind_param("s",$pricelist_id);
+    $execute_detail=$stmt_detail->execute();
+
+
+    if($execute&&$execute_detail&&$stmt->affected_rows>0){
     http_response_code(200);
     echo json_encode(["message" => "Pricelist berhasil terhapus"]);
     }
@@ -21,7 +25,6 @@ $pricelist_id = trim($data['pricelist_id']);
         http_response_code(400);
         echo json_encode(["error"=> "Pricelist tidak ditemukan"]);
     }
-
 
 } catch (mysqli_sql_exception $e) {
     if ($e->getCode() == 1451) {

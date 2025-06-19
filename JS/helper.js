@@ -1,6 +1,11 @@
 import * as access from "./cek_access.js";
 import { apiRequest } from "./api.js";
-export function custom_grid_header(field, handle_delete, handle_update) {
+export function custom_grid_header(
+  field,
+  handle_delete,
+  handle_update,
+  handle_view
+) {
   const grid_header = document.querySelector(`#table_${field} .gridjs-head`);
   if (!grid_header) return;
 
@@ -47,18 +52,36 @@ export function custom_grid_header(field, handle_delete, handle_update) {
   document.getElementById("loading_spinner").style.visibility = "hidden";
   $("#loading_spinner").fadeOut();
   // Attach event listener after header is rebuilt
-  document
-    .getElementById(`table_${field}`)
-    .addEventListener("click", function (event) {
-      const delete_btn = event.target.closest(`.delete_${field}`);
-      const update_btn = event.target.closest(`.update_${field}`);
+  if (field == "pricelist") {
+    document
+      .getElementById(`table_${field}`)
+      .addEventListener("click", function (event) {
+        const delete_btn = event.target.closest(`.delete_${field}`);
+        const update_btn = event.target.closest(`.update_${field}`);
+        const view_btn = event.target.closest(`.view_${field}`);
 
-      if (delete_btn && typeof handle_delete === "function") {
-        handle_delete(delete_btn);
-      } else if (update_btn && typeof handle_update === "function") {
-        handle_update(update_btn);
-      }
-    });
+        if (delete_btn && typeof handle_delete === "function") {
+          handle_delete(delete_btn);
+        } else if (update_btn && typeof handle_update === "function") {
+          handle_update(update_btn);
+        } else if (view_btn && typeof handle_view === "function") {
+          handle_view(view_btn);
+        }
+      });
+  } else {
+    document
+      .getElementById(`table_${field}`)
+      .addEventListener("click", function (event) {
+        const delete_btn = event.target.closest(`.delete_${field}`);
+        const update_btn = event.target.closest(`.update_${field}`);
+
+        if (delete_btn && typeof handle_delete === "function") {
+          handle_delete(delete_btn);
+        } else if (update_btn && typeof handle_update === "function") {
+          handle_update(update_btn);
+        }
+      });
+  }
 }
 
 export function format_no_telp(str) {
@@ -317,4 +340,94 @@ export function preview(element_id, img_id) {
       }
     }
   });
+}
+export function addField() {
+  var myTable = document.getElementById("detail_pricelist_tbody");
+  var currentIndex = myTable.rows.length;
+  var currentRow = myTable.insertRow(-1);
+
+  var input_box = document.createElement("input");
+  input_box.setAttribute("id", "harga" + currentIndex);
+  input_box.classList.add("form-control");
+
+  var select_box = document.createElement("select");
+  select_box.setAttribute("id", "produk_select" + currentIndex);
+  select_box.classList.add("form-select");
+
+  var delete_button = document.createElement("button");
+  delete_button.type = "button";
+  delete_button.className = "btn btn-danger btn-sm delete_detail_pricelist";
+  delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+
+  var currentCell = currentRow.insertCell(-1);
+  currentCell.appendChild(select_box);
+
+  currentCell = currentRow.insertCell(-1);
+  currentCell.appendChild(input_box);
+
+  currentCell = currentRow.insertCell(-1);
+  currentCell.appendChild(delete_button);
+  select_detail_pricelist(currentIndex);
+}
+
+export async function select_detail_pricelist(index) {
+  $(`#produk_select${index}`).select2({
+    placeholder: "Pilih produk",
+    allowClear: true,
+    dropdownParent: $("#modal_pricelist"),
+  });
+  delete_detail_pricelist();
+  try {
+    const response = await apiRequest(
+      `/PHP/API/produk_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}&target=tb_pricelist&context=create`
+    );
+    const select = $(`#produk_select${index}`);
+    select.empty();
+    select.append(new Option("Pilih Produk", "", false, false));
+    response.data.forEach((produk) => {
+      const option = new Option(
+        `${produk.produk_id} - ${produk.nama}`,
+        produk.produk_id,
+        false,
+        false
+      );
+      select.append(option);
+    });
+    select.trigger("change");
+  } catch (error) {
+    console.error("error:", error);
+  }
+}
+
+export function delete_detail_pricelist() {
+  $("#detail_pricelist_tbody").on(
+    "click",
+    ".delete_detail_pricelist",
+    async function () {
+      const result = await Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Anda tidak dapat mengembalikannya!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Iya, Hapus!",
+        cancelButtonText: "Batalkan",
+      });
+      if (result.isConfirmed) {
+        try {
+          $(this).closest("tr").remove();
+          Swal.fire("Berhasil", "Pricelist dihapus.", "success");
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: error.message,
+          });
+        }
+      }
+    }
+  );
 }

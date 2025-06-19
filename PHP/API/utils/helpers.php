@@ -20,19 +20,36 @@ function generateCustomID($prefix, $table, $column, $conn)
 function validate_1($data, $requiredFields, $defaults = [])
 {
     $output = [];
+
     foreach ($requiredFields as $f) {
-        if (!isset($data[$f]) || trim($data[$f]) === '') {
+        if (!isset($data[$f])) {
             http_response_code(400);
-            echo json_encode(["success" => false, "error" => "Missing or empty: $f"]);
+            echo json_encode(["success" => false, "error" => "Missing: $f"]);
             exit;
         }
-        $output[$f] = trim($data[$f]);
+
+        $value = $data[$f];
+
+        if (is_string($value)) {
+            $value = trim($value);
+            if ($value === '') {
+                http_response_code(400);
+                echo json_encode(["success" => false, "error" => "Empty: $f"]);
+                exit;
+            }
+        } elseif (is_array($value)) {
+            // Optional: Disallow array as required field if needed
+            // http_response_code(400);
+            // echo json_encode(["success" => false, "error" => "Invalid type for $f"]);
+            // exit;
+        }
+
+        $output[$f] = $value;
     }
 
-    // Include optional fields (even if empty)
     foreach ($data as $key => $val) {
         if (!array_key_exists($key, $output)) {
-            $output[$key] = trim($val);
+            $output[$key] = is_string($val) ? trim($val) : $val;
         }
     }
 
@@ -44,6 +61,7 @@ function validate_1($data, $requiredFields, $defaults = [])
 
     return $output;
 }
+
 
 function validate_2($value, $pattern, $errorMsg)
 {

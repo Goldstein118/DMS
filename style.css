@@ -377,3 +377,6 @@ h3 {
   min-height: 0px !important;
   padding: 0px;
 }
+#create_detail_pricelist {
+  max-width: fit-content !important;
+}

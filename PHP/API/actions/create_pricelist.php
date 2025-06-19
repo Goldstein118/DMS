@@ -31,7 +31,24 @@ try {
         "sssss"
     );
 
+    if (isset($data['details'])) {
+        foreach ($data['details'] as $detail) {
+            if (!isset($detail['produk_id']) || !isset($detail['harga'])) {
+                throw new Exception("Detail produk atau harga tidak lengkap.");
+            }
 
+            $produk_id = $detail['produk_id'];
+            $harga = $detail['harga'];
+
+            $detail_pricelist_id = generateCustomID('DE', 'tb_detail_pricelist', 'detail_pricelist_id', $conn);
+            executeInsert(
+                $conn,
+                "INSERT INTO tb_detail_pricelist (detail_pricelist_id ,harga ,pricelist_id, produk_id) VALUES (?, ?, ?, ?)",
+                [$detail_pricelist_id,$harga,$pricelist_id, $produk_id],
+                "ssss"
+            );
+        }
+    }
 
 
 

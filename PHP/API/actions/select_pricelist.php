@@ -21,7 +21,7 @@ if (strlen($search)>=3 && $search !=='') {
 else if (isset($data['pricelist_id'])){
     $pricelist_id = trim($data['pricelist_id']);
     $sql ="SELECT d.detail_pricelist_id, d.harga, d.pricelist_id, d.produk_id,
-            produk.nama AS produk_nama, price.nama AS price_nama
+            produk.nama AS produk_nama, price.nama AS price_nama , price.harga_default,price.status,price.tanggal_berlaku
             FROM tb_detail_pricelist d
             JOIN tb_pricelist price ON d.pricelist_id = price.pricelist_id
             JOIN tb_produk produk ON produk.produk_id = d.produk_id

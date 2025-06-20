@@ -4,11 +4,14 @@ import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 import * as helper from "./helper.js";
 
-document.getElementById("loading_spinner").style.visibility = "hidden";
-$("#loading_spinner").fadeOut();
-
 const grid_container_pricelist = document.querySelector("#table_pricelist");
 if (grid_container_pricelist) {
+  const create_detail_pricelist = document.getElementById(
+    "update_detail_pricelist"
+  );
+  create_detail_pricelist.addEventListener("click", () => {
+    helper.addField("update");
+  });
   window.pricelist_grid = new Grid({
     columns: [
       "Kode Pricelist",
@@ -118,6 +121,9 @@ if (grid_container_pricelist) {
 async function handle_view(button) {
   const row = button.closest("tr");
   const pricelist_id = row.cells[0].textContent;
+
+  // Populate the modal fields
+
   const result = await apiRequest(
     `/PHP/API/pricelist_API.php?action=select&user_id=${access.decryptItem(
       "user_id"
@@ -126,37 +132,48 @@ async function handle_view(button) {
     { pricelist_id }
   );
   const tableBody = document.getElementById("view_detail_pricelist_tbody");
-  tableBody.innerHTML = ""; // Clear previous rows
+
+  tableBody.innerHTML = "";
 
   if (result) {
     result.data.forEach((detail) => {
-      const tr = document.createElement("tr");
+      const tr_detail = document.createElement("tr");
 
-      // Create columns
-      const tdProduk = document.createElement("td");
-      tdProduk.textContent = detail.produk_nama;
+      const td_kode_pricelist = document.getElementById("view_pricelist_id");
+      td_kode_pricelist.textContent = detail.pricelist_id;
 
-      const tdHarga = document.createElement("td");
-      tdHarga.textContent = detail.harga;
+      const td_status = document.getElementById("view_status");
+      td_status.textContent = detail.status;
+
+      const td_tanggal_berlaku = document.getElementById(
+        "view_tanggal_berlaku"
+      );
+      td_tanggal_berlaku.textContent = detail.tanggal_berlaku;
+
+      const td_harga_default = document.getElementById("view_harga_default");
+      td_harga_default.textContent = detail.harga_default;
+
+      const tdKode = document.createElement("td");
+      tdKode.textContent = detail.detail_pricelist_id;
 
       const tdPriceNama = document.createElement("td");
       tdPriceNama.textContent = detail.price_nama;
 
-      const tdActions = document.createElement("td");
-      const deleteButton = document.createElement("button");
-      deleteButton.type = "button";
-      deleteButton.className = "btn btn-danger btn-sm delete_detail_pricelist";
-      deleteButton.innerHTML = `<i class="bi bi-trash-fill"></i>`;
-      tdActions.appendChild(deleteButton);
+      const tdProduk = document.createElement("td");
+      tdProduk.textContent = detail.produk_nama;
+
+      const tdHarga = document.createElement("td");
+      tdHarga.setAttribute("id", "view_harga");
+      tdHarga.textContent = detail.harga;
 
       // Append all tds to tr
-      tr.appendChild(tdProduk);
-      tr.appendChild(tdHarga);
-      tr.appendChild(tdPriceNama);
-      tr.appendChild(tdActions);
+      tr_detail.appendChild(tdKode);
+      tr_detail.appendChild(tdPriceNama);
+      tr_detail.appendChild(tdProduk);
+      tr_detail.appendChild(tdHarga);
 
       // Append tr to tbody
-      tableBody.appendChild(tr);
+      tableBody.appendChild(tr_detail);
     });
   } else {
     // Optional: show message if no data found
@@ -240,10 +257,73 @@ async function handle_update(button) {
   document.getElementById("update_tanggal_berlaku").value = tanggal_berlaku;
 
   await new Promise((resolve) => setTimeout(resolve, 500));
+  const result = await apiRequest(
+    `/PHP/API/pricelist_API.php?action=select&user_id=${access.decryptItem(
+      "user_id"
+    )}`,
+    "POST",
+    { pricelist_id }
+  );
+  const tableBody = document.getElementById("update_detail_pricelist_tbody");
+  tableBody.innerHTML = ""; // Clear previous rows
+
+  if (result) {
+    result.data.forEach((detail, index) => {
+      const tr = document.createElement("tr");
+      const current_produk_id = detail.produk_id;
+      // Produk select2
+      const tdProduk = document.createElement("td");
+      const selectProduk = document.createElement("select");
+      selectProduk.className = "form-select produk_select";
+      selectProduk.setAttribute("id", `produk_select${index}`);
+      tdProduk.appendChild(selectProduk);
+
+      // Harga input
+      const tdHarga = document.createElement("td");
+      const inputHarga = document.createElement("input");
+      inputHarga.setAttribute("id", `detail_harga${index}`);
+      inputHarga.className = "form-control";
+
+      let harga = helper.unformat_angka(detail.harga);
+      inputHarga.value = harga;
+      tdHarga.appendChild(inputHarga);
+
+      // Delete button
+      const tdDelete = document.createElement("td");
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "btn btn-danger btn-sm delete_detail_pricelist";
+      deleteBtn.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+      tdDelete.appendChild(deleteBtn);
+
+      // Append all tds
+      tr.appendChild(tdProduk);
+      tr.appendChild(tdHarga);
+      tr.appendChild(tdDelete);
+
+      tableBody.appendChild(tr);
+      helper.format_nominal(`detail_harga${index}`);
+
+      helper.select_detail_pricelist(index, "update", current_produk_id);
+    });
+  } else {
+    // Optional: show message if no data found
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 4;
+    td.className = "text-center text-muted";
+    td.textContent = "No details found for this pricelist.";
+    tr.appendChild(td);
+    tableBody.appendChild(tr);
+  }
+
+  button_icon.style.display = "inline-block";
+  spinner.style.display = "none";
+  $("#update_modal_pricelist").modal("show");
 }
 
 const submit_pricelist_update = document.getElementById(
-  "submit_pricelist_update"
+  "update_submit_pricelist"
 );
 
 if (submit_pricelist_update) {
@@ -255,75 +335,91 @@ if (submit_pricelist_update) {
 
     const row = window.currentRow;
     const update_pricelist_id = document.getElementById(
-      "update_pricelist_ID"
+      "update_pricelist_id"
     ).value;
     const update_pricelist_nama = document.getElementById(
       "update_name_pricelist"
     ).value;
     const update_harga_default = document.getElementById(
-      "update_harga_default"
-    );
+      "update_default_pricelist"
+    ).value;
     const update_status = document.getElementById(
       "update_status_pricelist"
     ).value;
     const update_tanggal_berlaku = document.getElementById(
       "update_tanggal_berlaku"
-    );
-    if (
-      !update_pricelist_nama ||
-      update_pricelist_nama.trim() === "" ||
-      !update_tanggal_berlaku ||
-      update_tanggal_berlaku.trim() === ""
-    ) {
+    ).value;
+    const detail_rows = [];
+    document
+      .querySelectorAll("#update_detail_pricelist_tbody tr")
+      .forEach((tr) => {
+        const produk_id = $(tr.querySelector("select")).val();
+        let harga = tr.querySelector("input").value;
+        harga = helper.format_angka(harga);
+
+        // Basic validation
+        if (produk_id && harga) {
+          detail_rows.push({ produk_id, harga });
+        }
+      });
+
+    if (detail_rows.length === 0) {
+      toastr.error("Minimal satu produk harus diisi.");
+      return;
+    }
+
+    if (!update_pricelist_nama.trim() || !update_tanggal_berlaku.trim()) {
       toastr.error("Kolom * wajib diisi.");
       return;
     }
 
     const is_valid = helper.validateField(
-      pricelist_nama_new,
+      update_pricelist_nama,
       /^[a-zA-Z\s]+$/,
       "Format nama tidak valid"
     );
-    if (is_valid) {
-      try {
-        const data_pricelist_update = {
-          pricelist_id: update_pricelist_id,
-          nama: update_pricelist_nama,
-          harga_default: update_harga_default,
-          status: update_status,
-          tanggal_berlaku: update_tanggal_berlaku,
-        };
-        const response = await apiRequest(
-          `/PHP/API/pricelist_API.php?action=update&user_id=${access.decryptItem(
-            "user_id"
-          )}`,
-          "POST",
-          data_pricelist_update
-        );
-        if (response.ok) {
-          row.cells[1].textContent = update_pricelist_nama;
-          row.cells[2].textContent = update_harga_default;
-          row.cells[3].textContent = update_status;
-          row.cells[4].textContent = update_tanggal_berlaku;
+    if (!is_valid) return;
 
-          $("#modal_pricelist_update").modal("hide");
-          Swal.fire("Berhasil", response.message, "success");
-          window.pricelist_grid.forceRender();
-          setTimeout(() => {
-            helper.custom_grid_header(
-              "pricelist",
-              handle_delete,
-              handle_update
-            );
-          }, 200);
-        }
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Gagal",
-          text: error.message,
-        });
+    try {
+      const data_pricelist_update = {
+        pricelist_id: update_pricelist_id,
+        nama: update_pricelist_nama,
+        harga_default: update_harga_default,
+        status: update_status,
+        tanggal_berlaku: update_tanggal_berlaku,
+        detail: detail_rows,
+      };
+
+      const response = await apiRequest(
+        `/PHP/API/pricelist_API.php?action=update&user_id=${access.decryptItem(
+          "user_id"
+        )}`,
+        "POST",
+        data_pricelist_update
+      );
+
+      if (response.ok) {
+        row.cells[1].textContent = update_pricelist_nama;
+        row.cells[2].textContent = update_harga_default;
+        row.cells[3].textContent = update_status;
+        row.cells[4].textContent = update_tanggal_berlaku;
+
+        $("#update_modal_pricelist").modal("hide");
+        Swal.fire("Berhasil", response.message, "success");
+
+        if (window.pricelist_grid) window.pricelist_grid.forceRender();
+        setTimeout(() => {
+          helper.custom_grid_header("pricelist", handle_delete, handle_update);
+        }, 200);
+      } else {
+        Swal.fire("Gagal", response.message || "Update gagal.", "error");
       }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.message,
+      });
     }
   });
 }

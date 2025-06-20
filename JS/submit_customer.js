@@ -8,7 +8,8 @@ if (submit_customer) {
     $("#modal_customer").on("shown.bs.modal", function () {
       $("#name_customer").trigger("focus");
     });
-    fetch_channel();
+    fetch_FK("channel");
+    fetch_FK("pricelist");
     helper.format_nominal("max_piutang");
     helper.preview("ktp_image", "ktp");
     helper.preview("npwp_image", "npwp");
@@ -28,27 +29,42 @@ if (submit_customer) {
       allowClear: true,
       dropdownParent: $("#modal_customer"),
     });
+    $("#pricelist_id").select2({
+      placeholder: "Pilih pricelist",
+      allowClear: true,
+      dropdownParent: $("#modal_customer"),
+    });
   });
 }
 
-async function fetch_channel() {
+async function fetch_FK(element) {
   try {
     const response = await apiRequest(
-      `/PHP/API/channel_API.php?action=select&user_id=${access.decryptItem(
+      `/PHP/API/${element}_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
       )}&target=tb_customer&context=create`
     );
-    const select = $("#channel_id");
+    const select = $(`#${element}_id`);
     select.empty();
-    select.append(new Option("Pilih Channel", "", false, false));
-    response.data.forEach((channel) => {
-      const option = new Option(
-        `${channel.channel_id} - ${channel.nama}`,
-        channel.channel_id,
-        false,
-        false
-      );
-      select.append(option);
+    select.append(new Option(`"Pilih ${element}`, "", false, false));
+    response.data.forEach((item) => {
+      if (element == "channel") {
+        const option = new Option(
+          `${item.channel_id} - ${item.nama}`,
+          item.channel_id,
+          false,
+          false
+        );
+        select.append(option);
+      } else if (element == "pricelist") {
+        const option = new Option(
+          `${item.pricelist_id} - ${item.nama}`,
+          item.pricelist_id,
+          false,
+          false
+        );
+        select.append(option);
+      }
     });
     select.trigger("change");
   } catch (error) {

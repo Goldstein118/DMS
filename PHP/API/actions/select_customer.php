@@ -110,13 +110,14 @@ if (strlen($search) >= 3 && $search !== '') {
 
     $sql = "SELECT c.customer_id, c.nama, c.alamat, c.no_telp, c.ktp, c.npwp, c.status,
         c.nitko, c.term_pembayaran, c.max_invoice, c.max_piutang, c.longitude, c.latitude,
-        c.channel_id, ch.nama AS channel_nama,
+        c.channel_id,c.pricelist_id,p.nama AS pricelist_nama, ch.nama AS channel_nama,
         g_ktp.gambar_id AS ktp_id,
         g_npwp.gambar_id AS npwp_id
         FROM tb_customer c
         LEFT JOIN tb_channel ch ON c.channel_id = ch.channel_id
         LEFT JOIN tb_gambar g_ktp ON g_ktp.customer_id = c.customer_id AND g_ktp.tipe = 'ktp'
-        LEFT JOIN tb_gambar g_npwp ON g_npwp.customer_id = c.customer_id AND g_npwp.tipe = 'npwp'";
+        LEFT JOIN tb_gambar g_npwp ON g_npwp.customer_id = c.customer_id AND g_npwp.tipe = 'npwp'
+        LEFT JOIN tb_pricelist p ON p.pricelist_id=c.pricelist_id";
 
 
     $result = $conn->query($sql);

@@ -110,7 +110,7 @@ function handleImageUpload($field, $tipe, $customer_id, $conn, $upload_dir, $bas
 }
 
 try {
-    $requiredFields = ['customer_id', 'nama', 'status', 'channel_id'];
+    $requiredFields = ['customer_id', 'nama', 'status', 'channel_id','pricelist_id'];
     $fields = validate_1($data, $requiredFields);
 
     $customer_id = $fields['customer_id'];
@@ -127,6 +127,7 @@ try {
     $longitude = ($fields['longitude'] ?? '') !== '' ? $fields['longitude'] : null;
     $latitude = ($fields['latitude'] ?? '') !== '' ? $fields['latitude'] : null;
     $channel_id = $fields['channel_id'];
+    $pricelist_id=$fields['pricelist_id'];
 
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
     validate_2($alamat, '/^[a-zA-Z0-9,. ]+$/', "Invalid address format");
@@ -147,9 +148,9 @@ try {
         handle_image_remove('npwp', $customer_id, $conn);
     }
     $stmt = $conn->prepare("UPDATE tb_customer SET nama=?, alamat=?, no_telp=?, ktp=?, npwp=?, status=?, nitko=?, 
-    term_pembayaran=?, max_invoice=?, max_piutang=?,longitude=?,latitude=?, channel_id=? WHERE customer_id=?");
+    term_pembayaran=?, max_invoice=?, max_piutang=?,longitude=?,latitude=?, channel_id=?,pricelist_id=? WHERE customer_id=?");
     $stmt->bind_param(
-        "ssssssssssddss",
+        "ssssssssssddsss",
         $nama,
         $alamat,
         $no_telp,
@@ -163,6 +164,7 @@ try {
         $longitude,
         $latitude,
         $channel_id,
+        $pricelist_id,
         $customer_id
     );
 

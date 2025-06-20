@@ -7,11 +7,14 @@ const submit_detail_pricelist = document.getElementById(
 );
 if (submit_pricelist) {
   submit_pricelist.addEventListener("click", submitPricelist);
-  submit_detail_pricelist.addEventListener("click", helper.addField);
+  submit_detail_pricelist.addEventListener("click", () => {
+    helper.addField("create");
+  });
   $(document).ready(function () {
     $("#modal_pricelist").on("shown.bs.modal", function () {
       $("#name_pricelist").trigger("focus");
       fetch_produk();
+      helper.format_nominal("harga");
       $("#produk_select").select2({
         placeholder: "Pilih produk",
         allowClear: true,
@@ -69,15 +72,15 @@ async function submitPricelist() {
     "Format nama tidak valid"
   );
   const details = [];
-  const rows = document.querySelectorAll("#detail_pricelist_tbody tr");
+  const rows = document.querySelectorAll("#create_detail_pricelist_tbody tr");
 
   for (const row of rows) {
     const select = row.querySelector("select");
     const input = row.querySelector("input");
 
     const produk_id = select?.value;
-    const harga = input?.value?.trim();
-
+    let harga = input?.value?.trim();
+    harga = helper.format_angka(harga);
     if (!produk_id || !harga) {
       toastr.error("Semua produk dan harga harus diisi.");
       return;
@@ -109,7 +112,7 @@ async function submitPricelist() {
         swal.fire("Berhasil", response.message, "success");
         document.getElementById("name_pricelist").value = "";
         document.getElementById("tanggal_berlaku").value = "";
-        document.querySelector("#detail_pricelist_tbody").innerHTML = "";
+        document.querySelector("#create_detail_pricelist_tbody").innerHTML = "";
         $("#modal_pricelist").modal("hide");
         window.pricelist_grid.forceRender();
         setTimeout(() => {

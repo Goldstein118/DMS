@@ -89,7 +89,8 @@ $customer = "CREATE TABLE IF NOT EXISTS tb_customer (
         max_piutang VARCHAR(20),
         latitude DECIMAL(9,6),
         longitude DECIMAL (9,6),
-        channel_id VARCHAR(20), FOREIGN KEY (channel_id) REFERENCES tb_channel(channel_id) ON DELETE RESTRICT
+        channel_id VARCHAR(20), FOREIGN KEY (channel_id) REFERENCES tb_channel(channel_id) ON DELETE RESTRICT,
+        pricelist_id VARCHAR (20), FOREIGN KEY (pricelist_id) REFERENCES tb_pricelist(pricelist_id) ON DELETE RESTRICT
         )";
 if ($conn->query($customer)) {
     try {

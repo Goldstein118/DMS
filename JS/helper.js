@@ -341,8 +341,8 @@ export function preview(element_id, img_id) {
     }
   });
 }
-export function addField() {
-  var myTable = document.getElementById("detail_pricelist_tbody");
+export function addField(action) {
+  var myTable = document.getElementById(`${action}_detail_pricelist_tbody`);
   var currentIndex = myTable.rows.length;
   var currentRow = myTable.insertRow(-1);
 
@@ -367,16 +367,30 @@ export function addField() {
 
   currentCell = currentRow.insertCell(-1);
   currentCell.appendChild(delete_button);
-  select_detail_pricelist(currentIndex);
+  format_nominal("harga" + currentIndex);
+  select_detail_pricelist(currentIndex, action);
 }
 
-export async function select_detail_pricelist(index) {
-  $(`#produk_select${index}`).select2({
-    placeholder: "Pilih produk",
-    allowClear: true,
-    dropdownParent: $("#modal_pricelist"),
-  });
-  delete_detail_pricelist();
+export async function select_detail_pricelist(
+  index,
+  action,
+  current_produk_id
+) {
+  if (action == "create") {
+    $(`#produk_select${index}`).select2({
+      placeholder: "Pilih produk",
+      allowClear: true,
+      dropdownParent: $("#modal_pricelist"),
+    });
+  } else if (action == "update") {
+    $(`#produk_select${index}`).select2({
+      placeholder: "Pilih produk",
+      allowClear: true,
+      dropdownParent: $("#update_modal_pricelist"),
+    });
+  }
+
+  delete_detail_pricelist(action);
   try {
     const response = await apiRequest(
       `/PHP/API/produk_API.php?action=select&user_id=${access.decryptItem(
@@ -386,23 +400,36 @@ export async function select_detail_pricelist(index) {
     const select = $(`#produk_select${index}`);
     select.empty();
     select.append(new Option("Pilih Produk", "", false, false));
-    response.data.forEach((produk) => {
-      const option = new Option(
-        `${produk.produk_id} - ${produk.nama}`,
-        produk.produk_id,
-        false,
-        false
-      );
-      select.append(option);
-    });
-    select.trigger("change");
+    if (action == "create") {
+      response.data.forEach((produk) => {
+        const option = new Option(
+          `${produk.produk_id} - ${produk.nama}`,
+          produk.produk_id,
+          false,
+          false
+        );
+        select.append(option);
+      });
+      select.trigger("change");
+    } else if (action == "update") {
+      response.data.forEach((produk) => {
+        const option = new Option(
+          `${produk.produk_id} - ${produk.nama}`,
+          produk.produk_id,
+          false,
+          produk.produk_id === current_produk_id
+        );
+        select.append(option);
+      });
+      select.val(current_produk_id).trigger("change");
+    }
   } catch (error) {
     console.error("error:", error);
   }
 }
 
-export function delete_detail_pricelist() {
-  $("#detail_pricelist_tbody").on(
+export function delete_detail_pricelist(action) {
+  $(`#${action}_detail_pricelist_tbody`).on(
     "click",
     ".delete_detail_pricelist",
     async function () {

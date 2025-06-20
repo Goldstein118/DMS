@@ -41,6 +41,9 @@
           <label class="form-label mb-0 mt-2" for="channel_id">Kode Channel:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="channel_id">
           </select>
+          <label class="form-label mb-0 mt-2" for="pricelist_id">Kode Pricelist:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <select  class="form-select" id="pricelist_id">
+          </select>
           <div>
             <label for="ktp_image" class="form-label mb-0 mt-2">Upload Gambar KTP:</label>
             <input type="file" class="form-control" id="ktp_image" name="ktp_image" accept=".jpg,.jpeg,.png">
@@ -106,6 +109,9 @@
           <input class="form-control" type="text" id="update_longitude" name="update_longitude" aria-describedby="basic-addon1" value="">
           <label class="form-label mb-0 mt-2" for="update_channel_id">Kode Channel:<i class="bi bi-asterisk text-danger align-middle "></i></label>
           <select class="form-select" id="update_channel_id">
+          </select>
+          <label class="form-label mb-0 mt-2" for="update_pricelist_id">Kode Pricelist:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+          <select  class="form-select" id="update_pricelist_id">
           </select>
           <div>
             <label for="update_ktp_image" class="form-label mb-0 mt-2">Upload Gambar KTP:</label>

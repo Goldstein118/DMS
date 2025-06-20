@@ -252,8 +252,10 @@ body::-webkit-scrollbar {
 #table_user td:nth-child(3),
 #table_role th:nth-child(3),
 #table_role td:nth-child(3),
-#table_customer td:nth-child(14),
-#table_customer th:nth-child(14),
+#table_customer td:nth-child(15),
+#table_customer th:nth-child(15),
+#table_customer td:nth-child(16),
+#table_customer th:nth-child(16),
 #table_produk th:nth-child(9),
 #table_produk th:nth-child(8),
 #table_produk td:nth-child(9),
@@ -268,7 +270,8 @@ body::-webkit-scrollbar {
 #table_customer td:nth-child(9),
 #table_customer td:nth-child(4),
 #table_produk td:nth-child(7),
-#table_divisi td:nth-child(5) {
+#table_divisi td:nth-child(5),
+#view_harga {
   text-align: right;
 }
 
@@ -377,6 +380,22 @@ h3 {
   min-height: 0px !important;
   padding: 0px;
 }
-#create_detail_pricelist {
+#create_detail_pricelist,
+#update_detail_pricelist {
   max-width: fit-content !important;
+}
+.view_modal_pricelist {
+  display: block !important;
+}
+#view_pricelist_title {
+  text-align: center;
+}
+#coulmn_2 {
+  text-align: center;
+}
+#view_pricelist {
+  font-size: 0.775rem !important;
+  width: fit-content;
+  height: fit-content;
+  float: right;
 }

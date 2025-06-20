@@ -10,6 +10,10 @@ if (grid_container_customer) {
       allowClear: true,
       dropdownParent: $("#modal_customer_update"),
     });
+    $("#update_pricelist_id").select2({
+      allowClear: true,
+      dropdownParent: $("#modal_customer_update"),
+    });
   });
   window.customer_grid = new Grid({
     columns: [
@@ -26,7 +30,9 @@ if (grid_container_customer) {
       "Maksimun Nominal Piutang",
       "Titik Koordinat",
       "Channel",
+      "Pricelist",
       "Channel_id",
+      "Pricelist_id",
 
       {
         name: "Aksi",
@@ -119,7 +125,10 @@ if (grid_container_customer) {
 
           `),
           customer.channel_nama,
+          customer.pricelist_nama,
           customer.channel_id,
+          customer.pricelist_id,
+
           null,
         ]),
     },
@@ -135,7 +144,39 @@ if (grid_container_customer) {
     );
   }, 200);
 }
-
+async function fetch_FK(element, id) {
+  try {
+    const response = await apiRequest(
+      `/PHP/API/${element}_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}&target=tb_customer&context=edit`
+    );
+    const select = $(`#update_${element}_id`);
+    select.empty();
+    response.data.forEach((item) => {
+      if (element == "channel") {
+        const option = new Option(
+          `${item.channel_id} - ${item.nama}`,
+          item.channel_id,
+          false,
+          item.channel_id === id
+        );
+        select.append(option);
+      } else if (element == "pricelist") {
+        const option = new Option(
+          `${item.pricelist_id} - ${item.nama}`,
+          item.pricelist_id,
+          false,
+          item.pricelist_id === id
+        );
+        select.append(option);
+      }
+    });
+    select.trigger("change");
+  } catch (error) {
+    console.error("error:", error);
+  }
+}
 async function handle_delete(button) {
   const row = button.closest("tr");
   const customer_id = row.cells[0].textContent;
@@ -246,7 +287,8 @@ async function handle_update(button) {
     }
   }
 
-  const current_channel_id = row.cells[13].textContent;
+  const current_channel_id = row.cells[14].textContent;
+  const current_pricelist_id = row.cells[15].textContent;
 
   const ktp_filename = ktp_link ? ktp_link.split("/").pop() : "Belum ada file";
   const npwp_filename = npwp_link
@@ -295,23 +337,8 @@ async function handle_update(button) {
 
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
-    const response = await apiRequest(
-      `/PHP/API/channel_API.php?action=select&user_id=${access.decryptItem(
-        "user_id"
-      )}&target=tb_customer&context=edit`
-    );
-    const channel_id_field = $("#update_channel_id");
-    channel_id_field.empty();
-    response.data.forEach((channel) => {
-      const option = new Option(
-        `${channel.channel_id} - ${channel.nama}`,
-        channel.channel_id,
-        false,
-        channel.channel_id === current_channel_id
-      );
-      channel_id_field.append(option);
-    });
-    channel_id_field.trigger("change");
+    fetch_FK("channel", current_channel_id);
+    fetch_FK("pricelist", current_pricelist_id);
     button_icon.style.display = "inline-block";
     spinner.style.display = "none";
     $("#modal_customer_update").modal("show");
@@ -358,6 +385,7 @@ if (submit_customer_update) {
     const update_latitude = document.getElementById("update_latitude").value;
 
     const channel_id_new = $("#update_channel_id").val();
+    const pricelist_id_new = $("#update_pricelist_id").val();
 
     if (
       !update_nama ||
@@ -365,9 +393,11 @@ if (submit_customer_update) {
       !update_status ||
       update_status.trim() === "" ||
       !channel_id_new ||
-      channel_id_new.trim() === ""
+      channel_id_new.trim() === "" ||
+      !pricelist_id_new ||
+      pricelist_id_new.trim() === ""
     ) {
-      toastr.error("Harap isi semua kolom debelum simpan.");
+      toastr.error("Harap isi semua kolom sebelum simpan.");
       return;
     }
     const is_valid =
@@ -446,6 +476,7 @@ if (submit_customer_update) {
       formData.append("longitude", update_longitude);
       formData.append("latitude", update_latitude);
       formData.append("channel_id", channel_id_new);
+      formData.append("pricelist_id", pricelist_id_new);
 
       // Files
       const ktpFile = document.getElementById("update_ktp_image").files[0];

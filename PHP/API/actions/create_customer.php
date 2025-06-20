@@ -4,7 +4,7 @@ $upload_dir = __DIR__ . '/../../../uploads';
 $base_url = 'http://localhost/DMS/uploads/'; 
 
 try {
-    $requiredFields = ['name_customer', 'status_customer','channel_id'];
+    $requiredFields = ['name_customer', 'status_customer','channel_id','pricelist_id'];
     $default = ['status_customer' => 'aktif'];
     $fields = validate_1($data, $requiredFields, $default);
     $nama_customer = $fields['name_customer'];
@@ -21,6 +21,7 @@ try {
 
     $status_customer = $fields['status_customer'];
     $channel_id = $fields['channel_id'];
+    $pricelist_id = $field['pricelist_id'];
 
     validate_2($nama_customer, '/^[a-zA-Z\s]+$/', "Invalid name format");
     validate_2($alamat_customer, '/^[a-zA-Z0-9, .-]+$/', "Invalid address format");
@@ -36,11 +37,11 @@ try {
     $customer_id = generateCustomID('CU', 'tb_customer', 'customer_id', $conn);
     executeInsert(
         $conn,
-        "INSERT INTO tb_customer (customer_id,nama,alamat,no_telp,ktp,npwp,status,nitko,term_pembayaran,max_invoice,max_piutang,longitude,latitude,channel_id) 
+        "INSERT INTO tb_customer (customer_id,nama,alamat,no_telp,ktp,npwp,status,nitko,term_pembayaran,max_invoice,max_piutang,longitude,latitude,channel_id,pricelist_id) 
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         [$customer_id, $nama_customer, $alamat_customer, $no_telp_customer, $ktp_customer, $npwp_customer, $status_customer, $nitko,
-        $term_payment, $max_invoice, $max_piutang,$longitude,$latitude,$channel_id],
-        "sssssssssssdds"
+        $term_payment, $max_invoice, $max_piutang,$longitude,$latitude,$channel_id,$pricelist_id],
+        "sssssssssssddss"
     );
 
 

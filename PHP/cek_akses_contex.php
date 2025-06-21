@@ -6,7 +6,7 @@ function checkContextAccess($conn, $userId, $context) {
         'tb_user'     => ['tb_karyawan'],
         'tb_karyawan' => ['tb_role'],
         'tb_customer' =>['tb_channel','tb_pricelist'],
-        'tb_produk'   => ['tb_kategori', 'tb_brand'],
+        'tb_produk'   => ['tb_kategori', 'tb_brand','tb_pricelist'],
         'tb_pricelist'=>['tb_produk']
 
         // Add more mappings as needed

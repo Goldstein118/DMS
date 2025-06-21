@@ -8,6 +8,7 @@ if (submit_produk) {
     $("#modal_produk").on("shown.bs.modal", function () {
       fetch_fk("kategori");
       fetch_fk("brand");
+      pricelist();
       helper.format_nominal("harga_minimal");
       $("#name_produk").trigger("focus");
       $("#kategori").select2({
@@ -24,6 +25,50 @@ if (submit_produk) {
   });
 }
 
+async function pricelist() {
+  const result = await apiRequest(
+    `/PHP/API/pricelist_API.php?action=select&user_id=${access.decryptItem(
+      "user_id"
+    )}&target=tb_produk&context=create`
+  );
+  var table_detail_pricelist = document.getElementById(
+    "create_detail_pricelist_produk_tbody"
+  );
+  table_detail_pricelist.innerHTML = "";
+  result.data.forEach((item) => {
+    const tr = document.createElement("tr");
+    var currentIndex = table_detail_pricelist.rows.length;
+
+    const td_detail_id = document.createElement("td");
+    td_detail_id.setAttribute("id", "detail_pricelist_id");
+    td_detail_id.textContent = item.detail_pricelist_id;
+
+    const td_nama = document.createElement("td");
+    td_nama.setAttribute("id", `pricelist_nama`);
+    td_nama.textContent = item.nama;
+
+    const td_harga = document.createElement("td");
+    const input_harga = document.createElement("input");
+    input_harga.setAttribute("id", "pricelist_harga" + currentIndex);
+    input_harga.className = "form-control";
+    input_harga.value = "0";
+    input_harga.style.textAlign = "right";
+    td_harga.appendChild(input_harga);
+
+    const td_button = document.createElement("td");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "btn btn-danger btn-sm delete_detail_pricelist";
+    button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+    td_button.appendChild(button);
+
+    tr.appendChild(td_nama);
+    tr.appendChild(td_harga);
+    tr.appendChild(td_button);
+    table_detail_pricelist.appendChild(tr);
+    helper.format_nominal("pricelist_harga" + currentIndex);
+  });
+}
 async function fetch_fk(field) {
   try {
     const response = await apiRequest(
@@ -79,6 +124,16 @@ async function submitProduk() {
   let harga_minimal = document.getElementById("harga_minimal").value;
   harga_minimal = helper.format_angka(harga_minimal);
 
+  const details = [];
+  const rows = document.querySelectorAll(
+    "#create_detail_pricelist_produk_tbody tr"
+  );
+
+  for (const row of rows) {
+    const input = row.querySelector("input");
+    let harga = input?.value?.trim();
+    harga = helper.format_angka(harga);
+  }
   if (
     !name_produk ||
     name_produk.trim() === "" ||

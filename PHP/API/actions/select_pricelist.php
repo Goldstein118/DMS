@@ -49,9 +49,38 @@ if (strlen($search) >= 3 && $search !== '') {
         echo json_encode(["error" => "No details found for this pricelist id"]);
     }
 }
+else if (isset($data['produk_id'])){
+$produk_id = trim($data['produk_id']);
+$sql = "SELECT IFNULL(d.harga,0) AS harga ,p.pricelist_id,p.nama FROM tb_pricelist p
+CROSS JOIN tb_produk produk 
+LEFT JOIN tb_detail_pricelist d ON p.pricelist_id=d.pricelist_id AND produk.produk_id=d.produk_id
+WHERE produk.produk_id=?";
+    $stmt = $conn ->prepare($sql);
+    if($stmt == false){
+        http_response_code(500);
+        echo json_encode(["error"=>"Failed to prepare statement: ". $conn->error]);
+        exit;
+    }
+
+    $stmt->bind_param("s",$produk_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $detail_data=[];
+    while ($row = $result->fetch_assoc()){
+        $detail_data[]=$row;
+    }
+
+    if (!empty($detail_data)) {
+        echo json_encode($detail_data);
+    } else {
+        http_response_code(404);
+        echo json_encode(["error" => "No details found for this product id"]);
+    }
+
+}
  else {
-    $sql = "SELECT p.pricelist_id,p.nama,p.harga_default,p.status,p.tanggal_berlaku,d.detail_pricelist_id FROM tb_pricelist p
-            JOIN tb_detail_pricelist d ON d.pricelist_id = p.pricelist_id";
+    $sql = "SELECT p.pricelist_id,p.nama,p.harga_default,p.status,p.tanggal_berlaku FROM tb_pricelist p";
     $result = $conn->query($sql);
     if ($result) {
         $pricelist_data = [];

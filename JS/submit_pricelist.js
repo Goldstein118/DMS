@@ -21,6 +21,11 @@ if (submit_pricelist) {
         dropdownParent: $("#modal_pricelist"),
       });
     });
+    $("#tanggal_berlaku").pickadate({
+      format: "dd mmm yyyy", // user sees: 01 Jan 2025
+      formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
+      hiddenName: true, // use a single name="date" on hidden input
+    });
   });
 }
 
@@ -80,12 +85,11 @@ async function submitPricelist() {
 
     const produk_id = select?.value;
     let harga = input?.value?.trim();
-    harga = helper.format_angka(harga);
     if (!produk_id || !harga) {
       toastr.error("Semua produk dan harga harus diisi.");
       return;
     }
-
+    harga = helper.format_angka(harga);
     details.push({ produk_id, harga });
   }
 

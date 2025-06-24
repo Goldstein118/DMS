@@ -1,6 +1,6 @@
 <!-- Offcanvas Sidebar for mobile (visible on small screens) -->
 
-<div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="mobileSidebar" style="width: 200px;">
+<div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="mobileSidebar" style="width: 160px;">
   <div class="offcanvas-header">
     <img src="../images/8.jpg" class="img-fluid d-block mx-auto my-3" style="max-height: 60px;" alt="DMS"><br>
     <div><span id="welcomeText" class="fw-bold">Selamat Datang,</span><br>
@@ -115,13 +115,13 @@
 </div>
 
 
-<div class="sidebar col-lg-2 d-none d-lg-block bg-white p-2 d-flex flex-column vh-100">
+<div class="sidebar col-lg-2 d-none d-lg-block bg-white p-2 d-flex flex-column ">
   <div class="d-flex align-items-center justify-content-center mb-3 border-bottom py-2 flex-column text-center">
     <img src="../images/8.jpg" alt="DMS" class="img-fluid d-block mb-2" style="max-height: 60px;">
     <span id="welcomeText" class="fw-bold">Selamat Datang,</span>
     <span id="username" class="text-muted small"></span>
   </div>
-  <div class="d-flex flex-column flex-grow-1">
+  <div class="sidebar_body d-flex flex-column flex-grow-1">
     <ul class="list-unstyled ps-0 flex-grow-1">
       <li class="mb-1">
         <button
@@ -216,8 +216,6 @@
         </button>
         <div class="collapse show" id="penjualan-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-
-
           </ul>
         </div>
       </li>

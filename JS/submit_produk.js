@@ -39,12 +39,9 @@ async function pricelist() {
     const tr = document.createElement("tr");
     var currentIndex = table_detail_pricelist.rows.length;
 
-    const td_detail_id = document.createElement("td");
-    td_detail_id.setAttribute("id", "detail_pricelist_id");
-    td_detail_id.textContent = item.detail_pricelist_id;
-
     const td_nama = document.createElement("td");
     td_nama.setAttribute("id", `pricelist_nama`);
+    td_nama.setAttribute("data-pricelist-id", item.pricelist_id);
     td_nama.textContent = item.nama;
 
     const td_harga = document.createElement("td");
@@ -55,16 +52,9 @@ async function pricelist() {
     input_harga.style.textAlign = "right";
     td_harga.appendChild(input_harga);
 
-    const td_button = document.createElement("td");
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "btn btn-danger btn-sm delete_detail_pricelist";
-    button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
-    td_button.appendChild(button);
-
     tr.appendChild(td_nama);
     tr.appendChild(td_harga);
-    tr.appendChild(td_button);
+
     table_detail_pricelist.appendChild(tr);
     helper.format_nominal("pricelist_harga" + currentIndex);
   });
@@ -130,9 +120,15 @@ async function submitProduk() {
   );
 
   for (const row of rows) {
+    const td = row.querySelector("td");
     const input = row.querySelector("input");
+    const pricelist_id = td?.getAttribute("data-pricelist-id");
     let harga = input?.value?.trim();
-    harga = helper.format_angka(harga);
+    if (harga == "0" || harga == 0) {
+    } else {
+      harga = helper.format_angka(harga);
+      details.push({ pricelist_id, harga });
+    }
   }
   if (
     !name_produk ||
@@ -165,36 +161,95 @@ async function submitProduk() {
     );
 
   if (is_valid) {
-    const data_produk = {
-      user_id: `${access.decryptItem("user_id")}`,
-      name_produk,
-      kategori_id,
-      brand_id,
-      no_sku,
-      status_produk,
-      harga_minimal,
-    };
-    try {
-      const response = await apiRequest(
-        `/PHP/API/produk_API.php?action=create`,
-        "POST",
-        data_produk
-      );
-      if (response.ok) {
-        swal.fire("Berhasil", response.message, "success");
-        document.getElementById("name_produk").value = "";
-        document.getElementById("no_sku").value = "";
-        document.getElementById("harga_minimal").value = "";
-        $("#kategori").val(null).trigger("change");
-        $("#brand").val(null).trigger("change");
-        $("#modal_produk").modal("hide");
-        window.produk_grid.forceRender();
-        setTimeout(() => {
-          helper.custom_grid_header("produk");
-        }, 200);
+    let harga_minimum_empty = true;
+    let harga_details_empty = true;
+    let harga_banding = true;
+
+    if (details.length == 0 || !details) {
+      const response = await Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Kolom Harga Pricelist Kosong!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Iya, Simpan!",
+        cancelButtonText: "Batalkan",
+      });
+      if (!response.isConfirmed) {
+        harga_minimum_empty = false;
       }
-    } catch (error) {
-      toastr.error(error.message);
+    }
+
+    if (!harga_minimal || harga_minimal.trim() === "") {
+      const result = await Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Kolom Harga Minimun Kosong!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Iya, Simpan!",
+        cancelButtonText: "Batalkan",
+      });
+      if (!result.isConfirmed) {
+        harga_details_empty = false;
+      }
+    }
+
+    const harga_min = parseFloat(harga_minimal.replace(/[^0-9.]/g, ""));
+    const banding_harga = details.some((item) => {
+      const harga_detail = parseFloat(item.harga.replace(/[^0-9.]/g, ""));
+      return harga_detail < harga_min;
+    });
+    if (banding_harga) {
+      const result = await Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Harga pricelist lebih kecil dari harga minimun!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Iya, Simpan!",
+        cancelButtonText: "Batalkan",
+      });
+      if (!result.isConfirmed) {
+        harga_banding = false;
+      }
+    }
+    if (harga_minimum_empty && harga_details_empty && harga_banding) {
+      const data_produk = {
+        user_id: `${access.decryptItem("user_id")}`,
+        name_produk,
+        kategori_id,
+        brand_id,
+        no_sku,
+        status_produk,
+        harga_minimal,
+        details,
+      };
+      try {
+        const response = await apiRequest(
+          `/PHP/API/produk_API.php?action=create`,
+          "POST",
+          data_produk
+        );
+        if (response.ok) {
+          swal.fire("Berhasil", response.message, "success");
+          document.getElementById("name_produk").value = "";
+          document.getElementById("no_sku").value = "";
+          document.getElementById("harga_minimal").value = "";
+          $("#kategori").val(null).trigger("change");
+          $("#brand").val(null).trigger("change");
+          $("#modal_produk").modal("hide");
+          window.produk_grid.forceRender();
+          setTimeout(() => {
+            helper.custom_grid_header("produk");
+          }, 200);
+        }
+      } catch (error) {
+        toastr.error(error.message);
+      }
     }
   }
 }

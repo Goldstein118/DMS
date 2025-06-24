@@ -13,7 +13,7 @@
                         <input class="form-control" type="text" id="name_pricelist" name="name_pricelist" value="">
 
                         <label class="form-label mb-0 mt-2" for="tanggal_berlaku">Tanggal Berlaku:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                        <input type="date" class="form-control" id="tanggal_berlaku" />
+                        <input type="text" class="form-control" id="tanggal_berlaku"/>
                     </div>
                     <div class="col">
                         <label class="form-label mb-0 mt-2" for="default_pricelist">Harga Default:<i class="bi bi-asterisk text-danger align-middle "></i></label>
@@ -51,7 +51,7 @@
                                             <th scope="col">
                                                 Harga
                                             </th>
-                                            <th scope="col">
+                                            <th id="aksi_thead" scope="col">
                                                 Aksi
                                             </th>
                                         </tr>
@@ -63,9 +63,9 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" id="harga">
+                                                <input type="text" style="text-align: right;" class="form-control" id="harga">
                                             </td>
-                                            <td>
+                                            <td id="aksi_tbody" style="text-align: center;">
                                                 <button class="btn btn-danger btn-sm delete_detail_pricelist">
                                                     <i class="bi bi-trash-fill"></i>
                                                 </button>
@@ -219,7 +219,7 @@
                                             <th scope="col">
                                                 Harga
                                             </th>
-                                            <th>Aksi</th>
+                                            <th style="width: 50px;">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="update_detail_pricelist_tbody">

@@ -283,6 +283,7 @@ async function handle_update(button) {
       const inputHarga = document.createElement("input");
       inputHarga.setAttribute("id", `detail_harga${index}`);
       inputHarga.className = "form-control";
+      inputHarga.style.textAlign = "right";
 
       let harga = helper.unformat_angka(detail.harga);
       inputHarga.value = harga;
@@ -295,7 +296,7 @@ async function handle_update(button) {
       deleteBtn.className = "btn btn-danger btn-sm delete_detail_pricelist";
       deleteBtn.innerHTML = `<i class="bi bi-trash-fill"></i>`;
       tdDelete.appendChild(deleteBtn);
-
+      tdDelete.style.width = "50px";
       // Append all tds
       tr.appendChild(tdProduk);
       tr.appendChild(tdHarga);

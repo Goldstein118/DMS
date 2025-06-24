@@ -11,35 +11,6 @@
   --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-@font-face {
-  font-family: "Roboto";
-  src: url("/DMS/Vendor/fonts/Roboto/static/Roboto-Regular.ttf") format("woff2"),
-    url("/DMS/Vendor/fonts/Roboto/static/Roboto-Regular.ttf") format("woff");
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Roboto";
-  src: url("/DMS/Vendor/fonts/Roboto/static/Roboto-Bold.ttf") format("woff2"),
-    url("/DMS/Vendor/fonts/Roboto/static/Roboto-Bold.ttf") format("woff");
-  font-weight: 700;
-  font-style: normal;
-}
-
-/* Then use it like normal */
-body {
-  font-family: "Roboto", sans-serif;
-}
-
-@media (max-width: 576px) {
-  .sidebar {
-    display: none !important;
-  }
-  .table-responsive {
-    font-size: 0.875rem;
-  }
-}
 label {
   font-size: 0.875rem;
   font-weight: bold;
@@ -88,7 +59,7 @@ th.gridjs-th {
 }
 
 table th {
-  background-color: var(--neutral-color);
+  background-color: #b2cef8 !important;
   color: var(--text-color);
   font-weight: bold;
 }
@@ -175,9 +146,18 @@ main {
 }
 
 .sidebar {
+  display: flex !important;
+  flex-direction: column;
   max-width: 160px;
   border-right: 1px solid #dee2e6;
+  max-height: calc(100vh - 7vh);
 }
+
+.sidebar_body {
+  overflow-y: auto !important;
+  min-height: 0; /* important to allow flex to work properly */
+}
+
 #main {
   padding: 0.5rem;
   flex: 1;
@@ -188,7 +168,7 @@ main {
 }
 
 footer {
-  height: 60px;
+  max-height: 7vh;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -275,6 +255,10 @@ body::-webkit-scrollbar {
   text-align: right;
 }
 
+#aksi_thead,
+#aksi_tbody {
+  width: 50px;
+}
 .ms-auto {
   margin-right: auto !important;
 }
@@ -428,4 +412,36 @@ h3 {
   display: table;
   width: 100%;
   table-layout: fixed;
+}
+.card {
+  margin-bottom: 1rem !important;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("/DMS/Vendor/fonts/Roboto/static/Roboto-Regular.ttf") format("woff2"),
+    url("/DMS/Vendor/fonts/Roboto/static/Roboto-Regular.ttf") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/DMS/Vendor/fonts/Roboto/static/Roboto-Bold.ttf") format("woff2"),
+    url("/DMS/Vendor/fonts/Roboto/static/Roboto-Bold.ttf") format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Then use it like normal */
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+@media (max-width: 991px) {
+  .sidebar {
+    display: none !important;
+  }
+  .table-responsive {
+    font-size: 0.875rem;
+  }
 }

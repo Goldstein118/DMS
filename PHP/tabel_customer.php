@@ -47,12 +47,13 @@
           <div>
             <label for="ktp_image" class="form-label mb-0 mt-2">Upload Gambar KTP:</label>
             <input type="file" class="form-control" id="ktp_image" name="ktp_image" accept=".jpg,.jpeg,.png">
+            <div id="ktp_link" class="form-text text-muted"></div>
 
           </div>
           <div>
             <label for="npwp_image" class="form-label mb-0 mt-2">Upload Gambar NPWP</label>
             <input type="file" class="form-control" id="npwp_image" name="npwp_image" accept=".jpg,.jpeg,.png">
-
+            <div id="npwp_link" class="form-text text-muted"></div>
           </div>
         </form>
 

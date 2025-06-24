@@ -11,8 +11,6 @@ if (submit_customer) {
     fetch_FK("channel");
     fetch_FK("pricelist");
     helper.format_nominal("max_piutang");
-    helper.preview("ktp_image", "ktp");
-    helper.preview("npwp_image", "npwp");
     document
       .getElementById("ktp_image")
       .addEventListener("change", function () {
@@ -57,6 +55,8 @@ async function fetch_FK(element) {
         );
         select.append(option);
       } else if (element == "pricelist") {
+        if (item.status !== "aktif") return;
+
         const option = new Option(
           `${item.pricelist_id} - ${item.nama}`,
           item.pricelist_id,
@@ -71,7 +71,8 @@ async function fetch_FK(element) {
     console.error("error:", error);
   }
 }
-
+helper.load_file_link("ktp_image", "ktp_link");
+helper.load_file_link("npwp_image", "npwp_link");
 async function submitCustomer() {
   const form = document.getElementById("form_customer");
   const formData = new FormData(form);

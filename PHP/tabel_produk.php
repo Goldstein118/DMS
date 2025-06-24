@@ -7,7 +7,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div class="row gap-3">
+          <div class="col">
             <div class="col">
               <div class="card">
                 <div class="card-header"> Produk</div>
@@ -49,9 +49,6 @@
                         <th scope="col">
                           Harga
                         </th>
-                        <th scope="col">
-                          Aksi
-                        </th>
                       </tr>
                     </thead>
                     <tbody id="create_detail_pricelist_produk_tbody">
@@ -78,7 +75,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div class="row g-3">
+          <div class="col">
             <div class="col">
               <div class="card">
                 <div class="card-header">Produk</div>
@@ -121,9 +118,6 @@
                         </th>
                         <th scope="col">
                           Harga
-                        </th>
-                        <th scope="col">
-                          Aksi
                         </th>
                       </tr>
                     </thead>

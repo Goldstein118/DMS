@@ -15,6 +15,8 @@ return [
     'toastr_css'       => "$vendorBase/toastr.min.css",
     'toaster_js'       => "$vendorBase/toastr.min.js",
     'sjcl_js'          => "$vendorBase/sjcl.min.js",
+    'datepickerjs'     =>"$vendorBase/datepicker.js",
+    'datepickercss'    =>"$vendorBase/datepicker.css"
 
     // Add more libraries here as needed
 ];

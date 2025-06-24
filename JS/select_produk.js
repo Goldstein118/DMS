@@ -190,6 +190,43 @@ function populateDropdown(data, field_id, field) {
 
   select.trigger("change");
 }
+async function update_pricelist(produk_id) {
+  const result = await apiRequest(
+    `/PHP/API/pricelist_API.php?action=select&user_id=${access.decryptItem(
+      "user_id"
+    )}&target=tb_produk&context=edit`,
+    "POST",
+    { produk_id }
+  );
+
+  const table_detail_pricelist = document.getElementById(
+    "update_detail_pricelist_produk_tbody"
+  );
+  table_detail_pricelist.innerHTML = "";
+
+  result.data.forEach((item, index) => {
+    const tr = document.createElement("tr");
+
+    const td_nama = document.createElement("td");
+    td_nama.setAttribute("data-pricelist-id", item.pricelist_id);
+    td_nama.textContent = item.nama;
+
+    const td_harga = document.createElement("td");
+    const input_harga = document.createElement("input");
+    input_harga.setAttribute("id", `update_pricelist_harga${index}`);
+    input_harga.className = "form-control";
+    input_harga.value = helper.unformat_angka(item.harga);
+    input_harga.style.textAlign = "right";
+    td_harga.appendChild(input_harga);
+
+    tr.appendChild(td_nama);
+    tr.appendChild(td_harga);
+
+    table_detail_pricelist.appendChild(tr);
+
+    helper.format_nominal(`update_pricelist_harga${index}`);
+  });
+}
 
 async function fetch_fk(field, field_id) {
   try {
@@ -227,6 +264,7 @@ async function handle_update(button) {
   document.getElementById("update_no_sku").value = no_sku;
   document.getElementById("update_status_produk").value = status;
   document.getElementById("update_harga_minimal").value = harga_minimal;
+  update_pricelist(produk_id);
   helper.format_nominal("update_harga_minimal");
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
@@ -277,6 +315,22 @@ if (submit_produk_update) {
     harga_minimal_new = helper.unformat_angka(harga_minimal_new);
     const kategori_id_new = $("#update_kategori").val();
     const brand_id_new = $("#update_brand").val();
+    const details = [];
+    const rows = document.querySelectorAll(
+      "#update_detail_pricelist_produk_tbody tr"
+    );
+
+    for (const row of rows) {
+      const td = row.querySelector("td");
+      const input = row.querySelector("input");
+      const pricelist_id = td?.getAttribute("data-pricelist-id");
+      let harga = input?.value?.trim();
+      if (harga == "0" || harga == 0) {
+      } else {
+        harga = helper.format_angka(harga);
+        details.push({ pricelist_id, harga });
+      }
+    }
 
     if (!nama_new || nama_new.trim() === "") {
       toastr.error("Kolom * wajib diisi.");
@@ -305,6 +359,7 @@ if (submit_produk_update) {
           harga_minimal: helper.format_angka(harga_minimal_new),
           kategori_id: kategori_id_new,
           brand_id: brand_id_new,
+          details,
         };
         const response = await apiRequest(
           `/PHP/API/produk_API.php?action=update&user_id=${access.decryptItem(

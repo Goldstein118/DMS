@@ -302,6 +302,16 @@ async function handle_update(button) {
   document.getElementById("update_npwp_link").innerHTML = npwp_link
     ? `<a href="${npwp_link}" target="_blank">Lihat</a>`
     : npwp_filename;
+  const clearKtp = document.getElementById("clear_ktp");
+  const clearNpwp = document.getElementById("clear_npwp");
+
+  if (clearKtp) {
+    clearKtp.style.display = ktp_link ? "inline-block" : "none";
+  }
+
+  if (clearNpwp) {
+    clearNpwp.style.display = npwp_link ? "inline-block" : "none";
+  }
 
   helper.load_input_file_name(ktp_link, "#update_ktp_image", ktp_filename);
   helper.load_input_file_name(npwp_link, "#update_npwp_image", npwp_filename);

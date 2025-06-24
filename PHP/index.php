@@ -28,6 +28,7 @@ include ("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
     <!-- Toastr CSS -->
   <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/toastr.min.css" rel="stylesheet">
+  <link href="<?php echo $_ENV['VENDOR_BASE_URL']?>/datepicker.css" rel="stylesheet">
 
   
   <!-- Custom CSS -->
@@ -52,11 +53,13 @@ include ("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
     <!-- Toastr JS -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/toastr.min.js"></script>
+  <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/datepicker.js"></script>
 
   <!--Grid.js -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/gridjs.umd.js"></script>
 
   <script src="<?php echo $_ENV['VENDOR_BASE_URL']?>/sjcl.min.js"></script>
+
 
 
 

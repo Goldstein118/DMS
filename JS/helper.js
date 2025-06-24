@@ -202,14 +202,28 @@ export function view_checkbox(field, aksi) {
     });
   }
 }
+
 export function format_angka(str) {
   if (str === null || str === undefined || str === "") {
     return str;
   }
-
-  if (!/^\d+$/.test(str)) {
-    return str + ".00";
+  // Remove existing commas for processing
+  const raw = str.replace(/,/g, "");
+  // If it's all digits (integer), format with commas and add .00
+  if (/^\d+$/.test(raw)) {
+    return Number(raw).toLocaleString("en-US") + ".00";
   }
+  // If it's a number with decimals, format with commas
+  if (/^\d+(\.\d+)?$/.test(raw)) {
+    const parts = raw.split(".");
+    let formatted = Number(parts[0]).toLocaleString("en-US");
+    if (parts[1]) {
+      formatted += "." + parts[1];
+    }
+    return formatted;
+  }
+  // Otherwise, return as is
+  return str;
 }
 export function format_npwp(npwp) {
   if (npwp.length == 15) {
@@ -231,27 +245,30 @@ export function unformat_angka(formattedString) {
 
   return formattedString.toString().replace(/\.00$/, "");
 }
+
 export function format_nominal(element_id) {
-  var nominal = document.getElementById(element_id);
-  nominal.addEventListener(
-    "keyup",
-    function () {
-      if (!nominal.value || nominal.value.trim() === "") {
-        nominal.value = "";
-        return;
-      } else {
-        var n = parseInt(this.value.replace(/\D/g, ""), 10);
-        nominal.value = n.toLocaleString("en-US");
-      }
-    },
-    false
-  );
+  const nominal = document.getElementById(element_id);
+
+  nominal.addEventListener("keyup", function () {
+    // Remove all non-digit characters
+    const cleaned = this.value.replace(/\D/g, "");
+
+    // If empty, show empty string (don't default to 0)
+    if (cleaned === "") {
+      this.value = "";
+      return;
+    }
+
+    // Convert to number and back to string with commas
+    const formatted = Number(cleaned).toLocaleString("en-US");
+    this.value = formatted;
+  });
 }
 
 export function load_file_link(
   inputId,
   displayId,
-  originalLink,
+  originalLink = null,
   clearBtnId = null
 ) {
   const inputElement = document.getElementById(inputId);
@@ -260,18 +277,20 @@ export function load_file_link(
   // Replace input element to clear previous event listeners
   const newInput = inputElement.cloneNode(true);
   inputElement.replaceWith(newInput);
-
+  const clearBtn = clearBtnId ? document.getElementById(clearBtnId) : null;
   const updateDisplay = (file) => {
     if (file) {
       const blobUrl = URL.createObjectURL(file);
       displayElement.innerHTML = `<a href="${blobUrl}" target="_blank">Lihat</a>`;
+      if (clearBtn) clearBtn.style.display = "inline-block";
     } else if (originalLink) {
       displayElement.innerHTML = `<a href="${originalLink}" target="_blank">Lihat</a>`;
+      if (clearBtn) clearBtn.style.display = "inline-block";
     } else {
       displayElement.innerHTML = `<a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Belum ada file</a>`;
+      if (clearBtn) clearBtn.style.display = "none";
     }
   };
-
   newInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
     updateDisplay(file);
@@ -344,29 +363,36 @@ export function preview(element_id, img_id) {
 export function addField(action) {
   var myTable = document.getElementById(`${action}_detail_pricelist_tbody`);
   var currentIndex = myTable.rows.length;
-  var currentRow = myTable.insertRow(-1);
+  const tr_detail = document.createElement("tr");
 
+  const td_harga = document.createElement("td");
   var input_box = document.createElement("input");
   input_box.setAttribute("id", "harga" + currentIndex);
   input_box.classList.add("form-control");
+  input_box.style.textAlign = "right";
+  td_harga.appendChild(input_box);
 
+  const td_select = document.createElement("td");
   var select_box = document.createElement("select");
   select_box.setAttribute("id", "produk_select" + currentIndex);
   select_box.classList.add("form-select");
+  td_select.appendChild(select_box);
 
+  const td_aksi = document.createElement("td");
+  td_aksi.setAttribute("id", "aksi_tbody");
   var delete_button = document.createElement("button");
   delete_button.type = "button";
   delete_button.className = "btn btn-danger btn-sm delete_detail_pricelist";
   delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+  td_aksi.appendChild(delete_button);
+  td_aksi.style.textAlign = "center";
 
-  var currentCell = currentRow.insertCell(-1);
-  currentCell.appendChild(select_box);
+  tr_detail.appendChild(td_select);
+  tr_detail.appendChild(td_harga);
+  tr_detail.appendChild(td_aksi);
 
-  currentCell = currentRow.insertCell(-1);
-  currentCell.appendChild(input_box);
+  myTable.appendChild(tr_detail);
 
-  currentCell = currentRow.insertCell(-1);
-  currentCell.appendChild(delete_button);
   format_nominal("harga" + currentIndex);
   select_detail_pricelist(currentIndex, action);
 }

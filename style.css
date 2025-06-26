@@ -239,7 +239,9 @@ body::-webkit-scrollbar {
 #table_produk th:nth-child(9),
 #table_produk th:nth-child(8),
 #table_produk td:nth-child(9),
-#table_produk td:nth-child(8) {
+#table_produk td:nth-child(8),
+#table_produk th:nth-child(10),
+#table_produk td:nth-child(10) {
   display: none !important;
 }
 #table_karyawan td:nth-child(5),

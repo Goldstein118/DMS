@@ -26,6 +26,7 @@ if (grid_container_produk) {
       "Harga Minimal",
       "kategori_id",
       "brand_id",
+      "link_gambar",
       {
         name: "Aksi",
         formatter: () => {
@@ -68,6 +69,9 @@ if (grid_container_produk) {
         </button>
         `;
           }
+          button += `<button type="button" class="btn btn btn-info view_pricelist btn-sm" >
+          <i class="bi bi-eye"></i>
+        </button>`;
           return html(button);
         },
       },
@@ -110,13 +114,25 @@ if (grid_container_produk) {
           produk.harga_minimal,
           produk.kategori_id,
           produk.brand_id,
+          html(`
+             ${
+               produk.produk_link
+                 ? `<a class = "link-dark d-inline-flex text-decoration-none rounded" href="${produk.produk_link}" target="_blank" >
+                    <i class="bi bi-person-vcard-fill"></i></a>`
+                 : ``
+             }`),
           null,
         ]),
     },
   });
   window.produk_grid.render(document.getElementById("table_produk"));
   setTimeout(() => {
-    helper.custom_grid_header("produk", handle_delete, handle_update);
+    helper.custom_grid_header(
+      "produk",
+      handle_delete,
+      handle_update,
+      handle_view
+    );
   }, 200);
 }
 
@@ -162,7 +178,14 @@ async function handle_delete(button) {
     }
   }
 }
-
+function handle_view(button) {
+  const row = button.closest("tr");
+  const produk_id = row.cells[0].textContent.trim();
+  window.open(
+    `../PHP/view_produk.php?produk_id=${encodeURIComponent(produk_id)}`,
+    "_blank"
+  );
+}
 function populateDropdown(data, field_id, field) {
   const select = $(`#update_${field}`);
   select.empty();
@@ -257,6 +280,8 @@ async function handle_update(button) {
   const status = row.cells[5].textContent;
   let harga_minimal = row.cells[6].textContent;
   harga_minimal = helper.unformat_angka(harga_minimal);
+  let produk_gambar = row.cells[9];
+  let produk_link = "";
 
   // Populate the modal fields
   document.getElementById("update_produk_id").value = produk_id;
@@ -266,6 +291,35 @@ async function handle_update(button) {
   document.getElementById("update_harga_minimal").value = harga_minimal;
   update_pricelist(produk_id);
   helper.format_nominal("update_harga_minimal");
+
+  if (produk_gambar) {
+    const div = document.createElement("div");
+    div.innerHTML = produk_gambar.innerHTML;
+    const a_tag = div.querySelector('a[href*="produk"]');
+    produk_link = a_tag ? a_tag.getAttribute("href") : "";
+  }
+  const produk_filename = produk_link
+    ? produk_link.split("/").pop()
+    : "Belum ada file";
+  document.getElementById("update_produk_link").innerHTML = produk_link
+    ? `<a href="${produk_link}" target="_blank">Lihat</a>`
+    : produk_filename;
+
+  const clear_produk = document.getElementById("clear_gambar_produk");
+  if (clear_produk) {
+    clear_produk.style.display = produk_link ? "inline-block" : "none";
+  }
+  helper.load_input_file_name(
+    produk_link,
+    "#update_produk_gambar",
+    produk_filename
+  );
+  helper.load_file_link(
+    "update_produk_gambar",
+    "update_produk_link",
+    produk_link,
+    "clear_gambar_produk"
+  );
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     fetch_fk("kategori", kategori_id);
@@ -350,23 +404,29 @@ if (submit_produk_update) {
         "Format harga minimal tidak valid"
       );
     if (is_valid) {
+      const formData = new FormData();
+      formData.append("produk_id", produk_id);
+      formData.append("nama", nama_new);
+      formData.append("no_sku", no_sku_new);
+      formData.append("status", status_new);
+      formData.append("harga_minimal", helper.format_angka(harga_minimal_new));
+      formData.append("kategori_id", kategori_id_new);
+      formData.append("brand_id", brand_id_new);
+      formData.append("details", JSON.stringify(details));
+      const produk_file = document.getElementById("update_produk_gambar")
+        .files[0];
+      if (produk_file) {
+        formData.append("produk_file", produk_file);
+      } else {
+        formData.append("remove_produk_file", "true");
+      }
       try {
-        const data_produk_update = {
-          produk_id: produk_id,
-          nama: nama_new,
-          no_sku: no_sku_new,
-          status: status_new,
-          harga_minimal: helper.format_angka(harga_minimal_new),
-          kategori_id: kategori_id_new,
-          brand_id: brand_id_new,
-          details,
-        };
         const response = await apiRequest(
           `/PHP/API/produk_API.php?action=update&user_id=${access.decryptItem(
             "user_id"
           )}`,
           "POST",
-          data_produk_update
+          formData
         );
         if (response.ok) {
           row.cells[1].textContent = nama_new;

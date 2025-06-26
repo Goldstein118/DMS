@@ -5,6 +5,14 @@ import * as access from "./cek_access.js";
 import * as helper from "./helper.js";
 
 const grid_container_pricelist = document.querySelector("#table_pricelist");
+const pickdatejs = $("#update_tanggal_berlaku")
+  .pickadate({
+    format: "dd mmm yyyy", // user sees: 01 Jan 2025
+    formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
+    selectYears: 25,
+    selectMonths: true,
+  })
+  .pickadate("picker");
 if (grid_container_pricelist) {
   const create_detail_pricelist = document.getElementById(
     "update_detail_pricelist"
@@ -12,6 +20,7 @@ if (grid_container_pricelist) {
   create_detail_pricelist.addEventListener("click", () => {
     helper.addField("update");
   });
+
   window.pricelist_grid = new Grid({
     columns: [
       "Kode Pricelist",
@@ -62,7 +71,7 @@ if (grid_container_pricelist) {
         `;
           }
           button += `
-        <button type="button" class="btn btn btn-info view_pricelist btn-sm" data-bs-toggle= "modal" data-bs-target ="#view_modal_pricelist">
+        <button type="button" class="btn btn btn-info view_pricelist btn-sm" >
           <i class="bi bi-eye"></i>
         </button>
         `;
@@ -102,8 +111,8 @@ if (grid_container_pricelist) {
           pricelist.pricelist_id,
           pricelist.nama,
           pricelist.harga_default,
+          helper.format_date(pricelist.tanggal_berlaku),
           pricelist.status,
-          pricelist.tanggal_berlaku,
           null,
         ]),
     },
@@ -118,73 +127,17 @@ if (grid_container_pricelist) {
     );
   }, 200);
 }
-async function handle_view(button) {
+
+function handle_view(button) {
   const row = button.closest("tr");
-  const pricelist_id = row.cells[0].textContent;
+  const pricelist_id = row.cells[0].textContent.trim();
 
-  // Populate the modal fields
-
-  const result = await apiRequest(
-    `/PHP/API/pricelist_API.php?action=select&user_id=${access.decryptItem(
-      "user_id"
+  window.open(
+    `../PHP/view_pricelist.php?pricelist_id=${encodeURIComponent(
+      pricelist_id
     )}`,
-    "POST",
-    { pricelist_id }
+    "_blank"
   );
-  const tableBody = document.getElementById("view_detail_pricelist_tbody");
-
-  tableBody.innerHTML = "";
-
-  if (result) {
-    result.data.forEach((detail) => {
-      const tr_detail = document.createElement("tr");
-
-      const td_kode_pricelist = document.getElementById("view_pricelist_id");
-      td_kode_pricelist.textContent = detail.pricelist_id;
-
-      const td_status = document.getElementById("view_status");
-      td_status.textContent = detail.status;
-
-      const td_tanggal_berlaku = document.getElementById(
-        "view_tanggal_berlaku"
-      );
-      td_tanggal_berlaku.textContent = detail.tanggal_berlaku;
-
-      const td_harga_default = document.getElementById("view_harga_default");
-      td_harga_default.textContent = detail.harga_default;
-
-      const tdKode = document.createElement("td");
-      tdKode.textContent = detail.detail_pricelist_id;
-
-      const tdPriceNama = document.createElement("td");
-      tdPriceNama.textContent = detail.price_nama;
-
-      const tdProduk = document.createElement("td");
-      tdProduk.textContent = detail.produk_nama;
-
-      const tdHarga = document.createElement("td");
-      tdHarga.setAttribute("id", "view_harga");
-      tdHarga.textContent = detail.harga;
-
-      // Append all tds to tr
-      tr_detail.appendChild(tdKode);
-      tr_detail.appendChild(tdPriceNama);
-      tr_detail.appendChild(tdProduk);
-      tr_detail.appendChild(tdHarga);
-
-      // Append tr to tbody
-      tableBody.appendChild(tr_detail);
-    });
-  } else {
-    // Optional: show message if no data found
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 4;
-    td.className = "text-center text-muted";
-    td.textContent = "No details found for this pricelist.";
-    tr.appendChild(td);
-    tableBody.appendChild(tr);
-  }
 }
 
 // Attach delete listeners
@@ -246,15 +199,18 @@ async function handle_update(button) {
   const pricelist_id = row.cells[0].textContent;
   const current_nama = row.cells[1].textContent;
   const harga_default = row.cells[2].textContent;
-  const current_status = row.cells[3].textContent;
-  const tanggal_berlaku = row.cells[4].textContent;
+  let tanggal_berlaku = row.cells[3].textContent;
+  const current_status = row.cells[4].textContent;
 
   // Populate the modal fields
   document.getElementById("update_pricelist_id").value = pricelist_id;
   document.getElementById("update_name_pricelist").value = current_nama;
   document.getElementById("update_default_pricelist").value = harga_default;
   document.getElementById("update_status_pricelist").value = current_status;
-  document.getElementById("update_tanggal_berlaku").value = tanggal_berlaku;
+  tanggal_berlaku = helper.unformat_date(tanggal_berlaku);
+  const parts = tanggal_berlaku.split("-"); // ["2025", "05", "02"]
+  const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+  pickdatejs.set("select", dateObj);
 
   await new Promise((resolve) => setTimeout(resolve, 500));
   const result = await apiRequest(
@@ -347,9 +303,8 @@ if (submit_pricelist_update) {
     const update_status = document.getElementById(
       "update_status_pricelist"
     ).value;
-    const update_tanggal_berlaku = document.getElementById(
-      "update_tanggal_berlaku"
-    ).value;
+    const picker = $("#update_tanggal_berlaku").pickadate("picker");
+    const update_tanggal_berlaku = picker.get("select", "yyyy-mm-dd");
     const detail_rows = [];
     document
       .querySelectorAll("#update_detail_pricelist_tbody tr")

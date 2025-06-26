@@ -10,11 +10,33 @@ if (!isset($data['produk_id'])) {
 }
 $produk_id = trim($data['produk_id']);
 
+    $conn->begin_transaction();
+
+
+    $stmtSelect = $conn->prepare("SELECT internal_link FROM tb_gambar_produk WHERE produk_id = ?");
+    $stmtSelect->bind_param("s", $produk_id);
+    $stmtSelect->execute();
+    $result = $stmtSelect->get_result();
+
+
+    while ($row = $result->fetch_assoc()) {
+        $path = $row['internal_link'];
+        if ($path && file_exists($path)) {
+            unlink($path); 
+        }
+    }
+    $stmtSelect->close();
+    $stmtGambar = $conn->prepare("DELETE FROM tb_gambar_produk WHERE produk_id = ?");
+    $stmtGambar->bind_param("s", $produk_id);
+    $stmtGambar->execute();
+    $stmtGambar->close();
+
     $stmt = $conn->prepare("DELETE FROM tb_produk WHERE produk_id = ?");
     $stmt->bind_param("s", $produk_id);
     $execute= $stmt->execute(); 
     
     if($execute&&$stmt->affected_rows>0){
+    $conn->commit();
     http_response_code(200);
     echo json_encode(["message" => "Produk berhasil terhapus"]);
     }

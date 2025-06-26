@@ -13,7 +13,7 @@
                         <input class="form-control" type="text" id="name_pricelist" name="name_pricelist" value="">
 
                         <label class="form-label mb-0 mt-2" for="tanggal_berlaku">Tanggal Berlaku:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                        <input type="text" class="form-control" id="tanggal_berlaku"/>
+                        <input type="text" class="form-control" id="tanggal_berlaku" name="tanggal_berlaku"/>
                     </div>
                     <div class="col">
                         <label class="form-label mb-0 mt-2" for="default_pricelist">Harga Default:<i class="bi bi-asterisk text-danger align-middle "></i></label>
@@ -181,7 +181,7 @@
                         <input class="form-control" type="text" id="update_name_pricelist" name="name_pricelist" value="">
 
                         <label class="form-label mb-0 mt-2" for="update_tanggal_berlaku">Tanggal Berlaku:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                        <input type="date" class="form-control" id="update_tanggal_berlaku" />
+                        <input type="text" class="form-control" id="update_tanggal_berlaku" />
                     </div>
                     <div class="col">
                         <label class="form-label mb-0 mt-2" for="update_default_pricelist">Harga Default:<i class="bi bi-asterisk text-danger align-middle "></i></label>

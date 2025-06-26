@@ -21,7 +21,7 @@ try {
 
     $status_customer = $fields['status_customer'];
     $channel_id = $fields['channel_id'];
-    $pricelist_id = $field['pricelist_id'];
+    $pricelist_id = $fields['pricelist_id'];
 
     validate_2($nama_customer, '/^[a-zA-Z\s]+$/', "Invalid name format");
     validate_2($alamat_customer, '/^[a-zA-Z0-9, .-]+$/', "Invalid address format");
@@ -38,7 +38,7 @@ try {
     executeInsert(
         $conn,
         "INSERT INTO tb_customer (customer_id,nama,alamat,no_telp,ktp,npwp,status,nitko,term_pembayaran,max_invoice,max_piutang,longitude,latitude,channel_id,pricelist_id) 
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         [$customer_id, $nama_customer, $alamat_customer, $no_telp_customer, $ktp_customer, $npwp_customer, $status_customer, $nitko,
         $term_payment, $max_invoice, $max_piutang,$longitude,$latitude,$channel_id,$pricelist_id],
         "sssssssssssddss"

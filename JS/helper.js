@@ -484,3 +484,49 @@ export function delete_detail_pricelist(action) {
     }
   );
 }
+
+export function format_date(str) {
+  const date = new Date(str);
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const month = monthNames[date.getMonth()];
+  const year = date.getFullYear();
+
+  const formatted = `${day} ${month} ${year}`;
+  return formatted;
+}
+export function unformat_date(str) {
+  const [day, monthStr, year] = str.split(" ");
+
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const month = String(monthNames.indexOf(monthStr) + 1).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}

@@ -193,7 +193,7 @@ if ($conn->query($gudang)) {
     }
 }
 
-$pricelist ="CREATE TABLE IF NOT EXISTS tb_pricelist(
+$pricelist = "CREATE TABLE IF NOT EXISTS tb_pricelist(
 pricelist_id VARCHAR(20) PRIMARY KEY NOT NULL,
 nama VARCHAR (50),
 harga_default VARCHAR(10) DEFAULT 'ya',
@@ -208,7 +208,7 @@ if ($conn->query($pricelist)) {
     }
 }
 
-$detail_pricelist ="CREATE TABLE IF NOT EXISTS tb_detail_pricelist(
+$detail_pricelist = "CREATE TABLE IF NOT EXISTS tb_detail_pricelist(
 detail_pricelist_id VARCHAR(20) PRIMARY KEY NOT NULL,
 harga VARCHAR(20),
 pricelist_id VARCHAR(20),
@@ -218,6 +218,21 @@ FOREIGN KEY (produk_id) REFERENCES tb_produk(produk_id) ON DELETE RESTRICT
 )";
 
 if ($conn->query($detail_pricelist)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+$gambar_produk = "CREATE TABLE IF NOT EXISTS tb_gambar_produk (
+gambar_produk_id VARCHAR(20) PRIMARY KEY NOT NULL,
+produk_id VARCHAR(20),
+internal_link VARCHAR(255),
+external_link VARCHAR(255),
+blob_data LONGBLOB,
+FOREIGN KEY (produk_id) REFERENCES tb_produk(produk_id) ON DELETE RESTRICT)";
+
+if ($conn->query($gambar_produk)) {
     try {
     } catch (Error) {
         echo mysqli_error($conn);

@@ -9,9 +9,13 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
-$rawInput=file_get_contents("php://input");
+if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
+    $rawInput = file_get_contents("php://input");
+    $data = json_decode($rawInput, true) ?? [];
+} else {
+    $data = $_POST; 
+}
 
-$data = json_decode($rawInput, true) ?? [];
 error_log("Incoming data: " . print_r($data, true));
 
 $user_id = $data['user_id'] ?? $_GET['user_id'] ?? $_POST['user_id']??null;

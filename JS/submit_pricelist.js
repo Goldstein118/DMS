@@ -24,7 +24,8 @@ if (submit_pricelist) {
     $("#tanggal_berlaku").pickadate({
       format: "dd mmm yyyy", // user sees: 01 Jan 2025
       formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
-      hiddenName: true, // use a single name="date" on hidden input
+      selectYears: 25,
+      selectMonths: true,
     });
   });
 }
@@ -58,7 +59,8 @@ async function submitPricelist() {
   // Collect form data
   const name_pricelist = document.getElementById("name_pricelist").value;
   const harga_default = document.getElementById("default_pricelist").value;
-  let tanggal_berlaku = document.getElementById("tanggal_berlaku").value;
+  const picker = $("#tanggal_berlaku").pickadate("picker");
+  const tanggal_berlaku = picker.get("select", "yyyy-mm-dd");
   const status_pricelist = document.getElementById("status_pricelist").value;
 
   // Validate form data

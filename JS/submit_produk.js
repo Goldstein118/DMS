@@ -59,6 +59,7 @@ async function pricelist() {
     helper.format_nominal("pricelist_harga" + currentIndex);
   });
 }
+helper.load_file_link("produk_gambar", "produk_link");
 async function fetch_fk(field) {
   try {
     const response = await apiRequest(
@@ -105,6 +106,8 @@ function populateDropdown(data, field) {
 }
 
 async function submitProduk() {
+  const form = document.getElementById("form_produk");
+  const formData = new FormData(form);
   // Collect form data
   const name_produk = document.getElementById("name_produk").value;
   const kategori_id = document.getElementById("kategori").value;
@@ -218,21 +221,20 @@ async function submitProduk() {
       }
     }
     if (harga_minimum_empty && harga_details_empty && harga_banding) {
-      const data_produk = {
-        user_id: `${access.decryptItem("user_id")}`,
-        name_produk,
-        kategori_id,
-        brand_id,
-        no_sku,
-        status_produk,
-        harga_minimal,
-        details,
-      };
+      formData.set("name_produk", name_produk);
+      formData.set("kategori_id", kategori_id);
+      formData.set("brand_id", brand_id);
+      formData.set("no_sku", no_sku);
+      formData.set("status_produk", status_produk);
+      formData.set("harga_minimal", harga_minimal);
+      formData.set("user_id", access.decryptItem("user_id"));
+      formData.set("details", JSON.stringify(details));
+
       try {
         const response = await apiRequest(
           `/PHP/API/produk_API.php?action=create`,
           "POST",
-          data_produk
+          formData
         );
         if (response.ok) {
           swal.fire("Berhasil", response.message, "success");

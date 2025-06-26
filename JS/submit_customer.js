@@ -80,8 +80,8 @@ async function submitCustomer() {
   const name_customer = document.getElementById("name_customer").value;
   let no_telp_customer = document.getElementById("no_telp_customer").value;
   const alamat_customer = document.getElementById("alamat_customer").value;
-  const nik_customer = document.getElementById("nik_customer").value;
-  const npwp_customer = document.getElementById("npwp_customer").value;
+  let nik_customer = document.getElementById("nik_customer").value;
+  let npwp_customer = document.getElementById("npwp_customer").value;
   const status_customer = document.getElementById("status_customer").value;
   const nitko = document.getElementById("nitko").value;
   const term_payment = document.getElementById("term_payment").value;
@@ -90,6 +90,7 @@ async function submitCustomer() {
   const longitude = document.getElementById("longitude").value;
   const latitude = document.getElementById("latitude").value;
   const channel_id = document.getElementById("channel_id").value;
+  const pricelist_id = document.getElementById("pricelist_id").value;
 
   if (
     !name_customer ||
@@ -177,6 +178,7 @@ async function submitCustomer() {
   formData.set("longitude", longitude);
   formData.set("latitude", latitude);
   formData.set("channel_id", channel_id);
+  formData.set("pricelist_id", pricelist_id);
   formData.set("action", "create");
   formData.set("user_id", access.decryptItem("user_id"));
 

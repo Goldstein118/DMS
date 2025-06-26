@@ -7,19 +7,26 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <form id="form_produk" enctype="multipart/form-data">
           <div class="col">
             <div class="col">
               <div class="card">
                 <div class="card-header"> Produk</div>
                 <div class="card-body">
                   <div class="row g-3">
+                  
                     <div class="col">
-                      <label class="form-label mb-0 mt-2" for="name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                      <input class="form-control" type="text" id="name_produk" name="name_produk" value="">
-                      <label class="form-label mb-0 mt-2" for="kategori">Kategori:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                      <select class="form-select" id="kategori"></select>
-                      <label class="form-label mb-0 mt-2" for="brand">Brand:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                      <select class="form-select" id="brand"></select>
+                        <label class="form-label mb-0 mt-2" for="name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                        <input class="form-control" type="text" id="name_produk" name="name_produk" value="">
+                        <label class="form-label mb-0 mt-2" for="kategori">Kategori:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                        <select class="form-select" id="kategori"></select>
+                        <label class="form-label mb-0 mt-2" for="brand">Brand:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                        <select class="form-select" id="brand"></select>
+                        <div>
+                          <label for="produk_gambar" class="form-label mb-0 mt-2">Upload Gambar Produk:</label>
+                          <input type="file" class="form-control" id="produk_gambar" name="produk_gambar" accept=".jpg,.jpeg,.png">
+                          <div id="produk_link" class="form-text text-muted"></div>
+                        </div>
                     </div>
                     <div class="col">
                       <label class="form-label mb-0 mt-2" for="no_sku">No SKU:</label>
@@ -58,6 +65,7 @@
               </div>
             </div>
           </div>
+          </form>
         </div>
         <div class="modal-footer">
           <button id="submit_produk" type="button" class="btn btn-primary">Submit</button>
@@ -75,6 +83,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <form id="form_produk" enctype="multipart/form-data">
           <div class="col">
             <div class="col">
               <div class="card">
@@ -90,6 +99,12 @@
                       <select class="form-select" id="update_kategori"></select>
                       <label class="form-label mb-0 mt-2" for="update_brand">Brand:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                       <select class="form-select" id="update_brand"></select>
+                      <label for="update_produk_gambar" class="form-label mb-0 mt-2">Upload Gambar Produk:</label>
+                      <div class="d-flex align-items-center gap-2">
+                        <input type="file" class="form-control" id="update_produk_gambar" name="update_produk_gambar" accept=".jpg,.jpeg,.png">
+                        <button type="button" class="btn btn-sm btn-outline-danger" id="clear_gambar_produk">Hapus</button>
+                      </div>
+                      <div id="update_produk_link" class="form-text text-muted"></div>
                     </div>
                     <div class="col">
                       <label class="form-label mb-0 mt-2" for="update_no_sku">No SKU:</label>
@@ -128,6 +143,7 @@
               </div>
             </div>
           </div>
+          </form>
         </div>
         <div class="modal-footer">
           <button id="update_submit_produk" type="button" class="btn btn-primary">Submit</button>

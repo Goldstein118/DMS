@@ -71,7 +71,14 @@ if (gird_container_supplier) {
           supplier.no_telp,
           supplier.ktp,
           supplier.npwp,
-          supplier.status,
+
+          html(`
+          ${
+            supplier.status === "aktif"
+              ? `<span class="badge text-bg-success">Aktif</span>`
+              : `<span class="badge text-bg-danger">Non Aktif</span>`
+          }
+          `),
           null, // Placeholder for the action buttons column
         ]),
     },
@@ -143,7 +150,11 @@ async function handle_update(button) {
   const no_telp = phone_supplier.replace(/\+62|-|\s/g, "");
   const ktp = row.cells[4].textContent;
   const npwp = row.cells[5].textContent;
-  const status = row.cells[6].textContent;
+  const status = row.cells[6]
+    .querySelector(".badge")
+    ?.textContent.trim()
+    .toLowerCase()
+    .replace(/\s/g, " ");
 
   document.getElementById("update_supplier_id").value = supplier_id;
   document.getElementById("update_supplier_nama").value = name;

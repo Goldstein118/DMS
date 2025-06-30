@@ -59,7 +59,7 @@ async function pricelist() {
     helper.format_nominal("pricelist_harga" + currentIndex);
   });
 }
-helper.load_file_link("produk_gambar", "produk_link");
+helper.load_file_link_group("produk_gambar", "produk_input_group");
 async function fetch_fk(field) {
   try {
     const response = await apiRequest(

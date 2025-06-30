@@ -21,6 +21,8 @@ if (submit_role) {
       "brand",
       "produk",
       "divisi",
+      "gudang",
+      "pricelist",
     ];
 
     checkboxFields.forEach((field) => {

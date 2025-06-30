@@ -42,18 +42,19 @@
           <select class="form-select" id="channel_id">
           </select>
           <label class="form-label mb-0 mt-2" for="pricelist_id">Kode Pricelist:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-          <select  class="form-select" id="pricelist_id">
+          <select class="form-select" id="pricelist_id">
           </select>
-          <div>
-            <label for="ktp_image" class="form-label mb-0 mt-2">Upload Gambar KTP:</label>
+
+          <label for="ktp_image" class="form-label mb-0 mt-2">Upload Gambar KTP:</label>
+          <div class="input-group mb-3" id="ktp_input_group">
             <input type="file" class="form-control" id="ktp_image" name="ktp_image" accept=".jpg,.jpeg,.png">
-            <div id="ktp_link" class="form-text text-muted"></div>
           </div>
-          <div>
-            <label for="npwp_image" class="form-label mb-0 mt-2">Upload Gambar NPWP</label>
+            
+          <label for="npwp_image" class="form-label mb-0 mt-2">Upload Gambar NPWP:</label>
+          <div class="input-group mb-3" id="npwp_input_group">
             <input type="file" class="form-control" id="npwp_image" name="npwp_image" accept=".jpg,.jpeg,.png">
-            <div id="npwp_link" class="form-text text-muted"></div>
           </div>
+
         </form>
 
       </div>
@@ -111,25 +112,19 @@
           <select class="form-select" id="update_channel_id">
           </select>
           <label class="form-label mb-0 mt-2" for="update_pricelist_id">Kode Pricelist:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-          <select  class="form-select" id="update_pricelist_id">
+          <select class="form-select" id="update_pricelist_id">
           </select>
-          <div>
-            <label for="update_ktp_image" class="form-label mb-0 mt-2">Upload Gambar KTP:</label>
-            <div class="d-flex align-items-center gap-2">
-              <input type="file" class="form-control" id="update_ktp_image" name="ktp_image" accept=".jpg,.jpeg,.png">
-              <button type="button" class="btn btn-sm btn-outline-danger" id="clear_ktp">Hapus</button>
-            </div>
-            <div id="update_ktp_link" class="form-text text-muted"></div>
+          
+          <label for="update_ktp_image" class="form-label mb-0 mt-2">Upload Gambar KTP:</label>
+          <div class="input-group mb-3" id="update_ktp_input_group">
+            <input type="file" class="form-control" id="update_ktp_image" name="update_ktp_image" accept=".jpg,.jpeg,.png">
+          </div>
+            
+          <label for="update_npwp_image" class="form-label mb-0 mt-2">Upload Gambar NPWP:</label>
+          <div class="input-group mb-3" id="update_npwp_input_group">
+            <input type="file" class="form-control" id="update_npwp_image" name="update_npwp_image" accept=".jpg,.jpeg,.png">
           </div>
 
-          <div>
-            <label for="update_npwp_image" class="form-label mb-0 mt-2">Upload Gambar NPWP:</label>
-            <div class="d-flex align-items-center gap-2">
-              <input type="file" class="form-control" id="update_npwp_image" name="npwp_image" accept=".jpg,.jpeg,.png">
-              <button type="button" class="btn btn-sm btn-outline-danger" id="clear_npwp">Hapus</button>
-            </div>
-            <div id="update_npwp_link" class="form-text text-muted"></div>
-          </div>
 
         </form>
       </div>

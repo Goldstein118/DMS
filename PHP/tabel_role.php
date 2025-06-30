@@ -20,7 +20,7 @@
           <div class="modal-body">
             <label class="form-label mb-0 mt-2" for="name_role">Nama:<i class="bi bi-asterisk text-danger align-middle"></i></label>
             <input class="form-control" type="text" id="name_role" name="name_role" />
-              <label class="form-label mb-0 mt-2" for="name_role">Data Akses:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+            <label class="form-label mb-0 mt-2" for="name_role">Data Akses:<i class="bi bi-asterisk text-danger align-middle "></i></label>
             <div class="accordion" id="accordion_main">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="heading_main">
@@ -41,7 +41,7 @@
                   <div class="accordion-body">
                     <div class="permission-group">
                       <p class="label-check-box">Data Karyawan</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -88,7 +88,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data User</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -135,7 +135,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data Role</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -181,7 +181,7 @@
                     </div>
                     <div class="permission-group">
                       <p class="label-check-box">Data Supplier</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -228,7 +228,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data Customer</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -274,7 +274,7 @@
                     </div>
                     <div class="permission-group">
                       <p class="label-check-box">Data Channel</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -321,7 +321,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data Kategori</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -368,7 +368,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data Brand</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -415,7 +415,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data Produk</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -462,7 +462,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data Divisi</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -501,6 +501,100 @@
                             class="form-check-input perm-checkbox"
                             type="checkbox"
                             id="check_delete_divisi" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Gudang</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_gudang" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_gudang" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_gudang" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_gudang" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_gudang" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Pricelist</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_pricelist" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_pricelist" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_pricelist" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_pricelist" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_pricelist" />
                           Delete
                         </label>
                       </div>
@@ -555,7 +649,7 @@
               class="form-control"
               type="text"
               id="update_role_name" />
-              <label class="form-label mb-0 mt-2" for="name_role">Data Akses:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+            <label class="form-label mb-0 mt-2" for="name_role">Data Akses:<i class="bi bi-asterisk text-danger align-middle "></i></label>
             <div class="accordion" id="accordion_main_update">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="heading_main">
@@ -576,7 +670,7 @@
                   <div class="accordion-body">
                     <div class="permission-group">
                       <p class="label-check-box">Data Karyawan</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -623,7 +717,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data User</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -670,7 +764,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data Role</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -717,7 +811,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data Supplier</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -764,7 +858,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data Customer</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -811,7 +905,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data Channel</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -858,7 +952,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data Kategori</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -905,7 +999,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data Brand</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -952,7 +1046,7 @@
 
                     <div class="permission-group">
                       <p class="label-check-box">Data Produk</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -997,9 +1091,9 @@
                       <hr />
                     </div>
 
-                      <div class="permission-group">
+                    <div class="permission-group">
                       <p class="label-check-box">Data Divisi</p>
-                      
+
                       <div class="permission-row">
                         <label class="form-check form-check-inline">
                           <input
@@ -1038,6 +1132,100 @@
                             class="form-check-input perm-checkbox"
                             type="checkbox"
                             id="check_delete_divisi_update" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Gudang</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="check_all_gudang_update" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_gudang_update" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_gudang_update" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_gudang_update" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_gudang_update" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Pricelist</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="check_all_pricelist_update" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_pricelist_update" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_pricelist_update" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_pricelist_update" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_pricelist_update" />
                           Delete
                         </label>
                       </div>

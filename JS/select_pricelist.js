@@ -112,7 +112,13 @@ if (grid_container_pricelist) {
           pricelist.nama,
           pricelist.harga_default,
           helper.format_date(pricelist.tanggal_berlaku),
-          pricelist.status,
+          html(`
+          ${
+            pricelist.status === "aktif"
+              ? `<span class="badge text-bg-success">Aktif</span>`
+              : `<span class="badge text-bg-danger">Non Aktif</span>`
+          }
+          `),
           null,
         ]),
     },
@@ -200,7 +206,11 @@ async function handle_update(button) {
   const current_nama = row.cells[1].textContent;
   const harga_default = row.cells[2].textContent;
   let tanggal_berlaku = row.cells[3].textContent;
-  const current_status = row.cells[4].textContent;
+  const current_status = row.cells[4]
+    .querySelector(".badge")
+    ?.textContent.trim()
+    .toLowerCase()
+    .replace(/\s/g, " ");
 
   // Populate the modal fields
   document.getElementById("update_pricelist_id").value = pricelist_id;

@@ -79,7 +79,13 @@ if (grid_container_gudang) {
         data.map((gudang) => [
           gudang.gudang_id,
           gudang.nama,
-          gudang.status,
+          html(`
+          ${
+            gudang.status === "aktif"
+              ? `<span class="badge text-bg-success">Aktif</span>`
+              : `<span class="badge text-bg-danger">Non Aktif</span>`
+          }
+          `),
           null,
         ]),
     },
@@ -142,7 +148,11 @@ async function handle_update(button) {
 
   const gudang_id = row.cells[0].textContent;
   const current_nama = row.cells[1].textContent;
-  const status = row.cells[2].textContent;
+  const status = row.cells[2]
+    .querySelector(".badge")
+    ?.textContent.trim()
+    .toLowerCase()
+    .replace(/\s/g, " ");
   document.getElementById("update_gudang_id").value = gudang_id;
   document.getElementById("update_nama_gudang").value = current_nama;
   document.getElementById("update_gudang_status").value = status;

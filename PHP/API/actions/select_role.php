@@ -18,9 +18,7 @@ if ($search !== ''&& strlen($search)>=3) {
     $stmt->execute();
     $result = $stmt->get_result();
 } else {
-    $sql_role = "SELECT r.role_id,r.nama,r.akses,u.user_id FROM tb_role r
-                LEFT JOIN tb_karyawan k ON r.role_id = k.role_id
-                 LEFT JOIN tb_user u ON u.karyawan_id=k.karyawan_id";
+    $sql_role = "SELECT r.role_id,r.nama,r.akses FROM tb_role r";
     $result = $conn->query($sql_role);
 }
 

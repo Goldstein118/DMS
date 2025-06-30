@@ -1,6 +1,6 @@
 <!-- Offcanvas Sidebar for mobile (visible on small screens) -->
 
-<div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="mobileSidebar" style="width: 160px;">
+<div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="mobileSidebar" style="width: 200px;">
   <div class="offcanvas-header">
     <img src="../images/8.jpg" class="img-fluid d-block mx-auto my-3" style="max-height: 60px;" alt="DMS"><br>
     <div><span id="welcomeText" class="fw-bold">Selamat Datang,</span><br>

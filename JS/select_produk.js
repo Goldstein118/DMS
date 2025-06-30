@@ -69,7 +69,7 @@ if (grid_container_produk) {
         </button>
         `;
           }
-          button += `<button type="button" class="btn btn btn-info view_pricelist btn-sm" >
+          button += `<button type="button" class="btn btn btn-info view_produk btn-sm" >
           <i class="bi bi-eye"></i>
         </button>`;
           return html(button);
@@ -110,7 +110,14 @@ if (grid_container_produk) {
           produk.kategori_nama,
           produk.brand_nama,
           produk.no_sku,
-          produk.status,
+
+          html(`
+          ${
+            produk.status === "aktif"
+              ? `<span class="badge text-bg-success">Aktif</span>`
+              : `<span class="badge text-bg-danger">Non Aktif</span>`
+          }
+          `),
           produk.harga_minimal,
           produk.kategori_id,
           produk.brand_id,
@@ -135,7 +142,14 @@ if (grid_container_produk) {
     );
   }, 200);
 }
-
+function handle_view(button) {
+  const row = button.closest("tr");
+  const produk_id = row.cells[0].textContent.trim();
+  window.open(
+    `../PHP/view_produk.php?produk_id=${encodeURIComponent(produk_id)}`,
+    "_blank"
+  );
+}
 async function handle_delete(button) {
   const row = button.closest("tr");
   const produk_id = row.cells[0].textContent;
@@ -178,14 +192,7 @@ async function handle_delete(button) {
     }
   }
 }
-function handle_view(button) {
-  const row = button.closest("tr");
-  const produk_id = row.cells[0].textContent.trim();
-  window.open(
-    `../PHP/view_produk.php?produk_id=${encodeURIComponent(produk_id)}`,
-    "_blank"
-  );
-}
+
 function populateDropdown(data, field_id, field) {
   const select = $(`#update_${field}`);
   select.empty();
@@ -277,7 +284,12 @@ async function handle_update(button) {
   const kategori_id = row.cells[7].textContent;
   const brand_id = row.cells[8].textContent;
   const no_sku = row.cells[4].textContent;
-  const status = row.cells[5].textContent;
+  const status = row.cells[5]
+    .querySelector(".badge")
+    ?.textContent.trim()
+    .toLowerCase()
+    .replace(/\s/g, " ");
+  console.log(status);
   let harga_minimal = row.cells[6].textContent;
   harga_minimal = helper.unformat_angka(harga_minimal);
   let produk_gambar = row.cells[9];
@@ -301,24 +313,16 @@ async function handle_update(button) {
   const produk_filename = produk_link
     ? produk_link.split("/").pop()
     : "Belum ada file";
-  document.getElementById("update_produk_link").innerHTML = produk_link
-    ? `<a href="${produk_link}" target="_blank">Lihat</a>`
-    : produk_filename;
 
-  const clear_produk = document.getElementById("clear_gambar_produk");
-  if (clear_produk) {
-    clear_produk.style.display = produk_link ? "inline-block" : "none";
-  }
   helper.load_input_file_name(
     produk_link,
     "#update_produk_gambar",
     produk_filename
   );
-  helper.load_file_link(
+  helper.load_file_link_group(
     "update_produk_gambar",
-    "update_produk_link",
-    produk_link,
-    "clear_gambar_produk"
+    "update_produk_input_group",
+    produk_link
   );
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {

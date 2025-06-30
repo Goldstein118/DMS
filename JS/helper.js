@@ -52,7 +52,7 @@ export function custom_grid_header(
   document.getElementById("loading_spinner").style.visibility = "hidden";
   $("#loading_spinner").fadeOut();
   // Attach event listener after header is rebuilt
-  if (field == "pricelist") {
+  if (field == "pricelist" || field == "produk") {
     document
       .getElementById(`table_${field}`)
       .addEventListener("click", function (event) {
@@ -265,6 +265,69 @@ export function format_nominal(element_id) {
   });
 }
 
+export function load_file_link_group(inputId, groupId, originalLink = null) {
+  const inputElement = document.getElementById(inputId);
+  const inputGroup = document.getElementById(groupId);
+
+  // Replace input to clear previous event listeners
+  const newInput = inputElement.cloneNode(true);
+  inputElement.replaceWith(newInput);
+
+  // Eye Button
+  let previewBtn = inputGroup.querySelector(".preview-btn");
+  if (!previewBtn) {
+    previewBtn = document.createElement("button");
+    previewBtn.type = "button";
+    previewBtn.className = "btn btn-outline-primary preview-btn";
+    previewBtn.innerHTML = '<i class="bi bi-eye-fill"></i>';
+    previewBtn.style.display = "none";
+    inputGroup.appendChild(previewBtn);
+  }
+
+  // Clear Button
+  let clearBtn = inputGroup.querySelector(".clear-btn");
+  if (!clearBtn) {
+    clearBtn = document.createElement("button");
+    clearBtn.type = "button";
+    clearBtn.className = "btn btn-outline-danger clear-btn ";
+    clearBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
+    clearBtn.style.display = "none";
+    inputGroup.appendChild(clearBtn);
+  }
+
+  const updateDisplay = (file) => {
+    if (file) {
+      const blobUrl = URL.createObjectURL(file);
+      previewBtn.onclick = () => window.open(blobUrl, "_blank");
+      previewBtn.style.display = "inline-block";
+      clearBtn.style.display = "inline-block";
+    } else if (originalLink) {
+      previewBtn.onclick = () => window.open(originalLink, "_blank");
+      previewBtn.style.display = "inline-block";
+      clearBtn.style.display = "inline-block";
+    } else {
+      previewBtn.style.display = "none";
+      clearBtn.style.display = "none";
+    }
+  };
+
+  // On file change
+  newInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    updateDisplay(file);
+  });
+
+  // Clear functionality
+  clearBtn.addEventListener("click", () => {
+    newInput.value = "";
+    originalLink = null;
+    updateDisplay(null);
+  });
+
+  // Initial state
+  updateDisplay(null);
+}
+
 export function load_file_link(
   inputId,
   displayId,
@@ -281,10 +344,10 @@ export function load_file_link(
   const updateDisplay = (file) => {
     if (file) {
       const blobUrl = URL.createObjectURL(file);
-      displayElement.innerHTML = `<a href="${blobUrl}" target="_blank">Lihat</a>`;
+      displayElement.innerHTML = `<a href="${blobUrl}" target="_blank"><i class="bi bi-eye-fill"></i></a>`;
       if (clearBtn) clearBtn.style.display = "inline-block";
     } else if (originalLink) {
-      displayElement.innerHTML = `<a href="${originalLink}" target="_blank">Lihat</a>`;
+      displayElement.innerHTML = `<a href="${originalLink}" target="_blank"><i class="bi bi-eye-fill"></i></a>`;
       if (clearBtn) clearBtn.style.display = "inline-block";
     } else {
       displayElement.innerHTML = `<a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Belum ada file</a>`;

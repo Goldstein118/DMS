@@ -71,8 +71,10 @@ async function fetch_FK(element) {
     console.error("error:", error);
   }
 }
-helper.load_file_link("ktp_image", "ktp_link");
-helper.load_file_link("npwp_image", "npwp_link");
+
+helper.load_file_link_group("npwp_image", "npwp_input_group");
+helper.load_file_link_group("ktp_image", "ktp_input_group");
+
 async function submitCustomer() {
   const form = document.getElementById("form_customer");
   const formData = new FormData(form);

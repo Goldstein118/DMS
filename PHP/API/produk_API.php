@@ -9,12 +9,14 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
-if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
+$contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+if (stripos($contentType, 'application/json') !== false) {
     $rawInput = file_get_contents("php://input");
     $data = json_decode($rawInput, true) ?? [];
 } else {
-    $data = $_POST; 
+    $data = $_POST;
 }
+
 
 error_log("Incoming data: " . print_r($data, true));
 

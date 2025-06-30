@@ -22,12 +22,12 @@
                         <select class="form-select" id="kategori"></select>
                         <label class="form-label mb-0 mt-2" for="brand">Brand:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                         <select class="form-select" id="brand"></select>
-                        <div>
-                          <label for="produk_gambar" class="form-label mb-0 mt-2">Upload Gambar Produk:</label>
+                        <label for="produk_gambar" class="form-label mb-0 mt-2">Upload Gambar Produk:</label>
+                        <div class="input-group mb-3" id="produk_input_group">
                           <input type="file" class="form-control" id="produk_gambar" name="produk_gambar" accept=".jpg,.jpeg,.png">
-                          <div id="produk_link" class="form-text text-muted"></div>
                         </div>
-                    </div>
+                    
+                      </div>
                     <div class="col">
                       <label class="form-label mb-0 mt-2" for="no_sku">No SKU:</label>
                       <input class="form-control" type="text" id="no_sku" name="no_sku" aria-describedby="basic-addon1" value="">
@@ -99,12 +99,10 @@
                       <select class="form-select" id="update_kategori"></select>
                       <label class="form-label mb-0 mt-2" for="update_brand">Brand:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                       <select class="form-select" id="update_brand"></select>
-                      <label for="update_produk_gambar" class="form-label mb-0 mt-2">Upload Gambar Produk:</label>
-                      <div class="d-flex align-items-center gap-2">
-                        <input type="file" class="form-control" id="update_produk_gambar" name="update_produk_gambar" accept=".jpg,.jpeg,.png">
-                        <button type="button" class="btn btn-sm btn-outline-danger" id="clear_gambar_produk">Hapus</button>
-                      </div>
-                      <div id="update_produk_link" class="form-text text-muted"></div>
+                        <label for="update_produk_gambar" class="form-label mb-0 mt-2">Upload Gambar Produk:</label>
+                        <div class="input-group mb-3" id="update_produk_input_group">
+                          <input type="file" class="form-control" id="update_produk_gambar" name="update_produk_gambar" accept=".jpg,.jpeg,.png">
+                        </div>
                     </div>
                     <div class="col">
                       <label class="form-label mb-0 mt-2" for="update_no_sku">No SKU:</label>

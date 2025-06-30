@@ -61,7 +61,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
     h1 {
       text-align: center;
-      padding: 10px 0;
+      margin-bottom: 0;
     }
 
     #logo_joyday {
@@ -86,12 +86,13 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
     <img src="../images/logo_joyday.png" alt="Logo" id="logo_joyday" />
 
     <div class="text-center">
-      <h2 style="display: inline-block">Pricelist</h2>
-      <br />
-      <span class="text-muted" id="view_pricelist_id"></span>
+      <h1 style="display: block">Pricelist</h1>
+      <span class="text-muted" id="view_pricelist_id" style="display:inline-block"></span>
+      <span class="text-muted">/</span>
+      <span class="text-muted" id="nama_pricelist" style="display:inline-block"></span>
     </div>
     <button type="button" class="btn btn-outline-primary btn-sm no_print" onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
-    <button type="button" class="btn btn-secondary btn-sm no_print" onclick="window.close()">Tutup</button>
+    <button type="button" class="btn btn-outline-danger btn-sm  no_print" onclick="window.close()">Tutup</button>
     <span class="text-muted" id="view_tanggal_berlaku" style="float: inline-end"></span>
   </header>
 
@@ -102,9 +103,8 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
       id="detail_pricelist">
       <thead id="view_detail_pricelist_thead">
         <tr>
-          <th scope="col">No</th>
+          <th scope="col" style="max-width: 9px; text-align:center">No</th>
           <th scope="col">Kode</th>
-          <th scope="col">Pricelist</th>
           <th scope="col">Produk</th>
           <th scope="col">Harga</th>
         </tr>

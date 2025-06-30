@@ -257,6 +257,15 @@ body::-webkit-scrollbar {
   text-align: right;
 }
 
+#table_customer td:nth-child(7),
+#table_karyawan td:nth-child(9),
+#table_supplier td:nth-child(7),
+#table_produk td:nth-child(6),
+#table_gudang td:nth-child(3),
+#table_pricelist td:nth-child(5) {
+  text-align: center;
+}
+
 #aksi_thead,
 #aksi_tbody {
   width: 50px;

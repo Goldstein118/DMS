@@ -160,6 +160,8 @@ async function handle_update(button) {
     "brand",
     "produk",
     "divisi",
+    "gudang",
+    "pricelist",
   ];
 
   document.getElementById("update_role_ID").value = role_ID;

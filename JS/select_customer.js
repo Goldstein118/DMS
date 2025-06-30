@@ -109,8 +109,14 @@ if (grid_container_customer) {
               : ``
           }
           `),
+          html(`
+          ${
+            customer.status === "aktif"
+              ? `<span class="badge text-bg-success">Aktif</span>`
+              : `<span class="badge text-bg-danger">Non Aktif</span>`
+          }
+          `),
 
-          customer.status,
           customer.nitko,
           customer.term_pembayaran,
           customer.max_invoice,
@@ -266,7 +272,12 @@ async function handle_update(button) {
     npwp_link = aTagNpwp ? aTagNpwp.getAttribute("href") : "";
   }
 
-  const current_status = row.cells[6].textContent;
+  const current_status = row.cells[6]
+    .querySelector(".badge")
+    ?.textContent.trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+
   const current_nitko = row.cells[7].textContent;
   const current_term_pembayaran = row.cells[8].textContent;
   const current_max_invoice = row.cells[9].textContent;
@@ -295,24 +306,6 @@ async function handle_update(button) {
     ? npwp_link.split("/").pop()
     : "Belum ada file";
 
-  document.getElementById("update_ktp_link").innerHTML = ktp_link
-    ? `<a href="${ktp_link}" target="_blank">Lihat</a>`
-    : ktp_filename;
-
-  document.getElementById("update_npwp_link").innerHTML = npwp_link
-    ? `<a href="${npwp_link}" target="_blank">Lihat</a>`
-    : npwp_filename;
-  const clearKtp = document.getElementById("clear_ktp");
-  const clearNpwp = document.getElementById("clear_npwp");
-
-  if (clearKtp) {
-    clearKtp.style.display = ktp_link ? "inline-block" : "none";
-  }
-
-  if (clearNpwp) {
-    clearNpwp.style.display = npwp_link ? "inline-block" : "none";
-  }
-
   helper.load_input_file_name(ktp_link, "#update_ktp_image", ktp_filename);
   helper.load_input_file_name(npwp_link, "#update_npwp_image", npwp_filename);
 
@@ -331,18 +324,18 @@ async function handle_update(button) {
   document.getElementById("update_longitude").value = longitude;
   document.getElementById("update_latitude").value = latitude;
 
-  helper.load_file_link(
+  helper.load_file_link_group(
     "update_ktp_image",
-    "update_ktp_link",
-    ktp_link,
-    "clear_ktp"
+    "update_ktp_input_group",
+    ktp_link
   );
-  helper.load_file_link(
+
+  helper.load_file_link_group(
     "update_npwp_image",
-    "update_npwp_link",
-    npwp_link,
-    "clear_npwp"
+    "update_npwp_input_group",
+    npwp_link
   );
+
   helper.format_nominal("update_max_piutang");
 
   await new Promise((resolve) => setTimeout(resolve, 500));

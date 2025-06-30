@@ -53,6 +53,58 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
   <script src="<?php echo $_ENV['VENDOR_BASE_URL'] ?>/sjcl.min.js"></script>
 
   <style>
+    @media print {
+      body {
+        background: #fff;
+        color: #001028;
+        font: size 0.875em;
+      }
+
+      h1 {
+        text-align: center;
+        padding: 10px 0;
+      }
+
+      #logo_joyday {
+        width: 15%;
+      }
+
+      table th {
+        background-color: #b2cef8 !important;
+        color: #333;
+        font-weight: bold;
+      }
+
+
+      #gambar_produk,
+      #data_produk {
+        max-height: fit-content;
+      }
+
+      .table-borderless th {
+        background-color: #ffffff !important;
+        font-weight: 600 !important;
+        text-align: left;
+      }
+
+      .table-borderless td {
+        text-align: right;
+      }
+
+      .table-borderless {
+        float: inline-end;
+
+        width: fit-content;
+        padding: 0px;
+        margin: 0px;
+      }
+
+      .no_print {
+        display: none;
+      }
+
+    }
+
     body {
       background: #fff;
       color: #001028;
@@ -67,16 +119,35 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
     #logo_joyday {
       width: 15%;
     }
-      table th {
-        background-color: #b2cef8 !important;
-        color: #333;
-        ;
-        font-weight: bold;
-      }
-    @media print {
-      .no_print {
-        display: none;
-      }
+
+    table th {
+      background-color: #b2cef8 !important;
+      color: #333;
+      font-weight: bold;
+    }
+
+
+    #gambar_produk,
+    #data_produk {
+      max-height: fit-content;      text-align: center;
+    }
+
+    .table-borderless th {
+      background-color: #ffffff !important;
+      font-weight: 600 !important;
+      text-align: left;
+    }
+
+    .table-borderless td {
+      text-align: right;
+    }
+
+    .table-borderless {
+      float: inline-end;
+
+
+      padding: 0px;
+      margin: 0px;
     }
   </style>
 </head>
@@ -91,22 +162,57 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
       <span class="text-muted" id="view_produk_id"></span>
     </div>
     <button type="button" class="btn btn-outline-primary btn-sm no_print" onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
-    <button type="button" class="btn btn-secondary btn-sm no_print" onclick="window.close()">Tutup</button>
+    <button type="button" class="btn btn-outline-danger btn-sm no_print" onclick="window.close()">Tutup</button>
     <span class="text-muted" id="view_tanggal_berlaku" style="float: inline-end"></span>
   </header>
 
   <main>
-    <span class="text-muted">
-    
-    </span>
-
+    <div class="d-flex row_produk">
+      <div class="w auto me-5" id="gambar_produk">
+      </div>
+      <div class="w auto ms-5" id="data_produk">
+        <table class="table table-borderless">
+          <tr id="tr_produk">
+            <th>Produk</th>
+            <td>:</td>
+            <td id="nama_produk"></td>
+          </tr>
+          <tr id="tr_brand">
+            <th>Brand</th>
+            <td>:</td>
+            <td id="nama_brand"></td>
+          </tr>
+          <tr id="tr_kategori">
+            <th>Kategori</th>
+            <td>:</td>
+            <td id="nama_kategori"></td>
+          </tr>
+          <tr id="tr_harga_minimal">
+            <th>Harga Minimal</th>
+            <td>:</td>
+            <td id="harga_minimal"></td>
+          </tr>
+          <tr id="tr_no_sku">
+            <th>No SKU</th>
+            <td>:</td>
+            <td id="no_sku"></td>
+          </tr>
+          <tr id="tr_status">
+            <th>Status</th>
+            <td>:</td>
+            <td id="status"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
     <table
-      class="table table-hover table-bordered table-sm table-striped"
+      class="table table-hover table-bordered table-sm mt-3 table-striped"
       id="detail_produk">
       <thead id="view_detail_produk_thead">
         <tr>
-          <th scope="col">No</th>
+          <th scope="col" style="max-width:8px; text-align : center">No</th>
           <th scope="col">Pricelist</th>
+          <th scope="col">Nama Pricelist</th>
           <th scope="col">Harga</th>
         </tr>
       </thead>

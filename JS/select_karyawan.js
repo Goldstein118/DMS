@@ -114,7 +114,14 @@ if (grid_container_karyawan) {
           karyawan.alamat,
           karyawan.ktp,
           karyawan.npwp,
-          karyawan.status,
+          html(`
+          ${
+            karyawan.status === "aktif"
+              ? `<span class="badge text-bg-success">Aktif</span>`
+              : `<span class="badge text-bg-danger">Non Aktif</span>`
+          }
+          `),
+
           karyawan.role_id,
           karyawan.user_id,
           null,
@@ -208,7 +215,13 @@ async function handle_update(button) {
   const currentalamat = row.cells[5].textContent;
   const currentKTP_NPWP = row.cells[6].textContent;
   const currentnpwp = row.cells[7].textContent;
-  const currentstatus = row.cells[8].textContent;
+  const currentstatus = row.cells[8]
+    .querySelector(".badge")
+    ?.textContent.trim()
+    .toLowerCase()
+    .replace(/\s/g, " ");
+
+  // console.log(currentstatus);
   /*
   console.log("Button_pressed");
   console.log(karyawan_ID);

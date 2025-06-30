@@ -91,8 +91,31 @@ if (strlen($search)>=3 && $search !=='') {
     $stmt->bind_param('sssssss',$search,$search,$search,$search,$search,$search,$search);
     $stmt->execute();
     $result = $stmt->get_result();
-} else {
-    $sql = "SELECT p.produk_id,p.nama,p.no_sku,p.status,p.harga_minimal,p.kategori_id,k.nama AS kategori_nama,p.brand_id,
+} else if(isset($data['produk_id'])){
+$produk_id = trim($data['produk_id']);
+    $sql = "SELECT p.produk_id,p.nama,p.no_sku,p.status,p.harga_minimal,p.kategori_id,k.nama AS kategori_nama,
+    p.brand_id,
+    b.nama AS brand_nama,g.gambar_produk_id FROM
+    tb_produk p 
+    LEFT JOIN tb_kategori k ON p.kategori_id = k.kategori_id
+    LEFT JOIN tb_brand b ON p.brand_id = b.brand_id
+    LEFT JOIN tb_gambar_produk g ON g.produk_id=p.produk_id WHERE p.produk_id=?";
+    $stmt = $conn ->prepare($sql);
+    if($stmt == false){
+        http_response_code(500);
+        echo json_encode(["error"=>"Failed to prepare statement: ". $conn->error]);
+        exit;
+    }
+
+    $stmt->bind_param("s",$produk_id);
+    $stmt->execute();
+    $result = $stmt ->get_result();
+
+} 
+
+else {
+    $sql = "SELECT p.produk_id,p.nama,p.no_sku,p.status,p.harga_minimal,p.kategori_id,k.nama AS kategori_nama,
+    p.brand_id,
     b.nama AS brand_nama,g.gambar_produk_id FROM
     tb_produk p 
     LEFT JOIN tb_kategori k ON p.kategori_id = k.kategori_id
@@ -101,8 +124,8 @@ if (strlen($search)>=3 && $search !=='') {
     
 
 $result = $conn->query($sql);
-}
 
+}
     if ($result) {
     $produk_data = [];
     while ($row = mysqli_fetch_assoc($result)) {
@@ -116,4 +139,5 @@ $result = $conn->query($sql);
     http_response_code(500);
     echo json_encode(["error" => "Failed to fetch data: " . $conn->error]);
     }
+
 ?>

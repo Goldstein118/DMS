@@ -139,6 +139,7 @@ status VARCHAR(20) DEFAULT 'aktif',
 harga_minimal VARCHAR(20),
 kategori_id VARCHAR(20),
 brand_id VARCHAR(20),
+stock_awal VARCHAR(20),
 FOREIGN KEY (kategori_id) REFERENCES tb_kategori(kategori_id) ON DELETE RESTRICT,
 FOREIGN KEY (brand_id) REFERENCES tb_brand(brand_id) ON DELETE RESTRICT
 )";
@@ -238,4 +239,28 @@ if ($conn->query($gambar_produk)) {
         echo mysqli_error($conn);
     }
 }
+
+$armada="CREATE TABLE IF NOT EXISTS tb_armada (armada_id VARCHAR (20)PRIMARY KEY NOT NULL,
+        nama VARCHAR(50),karyawan_id VARCHAR (20),FOREIGN KEY (karyawan_id) REFERENCES tb_karyawan(karyawan_id) ON DELETE RESTRICT)";
+
+if ($conn->query($armada)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+$frezzer="CREATE TABLE IF NOT EXISTS tb_frezzer (frezzer_id VARCHAR(20),kode_barcode VARCHAR(20),tipe VARCHAR(50),status VARCHAR (50) DEFAULT 'ready',merek VARCHAR (20),size VARCHAR(20))";
+if ($conn->query($frezzer)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+$promo="CREATE TABLE IF NOT EXISTS tb_promo (promo_id VARCHAR(20) PRIMARY KEY NOT NULL, 
+        tanggal_berlaku DATE ,tanggal_selesai DATE, jenis_bonus VARCHAR (20) DEFAULT 'barang' ,akumulasi VARCHAR(20),prioritas VARCHAR(20),created_on DATE,jenis_diskon VARCHAR(20),jumlah_diskon VARCHAR(20)";
+
+$promo_kondisi = "CREATE TABLE IF NOT EXISTS tb_promo_kondisi (promo_kondisi_id VARCHAR(20) PRIMARY KEY NOT NULL,promo_id VARCHAR(20)";
+
 mysqli_close($conn);

@@ -116,6 +116,8 @@ async function submitProduk() {
   const status_produk = document.getElementById("status_produk").value;
   let harga_minimal = document.getElementById("harga_minimal").value;
   harga_minimal = helper.format_angka(harga_minimal);
+  const stock_awal = document.getElementById("stock_awal").value;
+  console.log(stock_awal);
 
   const details = [];
   const rows = document.querySelectorAll(
@@ -161,6 +163,11 @@ async function submitProduk() {
       harga_minimal,
       /^[0-9., ]+$/,
       "Format harga minmal tidak valid"
+    ) &&
+    helper.validateField(
+      stock_awal,
+      /^[a-zA-Z0-9,.\- ]+$/,
+      "Format stock awal tidak valid"
     );
 
   if (is_valid) {
@@ -227,6 +234,7 @@ async function submitProduk() {
       formData.set("no_sku", no_sku);
       formData.set("status_produk", status_produk);
       formData.set("harga_minimal", harga_minimal);
+      formData.set("stock_awal", stock_awal);
       formData.set("user_id", access.decryptItem("user_id"));
       formData.set("details", JSON.stringify(details));
 

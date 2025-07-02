@@ -27,6 +27,7 @@ if (grid_container_produk) {
       "kategori_id",
       "brand_id",
       "link_gambar",
+      "Stock Awal",
       {
         name: "Aksi",
         formatter: () => {
@@ -128,6 +129,7 @@ if (grid_container_produk) {
                     <i class="bi bi-person-vcard-fill"></i></a>`
                  : ``
              }`),
+          produk.stock_awal,
           null,
         ]),
     },
@@ -290,6 +292,9 @@ async function handle_update(button) {
     .toLowerCase()
     .replace(/\s/g, " ");
   console.log(status);
+  const stock_awal = row.cells[10].textContent;
+  console.log(stock_awal);
+
   let harga_minimal = row.cells[6].textContent;
   harga_minimal = helper.unformat_angka(harga_minimal);
   let produk_gambar = row.cells[9];
@@ -301,6 +306,7 @@ async function handle_update(button) {
   document.getElementById("update_no_sku").value = no_sku;
   document.getElementById("update_status_produk").value = status;
   document.getElementById("update_harga_minimal").value = harga_minimal;
+  document.getElementById("update_stock_awal").value = stock_awal;
   update_pricelist(produk_id);
   helper.format_nominal("update_harga_minimal");
 
@@ -367,6 +373,8 @@ if (submit_produk_update) {
     const nama_new = document.getElementById("update_name_produk").value;
     const no_sku_new = document.getElementById("update_no_sku").value;
     const status_new = document.getElementById("update_status_produk").value;
+    const stock_awal_new = document.getElementById("update_stock_awal").value;
+    console.log(stock_awal_new);
     let harga_minimal_new = document.getElementById(
       "update_harga_minimal"
     ).value;
@@ -417,6 +425,7 @@ if (submit_produk_update) {
       formData.append("kategori_id", kategori_id_new);
       formData.append("brand_id", brand_id_new);
       formData.append("details", JSON.stringify(details));
+      formData.append("stock_awal", stock_awal_new);
       const produk_file = document.getElementById("update_produk_gambar")
         .files[0];
       if (produk_file) {

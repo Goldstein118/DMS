@@ -30,9 +30,8 @@ async function populate_table(pricelist_id) {
       const td_tanggal_berlaku = document.getElementById(
         "view_tanggal_berlaku"
       );
-      td_tanggal_berlaku.textContent = helper.format_date(
-        detail.tanggal_berlaku
-      );
+      td_tanggal_berlaku.textContent =
+        "Tanggal Berlaku: " + helper.format_date(detail.tanggal_berlaku);
 
       //   const td_harga_default = document.getElementById("view_harga_default");
       //   td_harga_default.textContent = detail.harga_default;

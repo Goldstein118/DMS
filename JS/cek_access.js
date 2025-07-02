@@ -30,6 +30,8 @@ const accessMap = {
   tb_divisi: 36,
   tb_gudang: 40,
   tb_pricelist: 44,
+  tb_armada: 48,
+  tb_frezzer: 52,
 };
 
 const actionIndex = {

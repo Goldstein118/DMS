@@ -88,7 +88,7 @@ $page = $_GET['page'] ?? 'tabel_karyawan';
 
 // Whitelist allowed pages for security
 $allowed_pages = ['tabel_karyawan', 'tabel_role', 'tabel_user','tabel_supplier','tabel_customer','tabel_channel',
-                  'tabel_kategori','tabel_brand','tabel_produk','tabel_divisi','tabel_gudang','tabel_pricelist'];
+                  'tabel_kategori','tabel_brand','tabel_produk','tabel_divisi','tabel_gudang','tabel_pricelist','tabel_armada','tabel_frezzer','tabel_promo'];
 
 if (in_array($page, $allowed_pages)) {
   include $page . '.php';
@@ -175,6 +175,23 @@ switch ($page) {
     ?>
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_pricelist.js?v=2.0"></script>
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_pricelist.js?v=2.0"></script>
+    <?php
+    break;
+  case 'tabel_armada':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_armada.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_armada.js?v=2.0"></script>
+    <?php
+    break;
+  case 'tabel_frezzer':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_frezzer.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_frezzer.js?v=2.0"></script>
+    <?php
+    break;
+  case 'tabel_promo':
+    ?>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_promo.js?v=2.0"></script>
     <?php
     break;
 }

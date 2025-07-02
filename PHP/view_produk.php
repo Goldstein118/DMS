@@ -113,7 +113,8 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
     h1 {
       text-align: center;
-      padding: 10px 0;
+      padding: 0px;
+      margin: 0px;
     }
 
     #logo_joyday {
@@ -157,13 +158,12 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
     <img src="../images/logo_joyday.png" alt="Logo" id="logo_joyday" />
 
     <div class="text-center">
-      <h2 style="display: inline-block">Produk</h2>
-      <br />
+      <h1 style="display: block">Produk</h1>
       <span class="text-muted" id="view_produk_id"></span>
     </div>
     <button type="button" class="btn btn-outline-primary btn-sm no_print" onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
     <button type="button" class="btn btn-outline-danger btn-sm no_print" onclick="window.close()">Tutup</button>
-    <span class="text-muted" id="view_tanggal_berlaku" style="float: inline-end"></span>
+
   </header>
 
   <main>

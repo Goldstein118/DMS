@@ -26,7 +26,6 @@
                         <div class="input-group mb-3" id="produk_input_group">
                           <input type="file" class="form-control" id="produk_gambar" name="produk_gambar" accept=".jpg,.jpeg,.png">
                         </div>
-                    
                       </div>
                     <div class="col">
                       <label class="form-label mb-0 mt-2" for="no_sku">No SKU:</label>
@@ -38,6 +37,8 @@
                       </select>
                       <label class="form-label mb-0 mt-2" for="harga_minimal">Harga Minimal:</label>
                       <input class="form-control" type="text" id="harga_minimal" name="harga_minimal" aria-describedby="basic-addon1" value="">
+                      <label class="form-label mb-0 mt-2" for="stock_awal">Stock Awal:</label>
+                      <input class="form-control" type="text" id="stock_awal" name="stock_awal" aria-describedby="basic-addon1" value="">
                     </div>
                   </div>
                 </div>
@@ -114,6 +115,8 @@
                       </select>
                       <label class="form-label mb-0 mt-2" for="update_harga_minimal">Harga Minimal:</label>
                       <input class="form-control" type="text" id="update_harga_minimal" name="update_harga_minimal" aria-describedby="basic-addon1" value="">
+                      <label class="form-label mb-0 mt-2" for="update_stock_awal">Stock Awal:</label>
+                      <input class="form-control" type="text" id="update_stock_awal" name="update_stock_awal" aria-describedby="basic-addon1" value="">
                     </div>
                   </div>
                 </div>

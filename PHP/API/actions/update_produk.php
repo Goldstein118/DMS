@@ -118,7 +118,7 @@ try {
     $no_sku = $fields['no_sku'] ?? '';
     $status = $fields['status_produk'];
     $harga_minimal = $fields['harga_minimal'] ?? '';
-
+    $stock_awal = $fields['stock_awal'] ?? '';
 
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
     validate_2($no_sku, '/^[a-zA-Z0-9,.\- ]*$/', "Invalid SKU format");
@@ -127,9 +127,9 @@ try {
         handle_image_remove($produk_id, $conn);
     }
 
-    $stmt = $conn->prepare("UPDATE tb_produk SET nama = ?, no_sku = ?, status = ?, harga_minimal = ?, kategori_id = ?, brand_id = ? 
+    $stmt = $conn->prepare("UPDATE tb_produk SET nama = ?, no_sku = ?, status = ?, harga_minimal = ?, kategori_id = ?, brand_id = ? ,stock_awal=?
                             WHERE produk_id = ?");
-    $stmt->bind_param("sssssss", $nama, $no_sku, $status, $harga_minimal, $kategori_id, $brand_id, $produk_id);
+    $stmt->bind_param("ssssssss", $nama, $no_sku, $status, $harga_minimal, $kategori_id, $brand_id,$stock_awal, $produk_id);
     if (!$stmt->execute()) throw new Exception("Product update failed: " . $stmt->error);
     $stmt->close();
 

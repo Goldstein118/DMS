@@ -40,7 +40,7 @@
                         <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <button class="btn btn-primary btn-sm" id="create_detail_pricelist">
-                                    <i class="bi bi-plus-circle"></i> Add
+                                    <i class="bi bi-plus-circle"></i> Tambah
                                 </button>
                                 <table class="table  table-hover table-bordered table-sm" id="detail_pricelist">
                                     <thead id="detail_pricelist_thead">
@@ -208,7 +208,7 @@
                         <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <button class="btn btn-primary btn-sm" id="update_detail_pricelist">
-                                    <i class="bi bi-plus-circle"></i> Add
+                                    <i class="bi bi-plus-circle"></i> Tambah
                                 </button>
                                 <table class="table  table-hover table-bordered table-sm" id="detail_pricelist">
                                     <thead id="update_detail_pricelist_thead">

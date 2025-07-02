@@ -16,7 +16,7 @@ try {
 
     validate_2($nama_pricelist, '/^[a-zA-Z\s]+$/', "Invalid name format");
 
-    $pricelist_id = generateCustomID('PR', 'tb_pricelist', 'pricelist_id', $conn);
+    $pricelist_id = generateCustomID('PRI', 'tb_pricelist', 'pricelist_id', $conn);
     executeInsert(
         $conn,
         "INSERT INTO tb_pricelist (pricelist_id,nama,harga_default,status,tanggal_berlaku) 
@@ -27,7 +27,7 @@ try {
             $harga_default,
             $status_pricelist,
             $tanggal_berlaku
-        ],
+        ], 
         "sssss"
     );
 

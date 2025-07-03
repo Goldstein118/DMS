@@ -105,6 +105,11 @@ if (strlen($search) >= 3 && $search !== '') {
     $stmt->bind_param('ssssssssssss', $search, $search, $search, $search, $search, $search, $search, $search, $search, $search, $search, $search);
     $stmt->execute();
     $result = $stmt->get_result();
+} else if (isset($data['select'])) {
+    $sql = "SELECT * FROM tb_customer";
+
+
+    $result = $conn->query($sql);
 } else {
 
 
@@ -128,8 +133,8 @@ if ($result) {
 
 
     while ($row = mysqli_fetch_assoc($result)) {
-        $ktp_url = $row['ktp_id'] ? getImageUrl($row['ktp_id'], $conn, $upload_dir, $base_url) : null;
-        $npwp_url = $row['npwp_id'] ? getImageUrl($row['npwp_id'], $conn, $upload_dir, $base_url) : null;
+        $ktp_url = isset($row['ktp_id']) && $row['ktp_id'] ? getImageUrl($row['ktp_id'], $conn, $upload_dir, $base_url) : null;
+        $npwp_url = isset($row['npwp_id']) && $row['npwp_id'] ? getImageUrl($row['npwp_id'], $conn, $upload_dir, $base_url) : null;
 
         $row['ktp_link'] = $ktp_url;
         $row['npwp_link'] = $npwp_url;

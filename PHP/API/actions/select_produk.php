@@ -112,6 +112,10 @@ $produk_id = trim($data['produk_id']);
     $result = $stmt ->get_result();
 
 } 
+else if (isset($data['select'])){
+    $sql = "SELECT * FROM tb_produk";
+    $result = $conn->query($sql);
+}
 
 else {
     $sql = "SELECT p.produk_id,p.nama,p.no_sku,p.status,p.harga_minimal,p.kategori_id,k.nama AS kategori_nama,
@@ -129,7 +133,7 @@ $result = $conn->query($sql);
     if ($result) {
     $produk_data = [];
     while ($row = mysqli_fetch_assoc($result)) {
-        $gambar_url = $row['gambar_produk_id']? getImageUrl($row['gambar_produk_id'],$conn,$upload_dir,$base_url) : null;
+        $gambar_url =isset($row['gambar_produk_id'])? getImageUrl($row['gambar_produk_id'],$conn,$upload_dir,$base_url) : null;
         $row['produk_link']=$gambar_url;
         $produk_data[] = $row;
     }

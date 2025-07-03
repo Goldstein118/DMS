@@ -37,13 +37,14 @@
                                         <input type="text" class="form-control" id="prioritas" name="prioritas" />
                                         <label class="form-label mb-0 mt-2" for="dibuat_pada">Dibuat Pada:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input type="text" class="form-control" id="dibuat_pada" name="dibuat_pada" />
-                                        <label class="form-label mb-0 mt-2" for="jumlah_diskon">Jumlah Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <input type="text" class="form-control" id="jumlah_diskon" name="jumlah_diskon" />
                                         <label class="form-label mb-0 mt-2" for="jenis_diskon">Jenis Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="jenis_diskon">
-                                            <option value="flat cut">Flat Cut</option>
+                                            <option value="nominal">Nominal</option>
                                             <option value="persen">Persen</option>
                                         </select>
+                                        <label class="form-label mb-0 mt-2" for="jumlah_diskon">Jumlah Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <input type="text" class="form-control" id="jumlah_diskon" name="jumlah_diskon" />
+
                                     </div>
                                 </div>
                             </div>
@@ -53,11 +54,50 @@
                         <div class="card">
                             <div class="card-header">Promo Kondisi</div>
                             <div class="card-body">
-                                <select class="js-example-basic-multiple" id="jenis_brand" name="states[]" multiple="multiple">
+
+                                <label class="form-label mb-0 mt-2" for="jenis_brand">Jenis Brand:</label>
+                                <select class="js-example-basic-multiple form-select" id="jenis_brand" name="brand[]" multiple="multiple">
                                 </select>
+                                <label class="form-label mb-0 mt-2" for="jenis_customer">Jenis Customer:</label>
+
+                                <select class="js-example-basic-multiple form-select" id="jenis_customer" name="customer[]" multiple="multiple"></select>
+
+                                <label class="form-label mb-0 mt-2" for="jenis_produk">Jenis Produk:</label>
+
+                                <select class="js-example-basic-multiple form-select" id="jenis_produk" name="produk[]" multiple="multiple"></select>
+                                <div class="row g-2">
+                                    <div class="col">
+                                        <label class="form-label mb-0 mt-2" for="status_promo">Status:</label>
+                                        <select class="form-select" id="status_promo">
+                                            <option value="aktif">Aktif</option>
+                                            <option value="nonaktif">Non Aktif</option>
+                                        </select>
+
+                                        <label class="form-label mb-0 mt-2" for="qty_akumulasi">Kuantitas Akumulasi:</label>
+                                        <input class="form-control" type="number" id="qty_akumulasi">
+
+                                        <label class="form-label mb-0 mt-2" for="qty_min">Kuantitas Minimal:</label>
+                                        <input class="form-control" type="number" id="qty_min">
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label mb-0 mt-2" for="qty_max">Kuantitas Maksimum:</label>
+                                        <input class="form-control" type="number" id="qty_max">
+
+                                        <label class="form-label mb-0 mt-2" for="quota">Quota:</label>
+                                        <input class="form-control" type="number" id="quota">
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="card" id="card_promo_3">
+                        <div class="card-header">Promo_3</div>
+                        <div class="card-body">
+                            <label class="form-label mb-0 mt-2" for="qty_bonus">Kuantitas Bonus:</label>
+                            <input class="form-control" id="qty_bonus" type="number">
+                            <label class="form-label mb-0 mt-2" for="jumlah_diskon">Jumlah Diskon:</label>
+                            <input class="form-control" id="jumlah_diskon">
+                        </div>
                     </div>
                 </div>
 
@@ -99,4 +139,3 @@
 
     </div>
 </main>
-

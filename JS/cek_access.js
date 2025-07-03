@@ -32,6 +32,7 @@ const accessMap = {
   tb_pricelist: 44,
   tb_armada: 48,
   tb_frezzer: 52,
+  tb_promo: 56,
 };
 
 const actionIndex = {

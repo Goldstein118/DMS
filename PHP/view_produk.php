@@ -130,7 +130,8 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
     #gambar_produk,
     #data_produk {
-      max-height: fit-content;      text-align: center;
+      max-height: fit-content;
+      text-align: center;
     }
 
     .table-borderless th {
@@ -162,7 +163,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
       <span class="text-muted" id="view_produk_id"></span>
     </div>
     <button type="button" class="btn btn-outline-primary btn-sm no_print" onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
-    <button type="button" class="btn btn-outline-danger btn-sm no_print" onclick="window.close()">Tutup</button>
+    <button type="button" class="btn btn-outline-danger btn-sm no_print" onclick="window.close()"><i class="bi bi-x-lg"></i>Tutup</button>
 
   </header>
 

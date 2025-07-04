@@ -416,59 +416,120 @@ if (submit_produk_update) {
         "Format harga minimal tidak valid"
       );
     if (is_valid) {
-      const formData = new FormData();
-      formData.append("produk_id", produk_id);
-      formData.append("nama", nama_new);
-      formData.append("no_sku", no_sku_new);
-      formData.append("status", status_new);
-      formData.append("harga_minimal", helper.format_angka(harga_minimal_new));
-      formData.append("kategori_id", kategori_id_new);
-      formData.append("brand_id", brand_id_new);
-      formData.append("details", JSON.stringify(details));
-      formData.append("stock_awal", stock_awal_new);
-      const produk_file = document.getElementById("update_produk_gambar")
-        .files[0];
-      if (produk_file) {
-        formData.append("produk_file", produk_file);
-      } else {
-        formData.append("remove_produk_file", "true");
-      }
-      try {
-        const response = await apiRequest(
-          `/PHP/API/produk_API.php?action=update&user_id=${access.decryptItem(
-            "user_id"
-          )}`,
-          "POST",
-          formData
-        );
-        if (response.ok) {
-          row.cells[1].textContent = nama_new;
+      let harga_minimum_empty = true;
+      let harga_details_empty = true;
+      let harga_banding = true;
 
-          const kategori = $("#update_kategori option:selected").text();
-          const kategori_nama = kategori.split(" - ")[1];
-          row.cells[2].textContent = kategori_nama;
-
-          const brand = $("#update_brand option:selected").text();
-          const brand_nama = brand.split(" - ")[1];
-          row.cells[3].textContent = brand_nama;
-
-          row.cells[4].textContent = no_sku_new;
-          row.cells[5].textContent = status_new;
-          row.cells[6].textContent = helper.format_angka(harga_minimal_new);
-
-          $("#update_modal_produk").modal("hide");
-          Swal.fire("Berhasil", response.message, "success");
-          window.produk_grid.forceRender();
-          setTimeout(() => {
-            helper.custom_grid_header("produk", handle_delete, handle_update);
-          }, 200);
-        }
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Gagal",
-          text: error.message,
+      if (details.length == 0 || !details) {
+        const response = await Swal.fire({
+          title: "Apakah Anda Yakin?",
+          text: "Kolom Harga Pricelist Kosong!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Iya, Simpan!",
+          cancelButtonText: "Batalkan",
         });
+        if (!response.isConfirmed) {
+          harga_minimum_empty = false;
+        }
+      }
+
+      if (!harga_minimal_new || harga_minimal_new.trim() === "") {
+        const result = await Swal.fire({
+          title: "Apakah Anda Yakin?",
+          text: "Kolom Harga Minimun Kosong!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Iya, Simpan!",
+          cancelButtonText: "Batalkan",
+        });
+        if (!result.isConfirmed) {
+          harga_details_empty = false;
+        }
+      }
+
+      const harga_min = parseFloat(harga_minimal_new.replace(/[^0-9.]/g, ""));
+      const banding_harga = details.some((item) => {
+        const harga_detail = parseFloat(item.harga.replace(/[^0-9.]/g, ""));
+        return harga_detail < harga_min;
+      });
+      if (banding_harga) {
+        const result = await Swal.fire({
+          title: "Apakah Anda Yakin?",
+          text: "Harga pricelist lebih kecil dari harga minimun!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Iya, Simpan!",
+          cancelButtonText: "Batalkan",
+        });
+        if (!result.isConfirmed) {
+          harga_banding = false;
+        }
+      }
+      if (harga_minimum_empty && harga_details_empty && harga_banding) {
+        const formData = new FormData();
+        formData.append("produk_id", produk_id);
+        formData.append("nama", nama_new);
+        formData.append("no_sku", no_sku_new);
+        formData.append("status", status_new);
+        formData.append(
+          "harga_minimal",
+          helper.format_angka(harga_minimal_new)
+        );
+        formData.append("kategori_id", kategori_id_new);
+        formData.append("brand_id", brand_id_new);
+        formData.append("details", JSON.stringify(details));
+        formData.append("stock_awal", stock_awal_new);
+        const produk_file = document.getElementById("update_produk_gambar")
+          .files[0];
+        if (produk_file) {
+          formData.append("produk_file", produk_file);
+        } else {
+          formData.append("remove_produk_file", "true");
+        }
+        try {
+          const response = await apiRequest(
+            `/PHP/API/produk_API.php?action=update&user_id=${access.decryptItem(
+              "user_id"
+            )}`,
+            "POST",
+            formData
+          );
+          if (response.ok) {
+            row.cells[1].textContent = nama_new;
+
+            const kategori = $("#update_kategori option:selected").text();
+            const kategori_nama = kategori.split(" - ")[1];
+            row.cells[2].textContent = kategori_nama;
+
+            const brand = $("#update_brand option:selected").text();
+            const brand_nama = brand.split(" - ")[1];
+            row.cells[3].textContent = brand_nama;
+
+            row.cells[4].textContent = no_sku_new;
+            row.cells[5].textContent = status_new;
+            row.cells[6].textContent = helper.format_angka(harga_minimal_new);
+
+            $("#update_modal_produk").modal("hide");
+            Swal.fire("Berhasil", response.message, "success");
+            window.produk_grid.forceRender();
+            setTimeout(() => {
+              helper.custom_grid_header("produk", handle_delete, handle_update);
+            }, 200);
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: error.message,
+          });
+        }
       }
     }
   });

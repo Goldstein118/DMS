@@ -67,12 +67,14 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
     #logo_joyday {
       width: 15%;
     }
-      table th {
-        background-color: #b2cef8 !important;
-        color: #333;
-        ;
-        font-weight: bold;
-      }
+
+    table th {
+      background-color: #b2cef8 !important;
+      color: #333;
+      ;
+      font-weight: bold;
+    }
+
     @media print {
       .no_print {
         display: none;
@@ -92,7 +94,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
       <span class="text-muted" id="nama_pricelist" style="display:inline-block"></span>
     </div>
     <button type="button" class="btn btn-outline-primary btn-sm no_print" onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
-    <button type="button" class="btn btn-outline-danger btn-sm  no_print" onclick="window.close()">Tutup</button>
+    <button type="button" class="btn btn-outline-danger btn-sm  no_print" onclick="window.close()"><i class="bi bi-x-lg"></i> Tutup</button>
     <span class="text-muted" id="view_tanggal_berlaku" style="float: inline-end"></span>
   </header>
 

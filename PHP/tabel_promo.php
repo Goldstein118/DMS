@@ -35,8 +35,7 @@
                                     <div class="col">
                                         <label class="form-label mb-0 mt-2" for="prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input type="text" class="form-control" id="prioritas" name="prioritas" />
-                                        <label class="form-label mb-0 mt-2" for="dibuat_pada">Dibuat Pada:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <input type="text" class="form-control" id="dibuat_pada" name="dibuat_pada" />
+
                                         <label class="form-label mb-0 mt-2" for="jenis_diskon">Jenis Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="jenis_diskon">
                                             <option value="nominal">Nominal</option>
@@ -95,12 +94,11 @@
                         <div class="card-body">
                             <label class="form-label mb-0 mt-2" for="qty_bonus">Kuantitas Bonus:</label>
                             <input class="form-control" id="qty_bonus" type="number">
-                            <label class="form-label mb-0 mt-2" for="jumlah_diskon">Jumlah Diskon:</label>
-                            <input class="form-control" id="jumlah_diskon">
+                            <label class="form-label mb-0 mt-2" for="diskon_bonus_barang">Jumlah Diskon:</label>
+                            <input class="form-control" id="diskon_bonus_barang">
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button id="submit_promo" type="button" class="btn btn-primary">Simpan</button>
@@ -108,7 +106,6 @@
         </div>
     </div>
 </div>
-
 
 
 <div class="modal fade" id="modal_promo_update" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

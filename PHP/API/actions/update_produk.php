@@ -3,7 +3,7 @@ require_once __DIR__ . '/../utils/helpers.php';
 $upload_dir = __DIR__ . '/../../../uploads_produk';
 $base_url = 'http://localhost/DMS/uploads_produk/';
 
-function handle_image_remove( $produk_id, $conn)
+function handle_image_remove($produk_id, $conn)
 {
     $check = $conn->prepare("SELECT gambar_produk_id, internal_link FROM tb_gambar_produk WHERE produk_id=?");
     $check->bind_param("s", $produk_id);
@@ -93,7 +93,7 @@ function handleImageUpload($field, $produk_id, $conn, $upload_dir, $base_url)
             if (file_exists($old_path)) {
                 unlink($old_path); // Delete old file from the server
             }
-            $stmt = $conn->prepare("UPDATE gambar_produk_id SET internal_link=?, external_link=?, blob_data=? WHERE produk_id=?");
+            $stmt = $conn->prepare("UPDATE tb_gambar_produk SET internal_link=?, external_link=?, blob_data=? WHERE produk_id=?");
             $stmt->bind_param("ssss", $internal_link, $external_link, $blobData, $produk_id);
         } else {
             $gambar_id = generateCustomID('IMGP', 'tb_gambar_produk', 'gambar_produk_id', $conn);
@@ -129,7 +129,7 @@ try {
 
     $stmt = $conn->prepare("UPDATE tb_produk SET nama = ?, no_sku = ?, status = ?, harga_minimal = ?, kategori_id = ?, brand_id = ? ,stock_awal=?
                             WHERE produk_id = ?");
-    $stmt->bind_param("ssssssss", $nama, $no_sku, $status, $harga_minimal, $kategori_id, $brand_id,$stock_awal, $produk_id);
+    $stmt->bind_param("ssssssss", $nama, $no_sku, $status, $harga_minimal, $kategori_id, $brand_id, $stock_awal, $produk_id);
     if (!$stmt->execute()) throw new Exception("Product update failed: " . $stmt->error);
     $stmt->close();
 
@@ -142,7 +142,7 @@ try {
         foreach ($data['details'] as $item) {
             $pricelist_id = $item['pricelist_id'];
             $harga = $item['harga'];
-            
+
             $stmt_delete->bind_param("ss", $pricelist_id, $produk_id);
             $stmt_delete->execute();
 
@@ -154,9 +154,9 @@ try {
 
         $stmt_delete->close();
         $stmt_insert->close();
+    } else {
     }
-    else{}
-    handleImageUpload('produk_file',$produk_id,$conn,$upload_dir,$base_url);
+    handleImageUpload('produk_file', $produk_id, $conn, $upload_dir, $base_url);
 
     http_response_code(200);
     echo json_encode(["ok" => true, "message" => "Produk & Pricelist berhasil diupdate"]);

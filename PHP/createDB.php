@@ -250,7 +250,8 @@ if ($conn->query($armada)) {
     }
 }
 
-$frezzer = "CREATE TABLE IF NOT EXISTS tb_frezzer (frezzer_id VARCHAR(20),kode_barcode VARCHAR(20),tipe VARCHAR(50),status VARCHAR (50) DEFAULT 'ready',merek VARCHAR (20),size VARCHAR(20))";
+$frezzer = "CREATE TABLE IF NOT EXISTS tb_frezzer (frezzer_id VARCHAR(20),kode_barcode VARCHAR(20),tipe VARCHAR(50),status VARCHAR (50) DEFAULT 'ready',
+merek VARCHAR (20),size VARCHAR(20))";
 if ($conn->query($frezzer)) {
     try {
     } catch (Error) {
@@ -260,10 +261,34 @@ if ($conn->query($frezzer)) {
 
 $promo = "CREATE TABLE IF NOT EXISTS tb_promo (promo_id VARCHAR(20) PRIMARY KEY NOT NULL, 
         tanggal_berlaku DATE ,tanggal_selesai DATE, jenis_bonus VARCHAR (20) DEFAULT 'barang',
-        akumulasi VARCHAR(20),prioritas VARCHAR(20),created_on DATE,jenis_diskon VARCHAR(20),
-        jumlah_diskon VARCHAR(20)";
+        akumulasi VARCHAR(20),prioritas VARCHAR(20),created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,jenis_diskon VARCHAR(20),
+        jumlah_diskon VARCHAR(20))";
+
+if ($conn->query($promo)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
 
 $promo_kondisi = "CREATE TABLE IF NOT EXISTS tb_promo_kondisi 
-                  (promo_kondisi_id VARCHAR(20) PRIMARY KEY NOT NULL,promo_id VARCHAR(20),";
+                  (promo_kondisi_id VARCHAR(20) PRIMARY KEY NOT NULL,promo_id VARCHAR(20),
+                  jenis_customer JSON,jenis_brand  JSON,jenis_produk JSON ,
+                  status VARCHAR(20) DEFAULT 'aktif',qty_akumulasi VARCHAR(20), qty_min VARCHAR(20),
+                  qty_max VARCHAR(20),quota VARCHAR (20))";
+if ($conn->query($promo_kondisi)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
 
-mysqli_close($conn);
+// $promo_bonus_barang = "CREATE TABLE IF NOT EXISTS tb_promo_bonus_barang(promo_bonus_barang_id VARCHAR(20) PRIMARY KEY NOT NULL,
+//                        promo_id VARCHAR(20),qty_bonus VARCHAR(20), jlh_diskon VARCHAR(20))";
+// mysqli_close($conn);
+// if ($conn->query($promo_bonus_barang)) {
+//     try {
+//     } catch (Error) {
+//         echo mysqli_error($conn);
+//     }
+// }

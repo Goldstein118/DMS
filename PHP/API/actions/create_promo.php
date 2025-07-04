@@ -1,13 +1,16 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
 try {
-    $requiredFields = ['kode_barcode', 'status',];
+    $requiredFields = ['nama', 'tanggal_berlaku', 'tanggal_selesai'];
     $field = validate_1($data, $requiredFields);
-    $kode_barcode = $field['kode_barcode'];
-    $tipe = $field['tipe'];
-    $status = $field['status'];
-    $merek = $field['merek'];
-    $size = $field['size'];
+    $nama = $field['nama'];
+    $tanggal_berlaku = $field['tanggal_berlaku'];
+    $tanggal_selesai = $field['tanggal_selesai'];
+    $jenis_bonus = $data['jenis_bonus'];
+    $akumulasi = $data['akumulasi'];
+    $prioritas = $data['prioritas'];
+    $jenis_diskon = $data['jenis_diskon'];
+
 
     validate_2($kode_barcode, '/^[a-zA-Z0-9\s]+$/', "Invalid name format");
 

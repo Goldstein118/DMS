@@ -1,5 +1,5 @@
 <?php
-if(!$conn){
+if (!$conn) {
     http_response_code(500);
     echo json_encode(["error" => "Database connection failed"]);
     exit;
@@ -75,7 +75,7 @@ function convertFilePathToUrl($filePath)
     return '/uploads/placeholder.jpg';
 }
 
-if (strlen($search)>=3 && $search !=='') {
+if (strlen($search) >= 3 && $search !== '') {
     $stmt = $conn->prepare("SELECT p.produk_id,p.nama,p.no_sku,p.status,p.harga_minimal,p.kategori_id,k.nama 
     AS kategori_nama,p.brand_id,b.nama AS brand_nama FROM
     tb_produk p 
@@ -88,11 +88,11 @@ if (strlen($search)>=3 && $search !=='') {
     OR k.nama LIKE CONCAT ('%',?,'%')
     OR b.nama LIKE CONCAT ('%',?,'%')
     ");
-    $stmt->bind_param('sssssss',$search,$search,$search,$search,$search,$search,$search);
+    $stmt->bind_param('sssssss', $search, $search, $search, $search, $search, $search, $search);
     $stmt->execute();
     $result = $stmt->get_result();
-} else if(isset($data['produk_id'])){
-$produk_id = trim($data['produk_id']);
+} else if (isset($data['produk_id'])) {
+    $produk_id = trim($data['produk_id']);
     $sql = "SELECT p.produk_id,p.nama,p.no_sku,p.status,p.harga_minimal,p.kategori_id,k.nama AS kategori_nama,
     p.brand_id,
     b.nama AS brand_nama,g.gambar_produk_id FROM
@@ -100,24 +100,20 @@ $produk_id = trim($data['produk_id']);
     LEFT JOIN tb_kategori k ON p.kategori_id = k.kategori_id
     LEFT JOIN tb_brand b ON p.brand_id = b.brand_id
     LEFT JOIN tb_gambar_produk g ON g.produk_id=p.produk_id WHERE p.produk_id=?";
-    $stmt = $conn ->prepare($sql);
-    if($stmt == false){
+    $stmt = $conn->prepare($sql);
+    if ($stmt == false) {
         http_response_code(500);
-        echo json_encode(["error"=>"Failed to prepare statement: ". $conn->error]);
+        echo json_encode(["error" => "Failed to prepare statement: " . $conn->error]);
         exit;
     }
 
-    $stmt->bind_param("s",$produk_id);
+    $stmt->bind_param("s", $produk_id);
     $stmt->execute();
-    $result = $stmt ->get_result();
-
-} 
-else if (isset($data['select'])){
+    $result = $stmt->get_result();
+} else if (isset($data['select'])) {
     $sql = "SELECT * FROM tb_produk";
     $result = $conn->query($sql);
-}
-
-else {
+} else {
     $sql = "SELECT p.produk_id,p.nama,p.no_sku,p.status,p.harga_minimal,p.kategori_id,k.nama AS kategori_nama,
     p.brand_id,
     b.nama AS brand_nama,g.gambar_produk_id,p.stock_awal FROM
@@ -125,23 +121,20 @@ else {
     LEFT JOIN tb_kategori k ON p.kategori_id = k.kategori_id
     LEFT JOIN tb_brand b ON p.brand_id = b.brand_id
     LEFT JOIN tb_gambar_produk g ON g.produk_id=p.produk_id";
-    
 
-$result = $conn->query($sql);
 
+    $result = $conn->query($sql);
 }
-    if ($result) {
+if ($result) {
     $produk_data = [];
     while ($row = mysqli_fetch_assoc($result)) {
-        $gambar_url =isset($row['gambar_produk_id'])? getImageUrl($row['gambar_produk_id'],$conn,$upload_dir,$base_url) : null;
-        $row['produk_link']=$gambar_url;
+        $gambar_url = isset($row['gambar_produk_id']) ? getImageUrl($row['gambar_produk_id'], $conn, $upload_dir, $base_url) : null;
+        $row['produk_link'] = $gambar_url;
         $produk_data[] = $row;
     }
     http_response_code(200);
     echo json_encode($produk_data);
-    } else {
+} else {
     http_response_code(500);
     echo json_encode(["error" => "Failed to fetch data: " . $conn->error]);
-    }
-
-?>
+}

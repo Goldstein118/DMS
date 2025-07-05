@@ -173,6 +173,7 @@ async function submitPromo() {
   }
   if (compare_tanggal) {
     const data_promo = {
+      user_id: `${access.decryptItem("user_id")}`,
       nama: nama,
       tanggal_berlaku: tanggal_berlaku,
       tanggal_selesai: tanggal_selesai,
@@ -197,7 +198,7 @@ async function submitPromo() {
       const response = await apiRequest(
         `/PHP/API/promo_API.php?action=create`,
         "POST",
-        { data_promo }
+        data_promo
       );
       if (response.ok) {
         swal.fire("Berhasil", response.message, "success");

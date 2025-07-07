@@ -201,7 +201,12 @@ async function submitPromo() {
         data_promo
       );
       if (response.ok) {
+        $("#modal_promo").modal("hide");
         swal.fire("Berhasil", response.message, "success");
+        window.promo_grid.forceRender();
+        setTimeout(() => {
+          helper.custom_grid_header("promo");
+        }, 200);
       }
     } catch (error) {
       toastr.error(error.message);

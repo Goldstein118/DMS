@@ -119,10 +119,13 @@
                 <div class="col">
                     <div class="col">
                         <div class="card">
-                            <div class="card-header">Promo</div>
+                            <div class="card-header">Update Promo</div>
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col">
+
+                                        <label class="form-label" for="update_promo_id">Kode Promo:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <input class="form-control" type="text" id="update_promo_id" name="update_promo_id" value="">
                                         <label class="form-label" for="update_nama_promo">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input class="form-control" type="text" id="update_nama_promo" name="update_nama_promo" value="">
                                         <label class="form-label mb-0 mt-2" for="update_tanggal_berlaku">Tanggal Berlaku:<i class="bi bi-asterisk text-danger align-middle "></i></label>
@@ -179,17 +182,14 @@
                                             <option value="aktif">Aktif</option>
                                             <option value="nonaktif">Non Aktif</option>
                                         </select>
-
                                         <label class="form-label mb-0 mt-2" for="update_qty_akumulasi">Kuantitas Akumulasi:</label>
                                         <input class="form-control" type="number" id="update_qty_akumulasi">
-
                                         <label class="form-label mb-0 mt-2" for="update_qty_min">Kuantitas Minimal:</label>
                                         <input class="form-control" type="number" id="update_qty_min">
                                     </div>
                                     <div class="col">
                                         <label class="form-label mb-0 mt-2" for="update_qty_max">Kuantitas Maksimum:</label>
                                         <input class="form-control" type="number" id="update_qty_max">
-
                                         <label class="form-label mb-0 mt-2" for="update_quota">Quota:</label>
                                         <input class="form-control" type="number" id="update_quota">
                                     </div>
@@ -197,7 +197,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card" id="card_promo_3">
+                    <div class="card" id="update_card_promo_3">
                         <div class="card-header">Promo_3</div>
                         <div class="card-body">
                             <label class="form-label mb-0 mt-2" for="update_qty_bonus">Kuantitas Bonus:</label>

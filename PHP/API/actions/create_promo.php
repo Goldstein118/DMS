@@ -30,7 +30,7 @@ try {
     $promo_id = generateCustomID('PRO', 'tb_promo', 'promo_id', $conn);
     executeInsert(
         $conn,
-        "INSERT INTO tb_promo(promo_id,nama,tanggal_berlaku,tanggal_selesai,jenis_bonus,akumulasi,prioritas,jenis_diskon,jumlah_diskon)
+        "INSERT INTO tb_promo(promo_id,nama,tanggal_berlaku,tanggal_selesai,jenis_bonus,jenis_diskon,akumulasi,prioritas,jumlah_diskon)
         VALUES (?,?,?,?,?,?,?,?,?)",
         [
             $promo_id,
@@ -45,27 +45,29 @@ try {
         ],
         "sssssssss"
     );
+    if (isset($brand_val) || isset($customer_val) || isset($produk_val)) {
+        $promo_kondisi_id = generateCustomID('PRK', 'tb_promo_kondisi', 'promo_kondisi_id', $conn);
 
-    $promo_kondisi_id = generateCustomID('PRK', 'tb_promo_kondisi', 'promo_kondisi_id', $conn);
-
-    executeInsert(
-        $conn,
-        " INSERT INTO tb_promo_kondisi (promo_kondisi_id,promo_id,jenis_brand,jenis_customer,jenis_produk,status,qty_akumulasi,qty_min,qty_max,quota) 
+        executeInsert(
+            $conn,
+            " INSERT INTO tb_promo_kondisi (promo_kondisi_id,promo_id,jenis_brand,jenis_customer,jenis_produk,status,qty_akumulasi,qty_min,qty_max,quota) 
         VALUES (?,?,?,?,?,?,?,?,?,?)",
-        [
-            $promo_kondisi_id,
-            $promo_id,
-            $json_brand,
-            $json_customer,
-            $json_produk,
-            $status_promo,
-            $qty_akumulasi,
-            $qty_min,
-            $qty_max,
-            $quota
-        ],
-        "ssssssssss"
-    );
+            [
+                $promo_kondisi_id,
+                $promo_id,
+                $json_brand,
+                $json_customer,
+                $json_produk,
+                $status_promo,
+                $qty_akumulasi,
+                $qty_min,
+                $qty_max,
+                $quota
+            ],
+            "ssssssssss"
+        );
+    }
+
     echo json_encode(["success" => true, "message" => "Berhasil", "data" => ["promo_id" => $promo_id]]);
 } catch (Exception $e) {
     http_response_code(500);

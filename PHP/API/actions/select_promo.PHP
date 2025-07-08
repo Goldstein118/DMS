@@ -14,10 +14,20 @@ if ($search !== '' && strlen($search) >= 3) {
     $stmt->bind_param('ss', $search, $search);
     $stmt->execute();
     $result = $stmt->get_result();
-} else if (isset($data['promo_id'])) {
+} else if (isset($data['promo_id']) && $data['table'] == "tb_promo_kondisi") {
     $promo_id = $data['promo_id'];
-    $sql_kondisi = "SELECT * FROM tb_promo_kondisi";
-    $result = $conn->query($sql_kondisi);
+    $sql_kondisi = "SELECT * FROM tb_promo_kondisi WHERE promo_id=?";
+    $stmt = $conn->prepare($sql_kondisi);
+    $stmt->bind_param("s", $promo_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+} else if (isset($data['promo_id']) && $data['table'] == "tb_promo_bonus_barang") {
+    $promo_id = $data['promo_id'];
+    $sql_bonus = "SELECT * FROM tb_promo_bonus_barang WHERE promo_id=?";
+    $stmt = $conn->prepare($sql_bonus);
+    $stmt->bind_param("s", $promo_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 } else {
     $sql_promo = "SELECT * FROM tb_promo";
     $result = $conn->query($sql_promo);

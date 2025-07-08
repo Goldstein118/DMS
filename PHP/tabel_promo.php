@@ -26,11 +26,6 @@
                                             <option value="barang">Barang</option>
                                             <option value="nominal">Nominal</option>
                                         </select>
-                                        <label class="form-label mb-0 mt-2" for="akumulasi">Akumulasi:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <select class="form-select" id="akumulasi">
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
-                                        </select>
                                     </div>
                                     <div class="col">
                                         <label class="form-label mb-0 mt-2" for="prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
@@ -43,7 +38,11 @@
                                         </select>
                                         <label class="form-label mb-0 mt-2" for="jumlah_diskon">Jumlah Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input type="text" class="form-control" id="jumlah_diskon" name="jumlah_diskon" />
-
+                                        <label class="form-label mb-0 mt-2" for="akumulasi">Akumulasi:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <select class="form-select" id="akumulasi">
+                                            <option value="ya">Ya</option>
+                                            <option value="tidak">Tidak</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -137,11 +136,7 @@
                                             <option value="barang">Barang</option>
                                             <option value="nominal">Nominal</option>
                                         </select>
-                                        <label class="form-label mb-0 mt-2" for="update_akumulasi">Akumulasi:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <select class="form-select" id="update_akumulasi">
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
-                                        </select>
+
                                     </div>
                                     <div class="col">
                                         <label class="form-label mb-0 mt-2" for="update_prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
@@ -154,7 +149,11 @@
                                         </select>
                                         <label class="form-label mb-0 mt-2" for="update_jumlah_diskon">Jumlah Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input type="text" class="form-control" id="update_jumlah_diskon" name="update_jumlah_diskon" />
-
+                                        <label class="form-label mb-0 mt-2" for="update_akumulasi">Akumulasi:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <select class="form-select" id="update_akumulasi">
+                                            <option value="ya">Ya</option>
+                                            <option value="tidak">Tidak</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>

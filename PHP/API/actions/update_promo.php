@@ -24,6 +24,8 @@ try {
     $qty_min = $data['qty_min'] ?? '';
     $qty_max = $data['qty_max'] ?? '';
     $quota = $data['quota'] ?? '';
+    $qty_bonus = $data['qty_bonus'];
+    $diskon_bonus_barang = $data['diskon_bonus_barang'];
 
     validate_2($nama, '/^[a-zA-Z0-9\s]+$/', "Format nama tidak valid");
 
@@ -49,13 +51,13 @@ try {
     $stmt->close();
 
     // Check if tb_promo_kondisi exists
-    $check_stmt = $conn->prepare("SELECT promo_kondisi_id FROM tb_promo_kondisi WHERE promo_id = ?");
-    $check_stmt->bind_param("s", $promo_id);
-    $check_stmt->execute();
-    $result = $check_stmt->get_result();
-    $check_stmt->close();
+    $check_kondisi_stmt = $conn->prepare("SELECT promo_kondisi_id FROM tb_promo_kondisi WHERE promo_id = ?");
+    $check_kondisi_stmt->bind_param("s", $promo_id);
+    $check_kondisi_stmt->execute();
+    $result_kondisi = $check_kondisi_stmt->get_result();
+    $check_kondisi_stmt->close();
 
-    if ($result->num_rows > 0) {
+    if ($result_kondisi->num_rows > 0) {
         // Update kondisi
         $stmt_update = $conn->prepare("UPDATE tb_promo_kondisi SET 
             jenis_customer = ?, jenis_brand = ?, jenis_produk = ?, 
@@ -94,6 +96,41 @@ try {
             $qty_min,
             $qty_max,
             $quota
+        );
+        $stmt_insert->execute();
+        $stmt_insert->close();
+    }
+
+    $check_bonus_stmt = $conn->prepare("SELECT promo_bonus_barang_id FROM tb_promo_bonus_barang WHERE promo_id = ?");
+    $check_bonus_stmt->bind_param("s", $promo_id);
+    $check_bonus_stmt->execute();
+    $result_bonus = $check_bonus_stmt->get_result();
+    $check_bonus_stmt->close();
+
+    if ($result_bonus->num_rows > 0) {
+        // Update kondisi
+        $stmt_update = $conn->prepare("UPDATE tb_promo_bonus_barang SET 
+            qty_bonus = ?,jlh_diskon=? WHERE promo_id = ?");
+        $stmt_update->bind_param(
+            "sss",
+            $qty_bonus,
+            $diskon_bonus_barang,
+            $promo_id
+        );
+        $stmt_update->execute();
+        $stmt_update->close();
+    } else {
+        // Insert new kondisi
+        $promo_bonus_barang_id = generateCustomID('PRB', 'tb_promo_bonus_barang', 'promo_bonus_barang_id', $conn);
+        $stmt_insert = $conn->prepare("INSERT INTO tb_promo_bonus_barang (
+        promo_bonus_barang_id,promo_id,qty_bonus,jlh_diskon
+        ) VALUES (?, ?, ?,?)");
+        $stmt_insert->bind_param(
+            "ssss",
+            $promo_bonus_barang_id,
+            $promo_id,
+            $qty_bonus,
+            $diskon_bonus_barang
         );
         $stmt_insert->execute();
         $stmt_insert->close();

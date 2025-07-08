@@ -86,8 +86,8 @@ if (grid_container_promo) {
         data.map((item) => [
           item.promo_id,
           item.nama,
-          item.tanggal_berlaku,
-          item.tanggal_selesai,
+          helper.format_date(item.tanggal_berlaku),
+          helper.format_date(item.tanggal_selesai),
           item.jenis_bonus,
           item.akumulasi,
           item.prioritas,
@@ -142,8 +142,6 @@ function populateDropdown(data, field, selectedRaw) {
   } catch (e) {
     console.warn(`Failed to parse selectedRaw for ${field}:`, e);
   }
-
-  console.log("SELECTING", selectedIds);
 
   data.forEach((item) => {
     const value = String(item[`${field}_id`]);
@@ -248,7 +246,7 @@ async function handle_update(button) {
         "user_id"
       )}`,
       "POST",
-      { promo_id }
+      { promo_id: promo_id, table: "tb_promo_kondisi" }
     );
     jenis.data.forEach(async (item) => {
       await fetch_jenis("brand", item.jenis_brand);
@@ -275,6 +273,25 @@ async function handle_update(button) {
       document.getElementById("update_card_promo_3").style.display = "none";
     }
   });
+
+  try {
+    const promo_barang = await apiRequest(
+      `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}`,
+      "POST",
+      { promo_id: promo_id, table: "tb_promo_bonus_barang" }
+    );
+    promo_barang.data.forEach((item) => {
+      document.getElementById("update_qty_bonus").value = item.qty_bonus
+        ? item.qty_bonus
+        : "";
+      document.getElementById("update_diskon_bonus_barang").value =
+        item.jlh_diskon ? item.jlh_diskon : "";
+    });
+  } catch (error) {
+    toastr.error("Gagal mengambil data : " + error.message);
+  }
 
   await new Promise((resolve) => setTimeout(resolve, 500));
   button_icon.style.display = "inline-block";
@@ -329,6 +346,10 @@ if (submit_promo_update) {
     const qty_min = document.getElementById("update_qty_min").value;
     const qty_max = document.getElementById("update_qty_max").value;
     const quota = document.getElementById("update_quota").value;
+    const qty_bonus = document.getElementById("update_qty_bonus").value;
+    const jlh_diskon_bonus = document.getElementById(
+      "update_diskon_bonus_barang"
+    ).value;
 
     if (
       helper.validateField(
@@ -356,6 +377,8 @@ if (submit_promo_update) {
           qty_min: qty_min,
           qty_max: qty_max,
           quota: quota,
+          qty_bonus: qty_bonus,
+          diskon_bonus_barang: jlh_diskon_bonus,
         };
 
         const response = await apiRequest(

@@ -68,6 +68,12 @@ try {
         );
     }
 
+    if (isset($qty_bonus) || isset($diskon_bonus_barang)) {
+        $promo_bonus_barang_id = generateCustomID('PRB', 'tb_promo_bonus_barang', 'promo_bonus_barang_id', $conn);
+
+        executeInsert($conn, "INSERT INTO tb_promo_bonus_barang(promo_bonus_barang_id,promo_id,qty_bonus,jlh_diskon) 
+        VALUES (?,?,?,?)", [$promo_bonus_barang_id, $promo_id, $qty_bonus, $diskon_bonus_barang], "ssss");
+    }
     echo json_encode(["success" => true, "message" => "Berhasil", "data" => ["promo_id" => $promo_id]]);
 } catch (Exception $e) {
     http_response_code(500);

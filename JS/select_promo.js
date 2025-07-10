@@ -3,7 +3,33 @@ import { Grid, html } from "../Vendor/gridjs.module.js";
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 import * as helper from "./helper.js";
-
+$(document).ready(function () {
+  $("#update_jenis_brand").select2({
+    dropdownParent: $("#modal_promo_update"),
+  });
+  $("#update_jenis_customer").select2({
+    dropdownParent: $("#modal_promo_update"),
+  });
+  $("#update_jenis_produk").select2({
+    dropdownParent: $("#modal_promo_update"),
+  });
+});
+const pickdate_tanggal_berlaku = $("#update_tanggal_berlaku")
+  .pickadate({
+    format: "dd mmm yyyy",
+    formatSubmit: "yyyy-mm-dd",
+    selectYears: 25,
+    selectMonths: true,
+  })
+  .pickadate("picker");
+const pickdate_tanggal_selesai = $("#update_tanggal_selesai")
+  .pickadate({
+    format: "dd mmm yyyy",
+    formatSubmit: "yyyy-mm-dd",
+    selectYears: 25,
+    selectMonths: true,
+  })
+  .pickadate("picker");
 const grid_container_promo = document.querySelector("#table_promo");
 if (grid_container_promo) {
   window.promo_grid = new Grid({
@@ -102,32 +128,87 @@ if (grid_container_promo) {
   window.promo_grid.render(document.getElementById("table_promo"));
   setTimeout(() => {
     helper.custom_grid_header("promo", handle_delete, handle_update);
-
-    $(document).ready(function () {
-      $("#update_jenis_brand").select2({
-        dropdownParent: $("#modal_promo_update"),
-      });
-      $("#update_jenis_customer").select2({
-        dropdownParent: $("#modal_promo_update"),
-      });
-      $("#update_jenis_produk").select2({
-        dropdownParent: $("#modal_promo_update"),
-      });
-      $("#update_tanggal_berlaku").pickadate({
-        format: "dd mmm yyyy",
-        formatSubmit: "yyyy-mm-dd",
-        selectYears: 25,
-        selectMonths: true,
-      });
-      $("#update_tanggal_selesai").pickadate({
-        format: "dd mmm yyyy",
-        formatSubmit: "yyyy-mm-dd",
-        selectYears: 25,
-        selectMonths: true,
-      });
-    });
   }, 200);
 }
+
+async function handle_delete(button) {
+  const row = button.closest("tr");
+  const promo_id = row.cells[0].textContent;
+  const result = await Swal.fire({
+    title: "Apakah Anda Yakin?",
+    text: "Anda tidak dapat mengembalikannya!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Iya, Hapus!",
+    cancelButtonText: "Batalkan",
+  });
+  if (result.isConfirmed) {
+    try {
+      const response = await apiRequest(
+        `/PHP/API/promo_API.php?action=delete&user_id=${access.decryptItem(
+          "user_id"
+        )}`,
+        "DELETE",
+        { promo_id: promo_id }
+      );
+      if (response.ok) {
+        row.remove();
+        Swal.fire("Berhasil", response.message || "Promo dihapus.", "success");
+      } else {
+        Swal.fire("Gagal", response.error || "Gagal menghapus promo.", "error");
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.message,
+      });
+    }
+  }
+}
+function refresh_jenis_option_update() {
+  const allOptions = [
+    { value: "brand", label: "Brand" },
+    { value: "customer", label: "Customer" },
+    { value: "produk", label: "Produk" },
+    { value: "channel", label: "Channel" },
+  ];
+
+  document.querySelectorAll(".jenis-select-update").forEach((select) => {
+    const currentValue =
+      select.dataset.jenisValue ||
+      select.dataset.jenis ||
+      select.getAttribute("data-jenis") ||
+      "";
+    const used = select_jenis_option_update(select);
+
+    // Clear and rebuild
+    select.innerHTML = `<option value="">-- Pilih --</option>`;
+    allOptions.forEach((opt) => {
+      if (!used.includes(opt.value) || opt.value === currentValue) {
+        const option = document.createElement("option");
+        option.value = opt.value;
+        option.textContent = opt.label;
+        if (opt.value === currentValue) option.selected = true;
+        select.appendChild(option);
+      }
+    });
+  });
+}
+
+function select_jenis_option_update(excludeSelect = null) {
+  const used = [];
+  document.querySelectorAll(".jenis-select-update").forEach((select) => {
+    if (select !== excludeSelect) {
+      const val = select.value;
+      if (val) used.push(val);
+    }
+  });
+  return used;
+}
+
 function populateDropdown(data, field, selectedRaw) {
   const select = $(`#update_jenis_${field}`);
   select.empty();
@@ -170,76 +251,7 @@ async function fetch_jenis(field, selectedRaw) {
     toastr.error("Gagal mengambil data : " + error.message);
   }
 }
-
-async function handle_delete(button) {
-  const row = button.closest("tr");
-  const promo_id = row.cells[0].textContent;
-  const result = await Swal.fire({
-    title: "Apakah Anda Yakin?",
-    text: "Anda tidak dapat mengembalikannya!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Iya, Hapus!",
-    cancelButtonText: "Batalkan",
-  });
-  if (result.isConfirmed) {
-    try {
-      const response = await apiRequest(
-        `/PHP/API/promo_API.php?action=delete&user_id=${access.decryptItem(
-          "user_id"
-        )}`,
-        "DELETE",
-        { promo_id: promo_id }
-      );
-      if (response.ok) {
-        row.remove();
-        Swal.fire("Berhasil", response.message || "Promo dihapus.", "success");
-      } else {
-        Swal.fire("Gagal", response.error || "Gagal menghapus promo.", "error");
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Gagal",
-        text: error.message,
-      });
-    }
-  }
-}
-async function handle_update(button) {
-  const row = button.closest("tr");
-  window.currentRow = row;
-  const button_icon = button.querySelector(".button_icon");
-  const spinner = button.querySelector(".spinner_update");
-  button_icon.style.display = "none";
-  spinner.style.display = "inline-block";
-
-  const promo_id = row.cells[0].textContent;
-  const current_nama = row.cells[1].textContent;
-  const current_tanggal_berlaku = row.cells[2].textContent;
-  const current_tanggal_selesai = row.cells[3].textContent;
-  const jenis_bonus = row.cells[4].textContent;
-  const akumulasi = row.cells[5].textContent;
-  const prioritas = row.cells[6].textContent;
-  const jenis_diskon = row.cells[8].textContent;
-  const jumlah_diskon = row.cells[9].textContent;
-
-  document.getElementById("update_promo_id").value = promo_id;
-  document.getElementById("update_nama_promo").value = current_nama;
-  document.getElementById("update_tanggal_berlaku").value =
-    current_tanggal_berlaku;
-
-  document.getElementById("update_tanggal_selesai").value =
-    current_tanggal_selesai;
-  document.getElementById("update_jenis_bonus").value = jenis_bonus;
-  document.getElementById("update_akumulasi").value = akumulasi;
-
-  document.getElementById("update_prioritas").value = prioritas;
-  document.getElementById("update_jenis_diskon").value = jenis_diskon;
-  document.getElementById("update_jumlah_diskon").value = jumlah_diskon;
-
+async function fetch_promo(promo_id) {
   try {
     const jenis = await apiRequest(
       `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
@@ -263,6 +275,60 @@ async function handle_update(button) {
   } catch (error) {
     toastr.error("Gagal mengambil data : " + error.message);
   }
+}
+async function handle_update(button) {
+  const row = button.closest("tr");
+  window.currentRow = row;
+  const button_icon = button.querySelector(".button_icon");
+  const spinner = button.querySelector(".spinner_update");
+  button_icon.style.display = "none";
+  spinner.style.display = "inline-block";
+
+  const promo_id = row.cells[0].textContent;
+  const current_nama = row.cells[1].textContent;
+  let current_tanggal_berlaku = row.cells[2].textContent;
+  let current_tanggal_selesai = row.cells[3].textContent;
+  const jenis_bonus = row.cells[4].textContent;
+  const akumulasi = row.cells[5].textContent;
+  const prioritas = row.cells[6].textContent;
+  const jenis_diskon = row.cells[8].textContent;
+  const jumlah_diskon = row.cells[9].textContent;
+
+  current_tanggal_berlaku = helper.unformat_date(current_tanggal_berlaku);
+  const parts_tanggal_berlaku = current_tanggal_berlaku.split("-"); // ["2025", "05", "02"]
+  const tanggal_berlaku = new Date(
+    parts_tanggal_berlaku[0],
+    parts_tanggal_berlaku[1] - 1,
+    parts_tanggal_berlaku[2]
+  );
+  pickdate_tanggal_berlaku.set("select", tanggal_berlaku);
+
+  current_tanggal_selesai = helper.unformat_date(current_tanggal_selesai);
+  const parts_tanggal_selesai = current_tanggal_selesai.split("-"); // ["2025", "05", "02"]
+  const tanggal_selesai = new Date(
+    parts_tanggal_selesai[0],
+    parts_tanggal_selesai[1] - 1,
+    parts_tanggal_selesai[2]
+  );
+  pickdate_tanggal_selesai.set("select", tanggal_selesai);
+
+  document.getElementById("update_promo_id").value = promo_id;
+  document.getElementById("update_nama_promo").value = current_nama;
+  document.getElementById("update_tanggal_berlaku").value =
+    current_tanggal_berlaku;
+
+  document.getElementById("update_tanggal_selesai").value =
+    current_tanggal_selesai;
+  document.getElementById("update_jenis_bonus").value = jenis_bonus;
+  document.getElementById("update_akumulasi").value = akumulasi;
+
+  document.getElementById("update_prioritas").value = prioritas;
+  document.getElementById("update_jenis_diskon").value = jenis_diskon;
+  document.getElementById("update_jumlah_diskon").value = jumlah_diskon;
+
+  await fetch_promo(promo_id);
+
+  refresh_jenis_option_update();
   let jenis_bonus_value = document.getElementById("update_jenis_bonus");
 
   jenis_bonus_value.addEventListener("change", (event) => {

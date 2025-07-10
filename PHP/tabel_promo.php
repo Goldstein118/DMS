@@ -52,17 +52,35 @@
                         <div class="card">
                             <div class="card-header">Promo Kondisi</div>
                             <div class="card-body">
+                                <button class="btn btn-primary btn-sm" id="promo_kondisi_button">
+                                    <i class="bi bi-plus-circle"></i> Tambah
+                                </button>
+                                <table
+                                    class="table table-hover table-bordered table-sm table-striped"
+                                    id="jenis_promo_kondisi">
+                                    <thead id="jenis_promo_kondisi_thead">
+                                        <tr>
+                                            <th scope="col">Jenis</th>
+                                            <th scope="col">Nama</th>
+                                            <th scope="col">Exclude/Include</th>
+                                        </tr>
+                                    </thead>
 
-                                <label class="form-label mb-0 mt-2" for="jenis_brand">Jenis Brand:</label>
+                                    <tbody id="jenis_promo_kondisi_tbody">
+
+                                    </tbody>
+                                </table>
+                                <!-- 
                                 <select class="js-example-basic-multiple form-select" id="jenis_brand" name="brand[]" multiple="multiple">
-                                </select>
-                                <label class="form-label mb-0 mt-2" for="jenis_customer">Jenis Customer:</label>
+                                </select> -->
+
+                                <!-- <label class="form-label mb-0 mt-2" for="jenis_customer">Jenis Customer:</label>
 
                                 <select class="js-example-basic-multiple form-select" id="jenis_customer" name="customer[]" multiple="multiple"></select>
 
                                 <label class="form-label mb-0 mt-2" for="jenis_produk">Jenis Produk:</label>
 
-                                <select class="js-example-basic-multiple form-select" id="jenis_produk" name="produk[]" multiple="multiple"></select>
+                                <select class="js-example-basic-multiple form-select" id="jenis_produk" name="produk[]" multiple="multiple"></select> -->
                                 <div class="row g-2">
                                     <div class="col">
                                         <label class="form-label mb-0 mt-2" for="status_promo">Status:</label>
@@ -108,7 +126,7 @@
 
 
 <div class="modal fade" id="modal_promo_update" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable  modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenterTitle">Edit Promo</h5>
@@ -163,6 +181,22 @@
                         <div class="card">
                             <div class="card-header">Promo Kondisi</div>
                             <div class="card-body">
+
+                                <table
+                                    class="table table-hover table-bordered table-sm table-striped"
+                                    id="update_jenis_promo_kondisi">
+                                    <thead id="update_jenis_promo_kondisi_thead">
+                                        <tr>
+                                            <th scope="col">Jenis</th>
+                                            <th scope="col">Nama</th>
+                                            <th scope="col">Exclude/Include</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="update_jenis_promo_kondisi_tbody">
+
+                                    </tbody>
+                                </table>
 
                                 <label class="form-label mb-0 mt-2" for="update_jenis_brand">Jenis Brand:</label>
                                 <select class="js-example-basic-multiple form-select" id="update_jenis_brand" name="brand[]" multiple="multiple">

@@ -52,7 +52,7 @@
                         <div class="card">
                             <div class="card-header">Promo Kondisi</div>
                             <div class="card-body">
-                                <button class="btn btn-primary btn-sm" id="promo_kondisi_button">
+                                <button class="btn btn-primary btn-sm mb-2" id="promo_kondisi_button">
                                     <i class="bi bi-plus-circle"></i> Tambah
                                 </button>
                                 <table
@@ -60,9 +60,10 @@
                                     id="jenis_promo_kondisi">
                                     <thead id="jenis_promo_kondisi_thead">
                                         <tr>
-                                            <th scope="col">Jenis</th>
-                                            <th scope="col">Nama</th>
-                                            <th scope="col">Exclude/Include</th>
+                                            <th style="width :150px" scope="col">Jenis</th>
+                                            <th style="width:350px" scope="col">Nama</th>
+                                            <th style="width: 150px;" scope="col">Exclude/Include</th>
+                                            <th style="width: 50px;" scope="col">Aksi</th>
                                         </tr>
                                     </thead>
 
@@ -194,20 +195,68 @@
                                     </thead>
 
                                     <tbody id="update_jenis_promo_kondisi_tbody">
+                                        <tr>
+                                            <td>
+                                                <label class="form-label mb-0 mt-2" for="update_jenis_brand">Jenis Brand:</label>
+                                            </td>
+                                            <td>
+                                                <select class="js-example-basic-multiple form-select" id="update_jenis_brand" name="brand[]" multiple="multiple">
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-select" id="update_exclude_include_brand">
+                                                    <option value="include">Include</option>
+                                                    <option value="exclude">Exclude</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label mb-0 mt-2" for="update_jenis_customer">Jenis Customer:</label>
+                                            </td>
+                                            <td>
+                                                <select class="js-example-basic-multiple form-select" id="update_jenis_customer" name="customer[]" multiple="multiple"></select>
 
+                                            </td>
+                                            <td>
+                                                <select class="form-select" id="update_exclude_include_customer">
+                                                    <option value="include">Include</option>
+                                                    <option value="exclude">Exclude</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label mb-0 mt-2" for="update_jenis_produk">Jenis Produk:</label>
+                                            </td>
+                                            <td>
+                                                <select class="js-example-basic-multiple form-select" id="update_jenis_produk" name="produk[]" multiple="multiple"></select>
+                                            </td>
+                                            <td>
+                                                <select class="form-select" id="update_exclude_include_produk">
+                                                    <option value="include">Include</option>
+                                                    <option value="exclude">Exclude</option>
+                                                </select>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label mb-0 mt-2" for="update_jenis_produk">Jenis Channel:</label>
+                                            </td>
+                                            <td>
+                                                <select class="js-example-basic-multiple form-select" id="update_jenis_channel" name="channel[]" multiple="multiple"></select>
+                                            </td>
+                                            <td>
+                                                <select class="form-select" id="update_exclude_include_channel">
+                                                    <option value="include">Include</option>
+                                                    <option value="exclude">Exclude</option>
+                                                </select>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
 
-                                <label class="form-label mb-0 mt-2" for="update_jenis_brand">Jenis Brand:</label>
-                                <select class="js-example-basic-multiple form-select" id="update_jenis_brand" name="brand[]" multiple="multiple">
-                                </select>
-                                <label class="form-label mb-0 mt-2" for="update_jenis_customer">Jenis Customer:</label>
-
-                                <select class="js-example-basic-multiple form-select" id="update_jenis_customer" name="customer[]" multiple="multiple"></select>
-
-                                <label class="form-label mb-0 mt-2" for="update_jenis_produk">Jenis Produk:</label>
-
-                                <select class="js-example-basic-multiple form-select" id="update_jenis_produk" name="produk[]" multiple="multiple"></select>
                                 <div class="row g-2">
                                     <div class="col">
                                         <label class="form-label mb-0 mt-2" for="update_status_promo">Status:</label>

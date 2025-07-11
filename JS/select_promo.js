@@ -13,6 +13,9 @@ $(document).ready(function () {
   $("#update_jenis_produk").select2({
     dropdownParent: $("#modal_promo_update"),
   });
+  $("#update_jenis_channel").select2({
+    dropdownParent: $("#modal_promo_update"),
+  });
 });
 const pickdate_tanggal_berlaku = $("#update_tanggal_berlaku")
   .pickadate({
@@ -264,14 +267,22 @@ async function fetch_promo(promo_id) {
       await fetch_jenis("brand", item.jenis_brand);
       await fetch_jenis("customer", item.jenis_customer);
       await fetch_jenis("produk", item.jenis_produk);
+      await fetch_jenis("channel", item.jenis_channel);
       document.getElementById("update_status_promo").value = item.status;
       document.getElementById("update_qty_akumulasi").value =
         item.qty_akumulasi;
       document.getElementById("update_qty_min").value = item.qty_min;
       document.getElementById("update_qty_max").value = item.qty_max;
       document.getElementById("update_quota").value = item.quota;
+      document.getElementById("update_exclude_include_brand").value =
+        item.exclude_include_brand;
+      document.getElementById("update_exclude_include_produk").value =
+        item.exclude_include_produk;
+      document.getElementById("update_exclude_include_customer").value =
+        item.exclude_include_customer;
+      document.getElementById("update_exclude_include_channel").value =
+        item.exclude_include_channel;
     });
-    // Pass each selected array as third param!
   } catch (error) {
     toastr.error("Gagal mengambil data : " + error.message);
   }
@@ -386,9 +397,11 @@ if (submit_promo_update) {
     const prioritas = document.getElementById("update_prioritas").value;
     const jenis_diskon = document.getElementById("update_jenis_diskon").value;
     const jumlah_diskon = document.getElementById("update_jumlah_diskon").value;
+
     let brand_val = [];
     let customer_val = [];
     let produk_val = [];
+    let channel_val = [];
     $("#update_jenis_brand")
       .select2("data")
       .forEach(function (item) {
@@ -407,6 +420,12 @@ if (submit_promo_update) {
         produk_val.push(item.id);
       });
 
+    $("#update_jenis_channel")
+      .select2("data")
+      .forEach(function (item) {
+        channel_val.push(item.id);
+      });
+
     const status = document.getElementById("update_status_promo").value;
     const qty_akumulasi = document.getElementById("update_qty_akumulasi").value;
     const qty_min = document.getElementById("update_qty_min").value;
@@ -415,6 +434,18 @@ if (submit_promo_update) {
     const qty_bonus = document.getElementById("update_qty_bonus").value;
     const jlh_diskon_bonus = document.getElementById(
       "update_diskon_bonus_barang"
+    ).value;
+    const update_exclude_include_brand = document.getElementById(
+      "update_exclude_include_brand"
+    ).value;
+    const update_exclude_include_customer = document.getElementById(
+      "update_exclude_include_customer"
+    ).value;
+    const update_exclude_include_produk = document.getElementById(
+      "update_exclude_include_produk"
+    ).value;
+    const update_exclude_include_channel = document.getElementById(
+      "update_exclude_include_channel"
     ).value;
 
     if (
@@ -445,6 +476,10 @@ if (submit_promo_update) {
           quota: quota,
           qty_bonus: qty_bonus,
           diskon_bonus_barang: jlh_diskon_bonus,
+          update_exclude_include_brand: update_exclude_include_brand,
+          update_exclude_include_customer: update_exclude_include_customer,
+          update_exclude_include_produk: update_exclude_include_produk,
+          update_exclude_include_channel: update_exclude_include_channel,
         };
 
         const response = await apiRequest(

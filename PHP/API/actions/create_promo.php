@@ -10,6 +10,7 @@ try {
     $brand_val = $data['jenis_brand'];
     $customer_val = $data['jenis_customer'];
     $produk_val = $data['jenis_produk'];
+    $channel_val = $data['jenis_channel'];
     $akumulasi = $data['akumulasi'];
     $prioritas = $data['prioritas'];
     $jenis_diskon = $data['jenis_diskon'];
@@ -22,9 +23,16 @@ try {
     $qty_bonus = $data['qty_bonus'];
     $diskon_bonus_barang = $data['diskon_bonus_barang'];
 
+    $exclude_include_brand = $data["exclude_include_brand"];
+    $exclude_include_produk = $data["exclude_include_produk"];
+    $exclude_include_customer = $data["exclude_include_customer"];
+    $exclude_include_channel = $data["exclude_include_channel"];
+
     $json_brand = json_encode($brand_val);
     $json_customer = json_encode($customer_val);
     $json_produk = json_encode($produk_val);
+    $json_channel = json_encode($channel_val);
+
     validate_2($nama, '/^[a-zA-Z0-9\s]+$/', "Invalid name format");
 
     $promo_id = generateCustomID('PRO', 'tb_promo', 'promo_id', $conn);
@@ -50,21 +58,27 @@ try {
 
         executeInsert(
             $conn,
-            " INSERT INTO tb_promo_kondisi (promo_kondisi_id,promo_id,jenis_brand,jenis_customer,jenis_produk,status,qty_akumulasi,qty_min,qty_max,quota) 
-        VALUES (?,?,?,?,?,?,?,?,?,?)",
+            " INSERT INTO tb_promo_kondisi (promo_kondisi_id,promo_id,jenis_brand,jenis_customer,jenis_produk,jenis_channel,status,qty_akumulasi,qty_min,qty_max,quota
+            ,exclude_include_brand,exclude_include_produk,exclude_include_customer,exclude_include_channel) 
+        VALUES (?,?,?,?,?,?,?,?,?,?,?)",
             [
                 $promo_kondisi_id,
                 $promo_id,
                 $json_brand,
                 $json_customer,
                 $json_produk,
+                $json_channel,
                 $status_promo,
                 $qty_akumulasi,
                 $qty_min,
                 $qty_max,
-                $quota
+                $quota,
+                $exclude_include_brand,
+                $exclude_include_produk,
+                $exclude_include_customer,
+                $exclude_include_channel
             ],
-            "ssssssssss"
+            "sssssssssssssss"
         );
     }
 

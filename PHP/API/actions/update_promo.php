@@ -19,6 +19,8 @@ try {
     $jenis_brand = json_encode($data['jenis_brand'] ?? []);
     $jenis_customer = json_encode($data['jenis_customer'] ?? []);
     $jenis_produk = json_encode($data['jenis_produk'] ?? []);
+    $jenis_channel = json_encode($data['jenis_cahnnel'] ?? []);
+
     $status = $data['status'] ?? 'aktif';
     $qty_akumulasi = $data['qty_akumulasi'] ?? '';
     $qty_min = $data['qty_min'] ?? '';
@@ -60,14 +62,15 @@ try {
     if ($result_kondisi->num_rows > 0) {
         // Update kondisi
         $stmt_update = $conn->prepare("UPDATE tb_promo_kondisi SET 
-            jenis_customer = ?, jenis_brand = ?, jenis_produk = ?, 
+            jenis_customer = ?, jenis_brand = ?, jenis_produk = ?, jenis_channel=?,
             status = ?, qty_akumulasi = ?, qty_min = ?, qty_max = ?, quota = ?
             WHERE promo_id = ?");
         $stmt_update->bind_param(
-            "sssssssss",
+            "ssssssssss",
             $jenis_customer,
             $jenis_brand,
             $jenis_produk,
+            $jenis_channel,
             $status,
             $qty_akumulasi,
             $qty_min,
@@ -81,16 +84,17 @@ try {
         // Insert new kondisi
         $promo_kondisi_id = generateCustomID('PRK', 'tb_promo_kondisi', 'promo_kondisi_id', $conn);
         $stmt_insert = $conn->prepare("INSERT INTO tb_promo_kondisi (
-            promo_kondisi_id, promo_id, jenis_customer, jenis_brand, jenis_produk,
+            promo_kondisi_id, promo_id, jenis_customer, jenis_brand, jenis_produk,jenis_channel,
             status, qty_akumulasi, qty_min, qty_max, quota
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)");
         $stmt_insert->bind_param(
-            "ssssssssss",
+            "sssssssssss",
             $promo_kondisi_id,
             $promo_id,
             $jenis_customer,
             $jenis_brand,
             $jenis_produk,
+            $jenis_channel,
             $status,
             $qty_akumulasi,
             $qty_min,

@@ -353,40 +353,41 @@ async function submitPromo() {
   const prioritas = document.getElementById("prioritas").value;
   const jenis_diskon = document.getElementById("jenis_diskon").value;
   const jumlah_diskon = document.getElementById("jumlah_diskon").value;
-  const exclude_include_brand = document.getElementById(
-    "exclude_include_brand"
-  ).value;
+
+  const exclude_include_brand = document.getElementById("exclude_include_brand")
+    ? document.getElementById("exclude_include_brand").value
+    : "";
+
   const exclude_include_produk = document.getElementById(
     "exclude_include_produk"
-  ).value;
+  )
+    ? document.getElementById("exclude_include_produk").value
+    : "";
+
   const exclude_include_customer = document.getElementById(
     "exclude_include_customer"
-  ).value;
+  )
+    ? document.getElementById("exclude_include_customer").value
+    : "";
+
   const exclude_include_channel = document.getElementById(
     "exclude_include_channel"
-  ).value;
+  )
+    ? document.getElementById("exclude_include_channel").value
+    : "";
 
-  var brand_val = [];
-  var customer_val = [];
-  var produk_val = [];
-
-  $("#jenis_brand")
-    .select2("data")
-    .forEach(function (item) {
-      brand_val.push(item.id);
-    });
-
-  $("#jenis_customer")
-    .select2("data")
-    .forEach(function (item) {
-      customer_val.push(item.id);
-    });
-
-  $("#jenis_produk")
-    .select2("data")
-    .forEach(function (item) {
-      produk_val.push(item.id);
-    });
+  const brand_val = document.getElementById("jenis_brand")
+    ? $("#jenis_brand").val()
+    : [];
+  const customer_val = document.getElementById("jenis_customer")
+    ? $("#jenis_customer").val()
+    : [];
+  const produk_val = document.getElementById("jenis_produk")
+    ? $("#jenis_produk").val()
+    : [];
+  const channel_val = document.getElementById("jenis_channel")
+    ? $("#jenis_channel").val()
+    : [];
 
   const status_promo = document.getElementById("status_promo").value;
   const qty_akumulasi = document.getElementById("qty_akumulasi").value;
@@ -433,6 +434,7 @@ async function submitPromo() {
       jenis_brand: brand_val,
       jenis_customer: customer_val,
       jenis_produk: produk_val,
+      jenis_channel: channel_val,
       akumulasi: akumulasi,
       prioritas: prioritas,
       jenis_diskon: jenis_diskon,
@@ -449,7 +451,6 @@ async function submitPromo() {
       exclude_include_produk: exclude_include_produk,
       exclude_include_channel: exclude_include_channel,
     };
-    console.log(data_promo);
     try {
       const response = await apiRequest(
         `/PHP/API/promo_API.php?action=create`,
@@ -463,6 +464,15 @@ async function submitPromo() {
         setTimeout(() => {
           helper.custom_grid_header("promo");
         }, 200);
+        document.getElementById("nama_promo").value = "";
+        document.getElementById("tanggal_berlaku").value = "";
+        document.getElementById("tanggal_selesai").value = "";
+        document.getElementById("prioritas").value = "";
+        document.getElementById("jumlah_diskon").value = "";
+        document.getElementById("qty_akumulasi").value = "";
+        document.getElementById("qty_min").value = "";
+        document.getElementById("qty_max").value = "";
+        document.getElementById("quota").value = "";
       }
     } catch (error) {
       toastr.error(error.message);

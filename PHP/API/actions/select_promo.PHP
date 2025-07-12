@@ -9,8 +9,15 @@ $search = trim($search);
 
 if ($search !== '' && strlen($search) >= 3) {
     $stmt = $conn->prepare("SELECT * FROM tb_promo
-    WHERE r.nama LIKE CONCAT ('%',?,'%')
-    OR r.role_id LIKE CONCAT ('%',?,'%')");
+    WHERE nama LIKE CONCAT ('%',?,'%')
+    OR tanggal_berlaku LIKE CONCAT ('%',?,'%')
+    OR tanggal_selesai LIKE CONCAT ('%',?,'%')
+    OR jenis_bonus LIKE CONCAT ('%',?,'%')
+    OR akumulasi LIKE CONCAT ('%',?,'%')
+    OR prioritas LIKE CONCAT ('%',?,'%')
+    OR jenis_diskon LIKE CONCAT ('%',?,'%')
+    OR jumlah_diskon LIKE CONCAT ('%',?,'%')
+    ");
     $stmt->bind_param('ss', $search, $search);
     $stmt->execute();
     $result = $stmt->get_result();

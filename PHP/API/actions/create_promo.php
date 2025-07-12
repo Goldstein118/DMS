@@ -53,14 +53,13 @@ try {
         ],
         "sssssssss"
     );
-    if (isset($brand_val) || isset($customer_val) || isset($produk_val)) {
+    if (isset($brand_val) || isset($customer_val) || isset($produk_val) || isset($channel_val)) {
         $promo_kondisi_id = generateCustomID('PRK', 'tb_promo_kondisi', 'promo_kondisi_id', $conn);
 
         executeInsert(
             $conn,
-            " INSERT INTO tb_promo_kondisi (promo_kondisi_id,promo_id,jenis_brand,jenis_customer,jenis_produk,jenis_channel,status,qty_akumulasi,qty_min,qty_max,quota
-            ,exclude_include_brand,exclude_include_produk,exclude_include_customer,exclude_include_channel) 
-        VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO tb_promo_kondisi (promo_kondisi_id, promo_id, jenis_brand, jenis_customer, jenis_produk, jenis_channel, status, qty_akumulasi, qty_min, qty_max, quota, exclude_include_brand, exclude_include_produk, exclude_include_customer, exclude_include_channel) 
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             [
                 $promo_kondisi_id,
                 $promo_id,

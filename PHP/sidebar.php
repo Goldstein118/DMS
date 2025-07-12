@@ -99,11 +99,7 @@
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_frezzer"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_frezzer' ? 'active' : ''; ?>"> Frezzer</a>
             </li>
-             <li>
-              <a
-                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_promo"
-                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_promo' ? 'active' : ''; ?>"> Promo</a>
-            </li>
+
           </ul>
         </div>
       </li>
@@ -120,7 +116,11 @@
         </button>
         <div class="collapse show" id="penjualan-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_promo"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_promo' ? 'active' : ''; ?>"> Promo</a>
+            </li>
           </ul>
         </div>
       </li>
@@ -152,58 +152,58 @@
         <div class="collapse show" id="data-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
             <li>
-              <a 
+              <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_karyawan"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_karyawan' ? 'active' : ''; ?>"> Karyawan</a>
             </li>
             <li>
-              <a  
+              <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_user"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_user' ? 'active' : ''; ?>"> User</a>
             </li>
             <li>
-              <a 
+              <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_role"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_role' ? 'active' : ''; ?>"> Role</a>
             </li>
             <li>
-              <a 
+              <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_supplier"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_supplier' ? 'active' : ''; ?>"> Supplier</a>
             </li>
             <li>
-              <a 
+              <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_customer"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_customer' ? 'active' : ''; ?>"> Customer</a>
             </li>
             <li>
-              <a 
+              <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_channel"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_channel' ? 'active' : ''; ?>"> Channel</a>
             </li>
             <li>
-              <a 
+              <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_kategori"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_kategori' ? 'active' : ''; ?>"> Kategori</a>
             </li>
             <li>
-              <a 
+              <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_brand"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_brand' ? 'active' : ''; ?>"> Brand</a>
             </li>
 
             <li>
-              <a 
+              <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_produk"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_produk' ? 'active' : ''; ?>"> Produk</a>
             </li>
 
             <li>
-              <a 
+              <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_divisi"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_divisi' ? 'active' : ''; ?>"> Divisi</a>
             </li>
-            
+
             <li>
               <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_gudang"
@@ -214,16 +214,12 @@
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_pricelist"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_pricelist' ? 'active' : ''; ?>"> Pricelist</a>
             </li>
-             <li>
+            <li>
               <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_armada"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_armada' ? 'active' : ''; ?>"> Armada</a>
             </li>
-             <li>
-              <a
-                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_promo"
-                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_promo' ? 'active' : ''; ?>"> Promo</a>
-            </li>
+
           </ul>
         </div>
       </li>
@@ -241,6 +237,11 @@
         </button>
         <div class="collapse show" id="penjualan-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_promo"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_promo' ? 'active' : ''; ?>"> Promo</a>
+            </li>
           </ul>
         </div>
       </li>

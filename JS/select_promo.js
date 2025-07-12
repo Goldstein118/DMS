@@ -448,12 +448,25 @@ if (submit_promo_update) {
       "update_exclude_include_channel"
     ).value;
 
+    let compare_tanggal = true;
+    const startDate = new Date(tanggal_berlaku);
+    const endDate = new Date(tanggal_selesai);
+    if (startDate > endDate) {
+      Swal.fire({
+        title: "Gagal",
+        text: "tanggal berlaku lebih besar dari tanggal selesai",
+        icon: "error",
+      });
+      return;
+    }
+
     if (
       helper.validateField(
         nama_new,
         /^[a-zA-Z0-9\s]+$/,
         "Format nama tidak valid"
-      )
+      ) &&
+      compare_tanggal
     ) {
       try {
         const data_promo_update = {
@@ -476,10 +489,10 @@ if (submit_promo_update) {
           quota: quota,
           qty_bonus: qty_bonus,
           diskon_bonus_barang: jlh_diskon_bonus,
-          update_exclude_include_brand: update_exclude_include_brand,
-          update_exclude_include_customer: update_exclude_include_customer,
-          update_exclude_include_produk: update_exclude_include_produk,
-          update_exclude_include_channel: update_exclude_include_channel,
+          exclude_include_brand: update_exclude_include_brand,
+          exclude_include_customer: update_exclude_include_customer,
+          exclude_include_produk: update_exclude_include_produk,
+          exclude_include_channel: update_exclude_include_channel,
         };
 
         const response = await apiRequest(

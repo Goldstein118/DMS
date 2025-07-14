@@ -9,7 +9,8 @@ $search = trim($search);
 
 if ($search !== '' && strlen($search) >= 3) {
     $stmt = $conn->prepare("SELECT * FROM tb_promo
-    WHERE nama LIKE CONCAT ('%',?,'%')
+    WHERE promo_id LIKE CONCAT ('%',?,'%')
+    OR nama LIKE CONCAT ('%',?,'%')
     OR tanggal_berlaku LIKE CONCAT ('%',?,'%')
     OR tanggal_selesai LIKE CONCAT ('%',?,'%')
     OR jenis_bonus LIKE CONCAT ('%',?,'%')
@@ -18,7 +19,7 @@ if ($search !== '' && strlen($search) >= 3) {
     OR jenis_diskon LIKE CONCAT ('%',?,'%')
     OR jumlah_diskon LIKE CONCAT ('%',?,'%')
     ");
-    $stmt->bind_param('ss', $search, $search);
+    $stmt->bind_param('ssssssss', $search, $search, $search, $search, $search, $search, $search, $search);
     $stmt->execute();
     $result = $stmt->get_result();
 } else if (isset($data['promo_id']) && $data['table'] == "tb_promo_kondisi") {

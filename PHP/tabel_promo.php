@@ -68,7 +68,9 @@
                                     </thead>
 
                                     <tbody id="jenis_promo_kondisi_tbody">
+                                        <tr id="tr_01">
 
+                                        </tr>
                                     </tbody>
                                 </table>
                                 <!-- 
@@ -143,7 +145,7 @@
                                     <div class="col">
 
                                         <label class="form-label" for="update_promo_id">Kode Promo:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <input class="form-control" type="text" id="update_promo_id" name="update_promo_id" value="">
+                                        <input class="form-control" type="text" id="update_promo_id" name="update_promo_id" value="" disabled>
                                         <label class="form-label" for="update_nama_promo">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input class="form-control" type="text" id="update_nama_promo" name="update_nama_promo" value="">
                                         <label class="form-label mb-0 mt-2" for="update_tanggal_berlaku">Tanggal Berlaku:<i class="bi bi-asterisk text-danger align-middle "></i></label>

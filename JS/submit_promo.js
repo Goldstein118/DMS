@@ -2,6 +2,7 @@ import config from "./config.js";
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 import * as helper from "./helper.js";
+
 const submit_promo = document.getElementById("submit_promo");
 const promo_kondisi_button = document.getElementById("promo_kondisi_button");
 
@@ -63,7 +64,7 @@ function select_jenis_option(excludeSelect = null) {
   });
   return used;
 }
-function delete_detail_pricelist() {
+function delete_promo_kondisi() {
   $(`#jenis_promo_kondisi_tbody`).on(
     "click",
     ".delete_promo_kondisi",
@@ -99,10 +100,82 @@ function delete_detail_pricelist() {
   );
 }
 const myTable = document.getElementById("jenis_promo_kondisi_tbody");
+const tr_01 = document.getElementById("tr_01");
+
+const td_select = document.createElement("td");
+const select = document.createElement("select");
+select.className = "form-select jenis-select";
+select.innerHTML = `
+    <option value="">-- Pilih --</option>
+    <option value="brand">Brand</option>
+    <option value="customer">Customer</option>
+    <option value="produk">Produk</option>
+    <option value="channel">Channel</option>
+  `;
+td_select.appendChild(select);
+
+const td_jenis = document.createElement("td");
+
+const dynamic_select = document.createElement("select");
+dynamic_select.className = "form-select";
+td_jenis.append(dynamic_select);
+
+const td_exclude = document.createElement("td");
+const exclude_select = document.createElement("select");
+exclude_select.className = "form-select";
+exclude_select.innerHTML = `
+    <option value="include">Include</option>
+    <option value="exclude">Exclude</option>
+    `;
+td_exclude.appendChild(exclude_select);
+
+const td_aksi = document.createElement("td");
+const delete_button = document.createElement("button");
+delete_button.type = "button";
+delete_button.className = "btn btn-danger btn-sm delete_promo_kondisi";
+delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+td_aksi.style.textAlign = "center";
+td_aksi.appendChild(delete_button);
+
+tr_01.append(td_select);
+tr_01.append(td_jenis);
+tr_01.append(td_exclude);
+tr_01.append(td_aksi);
+myTable.append(tr_01);
+select.addEventListener("change", () => {
+  if (select.value === "brand") {
+    dynamic_select.className = "dynamic-select js-example-basic-multiple";
+    dynamic_select.setAttribute("multiple", "multiple");
+    dynamic_select.setAttribute("id", "jenis_brand");
+    exclude_select.setAttribute("id", "exclude_include_brand");
+    fetch_fk("brand"); // ← Now that the element exists, fetch the data
+  } else if (select.value === "customer") {
+    dynamic_select.className = "dynamic-select js-example-basic-multiple";
+    dynamic_select.setAttribute("multiple", "multiple");
+    dynamic_select.setAttribute("id", "jenis_customer");
+    exclude_select.setAttribute("id", "exclude_include_customer");
+    fetch_fk("customer");
+  } else if (select.value === "produk") {
+    dynamic_select.className = "dynamic-select js-example-basic-multiple";
+    dynamic_select.setAttribute("multiple", "multiple");
+    dynamic_select.setAttribute("id", "jenis_produk");
+    exclude_select.setAttribute("id", "exclude_include_produk");
+    fetch_fk("produk");
+  } else if (select.value === "channel") {
+    dynamic_select.className = "dynamic-select js-example-basic-multiple";
+    dynamic_select.setAttribute("multiple", "multiple");
+    dynamic_select.setAttribute("id", "jenis_channel");
+    exclude_select.setAttribute("id", "exclude_include_channel");
+    fetch_fk("channel");
+  }
+
+  refresh_jenis_option();
+  delete_promo_kondisi();
+});
 
 function add_field(myTable) {
   console.log(myTable.rows.length);
-  if (myTable.rows.length <= 3) {
+  if (myTable.rows.length < 3) {
     const tr_detail = document.createElement("tr");
 
     // Jenis (td_select)
@@ -178,7 +251,7 @@ function add_field(myTable) {
       refresh_jenis_option();
     });
     refresh_jenis_option();
-    delete_detail_pricelist();
+    delete_promo_kondisi();
   } else if (myTable.rows.length == 3) {
     document.getElementById("promo_kondisi_button").style.display = "none";
     const tr_detail = document.createElement("tr");
@@ -256,7 +329,7 @@ function add_field(myTable) {
       refresh_jenis_option();
     });
     refresh_jenis_option();
-    delete_detail_pricelist();
+    delete_promo_kondisi();
   } else {
     document.getElementById("promo_kondisi_button").style.display = "none";
   }

@@ -9,6 +9,11 @@ try {
     }
 
     $promo_ID = $data['promo_id'];
+
+    $stmt_barang = $conn->prepare();
+
+
+
     $stmt_kondisi = $conn->prepare("DELETE FROM tb_promo_kondisi WHERE promo_id = ?");
     $stmt_kondisi->bind_param("s", $promo_ID);
     $execute_kondisi = $stmt_kondisi->execute();
@@ -22,11 +27,10 @@ try {
         echo json_encode(["message" => "Promo berhasil terhapus"]);
     } else {
         http_response_code(400);
-        echo json_encode(["error" => "Promo  tidak ditemukan"]);
+        echo json_encode(["error" => "Promo tidak ditemukan"]);
     }
-} catch (mysqli_sql_exception) {
+} catch (mysqli_sql_exception $e) {  // ← Fixed here
     if ($e->getCode() == 1451) {
-
         $table = null;
         if (preg_match('/fails \(`[^`]+`\.`([^`]+)`/', $e->getMessage(), $matches)) {
             $table = $matches[1];
@@ -43,5 +47,6 @@ try {
         echo json_encode(["error" => "Database error: " . $e->getMessage()]);
     }
 }
+
 $stmt->close();
 $conn->close();

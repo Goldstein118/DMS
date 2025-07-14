@@ -72,6 +72,8 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
+
+
   <div id="menu_container">
     <button class="btn btn-primary d-lg-none m-2 btn-sm" id="menu" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
       ☰ Menu

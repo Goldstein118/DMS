@@ -6,12 +6,31 @@ import * as helper from "./helper.js";
 
 const grid_container_frezzer = document.querySelector("#table_frezzer");
 if (grid_container_frezzer) {
+  // Helper function to get badge HTML based on status
+  function getStatusBadge(status) {
+    switch (status) {
+      case "ready":
+        return `<span class="badge text-bg-success">Ready</span>`;
+      case "dipakai":
+        return `<span class="badge text-bg-primary">Dipakai</span>`;
+      case "prosesclaim":
+        return `<span class="badge text-bg-warning">Proses Claim</span>`;
+      case "rusak":
+        return `<span class="badge text-bg-danger">Rusak</span>`;
+      default:
+        return `<span class="badge text-bg-secondary">${status}</span>`;
+    }
+  }
+
   window.frezzer_grid = new Grid({
     columns: [
       "Kode Frezzer",
       "Kode Barcode",
       "Tipe",
-      "Status",
+      {
+        name: "Status",
+        formatter: (cell) => html(getStatusBadge(cell)),
+      },
       "Merek",
       "Size",
       {
@@ -86,14 +105,6 @@ if (grid_container_frezzer) {
           frezzer.status,
           frezzer.merek,
           frezzer.size,
-
-          html(`
-          ${
-            frezzer.status === "aktif"
-              ? `<span class="badge text-bg-success">Aktif</span>`
-              : `<span class="badge text-bg-danger">Non Aktif</span>`
-          }
-          `),
           null,
         ]),
     },

@@ -10,7 +10,9 @@ try {
 
     $promo_ID = $data['promo_id'];
 
-    $stmt_barang = $conn->prepare();
+    $stmt_barang = $conn->prepare("DELETE FROM tb_promo_bonus_barang WHERE promo_id = ?");
+    $stmt_barang->bind_param("s", $promo_ID);
+    $execute_barang = $stmt_barang->execute();
 
 
 
@@ -22,7 +24,7 @@ try {
     $stmt->bind_param("s", $promo_ID);
     $execute = $stmt->execute();
 
-    if ($execute && $stmt->affected_rows > 0) {
+    if ($execute && $stmt->affected_rows > 0 && $execute_kondisi && $execute_barang) {
         http_response_code(200);
         echo json_encode(["message" => "Promo berhasil terhapus"]);
     } else {

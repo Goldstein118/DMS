@@ -5,11 +5,17 @@ import * as helper from "./helper.js";
 
 const submit_promo = document.getElementById("submit_promo");
 const promo_kondisi_button = document.getElementById("promo_kondisi_button");
+const promo_bonus_barang_button = document.getElementById(
+  "promo_bonus_barang_button"
+);
 
 if (submit_promo) {
   submit_promo.addEventListener("click", submitPromo);
   promo_kondisi_button.addEventListener("click", () => {
-    add_field(myTable);
+    add_field_kondisi(table_promo_kondisi);
+  });
+  promo_bonus_barang_button.addEventListener("click", () => {
+    add_field_barang(table_promo_bonus_barang);
   });
   document.getElementById("loading_spinner").style.visibility = "hidden";
   $("#loading_spinner").fadeOut();
@@ -28,317 +34,222 @@ if (submit_promo) {
     });
   });
 }
-function refresh_jenis_option() {
-  const allOptions = [
-    { value: "brand", label: "Brand" },
-    { value: "customer", label: "Customer" },
-    { value: "produk", label: "Produk" },
-    { value: "channel", label: "Channel" },
-  ];
 
-  document.querySelectorAll(".jenis-select").forEach((select) => {
-    const currentValue = select.value;
-    const used = select_jenis_option(select);
-
-    // Rebuild options
-    select.innerHTML = `<option value="">-- Pilih --</option>`;
-    allOptions.forEach((opt) => {
-      if (!used.includes(opt.value) || opt.value === currentValue) {
-        const option = document.createElement("option");
-        option.value = opt.value;
-        option.textContent = opt.label;
-        if (opt.value === currentValue) option.selected = true;
-        select.appendChild(option);
-      }
+function delete_promo_kondisi(field) {
+  $(`#${field}`).on("click", ".delete_promo_kondisi", async function () {
+    const result = await Swal.fire({
+      title: "Apakah Anda Yakin?",
+      text: "Anda tidak dapat mengembalikannya!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Iya, Hapus!",
+      cancelButtonText: "Batalkan",
     });
-  });
-}
-
-function select_jenis_option(excludeSelect = null) {
-  const used = [];
-  document.querySelectorAll(".jenis-select").forEach((select) => {
-    if (select !== excludeSelect) {
-      const val = select.value;
-      if (val) used.push(val);
-    }
-  });
-  return used;
-}
-function delete_promo_kondisi() {
-  $(`#jenis_promo_kondisi_tbody`).on(
-    "click",
-    ".delete_promo_kondisi",
-    async function () {
-      const result = await Swal.fire({
-        title: "Apakah Anda Yakin?",
-        text: "Anda tidak dapat mengembalikannya!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Iya, Hapus!",
-        cancelButtonText: "Batalkan",
-      });
-      if (result.isConfirmed) {
-        try {
-          $(this).closest("tr").remove();
-          console.log(myTable.rows.length);
-          if (myTable.rows.length <= 3) {
-            document.getElementById("promo_kondisi_button").style.display =
-              "block";
-          }
-          Swal.fire("Berhasil", "Pricelist dihapus.", "success");
-        } catch (error) {
-          Swal.fire({
-            icon: "error",
-            title: "Gagal",
-            text: error.message,
-          });
-        }
+    if (result.isConfirmed) {
+      try {
+        $(this).closest("tr").remove();
+        Swal.fire("Berhasil", "Pricelist dihapus.", "success");
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: error.message,
+        });
       }
     }
+  });
+}
+const table_promo_kondisi = document.getElementById(
+  "jenis_promo_kondisi_tbody"
+);
+const table_promo_bonus_barang = document.getElementById(
+  "table_bonus_barang_tbody"
+);
+add_field_kondisi(table_promo_kondisi);
+add_field_barang(table_promo_bonus_barang);
+
+function add_field_kondisi(myTable) {
+  var currentIndex = myTable.rows.length;
+  const tr_detail = document.createElement("tr");
+
+  // Jenis (td_select)
+  const td_select = document.createElement("td");
+  const jenis_select = document.createElement("select");
+  jenis_select.className = "form-select jenis-select";
+  jenis_select.innerHTML = `
+    <option value="">-- Pilih --</option>
+    <option value="brand">Brand</option>
+    <option value="customer">Customer</option>
+    <option value="produk">Produk</option>
+    <option value="channel">Channel</option>
+  `;
+  td_select.appendChild(jenis_select);
+  // Dynamic Select2 (td_dynamic)
+  const td_dynamic = document.createElement("td");
+  const dynamic_select = document.createElement("select");
+  dynamic_select.className = "form-select";
+
+  td_dynamic.appendChild(dynamic_select);
+
+  const td_exclude = document.createElement("td");
+  const exclude_select = document.createElement("select");
+  exclude_select.className = "form-select";
+  exclude_select.innerHTML = `
+    <option value="include">Include</option>
+    <option value="exclude">Exclude</option>
+    `;
+
+  td_exclude.appendChild(exclude_select);
+
+  const qty_min_td = document.createElement("td");
+  const qty_min = document.createElement("input");
+  qty_min.className = "form-control";
+  qty_min.setAttribute("id", `qty_min${currentIndex}`);
+  qty_min.setAttribute("disabled", "disabled");
+  qty_min_td.appendChild(qty_min);
+
+  const qty_max_td = document.createElement("td");
+  const qty_max = document.createElement("input");
+  qty_max.className = "form-control";
+  qty_max.setAttribute("id", `qty_max${currentIndex}`);
+  qty_max.setAttribute("disabled", "disabled");
+  qty_max_td.appendChild(qty_max);
+
+  const qty_akumulasi_td = document.createElement("td");
+  const qty_akumulasi = document.createElement("input");
+  qty_akumulasi.className = "form-control";
+  qty_akumulasi.setAttribute("id", `qty_akumulasi${currentIndex}`);
+  qty_akumulasi.setAttribute("disabled", "disabled");
+  qty_akumulasi_td.appendChild(qty_akumulasi);
+
+  // Delete Button (td_aksi)
+  const td_aksi = document.createElement("td");
+  const delete_button = document.createElement("button");
+  delete_button.type = "button";
+  delete_button.className = "btn btn-danger btn-sm delete_promo_kondisi";
+  delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+  td_aksi.style.textAlign = "center";
+  td_aksi.appendChild(delete_button);
+
+  tr_detail.appendChild(td_select);
+  tr_detail.appendChild(td_dynamic);
+  tr_detail.appendChild(td_exclude);
+  tr_detail.appendChild(qty_max_td);
+  tr_detail.appendChild(qty_min_td);
+  tr_detail.appendChild(qty_akumulasi_td);
+  tr_detail.appendChild(td_aksi);
+  table_promo_kondisi.appendChild(tr_detail);
+
+  jenis_select.addEventListener("change", () => {
+    if (jenis_select.value === "brand") {
+      dynamic_select.className = "dynamic-select js-example-basic-multiple";
+      dynamic_select.setAttribute("multiple", "multiple");
+      dynamic_select.setAttribute("id", `jenis_brand${currentIndex}`);
+      exclude_select.setAttribute("id", `exclude_include_brand${currentIndex}`);
+      qty_min.removeAttribute("disabled");
+      qty_max.removeAttribute("disabled");
+      qty_akumulasi.removeAttribute("disabled");
+      fetch_fk("brand", currentIndex); // ← Now that the element exists, fetch the data
+    } else if (jenis_select.value === "customer") {
+      dynamic_select.className = "dynamic-select js-example-basic-multiple";
+      dynamic_select.setAttribute("multiple", "multiple");
+      dynamic_select.setAttribute("id", `jenis_customer${currentIndex}`);
+      exclude_select.setAttribute(
+        "id",
+        `exclude_include_customer${currentIndex}`
+      );
+      qty_akumulasi.setAttribute("disabled", "disabled");
+      qty_max.setAttribute("disabled", "disabled");
+      qty_min.setAttribute("disabled", "disabled");
+
+      fetch_fk("customer", currentIndex);
+    } else if (jenis_select.value === "produk") {
+      dynamic_select.className = "dynamic-select js-example-basic-multiple";
+      dynamic_select.setAttribute("multiple", "multiple");
+      dynamic_select.setAttribute("id", `jenis_produk${currentIndex}`);
+      exclude_select.setAttribute(
+        "id",
+        `exclude_include_produk${currentIndex}`
+      );
+      qty_akumulasi.setAttribute("disabled", "disabled");
+      qty_max.setAttribute("disabled", "disabled");
+      qty_min.setAttribute("disabled", "disabled");
+      fetch_fk("produk", currentIndex);
+    } else if (jenis_select.value === "channel") {
+      dynamic_select.className = "dynamic-select js-example-basic-multiple";
+      dynamic_select.setAttribute("multiple", "multiple");
+      dynamic_select.setAttribute("id", `jenis_channel${currentIndex}`);
+      exclude_select.setAttribute(
+        "id",
+        `exclude_include_channel${currentIndex}`
+      );
+      qty_min.removeAttribute("disabled");
+      qty_max.removeAttribute("disabled");
+      qty_akumulasi.removeAttribute("disabled");
+      fetch_fk("channel", currentIndex);
+    }
+  });
+  delete_promo_kondisi("jenis_promo_kondisi_tbody");
+}
+function add_field_barang(myTable) {
+  var currentIndex = myTable.rows.length;
+  const tr_bonus_barang = document.createElement("tr");
+
+  const td_select_produk = document.createElement("td");
+  const select_produk = document.createElement("select");
+  select_produk.className = "form-select";
+  select_produk.setAttribute("id", `jenis_produk${currentIndex}`);
+  td_select_produk.appendChild(select_produk);
+
+  const td_jlh_qty = document.createElement("td");
+  const jlh_qty = document.createElement("input");
+  jlh_qty.className = "form-control";
+  jlh_qty.setAttribute("type", "number");
+  jlh_qty.setAttribute("id", `jlh_qty${currentIndex}`);
+  td_jlh_qty.appendChild(jlh_qty);
+
+  const td_jenis_diskon = document.createElement("td");
+  const jenis_diskon = document.createElement("select");
+  jenis_diskon.innerHTML = `
+    <option value="nominal">Nominal</option>
+    <option value="persen">Persen</option>
+  
+  `;
+  jenis_diskon.className = "form-select";
+  jenis_diskon.setAttribute("id", `jenis_diskon${currentIndex}`);
+  td_jenis_diskon.appendChild(jenis_diskon);
+
+  const td_jumlah_diskon_nominal = document.createElement("td");
+  const jumlah_diskon_nominal = document.createElement("input");
+  jumlah_diskon_nominal.className = "form-control";
+  jumlah_diskon_nominal.setAttribute(
+    "id",
+    `jumlah_diskon_nominal${currentIndex}`
   );
+  jumlah_diskon_nominal.setAttribute("type", "number");
+  td_jumlah_diskon_nominal.appendChild(jumlah_diskon_nominal);
+
+  const td_aksi = document.createElement("td");
+  const delete_button = document.createElement("button");
+  delete_button.type = "button";
+  delete_button.className = "btn btn-danger btn-sm delete_promo_kondisi";
+  delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+  td_aksi.style.textAlign = "center";
+  td_aksi.appendChild(delete_button);
+
+  tr_bonus_barang.appendChild(td_select_produk);
+  tr_bonus_barang.appendChild(td_jlh_qty);
+  tr_bonus_barang.appendChild(td_jenis_diskon);
+  tr_bonus_barang.appendChild(td_jumlah_diskon_nominal);
+  tr_bonus_barang.appendChild(td_aksi);
+  table_promo_bonus_barang.appendChild(tr_bonus_barang);
+  fetch_fk("produk", currentIndex);
+
+  delete_promo_kondisi("table_bonus_barang_tbody");
 }
-const myTable = document.getElementById("jenis_promo_kondisi_tbody");
-const tr_01 = document.getElementById("tr_01");
-
-const td_select = document.createElement("td");
-const select = document.createElement("select");
-select.className = "form-select jenis-select";
-select.innerHTML = `
-    <option value="">-- Pilih --</option>
-    <option value="brand">Brand</option>
-    <option value="customer">Customer</option>
-    <option value="produk">Produk</option>
-    <option value="channel">Channel</option>
-  `;
-td_select.appendChild(select);
-
-const td_jenis = document.createElement("td");
-
-const dynamic_select = document.createElement("select");
-dynamic_select.className = "form-select";
-td_jenis.append(dynamic_select);
-
-const td_exclude = document.createElement("td");
-const exclude_select = document.createElement("select");
-exclude_select.className = "form-select";
-exclude_select.innerHTML = `
-    <option value="include">Include</option>
-    <option value="exclude">Exclude</option>
-    `;
-td_exclude.appendChild(exclude_select);
-
-const td_aksi = document.createElement("td");
-const delete_button = document.createElement("button");
-delete_button.type = "button";
-delete_button.className = "btn btn-danger btn-sm delete_promo_kondisi";
-delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
-td_aksi.style.textAlign = "center";
-td_aksi.appendChild(delete_button);
-
-tr_01.append(td_select);
-tr_01.append(td_jenis);
-tr_01.append(td_exclude);
-tr_01.append(td_aksi);
-myTable.append(tr_01);
-select.addEventListener("change", () => {
-  if (select.value === "brand") {
-    dynamic_select.className = "dynamic-select js-example-basic-multiple";
-    dynamic_select.setAttribute("multiple", "multiple");
-    dynamic_select.setAttribute("id", "jenis_brand");
-    exclude_select.setAttribute("id", "exclude_include_brand");
-    fetch_fk("brand"); // ← Now that the element exists, fetch the data
-  } else if (select.value === "customer") {
-    dynamic_select.className = "dynamic-select js-example-basic-multiple";
-    dynamic_select.setAttribute("multiple", "multiple");
-    dynamic_select.setAttribute("id", "jenis_customer");
-    exclude_select.setAttribute("id", "exclude_include_customer");
-    fetch_fk("customer");
-  } else if (select.value === "produk") {
-    dynamic_select.className = "dynamic-select js-example-basic-multiple";
-    dynamic_select.setAttribute("multiple", "multiple");
-    dynamic_select.setAttribute("id", "jenis_produk");
-    exclude_select.setAttribute("id", "exclude_include_produk");
-    fetch_fk("produk");
-  } else if (select.value === "channel") {
-    dynamic_select.className = "dynamic-select js-example-basic-multiple";
-    dynamic_select.setAttribute("multiple", "multiple");
-    dynamic_select.setAttribute("id", "jenis_channel");
-    exclude_select.setAttribute("id", "exclude_include_channel");
-    fetch_fk("channel");
-  }
-
-  refresh_jenis_option();
-  delete_promo_kondisi();
-});
-
-function add_field(myTable) {
-  console.log(myTable.rows.length);
-  if (myTable.rows.length < 3) {
-    const tr_detail = document.createElement("tr");
-
-    // Jenis (td_select)
-    const td_select = document.createElement("td");
-    const jenis_select = document.createElement("select");
-    jenis_select.className = "form-select jenis-select";
-    jenis_select.innerHTML = `
-    <option value="">-- Pilih --</option>
-    <option value="brand">Brand</option>
-    <option value="customer">Customer</option>
-    <option value="produk">Produk</option>
-    <option value="channel">Channel</option>
-  `;
-    td_select.appendChild(jenis_select);
-    // Dynamic Select2 (td_dynamic)
-    const td_dynamic = document.createElement("td");
-    const dynamic_select = document.createElement("select");
-    dynamic_select.className = "form-select";
-
-    td_dynamic.appendChild(dynamic_select);
-
-    const td_exclude = document.createElement("td");
-    const exclude_select = document.createElement("select");
-    exclude_select.className = "form-select";
-    exclude_select.innerHTML = `
-    <option value="include">Include</option>
-    <option value="exclude">Exclude</option>
-    `;
-
-    td_exclude.appendChild(exclude_select);
-
-    // Delete Button (td_aksi)
-    const td_aksi = document.createElement("td");
-    const delete_button = document.createElement("button");
-    delete_button.type = "button";
-    delete_button.className = "btn btn-danger btn-sm delete_promo_kondisi";
-    delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
-    td_aksi.style.textAlign = "center";
-    td_aksi.appendChild(delete_button);
-
-    tr_detail.appendChild(td_select);
-    tr_detail.appendChild(td_dynamic);
-    tr_detail.appendChild(td_exclude);
-    tr_detail.appendChild(td_aksi);
-    myTable.appendChild(tr_detail);
-
-    jenis_select.addEventListener("change", () => {
-      if (jenis_select.value === "brand") {
-        dynamic_select.className = "dynamic-select js-example-basic-multiple";
-        dynamic_select.setAttribute("multiple", "multiple");
-        dynamic_select.setAttribute("id", "jenis_brand");
-        exclude_select.setAttribute("id", "exclude_include_brand");
-        fetch_fk("brand"); // ← Now that the element exists, fetch the data
-      } else if (jenis_select.value === "customer") {
-        dynamic_select.className = "dynamic-select js-example-basic-multiple";
-        dynamic_select.setAttribute("multiple", "multiple");
-        dynamic_select.setAttribute("id", "jenis_customer");
-        exclude_select.setAttribute("id", "exclude_include_customer");
-        fetch_fk("customer");
-      } else if (jenis_select.value === "produk") {
-        dynamic_select.className = "dynamic-select js-example-basic-multiple";
-        dynamic_select.setAttribute("multiple", "multiple");
-        dynamic_select.setAttribute("id", "jenis_produk");
-        exclude_select.setAttribute("id", "exclude_include_produk");
-        fetch_fk("produk");
-      } else if (jenis_select.value === "channel") {
-        dynamic_select.className = "dynamic-select js-example-basic-multiple";
-        dynamic_select.setAttribute("multiple", "multiple");
-        dynamic_select.setAttribute("id", "jenis_channel");
-        exclude_select.setAttribute("id", "exclude_include_channel");
-        fetch_fk("channel");
-      }
-      refresh_jenis_option();
-    });
-    refresh_jenis_option();
-    delete_promo_kondisi();
-  } else if (myTable.rows.length == 3) {
-    document.getElementById("promo_kondisi_button").style.display = "none";
-    const tr_detail = document.createElement("tr");
-
-    // Jenis (td_select)
-    const td_select = document.createElement("td");
-    const jenis_select = document.createElement("select");
-    jenis_select.className = "form-select jenis-select";
-    jenis_select.innerHTML = `
-    <option value="">-- Pilih --</option>
-    <option value="brand">Brand</option>
-    <option value="customer">Customer</option>
-    <option value="produk">Produk</option>
-    <option value="channel">Channel</option>
-  `;
-    td_select.appendChild(jenis_select);
-    // Dynamic Select2 (td_dynamic)
-    const td_dynamic = document.createElement("td");
-    const dynamic_select = document.createElement("select");
-    dynamic_select.className = "form-select";
-
-    td_dynamic.appendChild(dynamic_select);
-
-    const td_exclude = document.createElement("td");
-    const exclude_select = document.createElement("select");
-    exclude_select.className = "form-select";
-    exclude_select.innerHTML = `
-    <option value="include">Include</option>
-    <option value="exclude">Exclude</option>
-    `;
-
-    td_exclude.appendChild(exclude_select);
-
-    // Delete Button (td_aksi)
-    const td_aksi = document.createElement("td");
-    const delete_button = document.createElement("button");
-    delete_button.type = "button";
-    delete_button.className = "btn btn-danger btn-sm delete_promo_kondisi";
-    delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
-    td_aksi.style.textAlign = "center";
-    td_aksi.appendChild(delete_button);
-
-    tr_detail.appendChild(td_select);
-    tr_detail.appendChild(td_dynamic);
-    tr_detail.appendChild(td_exclude);
-    tr_detail.appendChild(td_aksi);
-    myTable.appendChild(tr_detail);
-
-    jenis_select.addEventListener("change", () => {
-      if (jenis_select.value === "brand") {
-        dynamic_select.className = "dynamic-select js-example-basic-multiple";
-        dynamic_select.setAttribute("multiple", "multiple");
-        dynamic_select.setAttribute("id", "jenis_brand");
-        exclude_select.setAttribute("id", "exclude_include_brand");
-        fetch_fk("brand"); // ← Now that the element exists, fetch the data
-      } else if (jenis_select.value === "customer") {
-        dynamic_select.className = "dynamic-select js-example-basic-multiple";
-        dynamic_select.setAttribute("multiple", "multiple");
-        dynamic_select.setAttribute("id", "jenis_customer");
-        exclude_select.setAttribute("id", "exclude_include_customer");
-        fetch_fk("customer");
-      } else if (jenis_select.value === "produk") {
-        dynamic_select.className = "dynamic-select js-example-basic-multiple";
-        dynamic_select.setAttribute("multiple", "multiple");
-        dynamic_select.setAttribute("id", "jenis_produk");
-        exclude_select.setAttribute("id", "exclude_include_produk");
-        fetch_fk("produk");
-      } else if (jenis_select.value === "channel") {
-        dynamic_select.className = "dynamic-select js-example-basic-multiple";
-        dynamic_select.setAttribute("multiple", "multiple");
-        dynamic_select.setAttribute("id", "jenis_channel");
-        exclude_select.setAttribute("id", "exclude_include_channel");
-        fetch_fk("channel");
-      }
-      refresh_jenis_option();
-    });
-    refresh_jenis_option();
-    delete_promo_kondisi();
-  } else {
-    document.getElementById("promo_kondisi_button").style.display = "none";
-  }
-}
-
-async function fetch_fk(field) {
-  $(`#jenis_${field}`).select2({
-    dropdownParent: $("#modal_promo"),
-  });
+async function fetch_fk(field, index) {
   try {
     const response = await apiRequest(
       `/PHP/API/${field}_API.php?action=select&user_id=${access.decryptItem(
@@ -347,14 +258,14 @@ async function fetch_fk(field) {
       "POST",
       { select: "select" }
     );
-    populateDropdown(response.data, field);
+    populateDropdown(response.data, field, index);
   } catch (error) {
     toastr.error("Gagal mengambil data : " + error.message);
   }
 }
 
-function populateDropdown(data, field) {
-  const select = $(`#jenis_${field}`);
+function populateDropdown(data, field, index) {
+  const select = $(`#jenis_${field}${index}`);
   select.empty();
   if (field === "brand") {
     data.forEach((item) => {
@@ -401,7 +312,9 @@ function populateDropdown(data, field) {
       );
     });
   }
-
+  $(`#jenis_${field}${index}`).select2({
+    dropdownParent: $("#modal_promo"),
+  });
   select.trigger("change");
 }
 let jenis_bonus = document.getElementById("jenis_bonus");
@@ -426,6 +339,8 @@ async function submitPromo() {
   const prioritas = document.getElementById("prioritas").value;
   const jenis_diskon = document.getElementById("jenis_diskon").value;
   const jumlah_diskon = document.getElementById("jumlah_diskon").value;
+  const quota = document.getElementById("quota").value;
+  const status_promo = document.getElementById("status_promo").value;
 
   const exclude_include_brand = document.getElementById("exclude_include_brand")
     ? document.getElementById("exclude_include_brand").value
@@ -462,11 +377,9 @@ async function submitPromo() {
     ? $("#jenis_channel").val()
     : [];
 
-  const status_promo = document.getElementById("status_promo").value;
   const qty_akumulasi = document.getElementById("qty_akumulasi").value;
   const qty_min = document.getElementById("qty_min").value;
   const qty_max = document.getElementById("qty_max").value;
-  const quota = document.getElementById("quota").value;
 
   const qty_bonus = document.getElementById("qty_bonus").value;
   const diskon_bonus_barang = document.getElementById(

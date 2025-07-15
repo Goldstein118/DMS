@@ -26,6 +26,11 @@
                                             <option value="barang">Barang</option>
                                             <option value="nominal">Nominal</option>
                                         </select>
+                                        <label class="form-label mb-0 mt-2" for="status_promo">Status:</label>
+                                        <select class="form-select" id="status_promo">
+                                            <option value="aktif">Aktif</option>
+                                            <option value="nonaktif">Non Aktif</option>
+                                        </select>
                                     </div>
                                     <div class="col">
                                         <label class="form-label mb-0 mt-2" for="prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
@@ -43,6 +48,8 @@
                                             <option value="ya">Ya</option>
                                             <option value="tidak">Tidak</option>
                                         </select>
+                                        <label class="form-label mb-0 mt-2" for="quota">Quota:</label>
+                                        <input class="form-control" type="number" id="quota">
                                     </div>
                                 </div>
                             </div>
@@ -61,16 +68,16 @@
                                     <thead id="jenis_promo_kondisi_thead">
                                         <tr>
                                             <th style="width :150px" scope="col">Jenis</th>
-                                            <th style="width:350px" scope="col">Nama</th>
+                                            <th style="width:350px" scope="col">Kondisi</th>
                                             <th style="width: 150px;" scope="col">Exclude/Include</th>
+                                            <th>Qty Min</th>
+                                            <th>Qty Max</th>
+                                            <th>Qty Akumulasi</th>
                                             <th style="width: 50px;" scope="col">Aksi</th>
                                         </tr>
                                     </thead>
 
                                     <tbody id="jenis_promo_kondisi_tbody">
-                                        <tr id="tr_01">
-
-                                        </tr>
                                     </tbody>
                                 </table>
                                 <!-- 
@@ -86,11 +93,7 @@
                                 <select class="js-example-basic-multiple form-select" id="jenis_produk" name="produk[]" multiple="multiple"></select> -->
                                 <div class="row g-2">
                                     <div class="col">
-                                        <label class="form-label mb-0 mt-2" for="status_promo">Status:</label>
-                                        <select class="form-select" id="status_promo">
-                                            <option value="aktif">Aktif</option>
-                                            <option value="nonaktif">Non Aktif</option>
-                                        </select>
+
 
                                         <label class="form-label mb-0 mt-2" for="qty_akumulasi">Kuantitas Akumulasi:</label>
                                         <input class="form-control" type="number" id="qty_akumulasi">
@@ -102,20 +105,32 @@
                                         <label class="form-label mb-0 mt-2" for="qty_max">Kuantitas Maksimum:</label>
                                         <input class="form-control" type="number" id="qty_max">
 
-                                        <label class="form-label mb-0 mt-2" for="quota">Quota:</label>
-                                        <input class="form-control" type="number" id="quota">
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="card" id="card_promo_3">
-                        <div class="card-header">Promo_3</div>
+                        <div class="card-header">Promo Bonus Barang</div>
                         <div class="card-body">
-                            <label class="form-label mb-0 mt-2" for="qty_bonus">Kuantitas Bonus:</label>
-                            <input class="form-control" id="qty_bonus" type="number">
-                            <label class="form-label mb-0 mt-2" for="diskon_bonus_barang">Jumlah Diskon:</label>
-                            <input class="form-control" id="diskon_bonus_barang">
+                            <button class="btn btn-primary btn-sm mb-2" id="promo_bonus_barang_button">
+                                <i class="bi bi-plus-circle"></i> Tambah
+                            </button>
+                            <table id="table_bonus_barang" class="table table-hover table-bordered table-sm table-striped">
+                                <thead id="table_bonus_barang_thead">
+                                    <tr>
+                                        <th>Produk</th>
+                                        <th>Jumlah Qty</th>
+                                        <th>Jenis Diskon</th>
+                                        <th>Jumlah Diskon/Nominal</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table_bonus_barang_tbody">
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

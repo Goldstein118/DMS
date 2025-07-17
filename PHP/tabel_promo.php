@@ -80,34 +80,7 @@
                                     <tbody id="jenis_promo_kondisi_tbody">
                                     </tbody>
                                 </table>
-                                <!-- 
-                                <select class="js-example-basic-multiple form-select" id="jenis_brand" name="brand[]" multiple="multiple">
-                                </select> -->
 
-                                <!-- <label class="form-label mb-0 mt-2" for="jenis_customer">Jenis Customer:</label>
-
-                                <select class="js-example-basic-multiple form-select" id="jenis_customer" name="customer[]" multiple="multiple"></select>
-
-                                <label class="form-label mb-0 mt-2" for="jenis_produk">Jenis Produk:</label>
-
-                                <select class="js-example-basic-multiple form-select" id="jenis_produk" name="produk[]" multiple="multiple"></select> -->
-                                <div class="row g-2">
-                                    <div class="col">
-
-
-                                        <label class="form-label mb-0 mt-2" for="qty_akumulasi">Kuantitas Akumulasi:</label>
-                                        <input class="form-control" type="number" id="qty_akumulasi">
-
-                                        <label class="form-label mb-0 mt-2" for="qty_min">Kuantitas Minimal:</label>
-                                        <input class="form-control" type="number" id="qty_min">
-                                    </div>
-                                    <div class="col">
-                                        <label class="form-label mb-0 mt-2" for="qty_max">Kuantitas Maksimum:</label>
-                                        <input class="form-control" type="number" id="qty_max">
-
-
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -172,6 +145,11 @@
                                             <option value="barang">Barang</option>
                                             <option value="nominal">Nominal</option>
                                         </select>
+                                        <label class="form-label mb-0 mt-2" for="update_status_promo">Status:</label>
+                                        <select class="form-select" id="update_status_promo">
+                                            <option value="aktif">Aktif</option>
+                                            <option value="nonaktif">Non Aktif</option>
+                                        </select>
 
                                     </div>
                                     <div class="col">
@@ -190,6 +168,8 @@
                                             <option value="ya">Ya</option>
                                             <option value="tidak">Tidak</option>
                                         </select>
+                                        <label class="form-label mb-0 mt-2" for="update_quota">Quota:</label>
+                                        <input class="form-control" type="number" id="update_quota">
                                     </div>
                                 </div>
                             </div>
@@ -199,110 +179,51 @@
                         <div class="card">
                             <div class="card-header">Promo Kondisi</div>
                             <div class="card-body">
-
+                                <button class="btn btn-primary btn-sm mb-2" id="update_promo_kondisi_barang_button">
+                                    <i class="bi bi-plus-circle"></i> Tambah
+                                </button>
                                 <table
                                     class="table table-hover table-bordered table-sm table-striped"
                                     id="update_jenis_promo_kondisi">
                                     <thead id="update_jenis_promo_kondisi_thead">
                                         <tr>
-                                            <th scope="col">Jenis</th>
-                                            <th scope="col">Nama</th>
-                                            <th scope="col">Exclude/Include</th>
+                                            <th style="width :150px" scope="col">Jenis</th>
+                                            <th style="width:350px" scope="col">Kondisi</th>
+                                            <th style="width: 150px;" scope="col">Exclude/Include</th>
+                                            <th>Qty Min</th>
+                                            <th>Qty Max</th>
+                                            <th>Qty Akumulasi</th>
+                                            <th style="width: 50px;" scope="col">Aksi</th>
                                         </tr>
                                     </thead>
 
                                     <tbody id="update_jenis_promo_kondisi_tbody">
-                                        <tr>
-                                            <td>
-                                                <label class="form-label mb-0 mt-2" for="update_jenis_brand">Jenis Brand:</label>
-                                            </td>
-                                            <td>
-                                                <select class="js-example-basic-multiple form-select" id="update_jenis_brand" name="brand[]" multiple="multiple">
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <select class="form-select" id="update_exclude_include_brand">
-                                                    <option value="include">Include</option>
-                                                    <option value="exclude">Exclude</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label class="form-label mb-0 mt-2" for="update_jenis_customer">Jenis Customer:</label>
-                                            </td>
-                                            <td>
-                                                <select class="js-example-basic-multiple form-select" id="update_jenis_customer" name="customer[]" multiple="multiple"></select>
-
-                                            </td>
-                                            <td>
-                                                <select class="form-select" id="update_exclude_include_customer">
-                                                    <option value="include">Include</option>
-                                                    <option value="exclude">Exclude</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label class="form-label mb-0 mt-2" for="update_jenis_produk">Jenis Produk:</label>
-                                            </td>
-                                            <td>
-                                                <select class="js-example-basic-multiple form-select" id="update_jenis_produk" name="produk[]" multiple="multiple"></select>
-                                            </td>
-                                            <td>
-                                                <select class="form-select" id="update_exclude_include_produk">
-                                                    <option value="include">Include</option>
-                                                    <option value="exclude">Exclude</option>
-                                                </select>
-                                            </td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label class="form-label mb-0 mt-2" for="update_jenis_produk">Jenis Channel:</label>
-                                            </td>
-                                            <td>
-                                                <select class="js-example-basic-multiple form-select" id="update_jenis_channel" name="channel[]" multiple="multiple"></select>
-                                            </td>
-                                            <td>
-                                                <select class="form-select" id="update_exclude_include_channel">
-                                                    <option value="include">Include</option>
-                                                    <option value="exclude">Exclude</option>
-                                                </select>
-                                            </td>
-                                        </tr>
                                     </tbody>
                                 </table>
 
-                                <div class="row g-2">
-                                    <div class="col">
-                                        <label class="form-label mb-0 mt-2" for="update_status_promo">Status:</label>
-                                        <select class="form-select" id="update_status_promo">
-                                            <option value="aktif">Aktif</option>
-                                            <option value="nonaktif">Non Aktif</option>
-                                        </select>
-                                        <label class="form-label mb-0 mt-2" for="update_qty_akumulasi">Kuantitas Akumulasi:</label>
-                                        <input class="form-control" type="number" id="update_qty_akumulasi">
-                                        <label class="form-label mb-0 mt-2" for="update_qty_min">Kuantitas Minimal:</label>
-                                        <input class="form-control" type="number" id="update_qty_min">
-                                    </div>
-                                    <div class="col">
-                                        <label class="form-label mb-0 mt-2" for="update_qty_max">Kuantitas Maksimum:</label>
-                                        <input class="form-control" type="number" id="update_qty_max">
-                                        <label class="form-label mb-0 mt-2" for="update_quota">Quota:</label>
-                                        <input class="form-control" type="number" id="update_quota">
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="card" id="update_card_promo_3">
                         <div class="card-header">Promo_3</div>
                         <div class="card-body">
-                            <label class="form-label mb-0 mt-2" for="update_qty_bonus">Kuantitas Bonus:</label>
-                            <input class="form-control" id="update_qty_bonus" type="number">
-                            <label class="form-label mb-0 mt-2" for="update_diskon_bonus_barang">Jumlah Diskon:</label>
-                            <input class="form-control" id="update_diskon_bonus_barang">
+                            <button class="btn btn-primary btn-sm mb-2" id="update_promo_bonus_barang_button">
+                                <i class="bi bi-plus-circle"></i> Tambah
+                            </button>
+                            <table id="update_table_bonus_barang" class="table table-hover table-bordered table-sm table-striped">
+                                <thead id="update_table_bonus_barang_thead">
+                                    <tr>
+                                        <th>Produk</th>
+                                        <th>Jumlah Qty</th>
+                                        <th>Jenis Diskon</th>
+                                        <th>Jumlah Diskon/Nominal</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="update_table_bonus_barang_tbody">
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

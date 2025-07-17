@@ -423,9 +423,10 @@ export function preview(element_id, img_id) {
     }
   });
 }
+let index = 0;
 export function addField(action) {
   var myTable = document.getElementById(`${action}_detail_pricelist_tbody`);
-  var currentIndex = myTable.rows.length;
+  var currentIndex = index++;
   const tr_detail = document.createElement("tr");
 
   const td_harga = document.createElement("td");

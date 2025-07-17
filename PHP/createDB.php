@@ -284,7 +284,8 @@ if ($conn->query($promo_kondisi)) {
 }
 
 $promo_bonus_barang = "CREATE TABLE IF NOT EXISTS tb_promo_bonus_barang(promo_bonus_barang_id VARCHAR(20) PRIMARY KEY NOT NULL,
-                       promo_id VARCHAR(20),qty_bonus VARCHAR(20),jenis_diskon VARCHAR(20), jlh_diskon VARCHAR(20),FOREIGN KEY (promo_id) REFERENCES tb_promo(promo_id) ON DELETE RESTRICT)";
+                       promo_id VARCHAR(20),qty_bonus VARCHAR(20),jenis_diskon VARCHAR(20), jlh_diskon VARCHAR(20),
+                       produk_id VARCHAR(20),FOREIGN KEY (promo_id) REFERENCES tb_promo(promo_id) ON DELETE RESTRICT)";
 
 if ($conn->query($promo_bonus_barang)) {
     try {

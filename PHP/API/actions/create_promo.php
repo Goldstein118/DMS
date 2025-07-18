@@ -54,7 +54,8 @@ try {
             $promo_kondisi_id = generateCustomID('PRK', 'tb_promo_kondisi', 'promo_kondisi_id', $conn);
             executeInsert(
                 $conn,
-                "INSERT INTO tb_promo_kondisi (promo_kondisi_id, promo_id,jenis_kondisi,kondisi,qty_akumulasi,qty_min,exclude_include,qty_max) 
+                "INSERT INTO tb_promo_kondisi (promo_kondisi_id, promo_id,jenis_kondisi,kondisi,
+                qty_akumulasi,qty_min,exclude_include,qty_max) 
                 VALUES (?,?,?,?,?,?,?,?)",
                 [
                     $promo_kondisi_id,

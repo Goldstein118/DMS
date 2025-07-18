@@ -2,10 +2,18 @@
 require_once __DIR__ . '/../utils/helpers.php';
 
 try {
-    // Expected required fields
+    if (!$data) {
+        throw new Exception("Invalid JSON input");
+    }
+
+    // Start transaction
+    $conn->begin_transaction();
+
+    // Required fields
     $requiredFields = ['promo_id', 'nama', 'tanggal_berlaku', 'tanggal_selesai'];
     $fields = validate_1($data, $requiredFields);
 
+    // Extract and sanitize input
     $promo_id = $fields['promo_id'];
     $nama = $fields['nama'];
     $tanggal_berlaku = $fields['tanggal_berlaku'];
@@ -15,35 +23,22 @@ try {
     $prioritas = $data['prioritas'] ?? '';
     $jenis_diskon = $data['jenis_diskon'] ?? '';
     $jumlah_diskon = $data['jumlah_diskon'] ?? '';
-
-    $jenis_brand = json_encode($data['jenis_brand'] ?? []);
-    $jenis_customer = json_encode($data['jenis_customer'] ?? []);
-    $jenis_produk = json_encode($data['jenis_produk'] ?? []);
-    $jenis_channel = json_encode($data['jenis_cahnnel'] ?? []);
-
-    $exclude_include_brand = $data["exclude_include_brand"];
-    $exclude_include_produk = $data["exclude_include_produk"];
-    $exclude_include_customer = $data["exclude_include_customer"];
-    $exlude_include_channel = $data["exclude_include_channel"];
-
     $status = $data['status'] ?? 'aktif';
-    $qty_akumulasi = $data['qty_akumulasi'] ?? '';
-    $qty_min = $data['qty_min'] ?? '';
-    $qty_max = $data['qty_max'] ?? '';
     $quota = $data['quota'] ?? '';
-    $qty_bonus = $data['qty_bonus'];
-    $diskon_bonus_barang = $data['diskon_bonus_barang'];
+    $promo_kondisi = $data['promo_kondisi'] ?? [];
+    $promo_bonus_barang = $data['promo_bonus_barang'] ?? [];
 
+    // Basic input validation
     validate_2($nama, '/^[a-zA-Z0-9\s]+$/', "Format nama tidak valid");
 
-    // Update tb_promo
+    // Update main promo
     $stmt = $conn->prepare("UPDATE tb_promo SET 
         nama = ?, tanggal_berlaku = ?, tanggal_selesai = ?, 
         jenis_bonus = ?, akumulasi = ?, prioritas = ?, 
-        jenis_diskon = ?, jumlah_diskon = ? 
+        jenis_diskon = ?, jumlah_diskon = ?, quota = ?, status = ?
         WHERE promo_id = ?");
     $stmt->bind_param(
-        "sssssssss",
+        "sssssssssss",
         $nama,
         $tanggal_berlaku,
         $tanggal_selesai,
@@ -52,111 +47,84 @@ try {
         $prioritas,
         $jenis_diskon,
         $jumlah_diskon,
+        $quota,
+        $status,
         $promo_id
     );
     $stmt->execute();
     $stmt->close();
 
-    // Check if tb_promo_kondisi exists
-    $check_kondisi_stmt = $conn->prepare("SELECT promo_kondisi_id FROM tb_promo_kondisi WHERE promo_id = ?");
-    $check_kondisi_stmt->bind_param("s", $promo_id);
-    $check_kondisi_stmt->execute();
-    $result_kondisi = $check_kondisi_stmt->get_result();
-    $check_kondisi_stmt->close();
+    // Handle promo_kondisi
+    $delete_kondisi_stmt = $conn->prepare("DELETE FROM tb_promo_kondisi WHERE promo_id = ?");
+    $delete_kondisi_stmt->bind_param("s", $promo_id);
+    $delete_kondisi_stmt->execute();
+    $delete_kondisi_stmt->close();
 
-    if ($result_kondisi->num_rows > 0) {
-        // Update kondisi
-        $stmt_update = $conn->prepare("UPDATE tb_promo_kondisi SET 
-            jenis_customer = ?, jenis_brand = ?, jenis_produk = ?, jenis_channel=?,exclude_include_brand=?,exclude_include_customer=?,exclude_include_produk =?,exclude_include_channel =?,
-            status = ?, qty_akumulasi = ?, qty_min = ?, qty_max = ?, quota = ?
-            WHERE promo_id = ?");
-        $stmt_update->bind_param(
-            "ssssssssssssss",
-            $jenis_customer,
-            $jenis_brand,
-            $jenis_produk,
-            $jenis_channel,
-            $exclude_include_brand,
-            $exclude_include_customer,
-            $exclude_include_produk,
-            $exclude_include_channel,
-            $status,
-            $qty_akumulasi,
-            $qty_min,
-            $qty_max,
-            $quota,
-            $promo_id
-        );
-        $stmt_update->execute();
-        $stmt_update->close();
-    } else {
-        // Insert new kondisi
+    foreach ($promo_kondisi as $promo) {
+        $jenis_kondisi = $promo['jenis_kondisi'];
+        $kondisi = json_encode($promo['kondisi']);
+        $exclude_include = $promo['exclude_include'] ?? null;
+        $qty_akumulasi = $promo['qty_akumulasi'] ?? null;
+        $qty_min = $promo['qty_min'] ?? null;
+        $qty_max = $promo['qty_max'] ?? null;
         $promo_kondisi_id = generateCustomID('PRK', 'tb_promo_kondisi', 'promo_kondisi_id', $conn);
+
         $stmt_insert = $conn->prepare("INSERT INTO tb_promo_kondisi (
-            promo_kondisi_id, promo_id, jenis_customer, jenis_brand, jenis_produk,jenis_channel,
-            exclude_include_brand,exclude_include_customer,exclude_include_produk,exclude_include_channel
-            status, qty_akumulasi, qty_min, qty_max, quota
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)");
+        promo_kondisi_id, promo_id, jenis_kondisi, kondisi, qty_akumulasi, qty_min, exclude_include, qty_max
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt_insert->bind_param(
-            "sssssssssssssss",
+            "ssssssss",
             $promo_kondisi_id,
             $promo_id,
-            $jenis_customer,
-            $jenis_brand,
-            $jenis_produk,
-            $jenis_channel,
-            $exclude_include_brand,
-            $exclude_include_customer,
-            $exclude_include_produk,
-            $exclude_include_channel,
-            $status,
+            $jenis_kondisi,
+            $kondisi,
             $qty_akumulasi,
             $qty_min,
-            $qty_max,
-            $quota
+            $exclude_include,
+            $qty_max
         );
         $stmt_insert->execute();
         $stmt_insert->close();
     }
 
-    $check_bonus_stmt = $conn->prepare("SELECT promo_bonus_barang_id FROM tb_promo_bonus_barang WHERE promo_id = ?");
-    $check_bonus_stmt->bind_param("s", $promo_id);
-    $check_bonus_stmt->execute();
-    $result_bonus = $check_bonus_stmt->get_result();
-    $check_bonus_stmt->close();
 
-    if ($result_bonus->num_rows > 0) {
-        // Update kondisi
-        $stmt_update = $conn->prepare("UPDATE tb_promo_bonus_barang SET 
-            qty_bonus = ?,jlh_diskon=? WHERE promo_id = ?");
-        $stmt_update->bind_param(
-            "sss",
-            $qty_bonus,
-            $diskon_bonus_barang,
-            $promo_id
-        );
-        $stmt_update->execute();
-        $stmt_update->close();
-    } else {
-        // Insert new kondisi
+    // Handle promo_bonus_barang
+    // Always delete old bonus_barang rows for the promo
+    $delete_bonus_stmt = $conn->prepare("DELETE FROM tb_promo_bonus_barang WHERE promo_id = ?");
+    $delete_bonus_stmt->bind_param("s", $promo_id);
+    $delete_bonus_stmt->execute();
+    $delete_bonus_stmt->close();
+
+    // Then insert new ones
+    foreach ($promo_bonus_barang as $promo) {
+        $qty_bonus = $promo['qty_bonus'] ?? null;
+        $jenis_diskon = $promo['jenis_diskon'] ?? null;
+        $jlh_diskon = $promo['jlh_diskon'] ?? null;
+        $produk_id = $promo['produk_id'] ?? null;
         $promo_bonus_barang_id = generateCustomID('PRB', 'tb_promo_bonus_barang', 'promo_bonus_barang_id', $conn);
+
         $stmt_insert = $conn->prepare("INSERT INTO tb_promo_bonus_barang (
-        promo_bonus_barang_id,promo_id,qty_bonus,jlh_diskon
-        ) VALUES (?, ?, ?,?)");
+        promo_bonus_barang_id, promo_id, qty_bonus, jenis_diskon, jlh_diskon, produk_id
+    ) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt_insert->bind_param(
-            "ssss",
+            "ssssss",
             $promo_bonus_barang_id,
             $promo_id,
             $qty_bonus,
-            $diskon_bonus_barang
+            $jenis_diskon,
+            $jlh_diskon,
+            $produk_id
         );
         $stmt_insert->execute();
         $stmt_insert->close();
     }
+
+    $conn->commit(); // Commit transaction
 
     http_response_code(200);
     echo json_encode(["ok" => true, "message" => "Promo dan kondisi berhasil diupdate."]);
 } catch (Exception $e) {
+    $conn->rollback(); // Roll back on error
     http_response_code(500);
     echo json_encode(["ok" => false, "message" => $e->getMessage()]);
 }

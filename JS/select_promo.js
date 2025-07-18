@@ -9,6 +9,12 @@ const update_promo_kondisi_barang_button = document.getElementById(
 const update_promo_bonus_barang_button = document.getElementById(
   "update_promo_bonus_barang_button"
 );
+const update_table_bonus_barang_tbody = document.getElementById(
+  "update_table_bonus_barang_tbody"
+);
+const update_promo_kondisi_tbody = document.getElementById(
+  "update_jenis_promo_kondisi_tbody"
+);
 
 update_promo_bonus_barang_button.addEventListener("click", add_field_barang);
 update_promo_kondisi_barang_button.addEventListener("click", () => {
@@ -135,6 +141,104 @@ if (grid_container_promo) {
   }, 200);
 }
 
+async function populate_bonus_barang_update_modal(promo_id) {
+  update_table_bonus_barang_tbody.innerHTML = "";
+  index = 0;
+  setTimeout(async () => {
+    const promo_barang = await apiRequest(
+      `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}`,
+      "POST",
+      { promo_id: promo_id, table: "tb_promo_bonus_barang" }
+    );
+    promo_barang.data.forEach((item) => {
+      let currentIndex = index++;
+      const current_produk_id = item.produk_id;
+      const tr_bonus_barang = document.createElement("tr");
+
+      const td_select_produk = document.createElement("td");
+      const select_produk = document.createElement("select");
+      select_produk.className = "form-select";
+      select_produk.setAttribute("id", `update_bonus_produk${currentIndex}`);
+
+      td_select_produk.appendChild(select_produk);
+
+      const td_jlh_qty = document.createElement("td");
+      const jlh_qty = document.createElement("input");
+      jlh_qty.className = "form-control";
+      jlh_qty.setAttribute("type", "number");
+      jlh_qty.setAttribute("id", `update_jlh_qty${currentIndex}`);
+      jlh_qty.value = item.qty_bonus;
+
+      td_jlh_qty.appendChild(jlh_qty);
+
+      const td_jenis_diskon = document.createElement("td");
+      const jenis_diskon = document.createElement("select");
+      jenis_diskon.innerHTML = `
+    <option value="nominal">Nominal</option>
+    <option value="persen">Persen</option>
+  
+  `;
+      jenis_diskon.className = "form-select";
+      jenis_diskon.setAttribute("id", `update_jenis_diskon${currentIndex}`);
+      jenis_diskon.value = item.jenis_diskon;
+
+      td_jenis_diskon.appendChild(jenis_diskon);
+
+      const td_jumlah_diskon_nominal = document.createElement("td");
+      const jumlah_diskon_nominal = document.createElement("input");
+      jumlah_diskon_nominal.className = "form-control";
+      jumlah_diskon_nominal.setAttribute(
+        "id",
+        `update_jumlah_diskon_nominal${currentIndex}`
+      );
+      jumlah_diskon_nominal.setAttribute("type", "number");
+      jumlah_diskon_nominal.value = item.jlh_diskon;
+      td_jumlah_diskon_nominal.appendChild(jumlah_diskon_nominal);
+
+      const td_aksi = document.createElement("td");
+      const delete_button = document.createElement("button");
+      delete_button.type = "button";
+      delete_button.className = "btn btn-danger btn-sm delete_promo_kondisi";
+      delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+      td_aksi.style.textAlign = "center";
+      td_aksi.appendChild(delete_button);
+
+      tr_bonus_barang.appendChild(td_select_produk);
+      tr_bonus_barang.appendChild(td_jlh_qty);
+      tr_bonus_barang.appendChild(td_jenis_diskon);
+      tr_bonus_barang.appendChild(td_jumlah_diskon_nominal);
+      tr_bonus_barang.appendChild(td_aksi);
+      update_table_bonus_barang_tbody.appendChild(tr_bonus_barang);
+
+      fetch_bonus_barang(
+        "produk",
+        currentIndex,
+        "update_bonus_produk",
+        current_produk_id
+      );
+
+      delete_promo_kondisi("update_table_bonus_barang_tbody");
+    });
+  }, 200);
+}
+
+async function fetch_bonus_barang(field, index, element_id, produk_id) {
+  try {
+    const response = await apiRequest(
+      `/PHP/API/${field}_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}&target=tb_promo&context=create`,
+      "POST",
+      { select: "select" }
+    );
+    populate_bonus_barang(response.data, index, element_id, produk_id);
+  } catch (error) {
+    toastr.error("Gagal mengambil data : " + error.message);
+  }
+}
+
 function add_field_kondisi(myTable) {
   var currentIndex = myTable.rows.length;
   const tr_detail = document.createElement("tr");
@@ -171,21 +275,21 @@ function add_field_kondisi(myTable) {
   const qty_min_td = document.createElement("td");
   const qty_min = document.createElement("input");
   qty_min.className = "form-control";
-  qty_min.setAttribute("id", `qty_min${currentIndex}`);
+  qty_min.setAttribute("id", `update_qty_min${currentIndex}`);
   qty_min.setAttribute("disabled", "disabled");
   qty_min_td.appendChild(qty_min);
 
   const qty_max_td = document.createElement("td");
   const qty_max = document.createElement("input");
   qty_max.className = "form-control";
-  qty_max.setAttribute("id", `qty_max${currentIndex}`);
+  qty_max.setAttribute("id", `update_qty_max${currentIndex}`);
   qty_max.setAttribute("disabled", "disabled");
   qty_max_td.appendChild(qty_max);
 
   const qty_akumulasi_td = document.createElement("td");
   const qty_akumulasi = document.createElement("input");
   qty_akumulasi.className = "form-control";
-  qty_akumulasi.setAttribute("id", `qty_akumulasi${currentIndex}`);
+  qty_akumulasi.setAttribute("id", `update_qty_akumulasi${currentIndex}`);
   qty_akumulasi.setAttribute("disabled", "disabled");
   qty_akumulasi_td.appendChild(qty_akumulasi);
 
@@ -211,16 +315,16 @@ function add_field_kondisi(myTable) {
     if (jenis_select.value === "brand") {
       dynamic_select.className = "dynamic-select js-example-basic-multiple";
       dynamic_select.setAttribute("multiple", "multiple");
-      dynamic_select.setAttribute("id", `jenis_brand${currentIndex}`);
+      dynamic_select.setAttribute("id", `update_jenis_brand${currentIndex}`);
       exclude_select.setAttribute("id", `exclude_include_brand${currentIndex}`);
       qty_min.removeAttribute("disabled");
       qty_max.removeAttribute("disabled");
       qty_akumulasi.removeAttribute("disabled");
-      fetch_fk("brand", currentIndex, "jenis_brand"); // ← Now that the element exists, fetch the data
+      fetch_fk("brand", currentIndex, "update_jenis_brand"); // ← Now that the element exists, fetch the data
     } else if (jenis_select.value === "customer") {
       dynamic_select.className = "dynamic-select js-example-basic-multiple";
       dynamic_select.setAttribute("multiple", "multiple");
-      dynamic_select.setAttribute("id", `jenis_customer${currentIndex}`);
+      dynamic_select.setAttribute("id", `update_jenis_customer${currentIndex}`);
       exclude_select.setAttribute(
         "id",
         `exclude_include_customer${currentIndex}`
@@ -229,11 +333,11 @@ function add_field_kondisi(myTable) {
       qty_max.setAttribute("disabled", "disabled");
       qty_min.setAttribute("disabled", "disabled");
 
-      fetch_fk("customer", currentIndex, "jenis_customer");
+      fetch_fk("customer", currentIndex, "update_jenis_customer");
     } else if (jenis_select.value === "produk") {
       dynamic_select.className = "dynamic-select js-example-basic-multiple";
       dynamic_select.setAttribute("multiple", "multiple");
-      dynamic_select.setAttribute("id", `jenis_produk${currentIndex}`);
+      dynamic_select.setAttribute("id", `update_jenis_produk${currentIndex}`);
       exclude_select.setAttribute(
         "id",
         `exclude_include_produk${currentIndex}`
@@ -241,11 +345,11 @@ function add_field_kondisi(myTable) {
       qty_akumulasi.setAttribute("disabled", "disabled");
       qty_max.setAttribute("disabled", "disabled");
       qty_min.setAttribute("disabled", "disabled");
-      fetch_fk("produk", currentIndex, "jenis_produk");
+      fetch_fk("produk", currentIndex, "update_jenis_produk");
     } else if (jenis_select.value === "channel") {
       dynamic_select.className = "dynamic-select js-example-basic-multiple";
       dynamic_select.setAttribute("multiple", "multiple");
-      dynamic_select.setAttribute("id", `jenis_channel${currentIndex}`);
+      dynamic_select.setAttribute("id", `update_jenis_channel${currentIndex}`);
       exclude_select.setAttribute(
         "id",
         `exclude_include_channel${currentIndex}`
@@ -253,7 +357,7 @@ function add_field_kondisi(myTable) {
       qty_min.removeAttribute("disabled");
       qty_max.removeAttribute("disabled");
       qty_akumulasi.removeAttribute("disabled");
-      fetch_fk("channel", currentIndex, "jenis_channel");
+      fetch_fk("channel", currentIndex, "update_jenis_channel");
     }
   });
   delete_promo_kondisi("update_jenis_promo_kondisi_tbody");
@@ -284,7 +388,38 @@ function delete_promo_kondisi(field) {
     }
   });
 }
-async function fetch_fk(field, index, element_id) {
+function populate_bonus_barang(data, index, element_id, produk_id) {
+  const select = $(`#${element_id}${index}`);
+  if (!select.length) {
+    console.warn(`Element #${element_id}${index} not found.`);
+    return;
+  }
+
+  console.log(`bonus barang: ${element_id}${index}`);
+  select.empty();
+
+  data.forEach((item) => {
+    select.append(
+      new Option(
+        `${item.produk_id} - ${item.nama}`,
+        item.produk_id,
+        false,
+        item.produk_id === produk_id
+      )
+    );
+  });
+
+  // Delay select2 init if needed
+  setTimeout(() => {
+    select.select2({
+      dropdownParent: $("#modal_promo_update"),
+    });
+
+    select.trigger("change");
+  }, 0); // or try 100ms if needed
+}
+
+async function fetch_fk(field, index, element_id, tipe) {
   try {
     const response = await apiRequest(
       `/PHP/API/${field}_API.php?action=select&user_id=${access.decryptItem(
@@ -293,13 +428,13 @@ async function fetch_fk(field, index, element_id) {
       "POST",
       { select: "select" }
     );
-    populateNewDropdown(response.data, field, index, element_id);
+    populateNewDropdown(response.data, field, index, element_id, tipe);
   } catch (error) {
     toastr.error("Gagal mengambil data : " + error.message);
   }
 }
 
-function populateNewDropdown(data, field, index, element_id) {
+function populateNewDropdown(data, field, index, element_id, tipe) {
   const select = $(`#${element_id}${index}`);
   console.log(`${element_id}${index}`);
   select.empty();
@@ -326,6 +461,10 @@ function populateNewDropdown(data, field, index, element_id) {
       );
     });
   } else if (field === "produk") {
+    if (tipe === "bonus") {
+      select.append(new Option("Pilih Produk", "", false, false));
+    }
+
     data.forEach((item) => {
       select.append(
         new Option(
@@ -438,155 +577,187 @@ async function fetch_jenis(field, selectedRaw, element_id, index) {
     toastr.error("Gagal mengambil data : " + error.message);
   }
 }
-const update_table_bonus_barang_tbody = document.getElementById(
-  "update_table_bonus_barang_tbody"
-);
-const update_promo_kondisi_tbody = document.getElementById(
-  "update_jenis_promo_kondisi_tbody"
-);
-async function fetch_promo(promo_id) {
-  try {
-    const jenis = await apiRequest(
-      `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
-        "user_id"
-      )}`,
-      "POST",
-      { promo_id: promo_id, table: "tb_promo_kondisi" }
-    );
-    jenis.data.forEach(async (item, currentIndex) => {
-      const tr_detail = document.createElement("tr");
 
-      // Jenis (td_select)
-      const td_select = document.createElement("td");
-      const jenis_select = document.createElement("select");
-      jenis_select.className = "form-select jenis-select";
-      jenis_select.innerHTML = `
+async function fetch_promo(promo_id) {
+  update_promo_kondisi_tbody.innerHTML = "";
+
+  setTimeout(async () => {
+    try {
+      const jenis = await apiRequest(
+        `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
+          "user_id"
+        )}`,
+        "POST",
+        { promo_id: promo_id, table: "tb_promo_kondisi" }
+      );
+      jenis.data.forEach(async (item, currentIndex) => {
+        const tr_detail = document.createElement("tr");
+
+        // Jenis (td_select)
+        const td_select = document.createElement("td");
+        const jenis_select = document.createElement("select");
+        jenis_select.className = "form-select jenis-select";
+        jenis_select.innerHTML = `
     <option value="">-- Pilih --</option>
     <option value="brand">Brand</option>
     <option value="customer">Customer</option>
     <option value="produk">Produk</option>
     <option value="channel">Channel</option>
   `;
-      jenis_select.value = item.jenis_kondisi;
-      jenis_select.setAttribute("disabled", "disabled");
-      td_select.appendChild(jenis_select);
+        jenis_select.value = item.jenis_kondisi;
+        jenis_select.setAttribute("disabled", "disabled");
+        td_select.appendChild(jenis_select);
 
-      // Dynamic Select2 (td_dynamic)
-      const td_dynamic = document.createElement("td");
-      const dynamic_select = document.createElement("select");
-      dynamic_select.className = "form-select";
+        // Dynamic Select2 (td_dynamic)
+        const td_dynamic = document.createElement("td");
+        const dynamic_select = document.createElement("select");
+        dynamic_select.className = "form-select";
 
-      td_dynamic.appendChild(dynamic_select);
+        td_dynamic.appendChild(dynamic_select);
 
-      const td_exclude = document.createElement("td");
-      const exclude_select = document.createElement("select");
-      exclude_select.className = "form-select";
-      exclude_select.innerHTML = `
+        const td_exclude = document.createElement("td");
+        const exclude_select = document.createElement("select");
+        exclude_select.className = "form-select";
+        exclude_select.innerHTML = `
     <option value="include">Include</option>
     <option value="exclude">Exclude</option>
     `;
-      exclude_select.value = item.exclude_include;
+        exclude_select.value = item.exclude_include;
 
-      td_exclude.appendChild(exclude_select);
+        td_exclude.appendChild(exclude_select);
 
-      const qty_min_td = document.createElement("td");
-      const qty_min = document.createElement("input");
-      qty_min.className = "form-control";
-      qty_min.setAttribute("id", `qty_min${currentIndex}`);
-      qty_min.setAttribute("disabled", "disabled");
-      qty_min.value = item.qty_min;
-      qty_min_td.appendChild(qty_min);
-
-      const qty_max_td = document.createElement("td");
-      const qty_max = document.createElement("input");
-      qty_max.className = "form-control";
-      qty_max.setAttribute("id", `qty_max${currentIndex}`);
-      qty_max.setAttribute("disabled", "disabled");
-      qty_max.value = item.qty_max;
-      qty_max_td.appendChild(qty_max);
-
-      const qty_akumulasi_td = document.createElement("td");
-      const qty_akumulasi = document.createElement("input");
-      qty_akumulasi.className = "form-control";
-      qty_akumulasi.setAttribute("id", `qty_akumulasi${currentIndex}`);
-      qty_akumulasi.setAttribute("disabled", "disabled");
-      qty_akumulasi.value = item.qty_akumulasi;
-      qty_akumulasi_td.appendChild(qty_akumulasi);
-
-      // Delete Button (td_aksi)
-      const td_aksi = document.createElement("td");
-      const delete_button = document.createElement("button");
-      delete_button.type = "button";
-      delete_button.className = "btn btn-danger btn-sm delete_promo_kondisi";
-      delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
-      td_aksi.style.textAlign = "center";
-      td_aksi.appendChild(delete_button);
-
-      tr_detail.appendChild(td_select);
-      tr_detail.appendChild(td_dynamic);
-      tr_detail.appendChild(td_exclude);
-      tr_detail.appendChild(qty_max_td);
-      tr_detail.appendChild(qty_min_td);
-      tr_detail.appendChild(qty_akumulasi_td);
-      tr_detail.appendChild(td_aksi);
-      update_promo_kondisi_tbody.appendChild(tr_detail);
-
-      if (jenis_select.value === "brand") {
-        dynamic_select.className = "dynamic-select js-example-basic-multiple";
-        dynamic_select.setAttribute("multiple", "multiple");
-        dynamic_select.setAttribute("id", `jenis_brand${currentIndex}`);
-        exclude_select.setAttribute(
-          "id",
-          `exclude_include_brand${currentIndex}`
-        );
-        qty_min.removeAttribute("disabled");
-        qty_max.removeAttribute("disabled");
-        qty_akumulasi.removeAttribute("disabled");
-        fetch_jenis("brand", item.kondisi, "jenis_brand", currentIndex); // ← Now that the element exists, fetch the data
-      } else if (jenis_select.value === "customer") {
-        dynamic_select.className = "dynamic-select js-example-basic-multiple";
-        dynamic_select.setAttribute("multiple", "multiple");
-        dynamic_select.setAttribute("id", `jenis_customer${currentIndex}`);
-        exclude_select.setAttribute(
-          "id",
-          `exclude_include_customer${currentIndex}`
-        );
-        qty_akumulasi.setAttribute("disabled", "disabled");
-        qty_max.setAttribute("disabled", "disabled");
+        const qty_min_td = document.createElement("td");
+        const qty_min = document.createElement("input");
+        qty_min.className = "form-control";
+        qty_min.setAttribute("id", `update_qty_min${currentIndex}`);
         qty_min.setAttribute("disabled", "disabled");
+        qty_min.value = item.qty_min;
+        qty_min_td.appendChild(qty_min);
 
-        fetch_jenis("customer", item.kondisi, "jenis_customer", currentIndex);
-      } else if (jenis_select.value === "produk") {
-        dynamic_select.className = "dynamic-select js-example-basic-multiple";
-        dynamic_select.setAttribute("multiple", "multiple");
-        dynamic_select.setAttribute("id", `jenis_produk${currentIndex}`);
-        exclude_select.setAttribute(
-          "id",
-          `exclude_include_produk${currentIndex}`
-        );
-        qty_akumulasi.setAttribute("disabled", "disabled");
+        const qty_max_td = document.createElement("td");
+        const qty_max = document.createElement("input");
+        qty_max.className = "form-control";
+        qty_max.setAttribute("id", `update_qty_max${currentIndex}`);
         qty_max.setAttribute("disabled", "disabled");
-        qty_min.setAttribute("disabled", "disabled");
-        fetch_jenis("produk", item.kondisi, "jenis_produk", currentIndex);
-      } else if (jenis_select.value === "channel") {
-        dynamic_select.className = "dynamic-select js-example-basic-multiple";
-        dynamic_select.setAttribute("multiple", "multiple");
-        dynamic_select.setAttribute("id", `jenis_channel${currentIndex}`);
-        exclude_select.setAttribute(
-          "id",
-          `exclude_include_channel${currentIndex}`
-        );
-        qty_min.removeAttribute("disabled");
-        qty_max.removeAttribute("disabled");
-        qty_akumulasi.removeAttribute("disabled");
-        fetch_jenis("channel", item.kondisi, "jenis_channel", currentIndex);
-      }
-    });
-  } catch (error) {
-    toastr.error("Gagal mengambil data : " + error.message);
-  }
+        qty_max.value = item.qty_max;
+        qty_max_td.appendChild(qty_max);
+
+        const qty_akumulasi_td = document.createElement("td");
+        const qty_akumulasi = document.createElement("input");
+        qty_akumulasi.className = "form-control";
+        qty_akumulasi.setAttribute("id", `update_qty_akumulasi${currentIndex}`);
+        qty_akumulasi.setAttribute("disabled", "disabled");
+        qty_akumulasi.value = item.qty_akumulasi;
+        qty_akumulasi_td.appendChild(qty_akumulasi);
+
+        // Delete Button (td_aksi)
+        const td_aksi = document.createElement("td");
+        const delete_button = document.createElement("button");
+        delete_button.type = "button";
+        delete_button.className = "btn btn-danger btn-sm delete_promo_kondisi";
+        delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+        td_aksi.style.textAlign = "center";
+        td_aksi.appendChild(delete_button);
+
+        tr_detail.appendChild(td_select);
+        tr_detail.appendChild(td_dynamic);
+        tr_detail.appendChild(td_exclude);
+        tr_detail.appendChild(qty_max_td);
+        tr_detail.appendChild(qty_min_td);
+        tr_detail.appendChild(qty_akumulasi_td);
+        tr_detail.appendChild(td_aksi);
+        update_promo_kondisi_tbody.appendChild(tr_detail);
+
+        if (jenis_select.value === "brand") {
+          dynamic_select.className = "dynamic-select js-example-basic-multiple";
+          dynamic_select.setAttribute("multiple", "multiple");
+          dynamic_select.setAttribute(
+            "id",
+            `update_jenis_brand${currentIndex}`
+          );
+          exclude_select.setAttribute(
+            "id",
+            `exclude_include_brand${currentIndex}`
+          );
+          qty_min.removeAttribute("disabled");
+          qty_max.removeAttribute("disabled");
+          qty_akumulasi.removeAttribute("disabled");
+          fetch_jenis(
+            "brand",
+            item.kondisi,
+            "update_jenis_brand",
+            currentIndex
+          ); // ← Now that the element exists, fetch the data
+        } else if (jenis_select.value === "customer") {
+          dynamic_select.className = "dynamic-select js-example-basic-multiple";
+          dynamic_select.setAttribute("multiple", "multiple");
+          dynamic_select.setAttribute(
+            "id",
+            `update_jenis_customer${currentIndex}`
+          );
+          exclude_select.setAttribute(
+            "id",
+            `exclude_include_customer${currentIndex}`
+          );
+          qty_akumulasi.setAttribute("disabled", "disabled");
+          qty_max.setAttribute("disabled", "disabled");
+          qty_min.setAttribute("disabled", "disabled");
+
+          fetch_jenis(
+            "customer",
+            item.kondisi,
+            "update_jenis_customer",
+            currentIndex
+          );
+        } else if (jenis_select.value === "produk") {
+          dynamic_select.className = "dynamic-select js-example-basic-multiple";
+          dynamic_select.setAttribute("multiple", "multiple");
+          dynamic_select.setAttribute(
+            "id",
+            `update_jenis_produk${currentIndex}`
+          );
+          exclude_select.setAttribute(
+            "id",
+            `exclude_include_produk${currentIndex}`
+          );
+          qty_akumulasi.setAttribute("disabled", "disabled");
+          qty_max.setAttribute("disabled", "disabled");
+          qty_min.setAttribute("disabled", "disabled");
+          fetch_jenis(
+            "produk",
+            item.kondisi,
+            "update_jenis_produk",
+            currentIndex
+          );
+        } else if (jenis_select.value === "channel") {
+          dynamic_select.className = "dynamic-select js-example-basic-multiple";
+          dynamic_select.setAttribute("multiple", "multiple");
+          dynamic_select.setAttribute(
+            "id",
+            `update_jenis_channel${currentIndex}`
+          );
+          exclude_select.setAttribute(
+            "id",
+            `exclude_include_channel${currentIndex}`
+          );
+          qty_min.removeAttribute("disabled");
+          qty_max.removeAttribute("disabled");
+          qty_akumulasi.removeAttribute("disabled");
+          fetch_jenis(
+            "channel",
+            item.kondisi,
+            "update_jenis_channel",
+            currentIndex
+          );
+        }
+      });
+    } catch (error) {
+      toastr.error("Gagal mengambil data : " + error.message);
+    }
+  }, 200);
 }
 let index = 0;
+
 async function add_field_barang() {
   let currentIndex = index++;
   const tr_bonus_barang = document.createElement("tr");
@@ -594,14 +765,14 @@ async function add_field_barang() {
   const td_select_produk = document.createElement("td");
   const select_produk = document.createElement("select");
   select_produk.className = "form-select";
-  select_produk.setAttribute("id", `bonus_produk${currentIndex}`);
+  select_produk.setAttribute("id", `update_bonus_produk${currentIndex}`);
   td_select_produk.appendChild(select_produk);
 
   const td_jlh_qty = document.createElement("td");
   const jlh_qty = document.createElement("input");
   jlh_qty.className = "form-control";
   jlh_qty.setAttribute("type", "number");
-  jlh_qty.setAttribute("id", `jlh_qty${currentIndex}`);
+  jlh_qty.setAttribute("id", `update_jlh_qty${currentIndex}`);
   td_jlh_qty.appendChild(jlh_qty);
 
   const td_jenis_diskon = document.createElement("td");
@@ -612,7 +783,7 @@ async function add_field_barang() {
   
   `;
   jenis_diskon.className = "form-select";
-  jenis_diskon.setAttribute("id", `jenis_diskon${currentIndex}`);
+  jenis_diskon.setAttribute("id", `update_jenis_diskon${currentIndex}`);
   td_jenis_diskon.appendChild(jenis_diskon);
 
   const td_jumlah_diskon_nominal = document.createElement("td");
@@ -620,7 +791,7 @@ async function add_field_barang() {
   jumlah_diskon_nominal.className = "form-control";
   jumlah_diskon_nominal.setAttribute(
     "id",
-    `jumlah_diskon_nominal${currentIndex}`
+    `update_jumlah_diskon_nominal${currentIndex}`
   );
   jumlah_diskon_nominal.setAttribute("type", "number");
   td_jumlah_diskon_nominal.appendChild(jumlah_diskon_nominal);
@@ -640,7 +811,7 @@ async function add_field_barang() {
   tr_bonus_barang.appendChild(td_aksi);
   update_table_bonus_barang_tbody.appendChild(tr_bonus_barang);
 
-  await fetch_fk("produk", currentIndex, "bonus_produk");
+  await fetch_fk("produk", currentIndex, "update_bonus_produk", "bonus");
 
   delete_promo_kondisi("table_bonus_barang_tbody");
 }
@@ -651,136 +822,66 @@ async function handle_update(button) {
   const spinner = button.querySelector(".spinner_update");
   button_icon.style.display = "none";
   spinner.style.display = "inline-block";
-
-  const promo_id = row.cells[0].textContent;
-  const current_nama = row.cells[1].textContent;
-  let current_tanggal_berlaku = row.cells[2].textContent;
-  let current_tanggal_selesai = row.cells[3].textContent;
-  const jenis_bonus = row.cells[4].textContent;
-  const akumulasi = row.cells[5].textContent;
-  const prioritas = row.cells[6].textContent;
-  const jenis_diskon = row.cells[8].textContent;
-  const jumlah_diskon = row.cells[9].textContent;
-  const quota = row.cells[10].textContent;
-  const status = row.cells[11].textContent;
-
-  current_tanggal_berlaku = helper.unformat_date(current_tanggal_berlaku);
-  const parts_tanggal_berlaku = current_tanggal_berlaku.split("-"); // ["2025", "05", "02"]
-  const tanggal_berlaku = new Date(
-    parts_tanggal_berlaku[0],
-    parts_tanggal_berlaku[1] - 1,
-    parts_tanggal_berlaku[2]
-  );
-  pickdate_tanggal_berlaku.set("select", tanggal_berlaku);
-
-  current_tanggal_selesai = helper.unformat_date(current_tanggal_selesai);
-  const parts_tanggal_selesai = current_tanggal_selesai.split("-"); // ["2025", "05", "02"]
-  const tanggal_selesai = new Date(
-    parts_tanggal_selesai[0],
-    parts_tanggal_selesai[1] - 1,
-    parts_tanggal_selesai[2]
-  );
-  pickdate_tanggal_selesai.set("select", tanggal_selesai);
-
-  document.getElementById("update_promo_id").value = promo_id;
-  document.getElementById("update_nama_promo").value = current_nama;
-  document.getElementById("update_tanggal_berlaku").value =
-    current_tanggal_berlaku;
-
-  document.getElementById("update_tanggal_selesai").value =
-    current_tanggal_selesai;
-  document.getElementById("update_jenis_bonus").value = jenis_bonus;
-  document.getElementById("update_akumulasi").value = akumulasi;
-
-  document.getElementById("update_prioritas").value = prioritas;
-  document.getElementById("update_jenis_diskon").value = jenis_diskon;
-  document.getElementById("update_jumlah_diskon").value = jumlah_diskon;
-  document.getElementById("update_quota").value = quota;
-  document.getElementById("update_status_promo").value = status;
-
-  await fetch_promo(promo_id);
-
-  let jenis_bonus_value = document.getElementById("update_jenis_bonus");
-
-  jenis_bonus_value.addEventListener("change", (event) => {
-    let bonus = jenis_bonus_value.options[jenis_bonus_value.selectedIndex].text;
-    if (bonus === "Barang") {
-      document.getElementById("update_card_promo_3").style.display = "block";
-    } else {
-      document.getElementById("update_card_promo_3").style.display = "none";
-    }
-  });
-
   try {
-    const promo_barang = await apiRequest(
-      `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
-        "user_id"
-      )}`,
-      "POST",
-      { promo_id: promo_id, table: "tb_promo_bonus_barang" }
+    const promo_id = row.cells[0].textContent;
+    const current_nama = row.cells[1].textContent;
+    let current_tanggal_berlaku = row.cells[2].textContent;
+    let current_tanggal_selesai = row.cells[3].textContent;
+    const jenis_bonus = row.cells[4].textContent;
+    const akumulasi = row.cells[5].textContent;
+    const prioritas = row.cells[6].textContent;
+    const jenis_diskon = row.cells[8].textContent;
+    const jumlah_diskon = row.cells[9].textContent;
+    const quota = row.cells[10].textContent;
+    const status = row.cells[11].textContent;
+
+    current_tanggal_berlaku = helper.unformat_date(current_tanggal_berlaku);
+    const parts_tanggal_berlaku = current_tanggal_berlaku.split("-"); // ["2025", "05", "02"]
+    const tanggal_berlaku = new Date(
+      parts_tanggal_berlaku[0],
+      parts_tanggal_berlaku[1] - 1,
+      parts_tanggal_berlaku[2]
     );
-    promo_barang.data.forEach((item) => {
-      let currentIndex = index++;
-      const tr_bonus_barang = document.createElement("tr");
+    pickdate_tanggal_berlaku.set("select", tanggal_berlaku);
 
-      const td_select_produk = document.createElement("td");
-      const select_produk = document.createElement("select");
-      select_produk.className = "form-select";
-      select_produk.setAttribute("id", `bonus_produk${currentIndex}`);
+    current_tanggal_selesai = helper.unformat_date(current_tanggal_selesai);
+    const parts_tanggal_selesai = current_tanggal_selesai.split("-"); // ["2025", "05", "02"]
+    const tanggal_selesai = new Date(
+      parts_tanggal_selesai[0],
+      parts_tanggal_selesai[1] - 1,
+      parts_tanggal_selesai[2]
+    );
+    pickdate_tanggal_selesai.set("select", tanggal_selesai);
 
-      td_select_produk.appendChild(select_produk);
+    document.getElementById("update_promo_id").value = promo_id;
+    document.getElementById("update_nama_promo").value = current_nama;
+    document.getElementById("update_tanggal_berlaku").value =
+      current_tanggal_berlaku;
 
-      const td_jlh_qty = document.createElement("td");
-      const jlh_qty = document.createElement("input");
-      jlh_qty.className = "form-control";
-      jlh_qty.setAttribute("type", "number");
-      jlh_qty.setAttribute("id", `jlh_qty${currentIndex}`);
-      jlh_qty.value = item.qty_bonus;
+    document.getElementById("update_tanggal_selesai").value =
+      current_tanggal_selesai;
+    document.getElementById("update_jenis_bonus").value = jenis_bonus;
+    document.getElementById("update_akumulasi").value = akumulasi;
 
-      td_jlh_qty.appendChild(jlh_qty);
+    document.getElementById("update_prioritas").value = prioritas;
+    document.getElementById("update_jenis_diskon").value = jenis_diskon;
+    document.getElementById("update_jumlah_diskon").value = jumlah_diskon;
+    document.getElementById("update_quota").value = quota;
+    document.getElementById("update_status_promo").value = status;
 
-      const td_jenis_diskon = document.createElement("td");
-      const jenis_diskon = document.createElement("select");
-      jenis_diskon.innerHTML = `
-    <option value="nominal">Nominal</option>
-    <option value="persen">Persen</option>
-  
-  `;
-      jenis_diskon.className = "form-select";
-      jenis_diskon.setAttribute("id", `jenis_diskon${currentIndex}`);
-      jenis_diskon.value = item.jenis_diskon;
+    await fetch_promo(promo_id);
+    await populate_bonus_barang_update_modal(promo_id);
 
-      td_jenis_diskon.appendChild(jenis_diskon);
+    let jenis_bonus_value = document.getElementById("update_jenis_bonus");
 
-      const td_jumlah_diskon_nominal = document.createElement("td");
-      const jumlah_diskon_nominal = document.createElement("input");
-      jumlah_diskon_nominal.className = "form-control";
-      jumlah_diskon_nominal.setAttribute(
-        "id",
-        `jumlah_diskon_nominal${currentIndex}`
-      );
-      jumlah_diskon_nominal.setAttribute("type", "number");
-      jumlah_diskon_nominal.value = item.jlh_diskon;
-      td_jumlah_diskon_nominal.appendChild(jumlah_diskon_nominal);
-
-      const td_aksi = document.createElement("td");
-      const delete_button = document.createElement("button");
-      delete_button.type = "button";
-      delete_button.className = "btn btn-danger btn-sm delete_promo_kondisi";
-      delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
-      td_aksi.style.textAlign = "center";
-      td_aksi.appendChild(delete_button);
-
-      tr_bonus_barang.appendChild(td_select_produk);
-      tr_bonus_barang.appendChild(td_jlh_qty);
-      tr_bonus_barang.appendChild(td_jenis_diskon);
-      tr_bonus_barang.appendChild(td_jumlah_diskon_nominal);
-      tr_bonus_barang.appendChild(td_aksi);
-      update_table_bonus_barang_tbody.appendChild(tr_bonus_barang);
-
-      fetch_fk("produk", currentIndex, "bonus_produk");
-
-      delete_promo_kondisi("update_table_bonus_barang_tbody");
+    jenis_bonus_value.addEventListener("change", (event) => {
+      let bonus =
+        jenis_bonus_value.options[jenis_bonus_value.selectedIndex].text;
+      if (bonus === "Barang") {
+        document.getElementById("update_card_promo_3").style.display = "block";
+      } else {
+        document.getElementById("update_card_promo_3").style.display = "none";
+      }
     });
   } catch (error) {
     toastr.error("Gagal mengambil data : " + error.message);
@@ -813,13 +914,9 @@ if (submit_promo_update) {
     const prioritas = document.getElementById("update_prioritas").value;
     const jenis_diskon = document.getElementById("update_jenis_diskon").value;
     const jumlah_diskon = document.getElementById("update_jumlah_diskon").value;
-
     const status = document.getElementById("update_status_promo").value;
     const quota = document.getElementById("update_quota").value;
-    const qty_bonus = document.getElementById("update_qty_bonus").value;
-    const jlh_diskon_bonus = document.getElementById(
-      "update_diskon_bonus_barang"
-    ).value;
+
     let compare_tanggal = true;
     const startDate = new Date(tanggal_berlaku);
     const endDate = new Date(tanggal_selesai);
@@ -831,6 +928,62 @@ if (submit_promo_update) {
       });
       return;
     }
+    const promo_kondisi = [];
+    const row_kondisi = document.querySelectorAll(
+      "#update_jenis_promo_kondisi_tbody tr"
+    );
+
+    for (const row of row_kondisi) {
+      const jenis_select = row.querySelector("td:nth-child(1) select"); // Jenis
+      const dynamic_select = row.querySelector("td:nth-child(2) select"); // Dynamic
+      const exclude_select = row.querySelector("td:nth-child(3) select"); // Include/Exclude
+      const qty_max = row.querySelector("td:nth-child(4) input"); // Qty Max
+      const qty_min = row.querySelector("td:nth-child(5) input"); // Qty Min
+      const qty_akumulasi = row.querySelector("td:nth-child(6) input"); // Qty Akumulasi
+
+      const selected_jenis = jenis_select?.value || "";
+      const selected_dynamic = Array.from(
+        dynamic_select?.selectedOptions || []
+      ).map((opt) => opt.value);
+      const exclude_option = exclude_select?.value || "";
+      const min = qty_min?.value || "";
+      const max = qty_max?.value || "";
+      const akumulasi = qty_akumulasi?.value || "";
+
+      promo_kondisi.push({
+        jenis_kondisi: selected_jenis,
+        kondisi: selected_dynamic,
+        exclude_include: exclude_option,
+        qty_min: min,
+        qty_max: max,
+        qty_akumulasi: akumulasi,
+      });
+    }
+    console.log(promo_kondisi);
+    const promo_bonus_barang = [];
+    const row_bonus_barang = document.querySelectorAll(
+      "#update_table_bonus_barang_tbody tr"
+    );
+
+    for (const row of row_bonus_barang) {
+      const produk_select = row.querySelector("td:nth-child(1) select");
+      const jumlah_qty = row.querySelector("td:nth-child(2) input");
+      const jenis_diskon = row.querySelector("td:nth-child(3) select");
+      const jumlah_diskon_nominal = row.querySelector("td:nth-child(4) input");
+
+      const produk = produk_select?.value;
+      const qty = jumlah_qty?.value?.trim();
+      const diskon = jenis_diskon?.value;
+      const jlh_diskon_nominal = jumlah_diskon_nominal?.value?.trim();
+
+      promo_bonus_barang.push({
+        produk_id: produk,
+        qty_bonus: qty,
+        jenis_diskon: diskon,
+        jlh_diskon: jlh_diskon_nominal,
+      });
+    }
+    console.log(promo_bonus_barang);
 
     if (
       helper.validateField(
@@ -853,8 +1006,8 @@ if (submit_promo_update) {
           jumlah_diskon: jumlah_diskon,
           status: status,
           quota: quota,
-          qty_bonus: qty_bonus,
-          diskon_bonus_barang: jlh_diskon_bonus,
+          promo_kondisi: promo_kondisi,
+          promo_bonus_barang: promo_bonus_barang,
         };
 
         const response = await apiRequest(

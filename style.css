@@ -429,6 +429,13 @@ h3 {
 .card {
   margin-bottom: 1rem !important;
 }
+
+#promo_kondisi_card_body,
+#promo_bonus_card_body,
+#update_promo_kondisi_card_body,
+#update_promo_bonus_card_body {
+  overflow: auto;
+}
 @font-face {
   font-family: "Roboto";
   src: url("/DMS/Vendor/fonts/Roboto/static/Roboto-Regular.ttf") format("woff2"),

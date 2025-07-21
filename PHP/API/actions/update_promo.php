@@ -10,26 +10,42 @@ try {
     $conn->begin_transaction();
 
     // Required fields
-    $requiredFields = ['promo_id', 'nama', 'tanggal_berlaku', 'tanggal_selesai'];
+    $requiredFields = [
+        'promo_id',
+        'nama',
+        'tanggal_berlaku',
+        'tanggal_selesai',
+        'jenis_bonus',
+        'akumulasi',
+        'prioritas',
+        'jenis_diskon',
+        'status',
+        'quota',
+    ];
     $fields = validate_1($data, $requiredFields);
+
 
     // Extract and sanitize input
     $promo_id = $fields['promo_id'];
     $nama = $fields['nama'];
     $tanggal_berlaku = $fields['tanggal_berlaku'];
     $tanggal_selesai = $fields['tanggal_selesai'];
-    $jenis_bonus = $data['jenis_bonus'] ?? 'barang';
-    $akumulasi = $data['akumulasi'] ?? '';
-    $prioritas = $data['prioritas'] ?? '';
-    $jenis_diskon = $data['jenis_diskon'] ?? '';
-    $jumlah_diskon = $data['jumlah_diskon'] ?? '';
-    $status = $data['status'] ?? 'aktif';
-    $quota = $data['quota'] ?? '';
+    $jenis_bonus = $fields['jenis_bonus'] ?? 'barang';
+    $akumulasi = $fields['akumulasi'] ?? '';
+    $prioritas = $fields['prioritas'] ?? '';
+    $jenis_diskon = $fields['jenis_diskon'] ?? '';
+    $jumlah_diskon = $fields['jumlah_diskon'] ?? '';
+    $status = $fields['status'];
+    $quota = $fields['quota'] ?? '';
     $promo_kondisi = $data['promo_kondisi'] ?? [];
     $promo_bonus_barang = $data['promo_bonus_barang'] ?? [];
 
     // Basic input validation
     validate_2($nama, '/^[a-zA-Z0-9\s]+$/', "Format nama tidak valid");
+    validate_2($prioritas, '/^\d+$/', "Format prioritas tidak valid");
+    validate_2($jumlah_diskon, '/^\d+$/', "Format jumlah diskon tidak valid");
+    validate_2($quota, '/^\d+$/', "Format quota tidak valid");
+
 
     // Update main promo
     $stmt = $conn->prepare("UPDATE tb_promo SET 

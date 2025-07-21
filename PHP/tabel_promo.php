@@ -49,7 +49,7 @@
                                             <option value="tidak">Tidak</option>
                                         </select>
                                         <label class="form-label mb-0 mt-2" for="quota">Quota:</label>
-                                        <input class="form-control" type="number" id="quota">
+                                        <input class="form-control" type="number" min="0" id="quota">
                                     </div>
                                 </div>
                             </div>
@@ -58,7 +58,7 @@
                     <div class="col">
                         <div class="card">
                             <div class="card-header">Promo Kondisi</div>
-                            <div class="card-body">
+                            <div class="card-body" id="promo_kondisi_card_body">
                                 <button class="btn btn-primary btn-sm mb-2" id="promo_kondisi_button">
                                     <i class="bi bi-plus-circle"></i> Tambah
                                 </button>
@@ -67,16 +67,15 @@
                                     id="jenis_promo_kondisi">
                                     <thead id="jenis_promo_kondisi_thead">
                                         <tr>
-                                            <th style="width :150px" scope="col">Jenis</th>
-                                            <th style="width:350px" scope="col">Kondisi</th>
-                                            <th style="width: 150px;" scope="col">Exclude/Include</th>
+                                            <th>Jenis</th>
+                                            <th>Kondisi</th>
+                                            <th>Exclude/Include</th>
                                             <th>Qty Min</th>
                                             <th>Qty Max</th>
                                             <th>Qty Akumulasi</th>
-                                            <th style="width: 50px;" scope="col">Aksi</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
-
                                     <tbody id="jenis_promo_kondisi_tbody">
                                     </tbody>
                                 </table>
@@ -86,7 +85,7 @@
                     </div>
                     <div class="card" id="card_promo_3">
                         <div class="card-header">Promo Bonus Barang</div>
-                        <div class="card-body">
+                        <div class="card-body" id="promo_bonus_card_body">
                             <button class="btn btn-primary btn-sm mb-2" id="promo_bonus_barang_button">
                                 <i class="bi bi-plus-circle"></i> Tambah
                             </button>
@@ -137,7 +136,7 @@
                                         <label class="form-label" for="update_nama_promo">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input class="form-control" type="text" id="update_nama_promo" name="update_nama_promo" value="">
                                         <label class="form-label mb-0 mt-2" for="update_tanggal_berlaku">Tanggal Berlaku:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <input type="text" class="form-control" id="update_tanggal_berlaku" name="update_tanggal_berlaku" />
+                                        <input type="text" class="form-control" id="update_tanggal_berlaku" name="update_tanggal_berlaku" data-value="<?php echo date('Y-m-d') ?>" />
                                         <label class="form-label mb-0 mt-2" for="update_tanggal_selesai">Tanggal Selesai:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input type="text" class="form-control" id="update_tanggal_selesai" name="update_tanggal_selesai" />
                                         <label class="form-label mb-0 mt-2" for="update_jenis_bonus">Jenis Bonus:<i class="bi bi-asterisk text-danger align-middle "></i></label>
@@ -145,7 +144,7 @@
                                             <option value="barang">Barang</option>
                                             <option value="nominal">Nominal</option>
                                         </select>
-                                        <label class="form-label mb-0 mt-2" for="update_status_promo">Status:</label>
+                                        <label class="form-label mb-0 mt-2" for="update_status_promo">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="update_status_promo">
                                             <option value="aktif">Aktif</option>
                                             <option value="nonaktif">Non Aktif</option>
@@ -168,8 +167,8 @@
                                             <option value="ya">Ya</option>
                                             <option value="tidak">Tidak</option>
                                         </select>
-                                        <label class="form-label mb-0 mt-2" for="update_quota">Quota:</label>
-                                        <input class="form-control" type="number" id="update_quota">
+                                        <label class="form-label mb-0 mt-2" for="update_quota">Quota:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <input class="form-control" type="number" min="0" id="update_quota">
                                     </div>
                                 </div>
                             </div>
@@ -178,7 +177,7 @@
                     <div class="col">
                         <div class="card">
                             <div class="card-header">Promo Kondisi</div>
-                            <div class="card-body">
+                            <div class="card-body" id="update_promo_kondisi_card_body">
                                 <button class="btn btn-primary btn-sm mb-2" id="update_promo_kondisi_barang_button">
                                     <i class="bi bi-plus-circle"></i> Tambah
                                 </button>
@@ -187,13 +186,13 @@
                                     id="update_jenis_promo_kondisi">
                                     <thead id="update_jenis_promo_kondisi_thead">
                                         <tr>
-                                            <th style="width :150px" scope="col">Jenis</th>
-                                            <th style="width:350px" scope="col">Kondisi</th>
-                                            <th style="width: 150px;" scope="col">Exclude/Include</th>
+                                            <th>Jenis</th>
+                                            <th>Kondisi</th>
+                                            <th>Exclude/Include</th>
                                             <th>Qty Min</th>
                                             <th>Qty Max</th>
                                             <th>Qty Akumulasi</th>
-                                            <th style="width: 50px;" scope="col">Aksi</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
 
@@ -206,7 +205,7 @@
                     </div>
                     <div class="card" id="update_card_promo_3">
                         <div class="card-header">Promo_3</div>
-                        <div class="card-body">
+                        <div class="card-body" id="update_promo_bonus_card_body">
                             <button class="btn btn-primary btn-sm mb-2" id="update_promo_bonus_barang_button">
                                 <i class="bi bi-plus-circle"></i> Tambah
                             </button>

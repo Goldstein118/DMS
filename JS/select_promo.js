@@ -129,7 +129,13 @@ if (grid_container_promo) {
           item.jenis_diskon,
           item.jumlah_diskon,
           item.quota,
-          item.status,
+          html(`
+          ${
+            item.status === "aktif"
+              ? `<span class="badge text-bg-success">Aktif</span>`
+              : `<span class="badge text-bg-danger">Non Aktif</span>`
+          }
+          `),
           null,
         ]),
     },
@@ -143,6 +149,9 @@ if (grid_container_promo) {
 
 async function populate_bonus_barang_update_modal(promo_id) {
   update_table_bonus_barang_tbody.innerHTML = "";
+  console.log(update_table_bonus_barang_tbody);
+  console.log("Called populate_bonus_barang_update_modal with ID:", promo_id);
+
   index = 0;
   setTimeout(async () => {
     const promo_barang = await apiRequest(
@@ -168,6 +177,7 @@ async function populate_bonus_barang_update_modal(promo_id) {
       const jlh_qty = document.createElement("input");
       jlh_qty.className = "form-control";
       jlh_qty.setAttribute("type", "number");
+      jlh_qty.setAttribute("min", "0");
       jlh_qty.setAttribute("id", `update_jlh_qty${currentIndex}`);
       jlh_qty.value = item.qty_bonus;
 
@@ -194,6 +204,7 @@ async function populate_bonus_barang_update_modal(promo_id) {
         `update_jumlah_diskon_nominal${currentIndex}`
       );
       jumlah_diskon_nominal.setAttribute("type", "number");
+      jumlah_diskon_nominal.setAttribute("min", "0");
       jumlah_diskon_nominal.value = item.jlh_diskon;
       td_jumlah_diskon_nominal.appendChild(jumlah_diskon_nominal);
 
@@ -218,9 +229,8 @@ async function populate_bonus_barang_update_modal(promo_id) {
         "update_bonus_produk",
         current_produk_id
       );
-
-      delete_promo_kondisi("update_table_bonus_barang_tbody");
     });
+    delete_promo_kondisi("update_table_bonus_barang_tbody");
   }, 200);
 }
 
@@ -342,9 +352,10 @@ function add_field_kondisi(myTable) {
         "id",
         `exclude_include_produk${currentIndex}`
       );
-      qty_akumulasi.setAttribute("disabled", "disabled");
-      qty_max.setAttribute("disabled", "disabled");
-      qty_min.setAttribute("disabled", "disabled");
+      qty_min.removeAttribute("disabled");
+      qty_max.removeAttribute("disabled");
+      qty_akumulasi.removeAttribute("disabled");
+
       fetch_fk("produk", currentIndex, "update_jenis_produk");
     } else if (jenis_select.value === "channel") {
       dynamic_select.className = "dynamic-select js-example-basic-multiple";
@@ -354,9 +365,9 @@ function add_field_kondisi(myTable) {
         "id",
         `exclude_include_channel${currentIndex}`
       );
-      qty_min.removeAttribute("disabled");
-      qty_max.removeAttribute("disabled");
-      qty_akumulasi.removeAttribute("disabled");
+      qty_akumulasi.setAttribute("disabled", "disabled");
+      qty_max.setAttribute("disabled", "disabled");
+      qty_min.setAttribute("disabled", "disabled");
       fetch_fk("channel", currentIndex, "update_jenis_channel");
     }
   });
@@ -720,9 +731,9 @@ async function fetch_promo(promo_id) {
             "id",
             `exclude_include_produk${currentIndex}`
           );
-          qty_akumulasi.setAttribute("disabled", "disabled");
-          qty_max.setAttribute("disabled", "disabled");
-          qty_min.setAttribute("disabled", "disabled");
+          qty_min.removeAttribute("disabled");
+          qty_max.removeAttribute("disabled");
+          qty_akumulasi.removeAttribute("disabled");
           fetch_jenis(
             "produk",
             item.kondisi,
@@ -740,9 +751,10 @@ async function fetch_promo(promo_id) {
             "id",
             `exclude_include_channel${currentIndex}`
           );
-          qty_min.removeAttribute("disabled");
-          qty_max.removeAttribute("disabled");
-          qty_akumulasi.removeAttribute("disabled");
+
+          qty_akumulasi.setAttribute("disabled", "disabled");
+          qty_max.setAttribute("disabled", "disabled");
+          qty_min.setAttribute("disabled", "disabled");
           fetch_jenis(
             "channel",
             item.kondisi,
@@ -833,7 +845,12 @@ async function handle_update(button) {
     const jenis_diskon = row.cells[8].textContent;
     const jumlah_diskon = row.cells[9].textContent;
     const quota = row.cells[10].textContent;
-    const status = row.cells[11].textContent;
+    const status = row.cells[11]
+      .querySelector(".badge")
+      ?.textContent.trim()
+      .toLowerCase()
+      .replace(/\s/g, "");
+    console.log(status);
 
     current_tanggal_berlaku = helper.unformat_date(current_tanggal_berlaku);
     const parts_tanggal_berlaku = current_tanggal_berlaku.split("-"); // ["2025", "05", "02"]
@@ -869,14 +886,19 @@ async function handle_update(button) {
     document.getElementById("update_quota").value = quota;
     document.getElementById("update_status_promo").value = status;
 
-    await fetch_promo(promo_id);
-    await populate_bonus_barang_update_modal(promo_id);
+    populate_bonus_barang_update_modal(promo_id);
 
-    let jenis_bonus_value = document.getElementById("update_jenis_bonus");
+    fetch_promo(promo_id);
 
-    jenis_bonus_value.addEventListener("change", (event) => {
-      let bonus =
-        jenis_bonus_value.options[jenis_bonus_value.selectedIndex].text;
+    const jenis_bonus_value = document.getElementById("update_jenis_bonus");
+
+    // Optional: remove existing event listeners by replacing the node
+    const newJenisBonus = jenis_bonus_value.cloneNode(true);
+    jenis_bonus_value.parentNode.replaceChild(newJenisBonus, jenis_bonus_value);
+
+    // Add event listener to new element
+    newJenisBonus.addEventListener("change", (event) => {
+      let bonus = newJenisBonus.options[newJenisBonus.selectedIndex].text;
       if (bonus === "Barang") {
         document.getElementById("update_card_promo_3").style.display = "block";
       } else {
@@ -950,6 +972,24 @@ if (submit_promo_update) {
       const max = qty_max?.value || "";
       const akumulasi = qty_akumulasi?.value || "";
 
+      if (
+        !selected_jenis ||
+        selected_jenis.trim() === "" ||
+        selected_dynamic.length === 0 ||
+        !exclude_option ||
+        exclude_option.trim() === ""
+      ) {
+        toastr.error("Semua field pada promo kondisi wajib diisi.");
+        return;
+      }
+
+      if (
+        (selected_jenis === "brand" || selected_jenis === "channel") &&
+        (!min || !max || !akumulasi)
+      ) {
+        toastr.error("Field qty pada brand/channel wajib diisi.");
+        return;
+      }
       promo_kondisi.push({
         jenis_kondisi: selected_jenis,
         kondisi: selected_dynamic,
@@ -975,6 +1015,19 @@ if (submit_promo_update) {
       const qty = jumlah_qty?.value?.trim();
       const diskon = jenis_diskon?.value;
       const jlh_diskon_nominal = jumlah_diskon_nominal?.value?.trim();
+      if (
+        !produk ||
+        produk.trim() === "" ||
+        !qty ||
+        qty.trim() === "" ||
+        !diskon ||
+        diskon.trim() === "" ||
+        !jlh_diskon_nominal ||
+        jlh_diskon_nominal.trim() === ""
+      ) {
+        toastr.error("Semua field pada promo bonus barang wajib diisi.");
+        return;
+      }
 
       promo_bonus_barang.push({
         produk_id: produk,
@@ -984,15 +1037,24 @@ if (submit_promo_update) {
       });
     }
     console.log(promo_bonus_barang);
-
-    if (
+    const validate_input =
       helper.validateField(
         nama_new,
         /^[a-zA-Z0-9\s]+$/,
         "Format nama tidak valid"
       ) &&
-      compare_tanggal
-    ) {
+      helper.validateField(
+        prioritas,
+        /^\d+$/,
+        "Format prioritas tidak valid"
+      ) &&
+      helper.validateField(
+        jumlah_diskon,
+        /^\d+$/,
+        "Format jumlah diskon tidak valid"
+      ) &&
+      helper.validateField(quota, /^\d+$/, "Format quota tidak valid");
+    if (validate_input && compare_tanggal) {
       try {
         const data_promo_update = {
           promo_id: promo_id,

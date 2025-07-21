@@ -1,20 +1,35 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
 try {
-    $requiredFields = ['nama', 'tanggal_berlaku', 'tanggal_selesai'];
+    $requiredFields = [
+        'promo_id',
+        'nama',
+        'tanggal_berlaku',
+        'tanggal_selesai',
+        'jenis_bonus',
+        'akumulasi',
+        'prioritas',
+        'jenis_diskon',
+        'status',
+        'quota',
+    ];
     $field = validate_1($data, $requiredFields);
     $nama = $field['nama'];
     $tanggal_berlaku = $field['tanggal_berlaku'];
     $tanggal_selesai = $field['tanggal_selesai'];
-    $jenis_bonus = $data['jenis_bonus'];
-    $akumulasi = $data['akumulasi'];
-    $prioritas = $data['prioritas'];
-    $jenis_diskon = $data['jenis_diskon'];
-    $jumlah_diskon = $data['jumlah_diskon'];
-    $status_promo = $data['status_promo'];
-    $quota = $data['quota'];
+    $jenis_bonus = $field['jenis_bonus'];
+    $akumulasi = $field['akumulasi'];
+    $prioritas = $field['prioritas'];
+    $jenis_diskon = $field['jenis_diskon'];
+    $jumlah_diskon = $field['jumlah_diskon'];
+    $status_promo = $field['status_promo'];
+    $quota = $field['quota'];
 
-    validate_2($nama, '/^[a-zA-Z0-9\s]+$/', "Invalid name format");
+    validate_2($nama, '/^[a-zA-Z0-9\s]+$/', "Format nama tidak valid");
+    validate_2($prioritas, '/^\d+$/', "Format prioritas tidak valid");
+    validate_2($jumlah_diskon, '/^\d+$/', "Format jumlah diskon tidak valid");
+    validate_2($quota, '/^\d+$/', "Format quota tidak valid");
+
 
     $promo_id = generateCustomID('PRO', 'tb_promo', 'promo_id', $conn);
     executeInsert(

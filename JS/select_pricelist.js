@@ -210,8 +210,8 @@ async function handle_update(button) {
     .querySelector(".badge")
     ?.textContent.trim()
     .toLowerCase()
-    .replace(/\s/g, " ");
-
+    .replace(/\s/g, "");
+  console.log(current_status);
   // Populate the modal fields
   document.getElementById("update_pricelist_id").value = pricelist_id;
   document.getElementById("update_name_pricelist").value = current_nama;
@@ -365,15 +365,10 @@ if (submit_pricelist_update) {
       );
 
       if (response.ok) {
-        row.cells[1].textContent = update_pricelist_nama;
-        row.cells[2].textContent = update_harga_default;
-        row.cells[3].textContent = update_status;
-        row.cells[4].textContent = update_tanggal_berlaku;
-
         $("#update_modal_pricelist").modal("hide");
         Swal.fire("Berhasil", response.message, "success");
 
-        if (window.pricelist_grid) window.pricelist_grid.forceRender();
+        window.pricelist_grid.forceRender();
         setTimeout(() => {
           helper.custom_grid_header("pricelist", handle_delete, handle_update);
         }, 200);

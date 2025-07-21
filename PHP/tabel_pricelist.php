@@ -13,7 +13,7 @@
                         <input class="form-control" type="text" id="name_pricelist" name="name_pricelist" value="">
 
                         <label class="form-label mb-0 mt-2" for="tanggal_berlaku">Tanggal Berlaku:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                        <input type="text" class="form-control" id="tanggal_berlaku" name="tanggal_berlaku"/>
+                        <input type="text" class="form-control" id="tanggal_berlaku" name="tanggal_berlaku" />
                     </div>
                     <div class="col">
                         <label class="form-label mb-0 mt-2" for="default_pricelist">Harga Default:<i class="bi bi-asterisk text-danger align-middle "></i></label>
@@ -25,7 +25,7 @@
                         <label class="form-label mb-0 mt-2" for="status_pricelist">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                         <select class="form-select" id="status_pricelist">
                             <option value="aktif">Aktif</option>
-                            <option value="non aktif">Non Aktif</option>
+                            <option value="nonaktif">Non Aktif</option>
                         </select>
                     </div>
                 </div>
@@ -104,20 +104,20 @@
                                         <th scope="col">
                                             Kode
                                         </th>
-                                        <td id =view_pricelist_id></td>
+                                        <td id=view_pricelist_id></td>
                                     </tr>
                                     <tr>
                                         <th scope="col">
                                             Status
                                         </th>
-                                        <td id =view_status></td>
+                                        <td id=view_status></td>
                                     </tr>
                                     <tr>
                                         <th scope="col">
                                             Tanggal Berlaku
                                         </th>
                                         <td id="view_tanggal_berlaku"></td>
-                                        
+
                                     </tr>
                                     <tr>
                                         <th scope="col">
@@ -126,7 +126,7 @@
                                         <td id="view_harga_default"></td>
                                     </tr>
                                 </tbody>
-                                
+
                             </table>
                         </small>
                     </div>
@@ -193,7 +193,7 @@
                         <label class="form-label mb-0 mt-2" for="update_status_pricelist">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                         <select class="form-select" id="update_status_pricelist">
                             <option value="aktif">Aktif</option>
-                            <option value="non aktif">Non Aktif</option>
+                            <option value="nonaktif">Non Aktif</option>
                         </select>
                     </div>
                 </div>

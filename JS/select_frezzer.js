@@ -168,7 +168,12 @@ async function handle_update(button) {
   const frezzer_id = row.cells[0].textContent;
   const kode_barcode = row.cells[1].textContent;
   const tipe = row.cells[2].textContent;
-  const status = row.cells[3].textContent;
+  const status = row.cells[3]
+    .querySelector(".badge")
+    ?.textContent.trim()
+    .toLowerCase()
+    .replace(/\s/g, "");
+  console.log(status);
   const merek = row.cells[4].textContent;
   const size = row.cells[5].textContent;
   document.getElementById("update_frezzer_id").value = frezzer_id;

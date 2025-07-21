@@ -175,9 +175,9 @@ function add_field_kondisi(myTable) {
         "id",
         `exclude_include_produk${currentIndex}`
       );
-      qty_akumulasi.setAttribute("disabled", "disabled");
-      qty_max.setAttribute("disabled", "disabled");
-      qty_min.setAttribute("disabled", "disabled");
+      qty_min.removeAttribute("disabled");
+      qty_max.removeAttribute("disabled");
+      qty_akumulasi.removeAttribute("disabled");
       fetch_fk("produk", currentIndex, "jenis_produk");
     } else if (jenis_select.value === "channel") {
       dynamic_select.className = "dynamic-select js-example-basic-multiple";
@@ -187,9 +187,9 @@ function add_field_kondisi(myTable) {
         "id",
         `exclude_include_channel${currentIndex}`
       );
-      qty_min.removeAttribute("disabled");
-      qty_max.removeAttribute("disabled");
-      qty_akumulasi.removeAttribute("disabled");
+      qty_akumulasi.setAttribute("disabled", "disabled");
+      qty_max.setAttribute("disabled", "disabled");
+      qty_min.setAttribute("disabled", "disabled");
       fetch_fk("channel", currentIndex, "jenis_channel");
     }
   });
@@ -209,6 +209,7 @@ async function add_field_barang() {
   const jlh_qty = document.createElement("input");
   jlh_qty.className = "form-control";
   jlh_qty.setAttribute("type", "number");
+  jlh_qty.setAttribute("min", "0");
   jlh_qty.setAttribute("id", `jlh_qty${currentIndex}`);
   td_jlh_qty.appendChild(jlh_qty);
 
@@ -231,6 +232,7 @@ async function add_field_barang() {
     `jumlah_diskon_nominal${currentIndex}`
   );
   jumlah_diskon_nominal.setAttribute("type", "number");
+  jumlah_diskon_nominal.setAttribute("min", "0");
   td_jumlah_diskon_nominal.appendChild(jumlah_diskon_nominal);
 
   const td_aksi = document.createElement("td");
@@ -359,15 +361,32 @@ async function submitPromo() {
     const qty_min = row.querySelector("td:nth-child(5) input"); // Qty Min
     const qty_akumulasi = row.querySelector("td:nth-child(6) input"); // Qty Akumulasi
 
-    const selected_jenis = jenis_select?.value || "";
-    const selected_dynamic = Array.from(
-      dynamic_select?.selectedOptions || []
-    ).map((opt) => opt.value);
-    const exclude_option = exclude_select?.value || "";
-    const min = qty_min?.value || "";
-    const max = qty_max?.value || "";
-    const akumulasi = qty_akumulasi?.value || "";
+    const selected_jenis = jenis_select?.value?.trim();
+    const selected_dynamic = Array.from(dynamic_select?.selectedOptions || [])
+      .map((opt) => opt.value)
+      .filter(Boolean);
+    const exclude_option = exclude_select?.value?.trim();
+    const min = qty_min?.value?.trim();
+    const max = qty_max?.value?.trim();
+    const akumulasi = qty_akumulasi?.value?.trim();
 
+    if (
+      !selected_jenis ||
+      selected_jenis.trim() === "" ||
+      selected_dynamic.length === 0 ||
+      !exclude_option ||
+      exclude_option.trim() === ""
+    ) {
+      toastr.error("Semua field pada promo kondisi wajib diisi.");
+      return;
+    }
+    if (
+      (selected_jenis === "brand" || selected_jenis === "channel") &&
+      (!min || !max || !akumulasi)
+    ) {
+      toastr.error("Field qty pada brand/channel wajib diisi.");
+      return;
+    }
     promo_kondisi.push({
       jenis_kondisi: selected_jenis,
       kondisi: selected_dynamic,
@@ -378,7 +397,7 @@ async function submitPromo() {
     });
   }
 
-  console.log(promo_kondisi);
+  // console.log(promo_kondisi);
   const promo_bonus_barang = [];
   const row_bonus_barang = document.querySelectorAll(
     "#table_bonus_barang_tbody tr"
@@ -395,6 +414,20 @@ async function submitPromo() {
     const diskon = jenis_diskon?.value;
     const jlh_diskon_nominal = jumlah_diskon_nominal?.value?.trim();
 
+    if (
+      !produk ||
+      produk.trim() === "" ||
+      !qty ||
+      qty.trim() === "" ||
+      !diskon ||
+      diskon.trim() === "" ||
+      !jlh_diskon_nominal ||
+      jlh_diskon_nominal.trim() === ""
+    ) {
+      toastr.error("Semua field pada promo bonus barang wajib diisi.");
+      return;
+    }
+
     promo_bonus_barang.push({
       produk_id: produk,
       qty_bonus: qty,
@@ -402,7 +435,7 @@ async function submitPromo() {
       jlh_diskon: jlh_diskon_nominal,
     });
   }
-  console.log(promo_bonus_barang);
+  // console.log(promo_bonus_barang);
   if (
     !nama ||
     nama.trim() === "" ||
@@ -411,9 +444,24 @@ async function submitPromo() {
     !tanggal_selesai ||
     tanggal_selesai.trim() === "" ||
     !jenis_bonus ||
-    jenis_bonus.trim() === ""
+    jenis_bonus.trim() === "" ||
+    !akumulasi ||
+    akumulasi.trim() === "" ||
+    !prioritas ||
+    prioritas.trim() === "" ||
+    !jenis_diskon ||
+    jenis_diskon.trim() === "" ||
+    !jumlah_diskon ||
+    jumlah_diskon.trim() === "" ||
+    !status_promo ||
+    status_promo.trim() === "" ||
+    !quota ||
+    quota.trim() === ""
   ) {
     toastr.error("Kolom * wajib diisi.");
+    return;
+  }
+  if (promo_kondisi.length === 0 || promo_bonus_barang.length === 0) {
     return;
   }
   let compare_tanggal = true;
@@ -427,7 +475,17 @@ async function submitPromo() {
     });
     return;
   }
-  if (compare_tanggal) {
+  const validate_input =
+    helper.validateField(nama, /^[a-zA-Z0-9\s]+$/, "Format nama tidak valid") &&
+    helper.validateField(prioritas, /^\d+$/, "Format prioritas tidak valid") &&
+    helper.validateField(
+      jumlah_diskon,
+      /^\d+$/,
+      "Format jumlah diskon tidak valid"
+    ) &&
+    helper.validateField(quota, /^\d+$/, "Format quota tidak valid");
+
+  if (validate_input && compare_tanggal) {
     const data_promo = {
       user_id: `${access.decryptItem("user_id")}`,
       nama: nama,

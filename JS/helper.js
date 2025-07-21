@@ -11,12 +11,15 @@ export function custom_grid_header(
 
   const search_Box = grid_header.querySelector(".gridjs-search");
   if (!search_Box) return;
+  let btn;
+  if (field != "frezzer") {
+    btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn btn-primary btn-sm";
+    btn.setAttribute("data-bs-toggle", "modal");
+    btn.setAttribute("data-bs-target", `#modal_${field}`);
+  }
 
-  const btn = document.createElement("button");
-  btn.type = "button";
-  btn.className = "btn btn-primary btn-sm";
-  btn.setAttribute("data-bs-toggle", "modal");
-  btn.setAttribute("data-bs-target", `#modal_${field}`);
   if (
     field === "karyawan" ||
     field === "user" ||
@@ -26,14 +29,18 @@ export function custom_grid_header(
   ) {
     btn.innerHTML = `<i class="bi bi-person-plus-fill"></i> ${field}`;
   } else {
-    btn.innerHTML = `<i class="bi bi-plus-circle"></i> ${field}`;
+    if (field != "frezzer") {
+      btn.innerHTML = `<i class="bi bi-plus-circle"></i> ${field}`;
+    }
   }
 
   const wrapper = document.createElement("div");
   wrapper.className = "d-flex justify-content-between align-items-center mb-3";
 
   if (access.hasAccess(`tb_${field}`, "create")) {
-    wrapper.appendChild(btn);
+    if (field != "frezzer") {
+      wrapper.appendChild(btn);
+    }
   }
 
   wrapper.appendChild(search_Box);
@@ -53,34 +60,46 @@ export function custom_grid_header(
   $("#loading_spinner").fadeOut();
   // Attach event listener after header is rebuilt
   if (field == "pricelist" || field == "produk") {
-    document
-      .getElementById(`table_${field}`)
-      .addEventListener("click", function (event) {
-        const delete_btn = event.target.closest(`.delete_${field}`);
-        const update_btn = event.target.closest(`.update_${field}`);
-        const view_btn = event.target.closest(`.view_${field}`);
+    const tableElement = document.getElementById(`table_${field}`);
+    const handler = function (event) {
+      const delete_btn = event.target.closest(`.delete_${field}`);
+      const update_btn = event.target.closest(`.update_${field}`);
+      const view_btn = event.target.closest(`.view_${field}`);
 
-        if (delete_btn && typeof handle_delete === "function") {
-          handle_delete(delete_btn);
-        } else if (update_btn && typeof handle_update === "function") {
-          handle_update(update_btn);
-        } else if (view_btn && typeof handle_view === "function") {
-          handle_view(view_btn);
-        }
-      });
+      if (delete_btn && typeof handle_delete === "function") {
+        handle_delete(delete_btn);
+      } else if (update_btn && typeof handle_update === "function") {
+        handle_update(update_btn);
+      } else if (view_btn && typeof handle_view === "function") {
+        handle_view(view_btn);
+      }
+    };
+
+    // First remove any previously attached listeners by replacing the node
+    const newTableElement = tableElement.cloneNode(true);
+    tableElement.parentNode.replaceChild(newTableElement, tableElement);
+
+    // Now attach the listener
+    newTableElement.addEventListener("click", handler);
   } else {
-    document
-      .getElementById(`table_${field}`)
-      .addEventListener("click", function (event) {
-        const delete_btn = event.target.closest(`.delete_${field}`);
-        const update_btn = event.target.closest(`.update_${field}`);
+    const tableElement = document.getElementById(`table_${field}`);
+    const handler = function (event) {
+      const delete_btn = event.target.closest(`.delete_${field}`);
+      const update_btn = event.target.closest(`.update_${field}`);
 
-        if (delete_btn && typeof handle_delete === "function") {
-          handle_delete(delete_btn);
-        } else if (update_btn && typeof handle_update === "function") {
-          handle_update(update_btn);
-        }
-      });
+      if (delete_btn && typeof handle_delete === "function") {
+        handle_delete(delete_btn);
+      } else if (update_btn && typeof handle_update === "function") {
+        handle_update(update_btn);
+      }
+    };
+
+    // First remove any previously attached listeners by replacing the node
+    const newTableElement = tableElement.cloneNode(true);
+    tableElement.parentNode.replaceChild(newTableElement, tableElement);
+
+    // Now attach the listener
+    newTableElement.addEventListener("click", handler);
   }
 }
 

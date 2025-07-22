@@ -872,12 +872,9 @@ async function handle_update(button) {
 
     document.getElementById("update_promo_id").value = promo_id;
     document.getElementById("update_nama_promo").value = current_nama;
-    document.getElementById("update_tanggal_berlaku").value =
-      current_tanggal_berlaku;
 
-    document.getElementById("update_tanggal_selesai").value =
-      current_tanggal_selesai;
     document.getElementById("update_jenis_bonus").value = jenis_bonus;
+    console.log(jenis_bonus);
     document.getElementById("update_akumulasi").value = akumulasi;
 
     document.getElementById("update_prioritas").value = prioritas;
@@ -895,14 +892,19 @@ async function handle_update(button) {
     // Optional: remove existing event listeners by replacing the node
     const newJenisBonus = jenis_bonus_value.cloneNode(true);
     jenis_bonus_value.parentNode.replaceChild(newJenisBonus, jenis_bonus_value);
+    newJenisBonus.value = jenis_bonus;
 
     // Add event listener to new element
     newJenisBonus.addEventListener("change", (event) => {
       let bonus = newJenisBonus.options[newJenisBonus.selectedIndex].text;
       if (bonus === "Barang") {
         document.getElementById("update_card_promo_3").style.display = "block";
+        document.getElementById("update_toggle_jenis_bonus").style.display =
+          "none";
       } else {
         document.getElementById("update_card_promo_3").style.display = "none";
+        document.getElementById("update_toggle_jenis_bonus").style.display =
+          "block";
       }
     });
   } catch (error) {
@@ -925,12 +927,17 @@ if (submit_promo_update) {
     const row = window.currentRow;
     const promo_id = document.getElementById("update_promo_id").value;
     const nama_new = document.getElementById("update_nama_promo").value;
-    const tanggal_berlaku = document.getElementById(
-      "update_tanggal_berlaku"
-    ).value;
-    const tanggal_selesai = document.getElementById(
-      "update_tanggal_selesai"
-    ).value;
+    const tanggal_berlaku_picker = $("#update_tanggal_berlaku").pickadate(
+      "picker"
+    );
+
+    const tanggal_berlaku = tanggal_berlaku_picker.get("select", "yyyy-mm-dd");
+
+    const tanggal_selesai_picker = $("#update_tanggal_selesai").pickadate(
+      "picker"
+    );
+
+    const tanggal_selesai = tanggal_selesai_picker.get("select", "yyyy-mm-dd");
     const jenis_bonus = document.getElementById("update_jenis_bonus").value;
     const akumulasi = document.getElementById("update_akumulasi").value;
     const prioritas = document.getElementById("update_prioritas").value;
@@ -1004,39 +1011,92 @@ if (submit_promo_update) {
     const row_bonus_barang = document.querySelectorAll(
       "#update_table_bonus_barang_tbody tr"
     );
+    if (jenis_diskon.value === "barang") {
+      for (const row of row_bonus_barang) {
+        const produk_select = row.querySelector("td:nth-child(1) select");
+        const jumlah_qty = row.querySelector("td:nth-child(2) input");
+        const jenis_diskon = row.querySelector("td:nth-child(3) select");
+        const jumlah_diskon_nominal = row.querySelector(
+          "td:nth-child(4) input"
+        );
 
-    for (const row of row_bonus_barang) {
-      const produk_select = row.querySelector("td:nth-child(1) select");
-      const jumlah_qty = row.querySelector("td:nth-child(2) input");
-      const jenis_diskon = row.querySelector("td:nth-child(3) select");
-      const jumlah_diskon_nominal = row.querySelector("td:nth-child(4) input");
+        const produk = produk_select?.value;
+        const qty = jumlah_qty?.value?.trim();
+        const diskon = jenis_diskon?.value;
+        const jlh_diskon_nominal = jumlah_diskon_nominal?.value?.trim();
+        if (
+          !produk ||
+          produk.trim() === "" ||
+          !qty ||
+          qty.trim() === "" ||
+          !diskon ||
+          diskon.trim() === "" ||
+          !jlh_diskon_nominal ||
+          jlh_diskon_nominal.trim() === ""
+        ) {
+          toastr.error("Semua field pada promo bonus barang wajib diisi.");
+          return;
+        }
 
-      const produk = produk_select?.value;
-      const qty = jumlah_qty?.value?.trim();
-      const diskon = jenis_diskon?.value;
-      const jlh_diskon_nominal = jumlah_diskon_nominal?.value?.trim();
+        promo_bonus_barang.push({
+          produk_id: produk,
+          qty_bonus: qty,
+          jenis_diskon: diskon,
+          jlh_diskon: jlh_diskon_nominal,
+        });
+      }
+    }
+
+    if (jenis_bonus.value === "barang") {
       if (
-        !produk ||
-        produk.trim() === "" ||
-        !qty ||
-        qty.trim() === "" ||
-        !diskon ||
-        diskon.trim() === "" ||
-        !jlh_diskon_nominal ||
-        jlh_diskon_nominal.trim() === ""
+        !nama ||
+        nama.trim() === "" ||
+        !tanggal_berlaku ||
+        tanggal_berlaku.trim() === "" ||
+        !tanggal_selesai ||
+        tanggal_selesai.trim() === "" ||
+        !jenis_bonus ||
+        jenis_bonus.trim() === "" ||
+        !akumulasi ||
+        akumulasi.trim() === "" ||
+        !prioritas ||
+        prioritas.trim() === "" ||
+        !status_promo ||
+        status_promo.trim() === "" ||
+        !quota ||
+        quota.trim() === ""
       ) {
-        toastr.error("Semua field pada promo bonus barang wajib diisi.");
+        toastr.error("Kolom * wajib diisi.");
         return;
       }
-
-      promo_bonus_barang.push({
-        produk_id: produk,
-        qty_bonus: qty,
-        jenis_diskon: diskon,
-        jlh_diskon: jlh_diskon_nominal,
-      });
+    } else if (jenis_bonus.value === "nominal") {
+      if (
+        !nama ||
+        nama.trim() === "" ||
+        !tanggal_berlaku ||
+        tanggal_berlaku.trim() === "" ||
+        !tanggal_selesai ||
+        tanggal_selesai.trim() === "" ||
+        !jenis_bonus ||
+        jenis_bonus.trim() === "" ||
+        !akumulasi ||
+        akumulasi.trim() === "" ||
+        !prioritas ||
+        prioritas.trim() === "" ||
+        !jenis_diskon ||
+        jenis_diskon.trim() === "" ||
+        !jumlah_diskon ||
+        jumlah_diskon.trim() === "" ||
+        !status ||
+        status.trim() === "" ||
+        !quota ||
+        quota.trim() === ""
+      ) {
+        toastr.error("Kolom * wajib diisi.");
+        return;
+      }
     }
-    console.log(promo_bonus_barang);
+
     const validate_input =
       helper.validateField(
         nama_new,

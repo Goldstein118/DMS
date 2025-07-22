@@ -8,6 +8,7 @@ const promo_kondisi_button = document.getElementById("promo_kondisi_button");
 const promo_bonus_barang_button = document.getElementById(
   "promo_bonus_barang_button"
 );
+const toggle_jenis_bonus = document.getElementById("toggle_jenis_bonus");
 
 if (submit_promo) {
   submit_promo.addEventListener("click", submitPromo);
@@ -329,8 +330,10 @@ jenis_bonus.addEventListener("change", (event) => {
   let bonus = jenis_bonus.options[jenis_bonus.selectedIndex].text;
   if (bonus === "Barang") {
     document.getElementById("card_promo_3").style.display = "block";
+    toggle_jenis_bonus.style.display = "none";
   } else {
     document.getElementById("card_promo_3").style.display = "none";
+    toggle_jenis_bonus.style.display = "block";
   }
 });
 
@@ -402,68 +405,95 @@ async function submitPromo() {
   const row_bonus_barang = document.querySelectorAll(
     "#table_bonus_barang_tbody tr"
   );
+  if (jenis_bonus.value === "barang") {
+    for (const row of row_bonus_barang) {
+      const produk_select = row.querySelector("td:nth-child(1) select");
+      const jumlah_qty = row.querySelector("td:nth-child(2) input");
+      const jenis_diskon = row.querySelector("td:nth-child(3) select");
+      const jumlah_diskon_nominal = row.querySelector("td:nth-child(4) input");
 
-  for (const row of row_bonus_barang) {
-    const produk_select = row.querySelector("td:nth-child(1) select");
-    const jumlah_qty = row.querySelector("td:nth-child(2) input");
-    const jenis_diskon = row.querySelector("td:nth-child(3) select");
-    const jumlah_diskon_nominal = row.querySelector("td:nth-child(4) input");
+      const produk = produk_select?.value;
+      const qty = jumlah_qty?.value?.trim();
+      const diskon = jenis_diskon?.value;
+      const jlh_diskon_nominal = jumlah_diskon_nominal?.value?.trim();
 
-    const produk = produk_select?.value;
-    const qty = jumlah_qty?.value?.trim();
-    const diskon = jenis_diskon?.value;
-    const jlh_diskon_nominal = jumlah_diskon_nominal?.value?.trim();
+      if (
+        !produk ||
+        produk.trim() === "" ||
+        !qty ||
+        qty.trim() === "" ||
+        !diskon ||
+        diskon.trim() === "" ||
+        !jlh_diskon_nominal ||
+        jlh_diskon_nominal.trim() === ""
+      ) {
+        toastr.error("Semua field pada promo bonus barang wajib diisi.");
+        return;
+      }
 
+      promo_bonus_barang.push({
+        produk_id: produk,
+        qty_bonus: qty,
+        jenis_diskon: diskon,
+        jlh_diskon: jlh_diskon_nominal,
+      });
+    }
+  }
+
+  // console.log(promo_bonus_barang);
+  if (jenis_bonus.value === "barang") {
     if (
-      !produk ||
-      produk.trim() === "" ||
-      !qty ||
-      qty.trim() === "" ||
-      !diskon ||
-      diskon.trim() === "" ||
-      !jlh_diskon_nominal ||
-      jlh_diskon_nominal.trim() === ""
+      !nama ||
+      nama.trim() === "" ||
+      !tanggal_berlaku ||
+      tanggal_berlaku.trim() === "" ||
+      !tanggal_selesai ||
+      tanggal_selesai.trim() === "" ||
+      !jenis_bonus ||
+      jenis_bonus.trim() === "" ||
+      !akumulasi ||
+      akumulasi.trim() === "" ||
+      !prioritas ||
+      prioritas.trim() === "" ||
+      !status_promo ||
+      status_promo.trim() === "" ||
+      !quota ||
+      quota.trim() === ""
     ) {
-      toastr.error("Semua field pada promo bonus barang wajib diisi.");
+      toastr.error("Kolom * wajib diisi.");
       return;
     }
+  } else if (jenis_bonus.value === "nominal") {
+    if (
+      !nama ||
+      nama.trim() === "" ||
+      !tanggal_berlaku ||
+      tanggal_berlaku.trim() === "" ||
+      !tanggal_selesai ||
+      tanggal_selesai.trim() === "" ||
+      !jenis_bonus ||
+      jenis_bonus.trim() === "" ||
+      !akumulasi ||
+      akumulasi.trim() === "" ||
+      !prioritas ||
+      prioritas.trim() === "" ||
+      !jenis_diskon ||
+      jenis_diskon.trim() === "" ||
+      !jumlah_diskon ||
+      jumlah_diskon.trim() === "" ||
+      !status_promo ||
+      status_promo.trim() === "" ||
+      !quota ||
+      quota.trim() === ""
+    ) {
+      toastr.error("Kolom * wajib diisi.");
+      return;
+    }
+  }
 
-    promo_bonus_barang.push({
-      produk_id: produk,
-      qty_bonus: qty,
-      jenis_diskon: diskon,
-      jlh_diskon: jlh_diskon_nominal,
-    });
-  }
-  // console.log(promo_bonus_barang);
-  if (
-    !nama ||
-    nama.trim() === "" ||
-    !tanggal_berlaku ||
-    tanggal_berlaku.trim() === "" ||
-    !tanggal_selesai ||
-    tanggal_selesai.trim() === "" ||
-    !jenis_bonus ||
-    jenis_bonus.trim() === "" ||
-    !akumulasi ||
-    akumulasi.trim() === "" ||
-    !prioritas ||
-    prioritas.trim() === "" ||
-    !jenis_diskon ||
-    jenis_diskon.trim() === "" ||
-    !jumlah_diskon ||
-    jumlah_diskon.trim() === "" ||
-    !status_promo ||
-    status_promo.trim() === "" ||
-    !quota ||
-    quota.trim() === ""
-  ) {
-    toastr.error("Kolom * wajib diisi.");
-    return;
-  }
-  if (promo_kondisi.length === 0 || promo_bonus_barang.length === 0) {
-    return;
-  }
+  // if (promo_kondisi.length === 0 || promo_bonus_barang.length === 0) {
+  //   return;
+  // }
   let compare_tanggal = true;
   const startDate = new Date(tanggal_berlaku);
   const endDate = new Date(tanggal_selesai);

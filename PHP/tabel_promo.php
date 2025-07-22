@@ -21,35 +21,41 @@
                                         <input type="text" class="form-control" id="tanggal_berlaku" name="tanggal_berlaku" />
                                         <label class="form-label mb-0 mt-2" for="tanggal_selesai">Tanggal Selesai:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input type="text" class="form-control" id="tanggal_selesai" name="tanggal_selesai" />
-                                        <label class="form-label mb-0 mt-2" for="jenis_bonus">Jenis Bonus:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <select class="form-select" id="jenis_bonus">
-                                            <option value="barang">Barang</option>
-                                            <option value="nominal">Nominal</option>
-                                        </select>
+                                        <label class="form-label mb-0 mt-2" for="quota">Quota:</label>
+                                        <input class="form-control" type="number" min="0" id="quota">
                                         <label class="form-label mb-0 mt-2" for="status_promo">Status:</label>
                                         <select class="form-select" id="status_promo">
                                             <option value="aktif">Aktif</option>
                                             <option value="nonaktif">Non Aktif</option>
                                         </select>
+
+
                                     </div>
                                     <div class="col">
-                                        <label class="form-label mb-0 mt-2" for="prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <input type="text" class="form-control" id="prioritas" name="prioritas" />
-
-                                        <label class="form-label mb-0 mt-2" for="jenis_diskon">Jenis Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <select class="form-select" id="jenis_diskon">
+                                        <label class="form-label mb-0 mt-2" for="jenis_bonus">Jenis Bonus:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <select class="form-select" id="jenis_bonus">
+                                            <option value="barang">Barang</option>
                                             <option value="nominal">Nominal</option>
-                                            <option value="persen">Persen</option>
                                         </select>
-                                        <label class="form-label mb-0 mt-2" for="jumlah_diskon">Jumlah Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <input type="text" class="form-control" id="jumlah_diskon" name="jumlah_diskon" />
+
+                                        <div id="toggle_jenis_bonus" style="display: none;">
+                                            <label class="form-label mb-0 mt-2" for="jenis_diskon">Jenis Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                            <select class="form-select" id="jenis_diskon">
+                                                <option value="nominal">Nominal</option>
+                                                <option value="persen">Persen</option>
+                                            </select>
+                                            <label class="form-label mb-0 mt-2" for="jumlah_diskon">Jumlah Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                            <input type="text" class="form-control" id="jumlah_diskon" name="jumlah_diskon" />
+                                        </div>
+
+
                                         <label class="form-label mb-0 mt-2" for="akumulasi">Akumulasi:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="akumulasi">
                                             <option value="ya">Ya</option>
                                             <option value="tidak">Tidak</option>
                                         </select>
-                                        <label class="form-label mb-0 mt-2" for="quota">Quota:</label>
-                                        <input class="form-control" type="number" min="0" id="quota">
+                                        <label class="form-label mb-0 mt-2" for="prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <input type="text" class="form-control" id="prioritas" name="prioritas" />
                                     </div>
                                 </div>
                             </div>
@@ -62,23 +68,27 @@
                                 <button class="btn btn-primary btn-sm mb-2" id="promo_kondisi_button">
                                     <i class="bi bi-plus-circle"></i> Tambah
                                 </button>
-                                <table
-                                    class="table table-hover table-bordered table-sm table-striped"
-                                    id="jenis_promo_kondisi">
-                                    <thead id="jenis_promo_kondisi_thead">
-                                        <tr>
-                                            <th>Jenis</th>
-                                            <th>Kondisi</th>
-                                            <th>Exclude/Include</th>
-                                            <th>Qty Min</th>
-                                            <th>Qty Max</th>
-                                            <th>Qty Akumulasi</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="jenis_promo_kondisi_tbody">
-                                    </tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table
+                                        class="table table-hover table-bordered table-sm "
+                                        id="jenis_promo_kondisi">
+                                        <thead id="jenis_promo_kondisi_thead">
+                                            <tr>
+                                                <th>Jenis</th>
+                                                <th>Kondisi</th>
+                                                <th>Exclude/Include</th>
+                                                <th>Qty Min</th>
+                                                <th>Qty Max</th>
+                                                <th>Qty Akumulasi</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="jenis_promo_kondisi_tbody">
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
 
                             </div>
                         </div>
@@ -89,7 +99,7 @@
                             <button class="btn btn-primary btn-sm mb-2" id="promo_bonus_barang_button">
                                 <i class="bi bi-plus-circle"></i> Tambah
                             </button>
-                            <table id="table_bonus_barang" class="table table-hover table-bordered table-sm table-striped">
+                            <table id="table_bonus_barang" class="table table-hover table-bordered table-sm ">
                                 <thead id="table_bonus_barang_thead">
                                     <tr>
                                         <th>Produk</th>
@@ -136,39 +146,39 @@
                                         <label class="form-label" for="update_nama_promo">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input class="form-control" type="text" id="update_nama_promo" name="update_nama_promo" value="">
                                         <label class="form-label mb-0 mt-2" for="update_tanggal_berlaku">Tanggal Berlaku:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <input type="text" class="form-control" id="update_tanggal_berlaku" name="update_tanggal_berlaku" data-value="<?php echo date('Y-m-d') ?>" />
+                                        <input type="text" class="form-control" id="update_tanggal_berlaku" name="update_tanggal_berlaku" />
                                         <label class="form-label mb-0 mt-2" for="update_tanggal_selesai">Tanggal Selesai:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input type="text" class="form-control" id="update_tanggal_selesai" name="update_tanggal_selesai" />
-                                        <label class="form-label mb-0 mt-2" for="update_jenis_bonus">Jenis Bonus:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <select class="form-select" id="update_jenis_bonus">
-                                            <option value="barang">Barang</option>
-                                            <option value="nominal">Nominal</option>
-                                        </select>
+                                        <label class="form-label mb-0 mt-2" for="update_quota">Quota:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <input class="form-control" type="number" min="0" id="update_quota">
                                         <label class="form-label mb-0 mt-2" for="update_status_promo">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="update_status_promo">
                                             <option value="aktif">Aktif</option>
                                             <option value="nonaktif">Non Aktif</option>
                                         </select>
-
                                     </div>
                                     <div class="col">
-                                        <label class="form-label mb-0 mt-2" for="update_prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <input type="text" class="form-control" id="update_prioritas" name="prioritas" />
-
-                                        <label class="form-label mb-0 mt-2" for="update_jenis_diskon">Jenis Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <select class="form-select" id="update_jenis_diskon">
+                                        <label class="form-label mb-0 mt-2" for="update_jenis_bonus">Jenis Bonus:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <select class="form-select" id="update_jenis_bonus">
+                                            <option value="barang">Barang</option>
                                             <option value="nominal">Nominal</option>
-                                            <option value="persen">Persen</option>
                                         </select>
-                                        <label class="form-label mb-0 mt-2" for="update_jumlah_diskon">Jumlah Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <input type="text" class="form-control" id="update_jumlah_diskon" name="update_jumlah_diskon" />
+                                        <div id="update_toggle_jenis_bonus" style="display: none;">
+                                            <label class="form-label mb-0 mt-2" for="update_jenis_diskon">Jenis Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                            <select class="form-select" id="update_jenis_diskon">
+                                                <option value="nominal">Nominal</option>
+                                                <option value="persen">Persen</option>
+                                            </select>
+                                            <label class="form-label mb-0 mt-2" for="update_jumlah_diskon">Jumlah Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                            <input type="text" class="form-control" id="update_jumlah_diskon" name="update_jumlah_diskon" />
+                                        </div>
                                         <label class="form-label mb-0 mt-2" for="update_akumulasi">Akumulasi:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="update_akumulasi">
                                             <option value="ya">Ya</option>
                                             <option value="tidak">Tidak</option>
                                         </select>
-                                        <label class="form-label mb-0 mt-2" for="update_quota">Quota:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <input class="form-control" type="number" min="0" id="update_quota">
+                                        <label class="form-label mb-0 mt-2" for="update_prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <input type="text" class="form-control" id="update_prioritas" name="prioritas" />
                                     </div>
                                 </div>
                             </div>
@@ -178,12 +188,15 @@
                         <div class="card">
                             <div class="card-header">Promo Kondisi</div>
                             <div class="card-body" id="update_promo_kondisi_card_body">
-                                <button class="btn btn-primary btn-sm mb-2" id="update_promo_kondisi_barang_button">
-                                    <i class="bi bi-plus-circle"></i> Tambah
-                                </button>
+
+
                                 <table
-                                    class="table table-hover table-bordered table-sm table-striped"
+                                    class="table table-hover table-bordered table-sm"
                                     id="update_jenis_promo_kondisi">
+
+                                    <button class="btn btn-primary btn-sm mb-2" id="update_promo_kondisi_barang_button">
+                                        <i class="bi bi-plus-circle"></i> Tambah
+                                    </button>
                                     <thead id="update_jenis_promo_kondisi_thead">
                                         <tr>
                                             <th>Jenis</th>
@@ -195,6 +208,8 @@
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
+
+
 
                                     <tbody id="update_jenis_promo_kondisi_tbody">
                                     </tbody>
@@ -209,7 +224,7 @@
                             <button class="btn btn-primary btn-sm mb-2" id="update_promo_bonus_barang_button">
                                 <i class="bi bi-plus-circle"></i> Tambah
                             </button>
-                            <table id="update_table_bonus_barang" class="table table-hover table-bordered table-sm table-striped">
+                            <table id="update_table_bonus_barang" class="table table-hover table-bordered table-sm">
                                 <thead id="update_table_bonus_barang_thead">
                                     <tr>
                                         <th>Produk</th>

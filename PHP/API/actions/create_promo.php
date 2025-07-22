@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../utils/helpers.php';
 try {
     $requiredFields = [
-        'promo_id',
         'nama',
         'tanggal_berlaku',
         'tanggal_selesai',
@@ -10,7 +9,7 @@ try {
         'akumulasi',
         'prioritas',
         'jenis_diskon',
-        'status',
+        'status_promo',
         'quota',
     ];
     $field = validate_1($data, $requiredFields);

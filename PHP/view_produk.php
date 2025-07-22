@@ -169,9 +169,9 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
   <main>
     <div class="d-flex row_produk">
-      <div class="w auto me-5" id="gambar_produk">
+      <div class="w auto " id="gambar_produk">
       </div>
-      <div class="w auto ms-5" id="data_produk">
+      <div class="w auto" id="data_produk">
         <table class="table table-borderless">
           <tr id="tr_produk">
             <th>Produk</th>

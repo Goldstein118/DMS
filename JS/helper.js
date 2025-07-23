@@ -202,22 +202,35 @@ export function view_checkbox(field, aksi) {
       const checkbox = document.getElementById(
         `check_${action}_${field}_update`
       );
-      checkbox.addEventListener("change", () => {
-        const view = document.getElementById(`check_view_${field}_update`);
-        if (checkbox.checked) {
-          view.checked = true;
-        }
-      });
+
+      if (checkbox) {
+        checkbox.addEventListener("change", () => {
+          const view = document.getElementById(`check_view_${field}_update`);
+          if (checkbox.checked && view) {
+            view.checked = true;
+          }
+        });
+      }
     });
   } else {
     ["create", "edit", "delete"].forEach((action) => {
       const checkbox = document.getElementById(`check_${action}_${field}`);
-      checkbox.addEventListener("change", () => {
-        const view = document.getElementById(`check_view_${field}`);
-        if (checkbox.checked) {
-          view.checked = true;
-        }
-      });
+
+      if (checkbox) {
+        checkbox.addEventListener("change", () => {
+          const view = document.getElementById(`check_view_${field}`);
+          if (checkbox.checked && view) {
+            view.checked = true;
+          }
+        });
+      }
+      if (!checkbox) {
+        console.warn(
+          `Missing checkbox: check_${action}_${field}${
+            aksi == "update" ? "_update" : ""
+          }`
+        );
+      }
     });
   }
 }
@@ -443,7 +456,8 @@ export function preview(element_id, img_id) {
   });
 }
 let index = 0;
-export function addField(action) {
+
+export function addField(action, element_id) {
   var myTable = document.getElementById(`${action}_detail_pricelist_tbody`);
   var currentIndex = index++;
   const tr_detail = document.createElement("tr");
@@ -457,7 +471,7 @@ export function addField(action) {
 
   const td_select = document.createElement("td");
   var select_box = document.createElement("select");
-  select_box.setAttribute("id", "produk_select" + currentIndex);
+  select_box.setAttribute("id", element_id + currentIndex);
   select_box.classList.add("form-select");
   td_select.appendChild(select_box);
 
@@ -477,22 +491,23 @@ export function addField(action) {
   myTable.appendChild(tr_detail);
 
   format_nominal("harga" + currentIndex);
-  select_detail_pricelist(currentIndex, action);
+  select_detail_pricelist(currentIndex, action, element_id);
 }
 
 export async function select_detail_pricelist(
   index,
   action,
+  element_id,
   current_produk_id
 ) {
   if (action == "create") {
-    $(`#produk_select${index}`).select2({
+    $(`#${element_id}${index}`).select2({
       placeholder: "Pilih produk",
       allowClear: true,
       dropdownParent: $("#modal_pricelist"),
     });
   } else if (action == "update") {
-    $(`#produk_select${index}`).select2({
+    $(`#${element_id}${index}`).select2({
       placeholder: "Pilih produk",
       allowClear: true,
       dropdownParent: $("#update_modal_pricelist"),
@@ -506,7 +521,7 @@ export async function select_detail_pricelist(
         "user_id"
       )}&target=tb_pricelist&context=create`
     );
-    const select = $(`#produk_select${index}`);
+    const select = $(`#${element_id}${index}`);
     select.empty();
     select.append(new Option("Pilih Produk", "", false, false));
     if (action == "create") {

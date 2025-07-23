@@ -15,10 +15,10 @@ const pickdatejs = $("#update_tanggal_berlaku")
   .pickadate("picker");
 if (grid_container_pricelist) {
   const create_detail_pricelist = document.getElementById(
-    "update_detail_pricelist"
+    "update_detail_pricelist_button"
   );
   create_detail_pricelist.addEventListener("click", () => {
-    helper.addField("update");
+    helper.addField("update", "generated_update_produk_select");
   });
 
   window.pricelist_grid = new Grid({
@@ -241,7 +241,7 @@ async function handle_update(button) {
       const tdProduk = document.createElement("td");
       const selectProduk = document.createElement("select");
       selectProduk.className = "form-select produk_select";
-      selectProduk.setAttribute("id", `produk_select${index}`);
+      selectProduk.setAttribute("id", `update_produk_select${index}`);
       tdProduk.appendChild(selectProduk);
 
       // Harga input
@@ -271,7 +271,12 @@ async function handle_update(button) {
       tableBody.appendChild(tr);
       helper.format_nominal(`detail_harga${index}`);
 
-      helper.select_detail_pricelist(index, "update", current_produk_id);
+      helper.select_detail_pricelist(
+        index,
+        "update",
+        `update_produk_select`,
+        current_produk_id
+      );
     });
   } else {
     // Optional: show message if no data found

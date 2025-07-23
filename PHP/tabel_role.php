@@ -601,6 +601,147 @@
                       <hr />
                     </div>
 
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Armada</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_armada" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_armada" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_armada" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_armada" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_armada" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Frezzer</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_frezzer" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_frezzer" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_frezzer" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_frezzer" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_frezzer" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Promo</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_promo" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_promo" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_promo" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_promo" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_promo" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
                   </div>
                 </div>
               </div>
@@ -1226,6 +1367,147 @@
                             class="form-check-input perm-checkbox"
                             type="checkbox"
                             id="check_delete_pricelist_update" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Armada</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_armada_update" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_armada_update" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_armada_update" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_armada_update" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_armada_update" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Frezzer</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_frezzer_update" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_frezzer_update" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_frezzer_update" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_frezzer_update" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_frezzer_update" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Promo</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_promo_update" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_promo_update" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_promo_update" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_promo_update" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_promo_update" />
                           Delete
                         </label>
                       </div>

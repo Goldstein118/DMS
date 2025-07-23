@@ -149,8 +149,6 @@ if (grid_container_promo) {
 
 async function populate_bonus_barang_update_modal(promo_id) {
   update_table_bonus_barang_tbody.innerHTML = "";
-  console.log(update_table_bonus_barang_tbody);
-  console.log("Called populate_bonus_barang_update_modal with ID:", promo_id);
 
   index = 0;
   setTimeout(async () => {
@@ -406,7 +404,6 @@ function populate_bonus_barang(data, index, element_id, produk_id) {
     return;
   }
 
-  console.log(`bonus barang: ${element_id}${index}`);
   select.empty();
 
   data.forEach((item) => {
@@ -447,7 +444,7 @@ async function fetch_fk(field, index, element_id, tipe) {
 
 function populateNewDropdown(data, field, index, element_id, tipe) {
   const select = $(`#${element_id}${index}`);
-  console.log(`${element_id}${index}`);
+
   select.empty();
   if (field === "brand") {
     data.forEach((item) => {
@@ -850,7 +847,6 @@ async function handle_update(button) {
       ?.textContent.trim()
       .toLowerCase()
       .replace(/\s/g, "");
-    console.log(status);
 
     current_tanggal_berlaku = helper.unformat_date(current_tanggal_berlaku);
     const parts_tanggal_berlaku = current_tanggal_berlaku.split("-"); // ["2025", "05", "02"]
@@ -873,8 +869,6 @@ async function handle_update(button) {
     document.getElementById("update_promo_id").value = promo_id;
     document.getElementById("update_nama_promo").value = current_nama;
 
-    document.getElementById("update_jenis_bonus").value = jenis_bonus;
-    console.log(jenis_bonus);
     document.getElementById("update_akumulasi").value = akumulasi;
 
     document.getElementById("update_prioritas").value = prioritas;
@@ -888,25 +882,44 @@ async function handle_update(button) {
     fetch_promo(promo_id);
 
     const jenis_bonus_value = document.getElementById("update_jenis_bonus");
+    jenis_bonus_value.value = jenis_bonus;
+    if (jenis_bonus_value.value === "barang") {
+      document.getElementById("update_card_promo_3").style.display = "block";
+      document.getElementById("update_toggle_jenis_bonus").style.display =
+        "none";
+    } else if (jenis_bonus_value.value === "nominal") {
+      document.getElementById("update_card_promo_3").style.display = "none";
+      document.getElementById("update_toggle_jenis_bonus").style.display =
+        "block";
+    }
 
-    // Optional: remove existing event listeners by replacing the node
-    const newJenisBonus = jenis_bonus_value.cloneNode(true);
-    jenis_bonus_value.parentNode.replaceChild(newJenisBonus, jenis_bonus_value);
-    newJenisBonus.value = jenis_bonus;
-
-    // Add event listener to new element
-    newJenisBonus.addEventListener("change", (event) => {
-      let bonus = newJenisBonus.options[newJenisBonus.selectedIndex].text;
-      if (bonus === "Barang") {
+    jenis_bonus_value.addEventListener("change", () => {
+      if (jenis_bonus_value.value === "barang") {
         document.getElementById("update_card_promo_3").style.display = "block";
         document.getElementById("update_toggle_jenis_bonus").style.display =
           "none";
-      } else {
+      } else if (jenis_bonus_value.value === "nominal") {
         document.getElementById("update_card_promo_3").style.display = "none";
         document.getElementById("update_toggle_jenis_bonus").style.display =
           "block";
       }
     });
+
+    // const newJenisBonus = jenis_bonus_value.cloneNode(true);
+    // jenis_bonus_value.parentNode.replaceChild(newJenisBonus, jenis_bonus_value);
+    // newJenisBonus.value = jenis_bonus;
+    // newJenisBonus.addEventListener("change", (event) => {
+    //   let bonus = newJenisBonus.options[newJenisBonus.selectedIndex].text;
+    //   if (bonus === "Barang") {
+    //     document.getElementById("update_card_promo_3").style.display = "block";
+    //     document.getElementById("update_toggle_jenis_bonus").style.display =
+    //       "none";
+    //   } else {
+    //     document.getElementById("update_card_promo_3").style.display = "none";
+    //     document.getElementById("update_toggle_jenis_bonus").style.display =
+    //       "block";
+    //   }
+    // });
   } catch (error) {
     toastr.error("Gagal mengambil data : " + error.message);
   }
@@ -1006,12 +1019,13 @@ if (submit_promo_update) {
         qty_akumulasi: akumulasi,
       });
     }
-    console.log(promo_kondisi);
+
     const promo_bonus_barang = [];
     const row_bonus_barang = document.querySelectorAll(
       "#update_table_bonus_barang_tbody tr"
     );
-    if (jenis_diskon.value === "barang") {
+
+    if (jenis_bonus === "barang") {
       for (const row of row_bonus_barang) {
         const produk_select = row.querySelector("td:nth-child(1) select");
         const jumlah_qty = row.querySelector("td:nth-child(2) input");
@@ -1047,10 +1061,10 @@ if (submit_promo_update) {
       }
     }
 
-    if (jenis_bonus.value === "barang") {
+    if (jenis_bonus === "barang") {
       if (
-        !nama ||
-        nama.trim() === "" ||
+        !nama_new ||
+        nama_new.trim() === "" ||
         !tanggal_berlaku ||
         tanggal_berlaku.trim() === "" ||
         !tanggal_selesai ||
@@ -1061,18 +1075,18 @@ if (submit_promo_update) {
         akumulasi.trim() === "" ||
         !prioritas ||
         prioritas.trim() === "" ||
-        !status_promo ||
-        status_promo.trim() === "" ||
+        !status ||
+        status.trim() === "" ||
         !quota ||
         quota.trim() === ""
       ) {
         toastr.error("Kolom * wajib diisi.");
         return;
       }
-    } else if (jenis_bonus.value === "nominal") {
+    } else if (jenis_bonus === "nominal") {
       if (
-        !nama ||
-        nama.trim() === "" ||
+        !nama_new ||
+        nama_new.trim() === "" ||
         !tanggal_berlaku ||
         tanggal_berlaku.trim() === "" ||
         !tanggal_selesai ||

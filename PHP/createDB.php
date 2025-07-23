@@ -293,4 +293,15 @@ if ($conn->query($promo_bonus_barang)) {
         echo mysqli_error($conn);
     }
 }
+
+$satuan = "CREATE TABLE IF NOT EXISTS tb_satuan(satuan_id VARCHAR (20) PRIMARY KEY NOT NULL, nama VARCHAR (20),id_referensi VARCHAR(20),qty VARCHAR (20))";
+
+if ($conn->query($satuan)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+
 mysqli_close($conn);

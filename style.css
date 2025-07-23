@@ -317,6 +317,7 @@ body::-webkit-scrollbar {
 .btn-group-sm > .btn,
 .btn-sm {
   margin-right: 0.125rem;
+  margin-bottom: 0.25rem;
 }
 .sidebar ul,
 .offcanvas-body ul {
@@ -378,7 +379,7 @@ h3 {
   padding: 0px;
 }
 #create_detail_pricelist,
-#update_detail_pricelist {
+#update_detail_pricelist_button {
   max-width: fit-content !important;
 }
 .view_modal_pricelist {
@@ -396,21 +397,37 @@ h3 {
   height: fit-content;
   float: right;
 }
-#detail_pricelist {
+#detail_pricelist,
+#jenis_promo_kondisi,
+#table_bonus_barang,
+#update_jenis_promo_kondisi,
+#update_table_bonus_barang,
+#update_detail_pricelist {
   border-collapse: collapse;
   width: 100%;
-  table-layout: auto;
+  table-layout: fixed;
+  min-width: 700px;
 }
 
-#detail_pricelist thead {
+#detail_pricelist thead,
+#jenis_promo_kondisi thead,
+#table_bonus_barang thead,
+#update_jenis_promo_kondisi thead,
+#update_table_bonus_barang thead,
+#update_detail_pricelist thead {
   display: table;
   width: 100%;
-  table-layout: auto;
+  table-layout: fixed;
   overflow-x: auto;
   overflow-y: hidden !important;
 }
 
-#detail_pricelist tbody {
+#detail_pricelist tbody,
+#jenis_promo_kondisi tbody,
+#table_bonus_barang tbody,
+#update_jenis_promo_kondisi tbody,
+#update_table_bonus_barang tbody,
+#update_detail_pricelist tbody {
   display: block;
   max-height: 200px;
   overflow-y: scroll;
@@ -423,10 +440,15 @@ h3 {
   display: none; /* Chrome, Safari */
 }
 
-#detail_pricelist tbody tr {
+#detail_pricelist tbody tr,
+#jenis_promo_kondisi tbody tr,
+#table_bonus_barang tbody tr,
+#update_jenis_promo_kondisi tbody tr,
+#update_table_bonus_barang tbody tr,
+#update_detail_pricelist tbody tr {
   display: table;
   width: 100%;
-  table-layout: auto;
+  table-layout: fixed;
 }
 .card {
   margin-bottom: 1rem !important;
@@ -436,13 +458,67 @@ h3 {
 #jenis_promo_kondisi td {
   min-width: 150px;
 }  */
+#jenis_promo_kondisi th:nth-child(1),
+#jenis_promo_kondisi td:nth-child(1) {
+  width: 130px;
+}
 
+#jenis_promo_kondisi th:nth-child(2),
+#jenis_promo_kondisi td:nth-child(2) {
+  width: 250px;
+}
+#jenis_promo_kondisi th:nth-child(3),
+#jenis_promo_kondisi td:nth-child(3) {
+  width: 130px;
+}
+#jenis_promo_kondisi th:nth-child(7),
+#jenis_promo_kondisi td:nth-child(7) {
+  width: 55px;
+}
+
+#update_jenis_promo_kondisi th:nth-child(1),
+#update_jenis_promo_kondisi td:nth-child(1) {
+  width: 130px;
+}
+
+#update_jenis_promo_kondisi th:nth-child(2),
+#update_jenis_promo_kondisi td:nth-child(2) {
+  width: 250px;
+}
+#update_jenis_promo_kondisi th:nth-child(3),
+#update_jenis_promo_kondisi td:nth-child(3) {
+  width: 130px;
+}
+#update_jenis_promo_kondisi th:nth-child(7),
+#update_jenis_promo_kondisi td:nth-child(7) {
+  width: 55px;
+}
+
+#table_bonus_barang th:nth-child(5),
+#table_bonus_barang td:nth-child(5) {
+  width: 55px;
+}
+
+#update_table_bonus_barang th:nth-child(5),
+#update_table_bonus_barang td:nth-child(5) {
+  width: 55px;
+}
+#accordion_body_pricelist,
+#update_accordion_body_pricelist {
+  overflow-x: auto;
+  overflow-y: hidden !important;
+  width: 100%;
+  max-height: 35vh;
+}
 #promo_kondisi_card_body,
 #promo_bonus_card_body,
 #update_promo_kondisi_card_body,
 #update_promo_bonus_card_body {
-  max-height: 350px;
+  max-height: 35vh;
   margin-bottom: 25px;
+  overflow-x: auto;
+  overflow-y: hidden !important;
+  width: 100%;
 }
 @font-face {
   font-family: "Roboto";

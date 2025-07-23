@@ -148,7 +148,7 @@ async function handle_update(button) {
   const role_ID = row.cells[0].textContent;
   const currentNama = row.cells[1].textContent;
   const currentAkses = row.cells[2].textContent;
-  console.log(currentAkses);
+
   const checkboxFields = [
     "karyawan",
     "user",
@@ -162,6 +162,9 @@ async function handle_update(button) {
     "divisi",
     "gudang",
     "pricelist",
+    "armada",
+    "frezzer",
+    "promo",
   ];
 
   document.getElementById("update_role_ID").value = role_ID;

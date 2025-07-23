@@ -1,6 +1,7 @@
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 import * as helper from "./helper.js";
+let index = 0;
 const submit_pricelist = document.getElementById("submit_pricelist");
 const submit_detail_pricelist = document.getElementById(
   "create_detail_pricelist"
@@ -8,7 +9,7 @@ const submit_detail_pricelist = document.getElementById(
 if (submit_pricelist) {
   submit_pricelist.addEventListener("click", submitPricelist);
   submit_detail_pricelist.addEventListener("click", () => {
-    helper.addField("create");
+    helper.addField("create", "produk_select");
   });
   $(document).ready(function () {
     $("#modal_pricelist").on("shown.bs.modal", function () {

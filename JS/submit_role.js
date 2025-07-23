@@ -23,6 +23,9 @@ if (submit_role) {
       "divisi",
       "gudang",
       "pricelist",
+      "armada",
+      "frezzer",
+      "promo",
     ];
 
     checkboxFields.forEach((field) => {

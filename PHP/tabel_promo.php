@@ -68,26 +68,24 @@
                                 <button class="btn btn-primary btn-sm mb-2" id="promo_kondisi_button">
                                     <i class="bi bi-plus-circle"></i> Tambah
                                 </button>
-                                <div class="table-responsive">
-                                    <table
-                                        class="table table-hover table-bordered table-sm "
-                                        id="jenis_promo_kondisi">
-                                        <thead id="jenis_promo_kondisi_thead">
-                                            <tr>
-                                                <th>Jenis</th>
-                                                <th>Kondisi</th>
-                                                <th>Exclude/Include</th>
-                                                <th>Qty Min</th>
-                                                <th>Qty Max</th>
-                                                <th>Qty Akumulasi</th>
-                                                <th>Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="jenis_promo_kondisi_tbody">
-                                        </tbody>
-                                    </table>
 
-                                </div>
+                                <table
+                                    class="table table-hover table-bordered table-sm "
+                                    id="jenis_promo_kondisi">
+                                    <thead id="jenis_promo_kondisi_thead">
+                                        <tr>
+                                            <th>Jenis</th>
+                                            <th>Kondisi</th>
+                                            <th>Exclude/Include</th>
+                                            <th>Qty Min</th>
+                                            <th>Qty Max</th>
+                                            <th>Qty Akumulasi</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="jenis_promo_kondisi_tbody">
+                                    </tbody>
+                                </table>
 
 
                             </div>

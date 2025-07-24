@@ -14,6 +14,10 @@ if (grid_container_produk) {
       allowClear: true,
       dropdownParent: $("#update_modal_produk"),
     });
+    $("#update_satuan").select2({
+      allowClear: true,
+      dropdownParent: $("#update_modal_produk"),
+    });
   });
   window.produk_grid = new Grid({
     columns: [
@@ -28,6 +32,8 @@ if (grid_container_produk) {
       "brand_id",
       "link_gambar",
       "Stock Awal",
+      "Satuan",
+      "satuan_id",
       {
         name: "Aksi",
         formatter: () => {
@@ -130,6 +136,8 @@ if (grid_container_produk) {
                  : ``
              }`),
           produk.stock_awal,
+          produk.satuan_nama,
+          produk.satuan_id,
           null,
         ]),
     },
@@ -217,6 +225,15 @@ function populateDropdown(data, field_id, field) {
           item.brand_id == field_id
         )
       );
+    } else if (field == "satuan") {
+      select.append(
+        new Option(
+          `${item.satuan_id} - ${item.nama}`,
+          item.satuan_id,
+          false,
+          item.satuan_id == field_id
+        )
+      );
     }
   });
 
@@ -291,13 +308,13 @@ async function handle_update(button) {
     ?.textContent.trim()
     .toLowerCase()
     .replace(/\s/g, " ");
-  console.log(status);
+
   const stock_awal = row.cells[10].textContent;
-  console.log(stock_awal);
 
   let harga_minimal = row.cells[6].textContent;
   harga_minimal = helper.unformat_angka(harga_minimal);
   let produk_gambar = row.cells[9];
+  const satuan_id = row.cells[12].textContent;
   let produk_link = "";
 
   // Populate the modal fields
@@ -307,6 +324,7 @@ async function handle_update(button) {
   document.getElementById("update_status_produk").value = status;
   document.getElementById("update_harga_minimal").value = harga_minimal;
   document.getElementById("update_stock_awal").value = stock_awal;
+  document.getElementById("update_satuan").value = satuan_id;
   update_pricelist(produk_id);
   helper.format_nominal("update_harga_minimal");
 
@@ -334,6 +352,7 @@ async function handle_update(button) {
   try {
     fetch_fk("kategori", kategori_id);
     fetch_fk("brand", brand_id);
+    fetch_fk("satuan", satuan_id);
 
     button_icon.style.display = "inline-block";
     spinner.style.display = "none";
@@ -374,13 +393,14 @@ if (submit_produk_update) {
     const no_sku_new = document.getElementById("update_no_sku").value;
     const status_new = document.getElementById("update_status_produk").value;
     const stock_awal_new = document.getElementById("update_stock_awal").value;
-    console.log(stock_awal_new);
+
     let harga_minimal_new = document.getElementById(
       "update_harga_minimal"
     ).value;
     harga_minimal_new = helper.unformat_angka(harga_minimal_new);
     const kategori_id_new = $("#update_kategori").val();
     const brand_id_new = $("#update_brand").val();
+    const satuan_id = $("#update_satuan").val();
     const details = [];
     const rows = document.querySelectorAll(
       "#update_detail_pricelist_produk_tbody tr"
@@ -486,6 +506,8 @@ if (submit_produk_update) {
         formData.append("brand_id", brand_id_new);
         formData.append("details", JSON.stringify(details));
         formData.append("stock_awal", stock_awal_new);
+        formData.append("satuan_id", satuan_id);
+
         const produk_file = document.getElementById("update_produk_gambar")
           .files[0];
         if (produk_file) {

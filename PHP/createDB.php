@@ -140,8 +140,10 @@ harga_minimal VARCHAR(20),
 kategori_id VARCHAR(20),
 brand_id VARCHAR(20),
 stock_awal VARCHAR(20),
+satuan_id VARCHAR(20),
 FOREIGN KEY (kategori_id) REFERENCES tb_kategori(kategori_id) ON DELETE RESTRICT,
-FOREIGN KEY (brand_id) REFERENCES tb_brand(brand_id) ON DELETE RESTRICT
+FOREIGN KEY (brand_id) REFERENCES tb_brand(brand_id) ON DELETE RESTRICT,
+FOREIGN KEY (satuan_id) REFERENCES tb_satuan(satuan_id) ON DELETE RESTRICT
 )";
 
 if ($conn->query($produk)) {
@@ -262,7 +264,8 @@ if ($conn->query($frezzer)) {
 $promo = "CREATE TABLE IF NOT EXISTS tb_promo (promo_id VARCHAR(20) PRIMARY KEY NOT NULL, nama VARCHAR (50),
         tanggal_berlaku DATE ,tanggal_selesai DATE, jenis_bonus VARCHAR (20) DEFAULT 'barang',
         akumulasi VARCHAR(20),prioritas VARCHAR(20),created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,jenis_diskon VARCHAR(20),
-        jumlah_diskon VARCHAR(20),quota VARCHAR (20), status VARCHAR(20) DEFAULT 'aktif')";
+        jumlah_diskon VARCHAR(20),quota VARCHAR (20), status VARCHAR(20) DEFAULT 'aktif',satuan_id VARCHAR(20), 
+        FOREIGN KEY (satuan_id) REFERENCES tb_satuan(satuan_id) ON DELETE RESTRICT)";
 
 if ($conn->query($promo)) {
     try {

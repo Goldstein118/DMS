@@ -99,6 +99,11 @@
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_frezzer"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_frezzer' ? 'active' : ''; ?>"> Frezzer</a>
             </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_satuan"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_satuan' ? 'active' : ''; ?>"> Satuan</a>
+            </li>
 
           </ul>
         </div>
@@ -224,7 +229,11 @@
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_frezzer"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_frezzer' ? 'active' : ''; ?>"> Frezzer</a>
             </li>
-
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_satuan"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_satuan' ? 'active' : ''; ?>"> Satuan</a>
+            </li>
           </ul>
         </div>
       </li>

@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
 try {
-    $requiredFields = ['name_satuan'];
+    $requiredFields = ['nama'];
     $field = validate_1($data, $requiredFields);
-    $nama_satuan = $field['name_satuan'];
+    $nama_satuan = $field['nama'];
     $id_referensi = $field['id_referensi'];
     $qty_satuan = $field['qty_satuan'];
 

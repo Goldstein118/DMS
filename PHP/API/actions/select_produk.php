@@ -115,12 +115,12 @@ if (strlen($search) >= 3 && $search !== '') {
     $result = $conn->query($sql);
 } else {
     $sql = "SELECT p.produk_id,p.nama,p.no_sku,p.status,p.harga_minimal,p.kategori_id,k.nama AS kategori_nama,
-    p.brand_id,
-    b.nama AS brand_nama,g.gambar_produk_id,p.stock_awal FROM
+    p.brand_id,b.nama AS brand_nama,p.satuan_id,s.nama AS satuan_nama,g.gambar_produk_id,p.stock_awal FROM
     tb_produk p 
     LEFT JOIN tb_kategori k ON p.kategori_id = k.kategori_id
     LEFT JOIN tb_brand b ON p.brand_id = b.brand_id
-    LEFT JOIN tb_gambar_produk g ON g.produk_id=p.produk_id";
+    LEFT JOIN tb_gambar_produk g ON g.produk_id=p.produk_id
+    LEFT JOIN tb_satuan s ON s.satuan_id=p.satuan_id";
 
 
     $result = $conn->query($sql);

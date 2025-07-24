@@ -33,6 +33,7 @@ if (submit_promo) {
       selectYears: 25,
       selectMonths: true,
     });
+    fetch_fk("satuan", "", "satuan_id");
   });
 }
 
@@ -251,11 +252,11 @@ async function add_field_barang() {
   tr_bonus_barang.appendChild(td_aksi);
   table_promo_bonus_barang.appendChild(tr_bonus_barang);
 
-  fetch_fk("produk", currentIndex, "bonus_produk");
+  fetch_fk("produk", currentIndex, "bonus_produk", "bonus");
 
   delete_promo_kondisi("table_bonus_barang_tbody");
 }
-async function fetch_fk(field, index, element_id) {
+async function fetch_fk(field, index, element_id, tipe) {
   try {
     const response = await apiRequest(
       `/PHP/API/${field}_API.php?action=select&user_id=${access.decryptItem(
@@ -264,13 +265,13 @@ async function fetch_fk(field, index, element_id) {
       "POST",
       { select: "select" }
     );
-    populateDropdown(response.data, field, index, element_id);
+    populateDropdown(response.data, field, index, element_id, tipe);
   } catch (error) {
     toastr.error("Gagal mengambil data : " + error.message);
   }
 }
 
-function populateDropdown(data, field, index, element_id) {
+function populateDropdown(data, field, index, element_id, tipe) {
   const select = $(`#${element_id}${index}`);
   select.empty();
   if (field === "brand") {
@@ -296,6 +297,9 @@ function populateDropdown(data, field, index, element_id) {
       );
     });
   } else if (field === "produk") {
+    if (tipe === "bonus") {
+      select.append(new Option("Pilih Produk", "", false, false));
+    }
     data.forEach((item) => {
       select.append(
         new Option(
@@ -312,6 +316,18 @@ function populateDropdown(data, field, index, element_id) {
         new Option(
           `${item.channel_id} - ${item.nama}`,
           item.channel_id,
+          false,
+          false
+        )
+      );
+    });
+  } else if (field === "satuan") {
+    data.forEach((item) => {
+      select.append(new Option("Pilih Satuan", "", false, false));
+      select.append(
+        new Option(
+          `${item.satuan_id} - ${item.nama}`,
+          item.satuan_id,
           false,
           false
         )
@@ -350,7 +366,7 @@ async function submitPromo() {
   const jumlah_diskon = document.getElementById("jumlah_diskon").value;
   const quota = document.getElementById("quota").value;
   const status_promo = document.getElementById("status_promo").value;
-
+  const satuan_id = $("#satuan_id").val();
   const promo_kondisi = [];
   const row_kondisi = document.querySelectorAll(
     "#jenis_promo_kondisi_tbody tr"
@@ -528,6 +544,7 @@ async function submitPromo() {
       jumlah_diskon: jumlah_diskon,
       status_promo: status_promo,
       quota: quota,
+      satuan_id: satuan_id,
       promo_kondisi: promo_kondisi,
       promo_bonus_barang: promo_bonus_barang,
     };

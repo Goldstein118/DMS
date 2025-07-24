@@ -37,7 +37,9 @@ if ($search !== '' && strlen($search) >= 3) {
     $stmt->execute();
     $result = $stmt->get_result();
 } else {
-    $sql_promo = "SELECT * FROM tb_promo";
+    $sql_promo = "SELECT p.promo_id,p.nama,p.tanggal_berlaku,p.tanggal_selesai,p.jenis_bonus,p.akumulasi,p.prioritas,
+    p.jenis_diskon,p.jumlah_diskon,p.quota,p.created_on,p.status,p.satuan_id,s.nama AS satuan_nama FROM tb_promo p  
+    LEFT JOIN tb_satuan s ON p.satuan_id = s.satuan_id";
     $result = $conn->query($sql_promo);
 }
 

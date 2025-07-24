@@ -104,7 +104,8 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
         'tabel_pricelist',
         'tabel_armada',
         'tabel_frezzer',
-        'tabel_promo'
+        'tabel_promo',
+        'tabel_satuan'
       ];
 
       if (in_array($page, $allowed_pages)) {
@@ -210,6 +211,12 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
       ?>
         <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_promo.js?v=2.0"></script>
         <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_promo.js?v=2.0"></script>
+      <?php
+        break;
+      case 'tabel_satuan':
+      ?>
+        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_satuan.js?v=2.0"></script>
+        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_satuan.js?v=2.0"></script>
     <?php
         break;
     }

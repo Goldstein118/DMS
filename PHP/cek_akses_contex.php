@@ -7,10 +7,10 @@ function checkContextAccess($conn, $userId, $context)
         'tb_user'     => ['tb_karyawan'],
         'tb_karyawan' => ['tb_role'],
         'tb_customer' => ['tb_channel', 'tb_pricelist'],
-        'tb_produk'   => ['tb_kategori', 'tb_brand', 'tb_pricelist'],
+        'tb_produk'   => ['tb_kategori', 'tb_brand', 'tb_pricelist', 'tb_satuan'],
         'tb_pricelist' => ['tb_produk'],
         'tb_armada'  => ['tb_karyawan'],
-        'tb_promo'   => ['tb_brand', 'tb_customer', 'tb_produk', 'tb_channel']
+        'tb_promo'   => ['tb_brand', 'tb_customer', 'tb_produk', 'tb_channel', 'tb_satuan']
         // Add more mappings as needed
     ];
 
@@ -30,6 +30,7 @@ function checkContextAccess($conn, $userId, $context)
         'tb_armada'   => 48,
         'tb_frezzer'  => 52,
         'tb_promo'    => 56,
+        'tb_satuan'   => 60,
         // Add more tables and their base indices here
     ];
 

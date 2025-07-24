@@ -29,7 +29,9 @@
                                             <option value="nonaktif">Non Aktif</option>
                                         </select>
 
-
+                                        <label class="form-label mb-0 mt-2" for="satuan_id">Satuan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <select class="form-select" id="satuan_id">
+                                        </select>
                                     </div>
                                     <div class="col">
                                         <label class="form-label mb-0 mt-2" for="jenis_bonus">Jenis Bonus:<i class="bi bi-asterisk text-danger align-middle "></i></label>
@@ -56,6 +58,8 @@
                                         </select>
                                         <label class="form-label mb-0 mt-2" for="prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input type="text" class="form-control" id="prioritas" name="prioritas" />
+
+
                                     </div>
                                 </div>
                             </div>
@@ -177,6 +181,10 @@
                                         </select>
                                         <label class="form-label mb-0 mt-2" for="update_prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input type="text" class="form-control" id="update_prioritas" name="prioritas" />
+
+                                        <label class="form-label mb-0 mt-2" for="update_satuan_id">Satuan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <select class="form-select" id="update_satuan_id">
+                                        </select>
                                     </div>
                                 </div>
                             </div>

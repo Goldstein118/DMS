@@ -11,6 +11,7 @@ try {
         'jenis_diskon',
         'status_promo',
         'quota',
+        'satuan_id'
     ];
     $field = validate_1($data, $requiredFields);
     $nama = $field['nama'];
@@ -23,6 +24,7 @@ try {
     $jumlah_diskon = $field['jumlah_diskon'];
     $status_promo = $field['status_promo'];
     $quota = $field['quota'];
+    $satuan_id = $field['satuan_id'];
 
     validate_2($nama, '/^[a-zA-Z0-9\s]+$/', "Format nama tidak valid");
     validate_2($prioritas, '/^\d+$/', "Format prioritas tidak valid");
@@ -34,8 +36,8 @@ try {
     executeInsert(
         $conn,
         "INSERT INTO tb_promo(promo_id,nama,tanggal_berlaku,tanggal_selesai,jenis_bonus,jenis_diskon
-        ,akumulasi,prioritas,jumlah_diskon,quota,status)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+        ,akumulasi,prioritas,jumlah_diskon,quota,status,satuan_id)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
         [
             $promo_id,
             $nama,
@@ -47,9 +49,10 @@ try {
             $prioritas,
             $jumlah_diskon,
             $quota,
-            $status_promo
+            $status_promo,
+            $satuan_id
         ],
-        "sssssssssss"
+        "ssssssssssss"
     );
     if (isset($data['promo_kondisi'])) {
 

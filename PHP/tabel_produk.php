@@ -8,14 +8,14 @@
         </div>
         <div class="modal-body">
           <form id="form_produk" enctype="multipart/form-data">
-          <div class="col">
             <div class="col">
-              <div class="card">
-                <div class="card-header"> Produk</div>
-                <div class="card-body">
-                  <div class="row g-3">
-                  
-                    <div class="col">
+              <div class="col">
+                <div class="card">
+                  <div class="card-header"> Produk</div>
+                  <div class="card-body">
+                    <div class="row g-3">
+
+                      <div class="col">
                         <label class="form-label mb-0 mt-2" for="name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                         <input class="form-control" type="text" id="name_produk" name="name_produk" value="">
                         <label class="form-label mb-0 mt-2" for="kategori">Kategori:<i class="bi bi-asterisk text-danger align-middle "></i></label>
@@ -27,45 +27,49 @@
                           <input type="file" class="form-control" id="produk_gambar" name="produk_gambar" accept=".jpg,.jpeg,.png">
                         </div>
                       </div>
-                    <div class="col">
-                      <label class="form-label mb-0 mt-2" for="no_sku">No SKU:</label>
-                      <input class="form-control" type="text" id="no_sku" name="no_sku" aria-describedby="basic-addon1" value="">
-                      <label class="form-label mb-0 mt-2" for="status_produk">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                      <select class="form-select" id="status_produk">
-                        <option value="aktif">Aktif</option>
-                        <option value="non aktif">Non Aktif</option>
-                      </select>
-                      <label class="form-label mb-0 mt-2" for="harga_minimal">Harga Minimal:</label>
-                      <input class="form-control" type="text" id="harga_minimal" name="harga_minimal" aria-describedby="basic-addon1" value="">
-                      <label class="form-label mb-0 mt-2" for="stock_awal">Stock Awal:</label>
-                      <input class="form-control" type="text" id="stock_awal" name="stock_awal" aria-describedby="basic-addon1" value="">
+                      <div class="col">
+                        <label class="form-label mb-0 mt-2" for="no_sku">No SKU:</label>
+                        <input class="form-control" type="text" id="no_sku" name="no_sku" aria-describedby="basic-addon1" value="">
+                        <label class="form-label mb-0 mt-2" for="status_produk">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                        <select class="form-select" id="status_produk">
+                          <option value="aktif">Aktif</option>
+                          <option value="non aktif">Non Aktif</option>
+                        </select>
+                        <label class="form-label mb-0 mt-2" for="harga_minimal">Harga Minimal:</label>
+                        <input class="form-control" type="text" id="harga_minimal" name="harga_minimal" aria-describedby="basic-addon1" value="">
+                        <label class="form-label mb-0 mt-2" for="stock_awal">Stock Awal:</label>
+                        <input class="form-control" type="text" id="stock_awal" name="stock_awal" aria-describedby="basic-addon1" value="">
+
+                        <label class="form-label mb-0 mt-2" for="satuan">Satuan:</label>
+                        <select class="form-select" id="satuan"></select>
+
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col">
-              <div class="card">
-                <div class="card-header">Pricelist</div>
-                <div class="card-body">
-                  <table class="table  table-hover table-bordered table-sm" id="detail_pricelist_produk_table">
-                    <thead id="detail_pricelist_produk_thead">
-                      <tr>
-                        <th scope="col">
-                          Pricelist
-                        </th>
-                        <th scope="col">
-                          Harga
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody id="create_detail_pricelist_produk_tbody">
-                    </tbody>
-                  </table>
+              <div class="col">
+                <div class="card">
+                  <div class="card-header">Pricelist</div>
+                  <div class="card-body">
+                    <table class="table  table-hover table-bordered table-sm" id="detail_pricelist_produk_table">
+                      <thead id="detail_pricelist_produk_thead">
+                        <tr>
+                          <th scope="col">
+                            Pricelist
+                          </th>
+                          <th scope="col">
+                            Harga
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody id="create_detail_pricelist_produk_tbody">
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </form>
         </div>
         <div class="modal-footer">
@@ -85,65 +89,67 @@
         </div>
         <div class="modal-body">
           <form id="form_produk" enctype="multipart/form-data">
-          <div class="col">
             <div class="col">
-              <div class="card">
-                <div class="card-header">Produk</div>
-                <div class="card-body">
-                  <div class="row g-3">
-                    <div class="col">
-                      <label class="form-label mb-0 mt-2" for="update_produk_id">Kode Produk:</label>
-                      <input class="form-control" type="text" id="update_produk_id" name="update_produk_id" value="" disabled>
-                      <label class="form-label mb-0 mt-2" for="update_name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                      <input class="form-control" type="text" id="update_name_produk" name="update_name_produk" value="">
-                      <label class="form-label mb-0 mt-2" for="update_kategori">Kategori:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                      <select class="form-select" id="update_kategori"></select>
-                      <label class="form-label mb-0 mt-2" for="update_brand">Brand:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                      <select class="form-select" id="update_brand"></select>
+              <div class="col">
+                <div class="card">
+                  <div class="card-header">Produk</div>
+                  <div class="card-body">
+                    <div class="row g-3">
+                      <div class="col">
+                        <label class="form-label mb-0 mt-2" for="update_produk_id">Kode Produk:</label>
+                        <input class="form-control" type="text" id="update_produk_id" name="update_produk_id" value="" disabled>
+                        <label class="form-label mb-0 mt-2" for="update_name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                        <input class="form-control" type="text" id="update_name_produk" name="update_name_produk" value="">
+                        <label class="form-label mb-0 mt-2" for="update_kategori">Kategori:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                        <select class="form-select" id="update_kategori"></select>
+                        <label class="form-label mb-0 mt-2" for="update_brand">Brand:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                        <select class="form-select" id="update_brand"></select>
                         <label for="update_produk_gambar" class="form-label mb-0 mt-2">Upload Gambar Produk:</label>
                         <div class="input-group mb-3" id="update_produk_input_group">
                           <input type="file" class="form-control" id="update_produk_gambar" name="update_produk_gambar" accept=".jpg,.jpeg,.png">
                         </div>
-                    </div>
-                    <div class="col">
-                      <label class="form-label mb-0 mt-2" for="update_no_sku">No SKU:</label>
-                      <input class="form-control" type="text" id="update_no_sku" name="update_no_sku" aria-describedby="basic-addon1" value="">
-                      <label class="form-label mb-0 mt-2" for="update_status_produk">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                      <select class="form-select" id="update_status_produk">
-                        <option value="aktif">Aktif</option>
-                        <option value="non aktif">Non Aktif</option>
-                      </select>
-                      <label class="form-label mb-0 mt-2" for="update_harga_minimal">Harga Minimal:</label>
-                      <input class="form-control" type="text" id="update_harga_minimal" name="update_harga_minimal" aria-describedby="basic-addon1" value="">
-                      <label class="form-label mb-0 mt-2" for="update_stock_awal">Stock Awal:</label>
-                      <input class="form-control" type="text" id="update_stock_awal" name="update_stock_awal" aria-describedby="basic-addon1" value="">
+                      </div>
+                      <div class="col">
+                        <label class="form-label mb-0 mt-2" for="update_no_sku">No SKU:</label>
+                        <input class="form-control" type="text" id="update_no_sku" name="update_no_sku" aria-describedby="basic-addon1" value="">
+                        <label class="form-label mb-0 mt-2" for="update_status_produk">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                        <select class="form-select" id="update_status_produk">
+                          <option value="aktif">Aktif</option>
+                          <option value="non aktif">Non Aktif</option>
+                        </select>
+                        <label class="form-label mb-0 mt-2" for="update_harga_minimal">Harga Minimal:</label>
+                        <input class="form-control" type="text" id="update_harga_minimal" name="update_harga_minimal" aria-describedby="basic-addon1" value="">
+                        <label class="form-label mb-0 mt-2" for="update_stock_awal">Stock Awal:</label>
+                        <input class="form-control" type="text" id="update_stock_awal" name="update_stock_awal" aria-describedby="basic-addon1" value="">
+                        <label class="form-label mb-0 mt-2" for="update_satuan">Satuan:</label>
+                        <select class="form-select" id="update_satuan"></select>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col">
-              <div class="card">
-                <div class="card-header">Pricelist</div>
-                <div class="card-body">
-                  <table class="table  table-hover table-bordered table-sm" id="update_detail_pricelist_produk">
-                    <thead id="update_detail_pricelist_produk_thead">
-                      <tr>
-                        <th scope="col">
-                          Pricelist
-                        </th>
-                        <th scope="col">
-                          Harga
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody id="update_detail_pricelist_produk_tbody">
-                    </tbody>
-                  </table>
+              <div class="col">
+                <div class="card">
+                  <div class="card-header">Pricelist</div>
+                  <div class="card-body">
+                    <table class="table  table-hover table-bordered table-sm" id="update_detail_pricelist_produk">
+                      <thead id="update_detail_pricelist_produk_thead">
+                        <tr>
+                          <th scope="col">
+                            Pricelist
+                          </th>
+                          <th scope="col">
+                            Harga
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody id="update_detail_pricelist_produk_tbody">
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </form>
         </div>
         <div class="modal-footer">

@@ -14,7 +14,8 @@ try {
     $no_sku = $fields['no_sku'] ?? '';
     $status = $fields['status_produk'];
     $harga_minimal = $fields['harga_minimal'] ?? '';
-    $stock_awal = $fields['stock_awal']??'';
+    $stock_awal = $fields['stock_awal'] ?? '';
+    $satuan_id = $fields['satuan_id'];
 
 
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
@@ -24,9 +25,9 @@ try {
     // Generate ID and insert
     $produk_id = generateCustomID('PR', 'tb_produk', 'produk_id', $conn);
 
-    $stmt_produk = $conn->prepare("INSERT INTO tb_produk (produk_id, nama,no_sku,status,harga_minimal,kategori_id,brand_id,stock_awal) 
-                                    VALUES (?,?,?,?,?,?,?,?)");
-    $stmt_produk->bind_param("ssssssss", $produk_id, $nama, $no_sku, $status, $harga_minimal, $kategori_id, $brand_id,$stock_awal);
+    $stmt_produk = $conn->prepare("INSERT INTO tb_produk (produk_id, nama,no_sku,status,harga_minimal,kategori_id,brand_id,stock_awal,satuan_id) 
+                                    VALUES (?,?,?,?,?,?,?,?,?)");
+    $stmt_produk->bind_param("sssssssss", $produk_id, $nama, $no_sku, $status, $harga_minimal, $kategori_id, $brand_id, $stock_awal, $satuan_id);
     if (!$stmt_produk->execute()) {
         throw new Exception("DB insert error: " . $stmt_produk->error);
     }

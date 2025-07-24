@@ -8,6 +8,7 @@ if (submit_produk) {
     $("#modal_produk").on("shown.bs.modal", function () {
       fetch_fk("kategori");
       fetch_fk("brand");
+      fetch_fk("satuan");
       pricelist();
       helper.format_nominal("harga_minimal");
       $("#name_produk").trigger("focus");
@@ -18,6 +19,11 @@ if (submit_produk) {
       });
       $("#brand").select2({
         placeholder: "Pilih Brand",
+        allowClear: true,
+        dropdownParent: $("#modal_produk"),
+      });
+      $("#satuan").select2({
+        placeholder: "Pilih Satuan",
         allowClear: true,
         dropdownParent: $("#modal_produk"),
       });
@@ -97,6 +103,15 @@ function populateDropdown(data, field) {
           false
         )
       );
+    } else if (field == "satuan") {
+      select.append(
+        new Option(
+          `${item.satuan_id} - ${item.nama}`,
+          item.satuan_id,
+          false,
+          false
+        )
+      );
     } else {
       toastr.error("field is empty or no matching field");
     }
@@ -117,7 +132,7 @@ async function submitProduk() {
   let harga_minimal = document.getElementById("harga_minimal").value;
   harga_minimal = helper.format_angka(harga_minimal);
   const stock_awal = document.getElementById("stock_awal").value;
-  console.log(stock_awal);
+  const satuan_id = document.getElementById("satuan_id").value;
 
   const details = [];
   const rows = document.querySelectorAll(
@@ -235,6 +250,7 @@ async function submitProduk() {
       formData.set("status_produk", status_produk);
       formData.set("harga_minimal", harga_minimal);
       formData.set("stock_awal", stock_awal);
+      formData.set("satuan_id", satuan_id);
       formData.set("user_id", access.decryptItem("user_id"));
       formData.set("details", JSON.stringify(details));
 

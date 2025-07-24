@@ -33,8 +33,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <label class="form-label mb-0 mt-2" for="update_satuan_ID">Kode User:</label>
-                <input class="form-control" type="text" id="update_satuan_ID" disabled>
+                <label class="form-label mb-0 mt-2" for="update_satuan_id">Kode User:</label>
+                <input class="form-control" type="text" id="update_satuan_id" disabled>
 
 
                 <label class="form-label mb-0 mt-2" for="update_nama_satuan">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>

@@ -6,12 +6,52 @@ if (submit_satuan) {
   submit_satuan.addEventListener("click", submitSatuan);
   $("#modal_satuan").on("shown.bs.modal", function () {
     $("#nama_satuan").trigger("focus");
+
+    $("#id_referensi").select2({
+      placeholder: "Pilih Satuan Referensi",
+      allowClear: true,
+      dropdownParent: $("#modal_satuan"),
+    });
+    fetch_satuan();
   });
+}
+
+async function fetch_satuan() {
+  try {
+    const response = await apiRequest(
+      `/PHP/API/satuan_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}`
+    );
+    populateSatuanDropdown(response.data);
+  } catch (error) {
+    toastr.error("Gagal mengambil data satuan: " + error.message);
+  }
+}
+
+function populateSatuanDropdown(data) {
+  const select = $("#id_referensi");
+  select.empty();
+  select.append(new Option("Pilih Satuan Referensi", "", false, false));
+
+  data.forEach((item) => {
+    select.append(
+      new Option(
+        `${item.satuan_id} - ${item.nama}`,
+        item.satuan_id,
+        false,
+        false
+      )
+    );
+  });
+
+  select.trigger("change");
 }
 
 async function submitSatuan() {
   const name_satuan = document.getElementById("nama_satuan").value;
-  const id_referensi = document.getElementById("id_referensi").value;
+
+  const id_referensi = $("#id_referensi").val();
   const qty_satuan = document.getElementById("qty_satuan").value;
 
   if (!name_satuan || name_satuan.trim() === "") {

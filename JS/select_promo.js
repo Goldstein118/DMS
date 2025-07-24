@@ -52,6 +52,8 @@ if (grid_container_promo) {
       "Jumlah Diskon",
       "Quota",
       "Status",
+      "Satuan",
+      "satuan_id",
       {
         name: "Aksi",
         formatter: () => {
@@ -136,6 +138,8 @@ if (grid_container_promo) {
               : `<span class="badge text-bg-danger">Non Aktif</span>`
           }
           `),
+          item.satuan_nama,
+          item.satuan_id,
           null,
         ]),
     },
@@ -386,7 +390,7 @@ function delete_promo_kondisi(field) {
     if (result.isConfirmed) {
       try {
         $(this).closest("tr").remove();
-        Swal.fire("Berhasil", "Pricelist dihapus.", "success");
+        Swal.fire("Berhasil", "Promo dihapus.", "success");
       } catch (error) {
         Swal.fire({
           icon: "error",
@@ -427,7 +431,7 @@ function populate_bonus_barang(data, index, element_id, produk_id) {
   }, 0); // or try 100ms if needed
 }
 
-async function fetch_fk(field, index, element_id, tipe) {
+async function fetch_fk(field, index, element_id, tipe, current_satuan_id) {
   try {
     const response = await apiRequest(
       `/PHP/API/${field}_API.php?action=select&user_id=${access.decryptItem(
@@ -436,13 +440,27 @@ async function fetch_fk(field, index, element_id, tipe) {
       "POST",
       { select: "select" }
     );
-    populateNewDropdown(response.data, field, index, element_id, tipe);
+    populateNewDropdown(
+      response.data,
+      field,
+      index,
+      element_id,
+      tipe,
+      current_satuan_id
+    );
   } catch (error) {
     toastr.error("Gagal mengambil data : " + error.message);
   }
 }
 
-function populateNewDropdown(data, field, index, element_id, tipe) {
+function populateNewDropdown(
+  data,
+  field,
+  index,
+  element_id,
+  tipe,
+  current_satuan_id
+) {
   const select = $(`#${element_id}${index}`);
 
   select.empty();
@@ -491,6 +509,17 @@ function populateNewDropdown(data, field, index, element_id, tipe) {
           item.channel_id,
           false,
           false
+        )
+      );
+    });
+  } else if (field === "satuan") {
+    data.forEach((item) => {
+      select.append(
+        new Option(
+          `${item.satuan_id} - ${item.nama}`,
+          item.satuan_id,
+          false,
+          item.satuan_id === current_satuan_id
         )
       );
     });
@@ -847,6 +876,7 @@ async function handle_update(button) {
       ?.textContent.trim()
       .toLowerCase()
       .replace(/\s/g, "");
+    const current_satuan_id = row.cells[13].textContent;
 
     current_tanggal_berlaku = helper.unformat_date(current_tanggal_berlaku);
     const parts_tanggal_berlaku = current_tanggal_berlaku.split("-"); // ["2025", "05", "02"]
@@ -876,6 +906,7 @@ async function handle_update(button) {
     document.getElementById("update_jumlah_diskon").value = jumlah_diskon;
     document.getElementById("update_quota").value = quota;
     document.getElementById("update_status_promo").value = status;
+    fetch_fk("satuan", "", "update_satuan_id", "", current_satuan_id);
 
     populate_bonus_barang_update_modal(promo_id);
 
@@ -958,6 +989,7 @@ if (submit_promo_update) {
     const jumlah_diskon = document.getElementById("update_jumlah_diskon").value;
     const status = document.getElementById("update_status_promo").value;
     const quota = document.getElementById("update_quota").value;
+    const satuan_id = $("#update_satuan_id").val();
 
     let compare_tanggal = true;
     const startDate = new Date(tanggal_berlaku);
@@ -1142,6 +1174,7 @@ if (submit_promo_update) {
           jumlah_diskon: jumlah_diskon,
           status: status,
           quota: quota,
+          satuan_id: satuan_id,
           promo_kondisi: promo_kondisi,
           promo_bonus_barang: promo_bonus_barang,
         };

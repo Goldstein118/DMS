@@ -21,6 +21,7 @@ try {
         'jenis_diskon',
         'status',
         'quota',
+        'satuan_id'
     ];
     $fields = validate_1($data, $requiredFields);
 
@@ -39,6 +40,8 @@ try {
     $quota = $fields['quota'] ?? '';
     $promo_kondisi = $data['promo_kondisi'] ?? [];
     $promo_bonus_barang = $data['promo_bonus_barang'] ?? [];
+    $satuan_id = $data['satuan_id'];
+
 
     // Basic input validation
     validate_2($nama, '/^[a-zA-Z0-9\s]+$/', "Format nama tidak valid");
@@ -51,10 +54,10 @@ try {
     $stmt = $conn->prepare("UPDATE tb_promo SET 
         nama = ?, tanggal_berlaku = ?, tanggal_selesai = ?, 
         jenis_bonus = ?, akumulasi = ?, prioritas = ?, 
-        jenis_diskon = ?, jumlah_diskon = ?, quota = ?, status = ?
+        jenis_diskon = ?, jumlah_diskon = ?, quota = ?, status = ?,satuan_id =?
         WHERE promo_id = ?");
     $stmt->bind_param(
-        "sssssssssss",
+        "ssssssssssss",
         $nama,
         $tanggal_berlaku,
         $tanggal_selesai,
@@ -65,6 +68,7 @@ try {
         $jumlah_diskon,
         $quota,
         $status,
+        $satuan_id,
         $promo_id
     );
     $stmt->execute();

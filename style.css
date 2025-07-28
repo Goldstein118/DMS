@@ -242,6 +242,8 @@ body::-webkit-scrollbar {
 #table_produk td:nth-child(8),
 #table_produk th:nth-child(10),
 #table_produk td:nth-child(10),
+#table_produk th:nth-child(13),
+#table_produk td:nth-child(13),
 #table_armada th:nth-child(4),
 #table_armada td:nth-child(4),
 #table_promo th:nth-child(14),
@@ -404,7 +406,8 @@ h3 {
 #table_bonus_barang,
 #update_jenis_promo_kondisi,
 #update_table_bonus_barang,
-#update_detail_pricelist {
+#update_detail_pricelist,
+#detail_pembelian {
   border-collapse: collapse;
   width: 100%;
   table-layout: fixed;
@@ -416,12 +419,15 @@ h3 {
 #table_bonus_barang thead,
 #update_jenis_promo_kondisi thead,
 #update_table_bonus_barang thead,
-#update_detail_pricelist thead {
+#update_detail_pricelist thead,
+#detail_pembelian thead {
   display: table;
   width: 100%;
   table-layout: fixed;
   overflow-x: auto;
   overflow-y: hidden !important;
+
+  vertical-align: middle;
 }
 
 #detail_pricelist tbody,
@@ -429,7 +435,8 @@ h3 {
 #table_bonus_barang tbody,
 #update_jenis_promo_kondisi tbody,
 #update_table_bonus_barang tbody,
-#update_detail_pricelist tbody {
+#update_detail_pricelist tbody,
+#detail_pembelian tbody {
   display: block;
   max-height: 200px;
   overflow-y: scroll;
@@ -447,7 +454,8 @@ h3 {
 #table_bonus_barang tbody tr,
 #update_jenis_promo_kondisi tbody tr,
 #update_table_bonus_barang tbody tr,
-#update_detail_pricelist tbody tr {
+#update_detail_pricelist tbody tr,
+#detail_pembelian tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
@@ -515,7 +523,8 @@ h3 {
 #promo_kondisi_card_body,
 #promo_bonus_card_body,
 #update_promo_kondisi_card_body,
-#update_promo_bonus_card_body {
+#update_promo_bonus_card_body,
+#detail_pembelian_card_body {
   max-height: 35vh;
   margin-bottom: 25px;
   overflow-x: auto;

@@ -127,7 +127,7 @@ if (grid_container_promo) {
           item.jenis_bonus,
           item.akumulasi,
           item.prioritas,
-          item.created_on,
+          helper.format_date_time(item.created_on),
           item.jenis_diskon,
           item.jumlah_diskon,
           item.quota,

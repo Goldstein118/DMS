@@ -3,7 +3,7 @@ import * as access from "./cek_access.js";
 import * as helper from "./helper.js";
 const submit_armada = document.getElementById("submit_armada");
 if (submit_armada) {
-  submit_armada.addEventListener("click", submitChannel);
+  submit_armada.addEventListener("click", submitArmada);
   $(document).ready(function () {
     $("#modal_armada").on("shown.bs.modal", function () {
       $("#nama_armada").trigger("focus");
@@ -47,7 +47,7 @@ function populate_karyawan(data) {
 
   select.trigger("change");
 }
-async function submitChannel() {
+async function submitArmada() {
   const nama = document.getElementById("nama_armada").value;
   const karyawan_id = document.getElementById("karyawan_select").value;
 

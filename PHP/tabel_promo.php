@@ -79,8 +79,8 @@
                                     <thead id="jenis_promo_kondisi_thead">
                                         <tr>
                                             <th>Jenis</th>
+                                            <th>Kriteria</th>
                                             <th>Kondisi</th>
-                                            <th>Exclude/Include</th>
                                             <th>Qty Min</th>
                                             <th>Qty Max</th>
                                             <th>Qty Akumulasi</th>

@@ -33,6 +33,8 @@ const accessMap = {
   tb_armada: 48,
   tb_frezzer: 52,
   tb_promo: 56,
+  tb_satuan: 60,
+  tb_pembelian: 64,
 };
 
 const actionIndex = {

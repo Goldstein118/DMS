@@ -18,6 +18,7 @@ function checkAccess($conn, $userId, $table, $index, $target_user_id = null)
         'tb_frezzer' => 52,
         'tb_promo'    => 56,
         'tb_satuan' => 60,
+        'tb_pembelian' => 64,
     ];
 
 

@@ -306,5 +306,27 @@ if ($conn->query($satuan)) {
     }
 }
 
+$pembelian = "CREATE TABLE IF NOT EXISTS tb_pembelian(pembelian_id VARCHAR(20) PRIMARY KEY NOT NULL,tanggal_po DATE,tanggal_pengiriman DATE,tanggal_terima DATE,tanggal_invoice DATE,
+supplier_id VARCHAR(20),keterangan VARCHAR(100),no_invoice_supplier VARCHAR(20),no_pengiriman VARCHAR(20),total_qty VARCHAR(20),ppn VARCHAR(20),nominal_ppn VARCHAR(20),diskon VARCHAR(20),nominal_pph VARCHAR(20),
+biaya_tambahan VARCHAR(20),grand_total VARCHAR(20),created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,created_by VARCHAR(50), status VARCHAR (20),tanggal_input_invoice DATE ,FOREIGN KEY (supplier_id) REFERENCES tb_supplier(supplier_id) ON DELETE RESTRICT)
+";
+
+if ($conn->query($pembelian)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+
+$detail_pembelian = "CREATE TABLE IF NOT EXISTS tb_detail_pembelian(detail_pembelian_id VARCHAR(20),pembelian_id VARCHAR(20), produk_id VARCHAR(20),urutan VARCHAR(20),qty VARCHAR(20),harga VARCHAR(20),diskon VARCHAR(20),satuan_id VARCHAR(20),
+FOREIGN KEY (pembelian_id) REFERENCES tb_pembelian(pembelian_id) ON DELETE RESTRICT,FOREIGN KEY (satuan_id) REFERENCES tb_satuan(satuan_id) ON DELETE RESTRICT)";
+
+if ($conn->query($detail_pembelian)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
 
 mysqli_close($conn);

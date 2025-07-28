@@ -584,6 +584,7 @@ export function delete_detail_pricelist(action) {
 }
 
 export function format_date(str) {
+  if (!str) return "";
   const date = new Date(str);
 
   const day = String(date.getDate()).padStart(2, "0");
@@ -627,4 +628,32 @@ export function unformat_date(str) {
   const month = String(monthNames.indexOf(monthStr) + 1).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
+}
+export function format_date_time(inputStr) {
+  // Convert the input string to a Date object
+  const date = new Date(inputStr.replace(" ", "T"));
+
+  // Define options for formatting
+  const day = date.getDate().toString().padStart(2, "0");
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const month = monthNames[date.getMonth()];
+  const year = date.getFullYear();
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+
+  // Build and return the formatted string
+  return `${day} ${month} ${year} ${hours}:${minutes}`;
 }

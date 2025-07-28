@@ -126,6 +126,13 @@
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_promo"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_promo' ? 'active' : ''; ?>"> Promo</a>
             </li>
+
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_pembelian"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_pembelian' ? 'active' : ''; ?>"> Pembelian</a>
+            </li>
+
           </ul>
         </div>
       </li>
@@ -255,6 +262,12 @@
               <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_promo"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_promo' ? 'active' : ''; ?>"> Promo</a>
+            </li>
+
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_pembelian"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_pembelian' ? 'active' : ''; ?>"> Pembelian</a>
             </li>
           </ul>
         </div>

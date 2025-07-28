@@ -32,7 +32,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>../style.css?v=2.0">
+  <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>../style.css?v=2.0.1">
 
 
 
@@ -105,7 +105,8 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
         'tabel_armada',
         'tabel_frezzer',
         'tabel_promo',
-        'tabel_satuan'
+        'tabel_satuan',
+        'tabel_pembelian'
       ];
 
       if (in_array($page, $allowed_pages)) {
@@ -217,6 +218,13 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
       ?>
         <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_satuan.js?v=2.0"></script>
         <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_satuan.js?v=2.0"></script>
+      <?php
+        break;
+
+      case 'tabel_pembelian':
+      ?>
+        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_pembelian.js?v=2.0"></script>
+        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_pembelian.js?v=2.0"></script>
     <?php
         break;
     }

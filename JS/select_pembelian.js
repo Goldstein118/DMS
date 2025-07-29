@@ -156,9 +156,11 @@ if (grid_container_pembelian) {
 
           html(
             `${
-              pembelian.tanggal_invoice
+              helper.isTwoWeeksLater(pembelian.tanggal_input_invoice)
                 ? `${helper.format_date(pembelian.tanggal_invoice)}`
-                : `<button type="button" id="tanggal_pengiriman" class="btn btn-warning tanggal_pengiriman btn-sm" data-bs-toggle="modal" data-bs-target="#modal_terima"
+                : `${helper.format_date(
+                    pembelian.tanggal_invoice
+                  )}<button type="button" id="tanggal_invoice" class="btn btn-warning tanggal_invoice btn-sm" data-bs-toggle="modal" data-bs-target="#modal_invoice"
                     >
               <i class="bi bi-pencil-fill"></i> 
             </button>`

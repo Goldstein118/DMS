@@ -11,13 +11,8 @@ try {
 
     $fields = validate_1($data, $requiredFields, $default);
     $tanggal_po = $fields['tanggal_po'];
-    $tanggal_pengiriman = $fields['tanggal_pengiriman'];
-    $tanggal_terima = $fields['tanggal_terima'];
-    $tanggal_invoice = $fields['tanggal_invoice'];
     $supplier_id = $fields['supplier_id'];
     $keterangan = $fields['keterangan'];
-    $no_invoice_supplier = $fields['no_invoice_supplier'];
-    $no_pengiriman = $fields['no_pengiriman'];
     $total_qty = $fields['total_qty'];
     $ppn = $fields['ppn'];
     $nominal_ppn = $fields['nominal_ppn'];
@@ -37,20 +32,15 @@ try {
 
     executeInsert(
         $conn,
-        "INSERT INTO tb_pembelian (pembelian_id,tanggal_po,tanggal_pengiriman,tanggal_terima,tanggal_invoice,supplier_id,keterangan,
-    no_invoice_supplier,no_pengiriman,total_qty,ppn,nominal_ppn,diskon,nominal_pph,biaya_tambahan,grand_total,
+        "INSERT INTO tb_pembelian (pembelian_id,tanggal_po,supplier_id,keterangan
+        ,total_qty,ppn,nominal_ppn,diskon,nominal_pph,biaya_tambahan,grand_total,
     status,created_by) 
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
         [
             $pembelian_id,
             $tanggal_po,
-            $tanggal_pengiriman,
-            $tanggal_terima,
-            $tanggal_invoice,
             $supplier_id,
             $keterangan,
-            $no_invoice_supplier,
-            $no_pengiriman,
             $total_qty,
             $ppn,
             $nominal_ppn,
@@ -61,7 +51,7 @@ try {
             $status,
             $created_by
         ],
-        "ssssssssssssssssss"
+        "sssssssssssss"
     );
 
 

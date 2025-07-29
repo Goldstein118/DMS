@@ -6,6 +6,15 @@ const submit_pembelian = document.getElementById("submit_pembelian");
 const submit_detail_pembelian = document.getElementById(
   "create_detail_pembelian"
 );
+const submit_pengiriman_button = document.getElementById(
+  "submit_pengiriman_button"
+);
+const submit_terima_button = document.getElementById("submit_terima_button");
+const submit_invoice_button = document.getElementById("submit_invoice_button");
+submit_pengiriman_button.addEventListener("click", submit_terima);
+submit_terima_button.addEventListener("click", submit_pengiriman);
+submit_invoice_button.addEventListener("click", submit_invoice);
+
 if (submit_pembelian) {
   submit_pembelian.addEventListener("click", submitPembelian);
   submit_detail_pembelian.addEventListener("click", () => {
@@ -29,23 +38,32 @@ if (submit_pembelian) {
       selectYears: 25,
       selectMonths: true,
     });
-    $("#tanggal_pengiriman").pickadate({
-      format: "dd mmm yyyy", // user sees: 01 Jan 2025
-      formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
-      selectYears: 25,
-      selectMonths: true,
+
+    $("#modal_pengiriman").on("shown.bs.modal", function () {
+      $("#tanggal_pengiriman").pickadate({
+        format: "dd mmm yyyy", // user sees: 01 Jan 2025
+        formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
+        selectYears: 25,
+        selectMonths: true,
+      });
     });
-    $("#tanggal_terima").pickadate({
-      format: "dd mmm yyyy", // user sees: 01 Jan 2025
-      formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
-      selectYears: 25,
-      selectMonths: true,
+
+    $("#modal_terima").on("shown.bs.modal", function () {
+      $("#tanggal_terima").pickadate({
+        format: "dd mmm yyyy", // user sees: 01 Jan 2025
+        formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
+        selectYears: 25,
+        selectMonths: true,
+      });
     });
-    $("#tanggal_invoice").pickadate({
-      format: "dd mmm yyyy", // user sees: 01 Jan 2025
-      formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
-      selectYears: 25,
-      selectMonths: true,
+
+    $("#modal_invoice").on("shown.bs.modal", function () {
+      $("#tanggal_invoice").pickadate({
+        format: "dd mmm yyyy", // user sees: 01 Jan 2025
+        formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
+        selectYears: 25,
+        selectMonths: true,
+      });
     });
   });
 }
@@ -271,24 +289,89 @@ async function fetch_supplier() {
   }
 }
 
+async function submit_terima() {
+  const picker_terima = $("#tanggal_terima").pickadate("picker");
+  const tanggal_terima = picker_terima.get("select", "yyyy-mm-dd");
+
+  const body = { tanggal_terima: tanggal_terima };
+  try {
+    const response = await apiRequest(
+      `/PHP/API/pembelian_API.php?action=update`,
+      "POST",
+      body
+    );
+    if (response.ok) {
+      swal.fire("Berhasil", response.message, "success");
+      $("#modal_terima").modal("hide");
+      window.pembelian_grid.forceRender();
+      setTimeout(() => {
+        helper.custom_grid_header("pembelian");
+      }, 200);
+    }
+  } catch (error) {
+    toastr.error(error.message);
+  }
+}
+
+async function submit_pengiriman() {
+  const picker_pengiriman = $("#tanggal_pengiriman").pickadate("picker");
+  const tanggal_pengiriman = picker_pengiriman.get("select", "yyyy-mm-dd");
+  const no_pengiriman = document.getElementById("no_pengiriman").value;
+  const body = {
+    tanggal_pengiriman: tanggal_pengiriman,
+    no_pengiriman: no_pengiriman,
+  };
+  try {
+    const response = await apiRequest(
+      `/PHP/API/pembelian_API.php?action=update`,
+      "POST",
+      body
+    );
+    if (response.ok) {
+      swal.fire("Berhasil", response.message, "success");
+      $("#modal_pengiriman").modal("hide");
+      window.pembelian_grid.forceRender();
+      setTimeout(() => {
+        helper.custom_grid_header("pembelian");
+      }, 200);
+    }
+  } catch (error) {
+    toastr.error(error.message);
+  }
+}
+
+async function submit_invoice() {
+  const picker_invoice = $("#tanggal_invoice").pickadate("picker");
+  const tanggal_invoice = picker_invoice.get("select", "yyyy-mm-dd");
+  const no_invoice = document.getElementById("no_invoice").value;
+  const body = { tanggal_invoice: tanggal_invoice, no_invoice: no_invoice };
+  try {
+    const response = await apiRequest(
+      `/PHP/API/pembelian_API.php?action=update`,
+      "POST",
+      body
+    );
+    if (response.ok) {
+      swal.fire("Berhasil", response.message, "success");
+      $("#modal_pengiriman").modal("hide");
+      window.pembelian_grid.forceRender();
+      setTimeout(() => {
+        helper.custom_grid_header("pembelian");
+      }, 200);
+    }
+  } catch (error) {
+    toastr.error(error.message);
+  }
+}
+
 async function submitPembelian() {
   // Collect form data
   const picker_po = $("#tanggal_po").pickadate("picker");
   const tanggal_po = picker_po.get("select", "yyyy-mm-dd");
 
-  const picker_pengiriman = $("#tanggal_pengiriman").pickadate("picker");
-  const tanggal_pengiriman = picker_pengiriman.get("select", "yyyy-mm-dd");
-
-  const picker_terima = $("#tanggal_terima").pickadate("picker");
-  const tanggal_terima = picker_terima.get("select", "yyyy-mm-dd");
-
-  const picker_invoice = $("#tanggal_invoice").pickadate("picker");
-  const tanggal_invoice = picker_invoice.get("select", "yyyy-mm-dd");
-
   const supplier_id = document.getElementById("supplier_id").value;
   const keterangan = document.getElementById("keterangan").value;
-  const no_invoice = document.getElementById("no_invoice").value;
-  const no_pengiriman = document.getElementById("no_pengiriman").value;
+
   const total_kuantitas = document.getElementById("total_kuantitas").value;
 
   const ppn = document.getElementById("ppn").value;
@@ -365,13 +448,8 @@ async function submitPembelian() {
     user_id: `${access.decryptItem("user_id")}`,
     created_by: `${access.decryptItem("nama")}`,
     tanggal_po: tanggal_po,
-    tanggal_pengiriman: tanggal_pengiriman,
-    tanggal_terima: tanggal_terima,
-    tanggal_invoice: tanggal_invoice,
     supplier_id: supplier_id,
     keterangan: keterangan,
-    no_invoice_supplier: no_invoice,
-    no_pengiriman: no_pengiriman,
     total_qty: total_kuantitas,
     ppn: ppn,
     nominal_ppn: nominal_ppn,

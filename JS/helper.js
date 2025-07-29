@@ -657,3 +657,14 @@ export function format_date_time(inputStr) {
   // Build and return the formatted string
   return `${day} ${month} ${year} ${hours}:${minutes}`;
 }
+
+export function isTwoWeeksLater(date) {
+  if (!date) return "";
+  const inputDate = new Date(date);
+  const twoWeeksLater = new Date(
+    inputDate.getTime() + 14 * 24 * 60 * 60 * 1000
+  ); // Add 2 weeks
+  const now = new Date();
+
+  return now >= twoWeeksLater;
+}

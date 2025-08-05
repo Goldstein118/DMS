@@ -7,7 +7,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
                 <div class="card">
                     <div class="card-header">Pembelian</div>
                     <div class="card-body" id="pembelian_card_body">
@@ -67,9 +66,9 @@
                                                         Kuantitas
                                                     </th>
                                                     <th scope="col">
-                                                        Harga
+                                                        Satuan
                                                     </th>
-                                                    <th scope="col">Satuan</th>
+                                                    <th scope="col"> Harga</th>
                                                     <th>Diskon</th>
                                                     <th id="aksi_thead">Aksi</th>
                                                 </tr>
@@ -147,12 +146,7 @@
                 </div>
 
 
-                <div class="card ">
-                    <div class="card-header">Detail Pembelian</div>
-                    <div class="card-body" id="detail_pembelian_card_body">
 
-                    </div>
-                </div>
             </div>
             <div class="modal-footer">
                 <button id="submit_pembelian" type="button" class="btn btn-primary">Submit</button>
@@ -165,14 +159,17 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="modal_pengiriman" tabindex="-1" aria-labelledby="modal_pengirimanLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="modal_pengiriman" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modal_pengirimanLabel">Modal title</h1>
+                <h1 class="modal-title fs-5" id="exampleModalCenterTitle">Modal title</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+
+                <input type="text" class="form-control d-none" id="pengiriman_pembelian_id" />
+
                 <label class="form-label mb-0 mt-2" for="tanggal_pengiriman">Tanggal Pengiriman:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                 <input type="text" class="form-control" id="tanggal_pengiriman" name="tanggal_pengiriman" />
 
@@ -187,14 +184,18 @@
 </div>
 
 
-<div class="modal fade" id="modal_terima" tabindex="-1" aria-labelledby="modal_terimaLabel" aria-hidden="true">
-    <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="modal_terima" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog   modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modal_terimaLabel">Modal title</h1>
+                <h1 class="modal-title fs-5" id="exampleModalCenterTitle">Modal title</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+
+
+                <input type="text" class="form-control d-none" id="terima_pembelian_id" />
+
                 <label class="form-label mb-0 mt-2" for="tanggal_terima">Tanggal Terima:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                 <input type="text" class="form-control" id="tanggal_terima" name="tanggal_terima" />
             </div>
@@ -207,16 +208,16 @@
 
 
 
-<div class="modal fade" id="modal_invoice" tabindex="-1" aria-labelledby="modal_invoiceLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="modal_invoice" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modal_invliceLabel">Modal title</h1>
+                <h1 class="modal-title fs-5" id="exampleModalCenterTitle">Modal title</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
-
+                <input type="text" class="form-control d-none" id="invoice_pembelian_id" />
                 <label class="form-label mb-0 mt-2" for="tanggal_invoice">Tanggal Invoice:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                 <input type="text" class="form-control" id="tanggal_invoice" name="tanggal_invoice" />
 
@@ -231,6 +232,164 @@
     </div>
 </div>
 
+
+
+<!-- modal_pembelian -->
+<div class="modal fade" id="update_modal_pembelian" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Tambah Pembelian</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header">Pembelian</div>
+                    <div class="card-body" id="update_pembelian_card_body">
+
+
+                        <div class="accordion mb-3" id="update_accordion_informasi_dasar">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Informasi Dasar
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse hide" data-bs-parent="#update_accordion_informasi_dasar">
+                                    <div class="accordion-body">
+                                        <div class="row gap-2">
+                                            <div class="col">
+                                                <label class="form-label mb-0 mt-2" for="update_tanggal_po">Tanggal PO:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                                <input class="form-control" type="text" id="update_tanggal_po" name="update_tanggal_po" value="">
+                                                <label class="form-label mb-0 mt-2" for="update_status_pembelian">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                                <select class="form-select" id="update_status_pembelian">
+                                                    <option value="proses">Proses PO</option>
+                                                    <option value="delivery">Delivery</option>
+                                                    <option value="selesai">Selesai</option>
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label mb-0 mt-2" for="update_supplier_id">Supplier:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                                <select class="form-select" id="update_supplier_id">
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion mb-3" id="update_accordion_detail_barang">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                        Informasi Detail Barang
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse hide" data-bs-parent="#update_accordion_detail_barang">
+                                    <div class="accordion-body" id="update_detail_pembelian_card_body">
+                                        <button class="btn btn-primary btn-sm mb-2" id="update_create_detail_pembelian">
+                                            <i class="bi bi-plus-circle"></i> Tambah
+                                        </button>
+                                        <table class="table  table-hover table-bordered table-sm" id="update_detail_pembelian">
+                                            <thead id="update_detail_pembelian_thead">
+                                                <tr>
+                                                    <th scope="col">
+                                                        Produk
+                                                    </th>
+                                                    <th scope="col">
+                                                        Kuantitas
+                                                    </th>
+                                                    <th scope="col">
+                                                        Satuan
+                                                    </th>
+                                                    <th scope="col"> Harga</th>
+                                                    <th>Diskon</th>
+                                                    <th id="aksi_thead">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="update_detail_pembelian_tbody">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="accordion mb-3" id="update_accordion_pajak">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                        Informasi Pajak
+                                    </button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse hide" data-bs-parent="#update_accordion_pajak">
+                                    <div class="accordion-body">
+
+
+                                        <label class="form-label mb-0 mt-2" for="update_ppn">PPN:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <input type="text" class="form-control" id="update_ppn" name="update_ppn" />
+
+                                        <label class="form-label mb-0 mt-2" for="update_nominal_ppn">Nominal PPN:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <input type="text" class="form-control" id="update_nominal_ppn" name="update_nominal_ppn" />
+
+                                        <label class="form-label mb-0 mt-2" for="update_nominal_pph">Nominal PPH:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <input type="text" class="form-control" id="update_nominal_pph" name="update_nominal_pph" />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion mb-3" id="update_accordion_informasi_tambahan">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                                        Informasi Tambahan
+                                    </button>
+                                </h2>
+                                <div id="collapseFour" class="accordion-collapse collapse hide" data-bs-parent="#update_accordion_informasi_tambahan">
+                                    <div class="accordion-body">
+
+                                        <label class="form-label mb-0 mt-2" for="update_keterangan">Keterangan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <input type="text" class="form-control" id="update_keterangan" name="update_keterangan" />
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <label class="form-label mb-0 mt-2" for="update_total_kuantitas">Total Kuantitas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                        <input type="text" class="form-control" id="total_kuantitas" name="update_total_kuantitas" />
+
+
+                        <label class="form-label mb-0 mt-2" for="update_diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                        <input type="text" class="form-control" id="update_diskon" name="update_diskon" />
+
+
+
+                        <label class="form-label mb-0 mt-2" for="update_biaya_tambahan">Biaya Tambahan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                        <input type="text" class="form-control" id="update_biaya_tambahan" name="update_biaya_tambahan" />
+
+                        <label class="form-label mb-0 mt-2" for="update_grand_total">Grand Total<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                        <input type="text" class="form-control" id="update_grand_total" name="update_grand_total" />
+
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button id="update_submit_pembelian" type="button" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

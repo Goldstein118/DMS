@@ -4,7 +4,10 @@ export function custom_grid_header(
   field,
   handle_delete,
   handle_update,
-  handle_view
+  handle_view,
+  handle_pengiriman,
+  handle_terima,
+  handle_invoice
 ) {
   const grid_header = document.querySelector(`#table_${field} .gridjs-head`);
   if (!grid_header) return;
@@ -72,6 +75,38 @@ export function custom_grid_header(
         handle_update(update_btn);
       } else if (view_btn && typeof handle_view === "function") {
         handle_view(view_btn);
+      }
+    };
+
+    // First remove any previously attached listeners by replacing the node
+    const newTableElement = tableElement.cloneNode(true);
+    tableElement.parentNode.replaceChild(newTableElement, tableElement);
+
+    // Now attach the listener
+    newTableElement.addEventListener("click", handler);
+  } else if (field == "pembelian") {
+    const tableElement = document.getElementById(`table_${field}`);
+    const handler = function (event) {
+      const delete_btn = event.target.closest(`.delete_${field}`);
+      const update_btn = event.target.closest(`.update_${field}`);
+      const view_btn = event.target.closest(`.view_${field}`);
+
+      const pengiriman = event.target.closest(`.tanggal_pengiriman`);
+      const terima = event.target.closest(`.tanggal_terima`);
+      const invoice = event.target.closest(`.tanggal_invoice`);
+
+      if (delete_btn && typeof handle_delete === "function") {
+        handle_delete(delete_btn);
+      } else if (update_btn && typeof handle_update === "function") {
+        handle_update(update_btn);
+      } else if (view_btn && typeof handle_view === "function") {
+        handle_view(view_btn);
+      } else if (pengiriman && typeof handle_pengiriman === "function") {
+        handle_pengiriman(pengiriman);
+      } else if (terima && typeof handle_terima === "function") {
+        handle_terima(terima);
+      } else if (invoice && typeof handle_invoice === "function") {
+        handle_invoice(invoice);
       }
     };
 

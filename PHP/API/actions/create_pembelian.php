@@ -28,7 +28,6 @@ try {
     // validate_2($nama_pembelian, '/^[a-zA-Z\s]+$/', "Invalid name format");
 
     $pembelian_id = generateCustomID('PE', 'tb_pembelian', 'pembelian_id', $conn);
-    $total_qty = 0; // Atur sesuai kebutuhan, misalnya jumlah qty dari semua detail
 
     executeInsert(
         $conn,

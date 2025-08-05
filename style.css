@@ -386,7 +386,8 @@ h3 {
   padding: 0px;
 }
 #create_detail_pricelist,
-#update_detail_pricelist_button {
+#update_detail_pricelist_button,
+#create_detail_pembelian {
   max-width: fit-content !important;
 }
 .view_modal_pricelist {
@@ -554,6 +555,12 @@ h3 {
 body {
   font-family: "Roboto", sans-serif;
 }
+
+/* .modal-dialog {
+  min-height: 25%;
+}
+.modal-content {
+  min-height: 50%; } */
 
 @media (max-width: 991px) {
   .sidebar {

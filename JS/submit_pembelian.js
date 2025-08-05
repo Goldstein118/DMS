@@ -6,68 +6,39 @@ const submit_pembelian = document.getElementById("submit_pembelian");
 const submit_detail_pembelian = document.getElementById(
   "create_detail_pembelian"
 );
-const submit_pengiriman_button = document.getElementById(
-  "submit_pengiriman_button"
-);
-const submit_terima_button = document.getElementById("submit_terima_button");
-const submit_invoice_button = document.getElementById("submit_invoice_button");
-submit_pengiriman_button.addEventListener("click", submit_terima);
-submit_terima_button.addEventListener("click", submit_pengiriman);
-submit_invoice_button.addEventListener("click", submit_invoice);
-
+function initPickadateOnce(selector) {
+  const $el = $(selector);
+  if (!$el.data("pickadate")) {
+    $el.pickadate({
+      format: "dd mmm yyyy",
+      selectYears: 25,
+      selectMonths: true,
+    });
+  }
+}
 if (submit_pembelian) {
   submit_pembelian.addEventListener("click", submitPembelian);
   submit_detail_pembelian.addEventListener("click", () => {
     add_field("create", "produk_select", "satuan_select");
   });
+
   $(document).ready(function () {
     $("#modal_pembelian").on("shown.bs.modal", function () {
       $("#name_pembelian").trigger("focus");
       fetch_supplier();
       add_field("create", "produk_select", "satuan_select");
-      // helper.format_nominal("harga");
+
       $("#supplier_id").select2({
         placeholder: "Pilih Supplier",
         allowClear: true,
         dropdownParent: $("#modal_pembelian"),
       });
-    });
-    $("#tanggal_po").pickadate({
-      format: "dd mmm yyyy", // user sees: 01 Jan 2025
-      formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
-      selectYears: 25,
-      selectMonths: true,
-    });
 
-    $("#modal_pengiriman").on("shown.bs.modal", function () {
-      $("#tanggal_pengiriman").pickadate({
-        format: "dd mmm yyyy", // user sees: 01 Jan 2025
-        formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
-        selectYears: 25,
-        selectMonths: true,
-      });
-    });
-
-    $("#modal_terima").on("shown.bs.modal", function () {
-      $("#tanggal_terima").pickadate({
-        format: "dd mmm yyyy", // user sees: 01 Jan 2025
-        formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
-        selectYears: 25,
-        selectMonths: true,
-      });
-    });
-
-    $("#modal_invoice").on("shown.bs.modal", function () {
-      $("#tanggal_invoice").pickadate({
-        format: "dd mmm yyyy", // user sees: 01 Jan 2025
-        formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
-        selectYears: 25,
-        selectMonths: true,
-      });
+      initPickadateOnce("#tanggal_po");
     });
   });
 }
-export async function select_detail_pembelian(
+async function select_detail_pembelian(
   index,
   action,
   produk_element_id,
@@ -171,7 +142,7 @@ export async function select_detail_pembelian(
   }
 }
 
-export function delete_detail_pembelian(action) {
+function delete_detail_pembelian(action) {
   $(`#${action}_detail_pembelian_tbody`).on(
     "click",
     ".delete_detail_pembelian",
@@ -219,18 +190,18 @@ function add_field(action, produk_element_id, satuan_element_id) {
   input_qty.classList.add("form-control");
   td_qty.appendChild(input_qty);
 
+  const td_satuan = document.createElement("td");
+  var satuan_select = document.createElement("select");
+  satuan_select.setAttribute("id", satuan_element_id + currentIndex);
+  satuan_select.classList.add("form-select");
+  td_satuan.appendChild(satuan_select);
+
   const td_harga = document.createElement("td");
   var input_harga = document.createElement("input");
   input_harga.setAttribute("id", "harga" + currentIndex);
   input_harga.classList.add("form-control");
   input_harga.style.textAlign = "right";
   td_harga.appendChild(input_harga);
-
-  const td_satuan = document.createElement("td");
-  var satuan_select = document.createElement("select");
-  satuan_select.setAttribute("id", satuan_element_id + currentIndex);
-  satuan_select.classList.add("form-select");
-  td_satuan.appendChild(satuan_select);
 
   const td_diskon = document.createElement("td");
   var input_diskon = document.createElement("input");
@@ -249,8 +220,8 @@ function add_field(action, produk_element_id, satuan_element_id) {
 
   tr_detail.appendChild(td_produk);
   tr_detail.appendChild(td_qty);
-  tr_detail.appendChild(td_harga);
   tr_detail.appendChild(td_satuan);
+  tr_detail.appendChild(td_harga);
   tr_detail.appendChild(td_diskon);
   tr_detail.appendChild(td_aksi);
 
@@ -286,81 +257,6 @@ async function fetch_supplier() {
     select.trigger("change");
   } catch (error) {
     console.error("error:", error);
-  }
-}
-
-async function submit_terima() {
-  const picker_terima = $("#tanggal_terima").pickadate("picker");
-  const tanggal_terima = picker_terima.get("select", "yyyy-mm-dd");
-
-  const body = { tanggal_terima: tanggal_terima };
-  try {
-    const response = await apiRequest(
-      `/PHP/API/pembelian_API.php?action=update`,
-      "POST",
-      body
-    );
-    if (response.ok) {
-      swal.fire("Berhasil", response.message, "success");
-      $("#modal_terima").modal("hide");
-      window.pembelian_grid.forceRender();
-      setTimeout(() => {
-        helper.custom_grid_header("pembelian");
-      }, 200);
-    }
-  } catch (error) {
-    toastr.error(error.message);
-  }
-}
-
-async function submit_pengiriman() {
-  const picker_pengiriman = $("#tanggal_pengiriman").pickadate("picker");
-  const tanggal_pengiriman = picker_pengiriman.get("select", "yyyy-mm-dd");
-  const no_pengiriman = document.getElementById("no_pengiriman").value;
-  const body = {
-    tanggal_pengiriman: tanggal_pengiriman,
-    no_pengiriman: no_pengiriman,
-  };
-  try {
-    const response = await apiRequest(
-      `/PHP/API/pembelian_API.php?action=update`,
-      "POST",
-      body
-    );
-    if (response.ok) {
-      swal.fire("Berhasil", response.message, "success");
-      $("#modal_pengiriman").modal("hide");
-      window.pembelian_grid.forceRender();
-      setTimeout(() => {
-        helper.custom_grid_header("pembelian");
-      }, 200);
-    }
-  } catch (error) {
-    toastr.error(error.message);
-  }
-}
-
-async function submit_invoice() {
-  const picker_invoice = $("#tanggal_invoice").pickadate("picker");
-  const tanggal_invoice = picker_invoice.get("select", "yyyy-mm-dd");
-  const no_invoice = document.getElementById("no_invoice").value;
-  const body = { tanggal_invoice: tanggal_invoice, no_invoice: no_invoice };
-  try {
-    const response = await apiRequest(
-      `/PHP/API/pembelian_API.php?action=update`,
-      "POST",
-      body
-    );
-    if (response.ok) {
-      swal.fire("Berhasil", response.message, "success");
-      $("#modal_pengiriman").modal("hide");
-      window.pembelian_grid.forceRender();
-      setTimeout(() => {
-        helper.custom_grid_header("pembelian");
-      }, 200);
-    }
-  } catch (error) {
-    toastr.error(error.message);
   }
 }
 

@@ -4,6 +4,26 @@ import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 import * as helper from "./helper.js";
 
+const submit_pengiriman_button = document.getElementById(
+  "submit_pengiriman_button"
+);
+const submit_terima_button = document.getElementById("submit_terima_button");
+const submit_invoice_button = document.getElementById("submit_invoice_button");
+submit_pengiriman_button.addEventListener("click", submit_pengiriman);
+submit_terima_button.addEventListener("click", submit_terima);
+submit_invoice_button.addEventListener("click", submit_invoice);
+
+function initPickadateOnce(selector) {
+  const $el = $(selector);
+  if (!$el.data("pickadate")) {
+    $el.pickadate({
+      format: "dd mmm yyyy",
+      selectYears: 25,
+      selectMonths: true,
+    });
+  }
+}
+
 const grid_container_pembelian = document.querySelector("#table_pembelian");
 const pickdatejs = $("#update_tanggal_berlaku")
   .pickadate({
@@ -20,6 +40,19 @@ if (grid_container_pembelian) {
   // create_detail_pembelian.addEventListener("click", () => {
   //   helper.addField("update", "generated_update_produk_select");
   // });
+  $(document).ready(function () {
+    $("#modal_pengiriman").on("shown.bs.modal", function () {
+      initPickadateOnce("#tanggal_pengiriman");
+    });
+
+    $("#modal_terima").on("shown.bs.modal", function () {
+      initPickadateOnce("#tanggal_terima");
+    });
+
+    $("#modal_invoice").on("shown.bs.modal", function () {
+      initPickadateOnce("#tanggal_invoice");
+    });
+  });
 
   window.pembelian_grid = new Grid({
     columns: [
@@ -147,7 +180,7 @@ if (grid_container_pembelian) {
                 <button
                 type="button"
                 id="tanggal_pengiriman"
-                class="btn btn-warning tanggal_pengiriman btn-sm" data-bs-toggle="modal" data-bs-target="#modal_terima"
+                class="btn btn-warning tanggal_terima btn-sm" data-bs-toggle="modal" data-bs-target="#modal_terima"
               >
                   <i class="bi bi-pencil-fill"></i>
               </button>`
@@ -160,7 +193,7 @@ if (grid_container_pembelian) {
                 ? `${helper.format_date(pembelian.tanggal_invoice)}`
                 : `${helper.format_date(
                     pembelian.tanggal_invoice
-                  )}<button type="button" id="tanggal_invoice" class="btn btn-warning tanggal_invoice btn-sm" data-bs-toggle="modal" data-bs-target="#modal_invoice"
+                  )}<button type="button"  class="btn btn-warning tanggal_invoice btn-sm" data-bs-toggle="modal" data-bs-target="#modal_invoice"
                     >
               <i class="bi bi-pencil-fill"></i> 
             </button>`
@@ -197,9 +230,198 @@ if (grid_container_pembelian) {
       "pembelian",
       handle_delete,
       handle_update,
-      handle_view
+      handle_view,
+      handle_pengiriman,
+      handle_terima,
+      handle_invoice
     );
   }, 200);
+}
+
+function handle_pengiriman(button) {
+  $("#modal_pengiriman").on("shown.bs.modal", async function () {
+    // Prevent multiple bindings
+    $(this).off("shown.bs.modal");
+
+    const row = button.closest("tr");
+    window.currentRow = row;
+    const pembelian_id = row.cells[0].textContent;
+    document.getElementById("pengiriman_pembelian_id").value = pembelian_id;
+    const result = await apiRequest(
+      `/PHP/API/pembelian_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}`,
+      "POST",
+      { pembelian_id: pembelian_id }
+    );
+
+    result.data.forEach((item) => {
+      const pickdatejs_pengiriman = $("#tanggal_pengiriman").pickadate(
+        "picker"
+      );
+      const parts = item.tanggal_pengiriman
+        ? item.tanggal_pengiriman.split("-")
+        : "";
+      if (parts.length === 3) {
+        const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+        pickdatejs_pengiriman.set("select", dateObj);
+      }
+      document.getElementById("no_pengiriman").value = item.no_pengiriman;
+    });
+  });
+
+  $("#modal_pengiriman").modal("show");
+}
+
+function handle_terima(button) {
+  $("#modal_terima").on("shown.bs.modal", async function () {
+    // Prevent multiple bindings
+    $(this).off("shown.bs.modal");
+
+    const row = button.closest("tr");
+    window.currentRow = row;
+    const pembelian_id = row.cells[0].textContent;
+    document.getElementById("terima_pembelian_id").value = pembelian_id;
+    const result = await apiRequest(
+      `/PHP/API/pembelian_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}`,
+      "POST",
+      { pembelian_id: pembelian_id }
+    );
+
+    result.data.forEach((item) => {
+      const pickdatejs_terima = $("#tanggal_terima").pickadate("picker");
+      const parts = item.tanggal_terima ? item.tanggal_terima.split("-") : "";
+      if (parts.length === 3) {
+        const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+        pickdatejs_terima.set("select", dateObj);
+      }
+    });
+  });
+
+  $("#modal_terima").modal("show");
+}
+
+function handle_invoice(button) {
+  $("#modal_invoice").on("shown.bs.modal", async function () {
+    // Prevent multiple bindings
+    $(this).off("shown.bs.modal");
+
+    const row = button.closest("tr");
+    window.currentRow = row;
+    const pembelian_id = row.cells[0].textContent;
+    document.getElementById("invoice_pembelian_id").value = pembelian_id;
+    const result = await apiRequest(
+      `/PHP/API/pembelian_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}`,
+      "POST",
+      { pembelian_id: pembelian_id }
+    );
+
+    result.data.forEach((item) => {
+      const pickdatejs_invoice = $("#tanggal_invoice").pickadate("picker");
+      const parts = item.tanggal_invoice ? item.tanggal_invoice.split("-") : "";
+      if (parts.length === 3) {
+        const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+        pickdatejs_invoice.set("select", dateObj);
+      }
+      document.getElementById("no_invoice").value = item.no_invoice_supplier;
+    });
+  });
+
+  $("#modal_invoice").modal("show");
+}
+
+async function submit_terima() {
+  const pembelian_id = document.getElementById("terima_pembelian_id").value;
+
+  const picker_terima = $("#tanggal_terima").pickadate("picker");
+  const tanggal_terima = picker_terima.get("select", "yyyy-mm-dd");
+
+  const body = {
+    user_id: `${access.decryptItem("user_id")}`,
+    pembelian_id: pembelian_id,
+    tanggal_terima: tanggal_terima,
+  };
+  try {
+    const response = await apiRequest(
+      `/PHP/API/pembelian_API.php?action=update`,
+      "POST",
+      body
+    );
+    if (response.ok) {
+      swal.fire("Berhasil", response.message, "success");
+      $("#modal_terima").modal("hide");
+      window.pembelian_grid.forceRender();
+      setTimeout(() => {
+        helper.custom_grid_header("pembelian");
+      }, 200);
+    }
+  } catch (error) {
+    toastr.error(error.message);
+  }
+}
+
+async function submit_pengiriman() {
+  const pembelian_id = document.getElementById("pengiriman_pembelian_id").value;
+  const picker_pengiriman = $("#tanggal_pengiriman").pickadate("picker");
+  const tanggal_pengiriman = picker_pengiriman.get("select", "yyyy-mm-dd");
+  const no_pengiriman = document.getElementById("no_pengiriman").value;
+  const body = {
+    user_id: `${access.decryptItem("user_id")}`,
+    pembelian_id: pembelian_id,
+    tanggal_pengiriman: tanggal_pengiriman,
+    no_pengiriman: no_pengiriman,
+  };
+  try {
+    const response = await apiRequest(
+      `/PHP/API/pembelian_API.php?action=update`,
+      "POST",
+      body
+    );
+    if (response.ok) {
+      swal.fire("Berhasil", response.message, "success");
+      $("#modal_pengiriman").modal("hide");
+      window.pembelian_grid.forceRender();
+      setTimeout(() => {
+        helper.custom_grid_header("pembelian");
+      }, 200);
+    }
+  } catch (error) {
+    toastr.error(error.message);
+  }
+}
+
+async function submit_invoice() {
+  const pembelian_id = document.getElementById("invoice_pembelian_id").value;
+  const picker_invoice = $("#tanggal_invoice").pickadate("picker");
+  const tanggal_invoice = picker_invoice.get("select", "yyyy-mm-dd");
+  const no_invoice = document.getElementById("no_invoice").value;
+  const body = {
+    user_id: `${access.decryptItem("user_id")}`,
+    pembelian_id: pembelian_id,
+    tanggal_invoice: tanggal_invoice,
+    no_invoice: no_invoice,
+  };
+  try {
+    const response = await apiRequest(
+      `/PHP/API/pembelian_API.php?action=update`,
+      "POST",
+      body
+    );
+    if (response.ok) {
+      swal.fire("Berhasil", response.message, "success");
+      $("#modal_invoice").modal("hide");
+      window.pembelian_grid.forceRender();
+      setTimeout(() => {
+        helper.custom_grid_header("pembelian");
+      }, 200);
+    }
+  } catch (error) {
+    toastr.error(error.message);
+  }
 }
 
 function handle_view(button) {

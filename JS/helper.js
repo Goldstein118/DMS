@@ -699,7 +699,6 @@ export function isTwoWeeksLater(date) {
   const twoWeeksLater = new Date(
     inputDate.getTime() + 14 * 24 * 60 * 60 * 1000
   ); // Add 2 weeks
-  const now = new Date();
 
-  return now >= twoWeeksLater;
+  return inputDate >= twoWeeksLater;
 }

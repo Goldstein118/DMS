@@ -26,7 +26,6 @@ if (submit_pembelian) {
     $("#modal_pembelian").on("shown.bs.modal", function () {
       $("#name_pembelian").trigger("focus");
       fetch_supplier();
-      add_field("create", "produk_select", "satuan_select");
 
       $("#supplier_id").select2({
         placeholder: "Pilih Supplier",
@@ -36,6 +35,10 @@ if (submit_pembelian) {
 
       initPickadateOnce("#tanggal_po");
     });
+    helper.format_nominal("nominal_pph");
+    helper.format_nominal("diskon");
+
+    add_field("create", "produk_select", "satuan_select");
   });
 }
 async function select_detail_pembelian(
@@ -207,6 +210,7 @@ function add_field(action, produk_element_id, satuan_element_id) {
   var input_diskon = document.createElement("input");
   input_diskon.setAttribute("id", "diskon" + currentIndex);
   input_diskon.classList.add("form-control");
+  input_diskon.style.textAlign = "right";
   td_diskon.appendChild(input_diskon);
 
   const td_aksi = document.createElement("td");
@@ -228,6 +232,7 @@ function add_field(action, produk_element_id, satuan_element_id) {
   myTable.appendChild(tr_detail);
 
   helper.format_nominal("harga" + currentIndex);
+  helper.format_nominal("diskon" + currentIndex);
   select_detail_pembelian(
     currentIndex,
     action,
@@ -267,28 +272,13 @@ async function submitPembelian() {
 
   const supplier_id = document.getElementById("supplier_id").value;
   const keterangan = document.getElementById("keterangan").value;
-
-  const total_kuantitas = document.getElementById("total_kuantitas").value;
-
+  let diskon = document.getElementById("diskon").value;
   const ppn = document.getElementById("ppn").value;
-  const nominal_ppn = document.getElementById("nominal_ppn").value;
-  const diskon = document.getElementById("diskon").value;
-  const nominal_pph = document.getElementById("nominal_pph").value;
+  let nominal_pph = document.getElementById("nominal_pph").value;
   const biaya_tambahan = document.getElementById("biaya_tambahan").value;
-  const grand_total = document.getElementById("grand_total").value;
 
   const status_pembelian = document.getElementById("status_pembelian").value;
 
-  // Validate form data
-  //   if (
-  //     !name_pembelian ||
-  //     name_pembelian.trim() === "" ||
-  //     !tanggal_berlaku ||
-  //     tanggal_berlaku.trim() === ""
-  //   ) {
-  //     toastr.error("Kolom * wajib diisi.");
-  //     return;
-  //   }
   //   const is_valid = helper.validateField(
   //     name_pembelian,
   //     /^[a-zA-Z\s]+$/,
@@ -300,15 +290,15 @@ async function submitPembelian() {
   for (const row of rows) {
     const produk_select = row.querySelector("td:nth-child(1) select");
     const qty = row.querySelector("td:nth-child(2) input");
-    const harga = row.querySelector("td:nth-child(3) input");
-    const satuan = row.querySelector("td:nth-child(4) select");
+    const satuan = row.querySelector("td:nth-child(3) select");
+    const harga = row.querySelector("td:nth-child(4) input");
     const diskon = row.querySelector("td:nth-child(5) input");
 
     const produk_id = produk_select?.value?.trim();
     const kuantitas = qty?.value?.trim();
-    const harga_ = harga?.value?.trim();
+    let harga_ = harga?.value?.trim();
     const satuan_id = satuan?.value?.trim();
-    const discount = diskon?.value?.trim();
+    let discount = diskon?.value?.trim();
 
     if (
       !produk_id ||
@@ -325,7 +315,8 @@ async function submitPembelian() {
       toastr.error("Semua field pada detail pembelian wajib diisi.");
       return;
     }
-
+    harga_ = helper.format_angka(harga_);
+    discount = helper.format_angka(discount);
     details.push({
       produk_id: produk_id,
       qty: kuantitas,
@@ -339,6 +330,8 @@ async function submitPembelian() {
     toastr.error("Minimal satu detail pembelian harus diisi.");
     return;
   }
+  nominal_pph = helper.format_angka(nominal_pph);
+  diskon = helper.format_angka(diskon);
 
   const data_pembelian = {
     user_id: `${access.decryptItem("user_id")}`,
@@ -346,13 +339,10 @@ async function submitPembelian() {
     tanggal_po: tanggal_po,
     supplier_id: supplier_id,
     keterangan: keterangan,
-    total_qty: total_kuantitas,
     ppn: ppn,
-    nominal_ppn: nominal_ppn,
     diskon: diskon,
     nominal_pph: nominal_pph,
     biaya_tambahan: biaya_tambahan,
-    grand_total: grand_total,
     status: status_pembelian,
     details: details,
   };

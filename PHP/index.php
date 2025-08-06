@@ -68,9 +68,8 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 <body>
   <!--spinner-->
   <div id="loading_spinner" class="d-flex justify-content-center align-items-center" style="height: 100vh; visibility : visible">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+    <dotlottie-wc src="https://lottie.host/a7f7ef11-5190-400a-8dfd-92eac990725c/MxZMJwW8Oi.lottie" style="width: 300px;height: 300px" speed="1" autoplay loop></dotlottie-wc>
   </div>
 
 
@@ -90,6 +89,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
       // Whitelist allowed pages for security
       $allowed_pages = [
+        'dashboard',
         'tabel_karyawan',
         'tabel_role',
         'tabel_user',
@@ -232,5 +232,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/side_bar.js?v=2.0"></script>
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/helper.js?v=2.0"></script>
 </body>
+
+
 
 </html>

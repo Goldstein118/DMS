@@ -96,7 +96,7 @@ try {
         $tanggal_terima = $data['tanggal_terima'];
 
         $stmt = $conn->prepare("UPDATE tb_pembelian SET tanggal_terima = ? WHERE pembelian_id = ?");
-        $stmt->bind_param("ss", $tanggal_pengiriman, $pembelian_id);
+        $stmt->bind_param("ss", $tanggal_terima, $pembelian_id);
         $stmt->execute();
         $stmt->close();
         http_response_code(200);

@@ -94,10 +94,13 @@
 
 
                                         <label class="form-label mb-0 mt-2" for="ppn">PPN:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <input type="text" class="form-control" id="ppn" name="ppn" />
+                                        <select class="form-select" id="ppn">
+                                            <option value="0.1">
+                                                10%
+                                            </option>
+                                            <option value="0.11">11%</option>
+                                        </select>
 
-                                        <label class="form-label mb-0 mt-2" for="nominal_ppn">Nominal PPN:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <input type="text" class="form-control" id="nominal_ppn" name="nominal_ppn" />
 
                                         <label class="form-label mb-0 mt-2" for="nominal_pph">Nominal PPH:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <input type="text" class="form-control" id="nominal_pph" name="nominal_pph" />
@@ -259,6 +262,7 @@
                                     <div class="accordion-body">
                                         <div class="row gap-2">
                                             <div class="col">
+                                                <input class="form-control d-none" type="text" id="update_pembelian_id" name="update_pembelian_id" value="">
                                                 <label class="form-label mb-0 mt-2" for="update_tanggal_po">Tanggal PO:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                                 <input class="form-control" type="text" id="update_tanggal_po" name="update_tanggal_po" value="">
                                                 <label class="form-label mb-0 mt-2" for="update_status_pembelian">Status:<i class="bi bi-asterisk text-danger align-middle "></i></label>
@@ -380,9 +384,6 @@
 
                     </div>
                 </div>
-
-
-
             </div>
             <div class="modal-footer">
                 <button id="update_submit_pembelian" type="button" class="btn btn-primary">Submit</button>

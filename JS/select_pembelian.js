@@ -160,43 +160,43 @@ if (grid_container_pembelian) {
           html(`
             
             ${
-              pembelian.tanggal_terima && pembelian.tanggal_pengiriman
-                ? `${helper.format_date(pembelian.tanggal_pengiriman)} `
-                : `${helper.format_date(pembelian.tanggal_pengiriman)}
+              pembelian.tanggal_po && !pembelian.tanggal_terima
+                ? `${helper.format_date(pembelian.tanggal_pengiriman)} 
                 <button
                 type="button"
                 id="tanggal_pengiriman"
                 class="btn btn-warning tanggal_pengiriman btn-sm" data-bs-toggle="modal" data-bs-target="#modal_pengiriman"
               >
-                  <i class="bi bi-pencil-fill"></i>
+                <i class="bi bi-pencil-fill"></i>
               </button>`
+                : `${helper.format_date(pembelian.tanggal_pengiriman)}`
             }
             `),
           html(
             `${
-              pembelian.tanggal_invoice && pembelian.tanggal_terima
-                ? `${helper.format_date(pembelian.tanggal_terima)}`
-                : `${helper.format_date(pembelian.tanggal_terima)}
+              pembelian.tanggal_pengiriman && !pembelian.tanggal_invoice
+                ? `${helper.format_date(pembelian.tanggal_terima)}
                 <button
                 type="button"
                 id="tanggal_pengiriman"
                 class="btn btn-warning tanggal_terima btn-sm" data-bs-toggle="modal" data-bs-target="#modal_terima"
               >
-                  <i class="bi bi-pencil-fill"></i>
+                <i class="bi bi-pencil-fill"></i>
               </button>`
+                : `${helper.format_date(pembelian.tanggal_terima)}`
             }`
           ),
 
           html(
             `${
-              helper.isTwoWeeksLater(pembelian.tanggal_input_invoice)
-                ? `${helper.format_date(pembelian.tanggal_invoice)}`
-                : `${helper.format_date(
-                    pembelian.tanggal_invoice
-                  )}<button type="button"  class="btn btn-warning tanggal_invoice btn-sm" data-bs-toggle="modal" data-bs-target="#modal_invoice"
+              !helper.isTwoWeeksLater(pembelian.tanggal_input_invoice) &&
+              pembelian.tanggal_terima
+                ? `${helper.format_date(pembelian.tanggal_invoice)} 
+                <button type="button"  class="btn btn-warning tanggal_invoice btn-sm" data-bs-toggle="modal" data-bs-target="#modal_invoice"
                     >
               <i class="bi bi-pencil-fill"></i> 
             </button>`
+                : `${helper.format_date(pembelian.tanggal_invoice)}`
             }`
           ),
           pembelian.supplier_id,
@@ -494,91 +494,7 @@ async function handle_update(button) {
 
   const pembelian_id = row.cells[0].textContent;
 
-  const current_nama = row.cells[1].textContent;
-  const harga_default = row.cells[2].textContent;
-  let tanggal_berlaku = row.cells[3].textContent;
-  const current_status = row.cells[4]
-    .querySelector(".badge")
-    ?.textContent.trim()
-    .toLowerCase()
-    .replace(/\s/g, "");
-  console.log(current_status);
-  // Populate the modal fields
   document.getElementById("update_pembelian_id").value = pembelian_id;
-  document.getElementById("update_name_pembelian").value = current_nama;
-  document.getElementById("update_default_pembelian").value = harga_default;
-  document.getElementById("update_status_pembelian").value = current_status;
-  tanggal_berlaku = helper.unformat_date(tanggal_berlaku);
-  const parts = tanggal_berlaku.split("-"); // ["2025", "05", "02"]
-  const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-  pickdatejs.set("select", dateObj);
-
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  const result = await apiRequest(
-    `/PHP/API/pembelian_API.php?action=select&user_id=${access.decryptItem(
-      "user_id"
-    )}`,
-    "POST",
-    { pembelian_id }
-  );
-  const tableBody = document.getElementById("update_detail_pembelian_tbody");
-  tableBody.innerHTML = ""; // Clear previous rows
-
-  if (result) {
-    result.data.forEach((detail, index) => {
-      const tr = document.createElement("tr");
-      const current_produk_id = detail.produk_id;
-      // Produk select2
-      const tdProduk = document.createElement("td");
-      const selectProduk = document.createElement("select");
-      selectProduk.className = "form-select produk_select";
-      selectProduk.setAttribute("id", `update_produk_select${index}`);
-      tdProduk.appendChild(selectProduk);
-
-      // Harga input
-      const tdHarga = document.createElement("td");
-      const inputHarga = document.createElement("input");
-      inputHarga.setAttribute("id", `detail_harga${index}`);
-      inputHarga.className = "form-control";
-      inputHarga.style.textAlign = "right";
-
-      let harga = helper.unformat_angka(detail.harga);
-      inputHarga.value = harga;
-      tdHarga.appendChild(inputHarga);
-
-      // Delete button
-      const tdDelete = document.createElement("td");
-      const deleteBtn = document.createElement("button");
-      deleteBtn.type = "button";
-      deleteBtn.className = "btn btn-danger btn-sm delete_detail_pembelian";
-      deleteBtn.innerHTML = `<i class="bi bi-trash-fill"></i>`;
-      tdDelete.appendChild(deleteBtn);
-      tdDelete.style.width = "50px";
-      // Append all tds
-      tr.appendChild(tdProduk);
-      tr.appendChild(tdHarga);
-      tr.appendChild(tdDelete);
-
-      tableBody.appendChild(tr);
-      helper.format_nominal(`detail_harga${index}`);
-
-      helper.select_detail_pembelian(
-        index,
-        "update",
-        `update_produk_select`,
-        current_produk_id
-      );
-    });
-  } else {
-    // Optional: show message if no data found
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 4;
-    td.className = "text-center text-muted";
-    td.textContent = "No details found for this pembelian.";
-    tr.appendChild(td);
-    tableBody.appendChild(tr);
-  }
 
   button_icon.style.display = "inline-block";
   spinner.style.display = "none";
@@ -611,7 +527,9 @@ if (submit_pembelian_update) {
     ).value;
     const picker = $("#update_tanggal_berlaku").pickadate("picker");
     const update_tanggal_berlaku = picker.get("select", "yyyy-mm-dd");
+
     const detail_rows = [];
+
     document
       .querySelectorAll("#update_detail_pembelian_tbody tr")
       .forEach((tr) => {

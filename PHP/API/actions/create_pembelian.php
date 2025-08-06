@@ -1,9 +1,14 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
+function toFloat($value)
+{
+    // Remove commas, trim whitespace, then cast to float
+    return (float)str_replace(',', '', trim($value));
+}
 
 
 try {
-    $requiredFields = [];
+    $requiredFields = ['tanggal_po'];
     $default = [
         'status' => 'aktif',
     ];
@@ -13,13 +18,10 @@ try {
     $tanggal_po = $fields['tanggal_po'];
     $supplier_id = $fields['supplier_id'];
     $keterangan = $fields['keterangan'];
-    $total_qty = $fields['total_qty'];
     $ppn = $fields['ppn'];
-    $nominal_ppn = $fields['nominal_ppn'];
-    $diskon = $fields['diskon'];
+    $diskon_invoice = $fields['diskon'];
     $nominal_pph = $fields['nominal_pph'];
     $biaya_tambahan = $fields['biaya_tambahan'];
-    $grand_total = $fields['grand_total'];
     $status = $fields['status'];
     $created_by = $fields['created_by'];
 
@@ -32,29 +34,28 @@ try {
     executeInsert(
         $conn,
         "INSERT INTO tb_pembelian (pembelian_id,tanggal_po,supplier_id,keterangan
-        ,total_qty,ppn,nominal_ppn,diskon,nominal_pph,biaya_tambahan,grand_total,
+        ,ppn,nominal_pph,biaya_tambahan,
     status,created_by) 
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+    VALUES (?,?,?,?,?,?,?,?,?)",
         [
             $pembelian_id,
             $tanggal_po,
             $supplier_id,
             $keterangan,
-            $total_qty,
             $ppn,
-            $nominal_ppn,
-            $diskon,
             $nominal_pph,
             $biaya_tambahan,
-            $grand_total,
             $status,
             $created_by
         ],
-        "sssssssssssss"
+        "sssssssss"
     );
 
 
     if (isset($data['details'])) {
+        $total_qty = 0;
+        $total_harga = 0;
+
         foreach ($data['details'] as $detail) {
             if (!isset($detail['produk_id']) || !isset($detail['harga'])) {
                 throw new Exception("Detail produk atau harga tidak lengkap.");
@@ -65,6 +66,13 @@ try {
             $harga = $detail['harga'];
             $satuan_id = $detail['satuan_id'];
             $diskon = $detail['diskon'];
+
+            $qty_unformat = toFloat($detail['qty']);
+            $harga_unformat = toFloat($detail['harga']);
+            $diskon_unformat = toFloat($detail['diskon']);
+
+            $total_qty += $qty_unformat;
+            $total_harga += $qty_unformat * ($harga_unformat - $diskon_unformat);
 
             $detail_pembelian_id = generateCustomID('DPE', 'tb_detail_pembelian', 'detail_pembelian_id', $conn);
             executeInsert(
@@ -77,6 +85,19 @@ try {
                 "sssssss"
             );
         }
+
+        $ppn_unformat = toFloat($fields['ppn']);
+        $diskon_invoice_unformat = toFloat($fields['diskon']);
+        $nominal_pph_unformat = toFloat($fields['nominal_pph']);
+        $biaya_tambahan_unformat = toFloat($fields['biaya_tambahan']);
+
+        $nominal_ppn = $total_harga * $ppn_unformat;
+        $sub_total = $total_harga - $diskon_invoice_unformat;
+        $grand_total = $sub_total + $nominal_ppn;
+        $stmt = $conn->prepare("UPDATE tb_pembelian SET total_qty = ?,  grand_total = ? , nominal_ppn =? WHERE pembelian_id = ?");
+        $stmt->bind_param("ssss", $total_qty, $grand_total, $nominal_ppn, $pembelian_id);
+        $stmt->execute();
+        $stmt->close();
     }
 
 

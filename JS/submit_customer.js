@@ -2,6 +2,7 @@ import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 import * as helper from "./helper.js";
 const submit_customer = document.getElementById("submit_customer");
+const jenis_customer = document.getElementById("jenis_customer");
 if (submit_customer) {
   submit_customer.addEventListener("click", submitCustomer);
   $(document).ready(function () {
@@ -16,6 +17,23 @@ if (submit_customer) {
       .addEventListener("change", function () {
         access.validateImageFile(this);
       });
+
+    jenis_customer.addEventListener("change", () => {
+      if (jenis_customer.value === "pribadi") {
+        document.getElementById("div_npwp_customer").style.display = "none";
+        document.getElementById("div_nik_customer").style.display = "block";
+      } else if (jenis_customer.value === "perusahaan") {
+        document.getElementById("div_npwp_customer").style.display = "block";
+        document.getElementById("div_nik_customer").style.display = "none";
+      }
+    });
+    if (jenis_customer.value === "pribadi") {
+      document.getElementById("div_npwp_customer").style.display = "none";
+      document.getElementById("div_nik_customer").style.display = "block";
+    } else if (jenis_customer.value === "perusahaan") {
+      document.getElementById("div_npwp_customer").style.display = "block";
+      document.getElementById("div_nik_customer").style.display = "none";
+    }
 
     document
       .getElementById("npwp_image")
@@ -105,7 +123,12 @@ async function submitCustomer() {
     toastr.error("Kolom * wajib diisi.");
     return;
   }
-
+  let nik_npwp;
+  if (jenis_customer.value == "pribadi") {
+    nik_npwp = !nik_customer || nik_customer.trim() === "";
+  } else if (jenis_customer.value == "perusahaan") {
+    nik_npwp = !npwp_customer || npwp_customer.trim() === "";
+  }
   const is_valid =
     helper.validateField(
       name_customer,
@@ -163,7 +186,7 @@ async function submitCustomer() {
       "Format latitude tidak valid"
     );
 
-  if (!is_valid) return;
+  if (!is_valid || !nik_npwp) return;
   npwp_customer = helper.format_npwp(npwp_customer);
   no_telp_customer = helper.format_no_telp(no_telp_customer);
 
@@ -181,6 +204,7 @@ async function submitCustomer() {
   formData.set("latitude", latitude);
   formData.set("channel_id", channel_id);
   formData.set("pricelist_id", pricelist_id);
+  formData.set("jenis_customer", jenis_customer.value);
   formData.set("action", "create");
   formData.set("user_id", access.decryptItem("user_id"));
 

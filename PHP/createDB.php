@@ -90,7 +90,8 @@ $customer = "CREATE TABLE IF NOT EXISTS tb_customer (
         latitude DECIMAL(9,6),
         longitude DECIMAL (9,6),
         channel_id VARCHAR(20), FOREIGN KEY (channel_id) REFERENCES tb_channel(channel_id) ON DELETE RESTRICT,
-        pricelist_id VARCHAR (20), FOREIGN KEY (pricelist_id) REFERENCES tb_pricelist(pricelist_id) ON DELETE RESTRICT
+        pricelist_id VARCHAR (20), FOREIGN KEY (pricelist_id) REFERENCES tb_pricelist(pricelist_id) ON DELETE RESTRICT,
+        jenis_customer VARCHAR(20)
         )";
 if ($conn->query($customer)) {
     try {
@@ -319,7 +320,7 @@ if ($conn->query($pembelian)) {
 }
 
 
-$detail_pembelian = "CREATE TABLE IF NOT EXISTS tb_detail_pembelian(detail_pembelian_id VARCHAR(20),pembelian_id VARCHAR(20), produk_id VARCHAR(20),urutan VARCHAR(20),qty VARCHAR(20),harga VARCHAR(20),diskon VARCHAR(20),satuan_id VARCHAR(20),
+$detail_pembelian = "CREATE TABLE IF NOT EXISTS tb_detail_pembelian(detail_pembelian_id VARCHAR(20) PRIMARY KEY NOT NULL,pembelian_id VARCHAR(20), produk_id VARCHAR(20),urutan VARCHAR(20),qty VARCHAR(20),harga VARCHAR(20),diskon VARCHAR(20),satuan_id VARCHAR(20),
 FOREIGN KEY (pembelian_id) REFERENCES tb_pembelian(pembelian_id) ON DELETE RESTRICT,FOREIGN KEY (satuan_id) REFERENCES tb_satuan(satuan_id) ON DELETE RESTRICT)";
 
 if ($conn->query($detail_pembelian)) {
@@ -329,4 +330,23 @@ if ($conn->query($detail_pembelian)) {
     }
 }
 
+
+$data_biaya = "CREATE TABLE IF NOT EXISTS tb_data_biaya(data_biaya_id VARCHAR(20) PRIMARY KEY NOT NULL,nama VARCHAR(50))";
+
+if ($conn->query($data_biaya)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+$biaya_tambahan = "CREATE TABLE IF NOT EXISTS tb_biaya_tambahan(biaya_tambahan_id VARCHAR(20) PRIMARY KEY NOT NULL,data_biaya_id VARCHAR(20),pembelian_id VARCHAR(20),keterangan VARCHAR(100),jlh VARCHAR(20),urutan VARCHAR(20),
+FOREIGN KEY (data_biaya_id) REFERENCES tb_data_biaya(data_biaya_id),FOREIGN KEY (pembelian_id) REFERENCES tb_pembelian(pembelian_id) ON DELETE RESTRICT)";
+
+if ($conn->query($biaya_tambahan)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
 mysqli_close($conn);

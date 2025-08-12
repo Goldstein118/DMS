@@ -4,7 +4,27 @@ import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 import * as helper from "./helper.js";
 const grid_container_customer = document.querySelector("#table_customer");
+const jenis_customer = document.getElementById("update_jenis_customer");
 if (grid_container_customer) {
+  jenis_customer.addEventListener("change", () => {
+    if (jenis_customer.value === "pribadi") {
+      document.getElementById("update_div_npwp_customer").style.display =
+        "none";
+      document.getElementById("update_div_nik_customer").style.display =
+        "block";
+    } else if (jenis_customer.value === "perusahaan") {
+      document.getElementById("update_div_npwp_customer").style.display =
+        "block";
+      document.getElementById("update_div_nik_customer").style.display = "none";
+    }
+  });
+  if (jenis_customer.value === "pribadi") {
+    document.getElementById("update_div_npwp_customer").style.display = "none";
+    document.getElementById("update_div_nik_customer").style.display = "block";
+  } else if (jenis_customer.value === "perusahaan") {
+    document.getElementById("update_div_npwp_customer").style.display = "block";
+    document.getElementById("update_div_nik_customer").style.display = "none";
+  }
   $(document).ready(function () {
     $("#update_channel_id").select2({
       allowClear: true,
@@ -19,18 +39,19 @@ if (grid_container_customer) {
     columns: [
       "Kode Customer",
       "Nama",
-      "Alamat",
+      "Alamat (KTP)",
       "Nomor Telepon",
       "NIK",
       "NPWP",
       "Status",
-      "NITKO",
+      "NITKU",
       "Term Pembayaran (Hari)",
       "Maksimun Invoice",
       "Maksimun Nominal Piutang",
       "Titik Koordinat",
       "Channel",
       "Pricelist",
+      "Jenis Customer",
       "Channel_id",
       "Pricelist_id",
 
@@ -132,6 +153,7 @@ if (grid_container_customer) {
           `),
           customer.channel_nama,
           customer.pricelist_nama,
+          customer.jenis_customer,
           customer.channel_id,
           customer.pricelist_id,
 
@@ -300,6 +322,7 @@ async function handle_update(button) {
 
   const current_channel_id = row.cells[14].textContent;
   const current_pricelist_id = row.cells[15].textContent;
+  const current_jenis_customer = row.cells[16].textContent;
 
   const ktp_filename = ktp_link ? ktp_link.split("/").pop() : "Belum ada file";
   const npwp_filename = npwp_link
@@ -323,6 +346,8 @@ async function handle_update(button) {
   document.getElementById("update_max_piutang").value = current_max_piutang;
   document.getElementById("update_longitude").value = longitude;
   document.getElementById("update_latitude").value = latitude;
+  document.getElementById("update_jenis_customer").value =
+    current_jenis_customer;
 
   helper.load_file_link_group(
     "update_ktp_image",
@@ -480,6 +505,7 @@ if (submit_customer_update) {
       formData.append("latitude", update_latitude);
       formData.append("channel_id", channel_id_new);
       formData.append("pricelist_id", pricelist_id_new);
+      formData.append("jenis_customer", jenis_customer.value);
 
       // Files
       const ktpFile = document.getElementById("update_ktp_image").files[0];

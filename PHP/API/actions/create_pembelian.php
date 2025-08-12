@@ -1,42 +1,39 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
+
 function toFloat($value)
 {
-    // Remove commas, trim whitespace, then cast to float
     return (float)str_replace(',', '', trim($value));
 }
 
-
 try {
+    // Validation
     $requiredFields = ['tanggal_po'];
-    $default = [
-        'status' => 'aktif',
-    ];
-
-
+    $default = ['status' => 'aktif'];
     $fields = validate_1($data, $requiredFields, $default);
+
+    // Extract main fields
     $tanggal_po = $fields['tanggal_po'];
     $supplier_id = $fields['supplier_id'];
     $keterangan = $fields['keterangan'];
     $ppn = $fields['ppn'];
     $diskon_invoice = $fields['diskon'];
     $nominal_pph = $fields['nominal_pph'];
-    $biaya_tambahan = $fields['biaya_tambahan'];
     $status = $fields['status'];
     $created_by = $fields['created_by'];
 
+    $ppn_unformat = toFloat($ppn);
+    $diskon_invoice_unformat = toFloat($diskon_invoice);
+    $nominal_pph_unformat = toFloat($nominal_pph);
 
-
-    // validate_2($nama_pembelian, '/^[a-zA-Z\s]+$/', "Invalid name format");
-
+    // Generate ID
     $pembelian_id = generateCustomID('PE', 'tb_pembelian', 'pembelian_id', $conn);
 
+    // Insert main purchase
     executeInsert(
         $conn,
-        "INSERT INTO tb_pembelian (pembelian_id,tanggal_po,supplier_id,keterangan
-        ,ppn,nominal_pph,biaya_tambahan,
-    status,created_by) 
-    VALUES (?,?,?,?,?,?,?,?,?)",
+        "INSERT INTO tb_pembelian (pembelian_id, tanggal_po, supplier_id, keterangan, ppn, nominal_pph, status, created_by)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         [
             $pembelian_id,
             $tanggal_po,
@@ -44,18 +41,17 @@ try {
             $keterangan,
             $ppn,
             $nominal_pph,
-            $biaya_tambahan,
             $status,
             $created_by
         ],
-        "sssssssss"
+        "ssssssss"
     );
 
+    $total_qty = 0;
+    $total_harga = 0;
 
+    // === Process Detail Items ===
     if (isset($data['details'])) {
-        $total_qty = 0;
-        $total_harga = 0;
-
         foreach ($data['details'] as $detail) {
             if (!isset($detail['produk_id']) || !isset($detail['harga'])) {
                 throw new Exception("Detail produk atau harga tidak lengkap.");
@@ -64,12 +60,12 @@ try {
             $produk_id = $detail['produk_id'];
             $qty = $detail['qty'];
             $harga = $detail['harga'];
-            $satuan_id = $detail['satuan_id'];
             $diskon = $detail['diskon'];
+            $satuan_id = $detail['satuan_id'];
 
-            $qty_unformat = toFloat($detail['qty']);
-            $harga_unformat = toFloat($detail['harga']);
-            $diskon_unformat = toFloat($detail['diskon']);
+            $qty_unformat = toFloat($qty);
+            $harga_unformat = toFloat($harga);
+            $diskon_unformat = toFloat($diskon);
 
             $total_qty += $qty_unformat;
             $total_harga += $qty_unformat * ($harga_unformat - $diskon_unformat);
@@ -77,33 +73,78 @@ try {
             $detail_pembelian_id = generateCustomID('DPE', 'tb_detail_pembelian', 'detail_pembelian_id', $conn);
             executeInsert(
                 $conn,
-                "INSERT INTO tb_detail_pembelian (detail_pembelian_id ,pembelian_id, produk_id,qty,harga,diskon,satuan_id) 
-                
-                VALUES (?,?,?,?,?,?,?)",
-
-                [$detail_pembelian_id, $pembelian_id, $produk_id, $qty, $harga, $diskon, $satuan_id],
+                "INSERT INTO tb_detail_pembelian (detail_pembelian_id, pembelian_id, produk_id, qty, harga, diskon, satuan_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?)",
+                [
+                    $detail_pembelian_id,
+                    $pembelian_id,
+                    $produk_id,
+                    $qty,
+                    $harga,
+                    $diskon,
+                    $satuan_id
+                ],
                 "sssssss"
             );
         }
-
-        $ppn_unformat = toFloat($fields['ppn']);
-        $diskon_invoice_unformat = toFloat($fields['diskon']);
-        $nominal_pph_unformat = toFloat($fields['nominal_pph']);
-        $biaya_tambahan_unformat = toFloat($fields['biaya_tambahan']);
-
-        $nominal_ppn = $total_harga * $ppn_unformat;
-        $sub_total = $total_harga - $diskon_invoice_unformat;
-        $grand_total = $sub_total + $nominal_ppn;
-        $stmt = $conn->prepare("UPDATE tb_pembelian SET total_qty = ?,  grand_total = ? , nominal_ppn =? WHERE pembelian_id = ?");
-        $stmt->bind_param("ssss", $total_qty, $grand_total, $nominal_ppn, $pembelian_id);
-        $stmt->execute();
-        $stmt->close();
     }
 
 
+    $total_biaya_tambahan = 0;
+    if (isset($data['biaya_tambahan'])) {
+        foreach ($data['biaya_tambahan'] as $biaya) {
+            if (!isset($biaya['data_biaya_id']) || !isset($biaya['jumlah']) || !isset($biaya['keterangan'])) {
+                throw new Exception("Informasi biaya tambahan tidak lengkap.");
+            }
 
-    echo json_encode(["success" => true, "message" => "Berhasil", "data" => ["pembelian_id" => $pembelian_id]]);
+            $data_biaya_id = $biaya['data_biaya_id'];
+            $jumlah = $biaya['jumlah'];
+            $jumlah_unformat = toFloat($jumlah);
+            $keterangan_biaya = $biaya['keterangan'];
+
+            $total_biaya_tambahan += $jumlah_unformat;
+
+            $biaya_tambahan_id = generateCustomID('DBT', 'tb_biaya_tambahan', 'biaya_tambahan_id', $conn);
+            executeInsert(
+                $conn,
+                "INSERT INTO tb_biaya_tambahan (biaya_tambahan_id, pembelian_id, data_biaya_id, jlh, keterangan)
+                VALUES (?, ?, ?, ?, ?)",
+                [
+                    $biaya_tambahan_id,
+                    $pembelian_id,
+                    $data_biaya_id,
+                    $jumlah,
+                    $keterangan_biaya
+                ],
+                "sssss"
+            );
+        }
+    }
+
+    // === Final Calculation ===
+    $sub_total = $total_harga - $diskon_invoice_unformat + $total_biaya_tambahan;
+    $nominal_ppn = $sub_total * $ppn_unformat;
+    $grand_total = $sub_total + $nominal_ppn - $nominal_pph_unformat;
+
+    // === Update Purchase Summary ===
+    $stmt = $conn->prepare("UPDATE tb_pembelian 
+                            SET total_qty = ?, grand_total = ?, nominal_ppn = ?,biaya_tambahan= ?
+                            WHERE pembelian_id = ?");
+    $stmt->bind_param("sssss", $total_qty, $grand_total, $nominal_ppn, $total_biaya_tambahan, $pembelian_id);
+    $stmt->execute();
+    $stmt->close();
+
+    echo json_encode([
+        "success" => true,
+        "message" => "Berhasil",
+        "data" => [
+            "pembelian_id" => $pembelian_id
+        ]
+    ]);
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(["success" => false, "error" => $e->getMessage()]);
+    echo json_encode([
+        "success" => false,
+        "error" => $e->getMessage()
+    ]);
 }

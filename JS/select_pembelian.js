@@ -13,19 +13,8 @@ submit_pengiriman_button.addEventListener("click", submit_pengiriman);
 submit_terima_button.addEventListener("click", submit_terima);
 submit_invoice_button.addEventListener("click", submit_invoice);
 
-function initPickadateOnce(selector) {
-  const $el = $(selector);
-  if (!$el.data("pickadate")) {
-    $el.pickadate({
-      format: "dd mmm yyyy",
-      selectYears: 25,
-      selectMonths: true,
-    });
-  }
-}
-
 const grid_container_pembelian = document.querySelector("#table_pembelian");
-const pickdatejs = $("#update_tanggal_berlaku")
+const pickdatejs_po = $("#update_tanggal_po")
   .pickadate({
     format: "dd mmm yyyy", // user sees: 01 Jan 2025
     formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
@@ -33,43 +22,31 @@ const pickdatejs = $("#update_tanggal_berlaku")
     selectMonths: true,
   })
   .pickadate("picker");
+
 if (grid_container_pembelian) {
-  // const create_detail_pembelian = document.getElementById(
-  //   "update_detail_pembelian_button"
-  // );
-  // create_detail_pembelian.addEventListener("click", () => {
-  //   helper.addField("update", "generated_update_produk_select");
-  // });
   $(document).ready(function () {
-    $("#modal_pengiriman").on("shown.bs.modal", function () {
-      initPickadateOnce("#tanggal_pengiriman");
-    });
-
-    $("#modal_terima").on("shown.bs.modal", function () {
-      initPickadateOnce("#tanggal_terima");
-    });
-
-    $("#modal_invoice").on("shown.bs.modal", function () {
-      initPickadateOnce("#tanggal_invoice");
+    $("#update_supplier_id").select2({
+      allowClear: true,
+      dropdownParent: $("#update_modal_pembelian"),
     });
   });
-
   window.pembelian_grid = new Grid({
     columns: [
       "Kode Pembelian",
       "tanggal_po",
+      "supplier_id",
+      "supplier",
       "tanggal_pengiriman",
+      "no_pengiriman",
       "tanggal_terima",
       "tanggal_invoice",
-      "supplier",
-      "keterangan",
       "no_invoice_supplier",
-      "no_pengiriman",
       "total_qty",
       "ppn",
       "nominal_ppn",
-      "diskon",
       "nominal_pph",
+      "diskon",
+      "keterangan",
       "biaya_tambahan",
       "grand_total",
       "created_on",
@@ -157,6 +134,8 @@ if (grid_container_pembelian) {
         data.map((pembelian) => [
           pembelian.pembelian_id,
           helper.format_date(pembelian.tanggal_po),
+          pembelian.supplier_id,
+          pembelian.supplier_nama,
           html(`
             
             ${
@@ -172,6 +151,7 @@ if (grid_container_pembelian) {
                 : `${helper.format_date(pembelian.tanggal_pengiriman)}`
             }
             `),
+          pembelian.no_pengiriman,
           html(
             `${
               pembelian.tanggal_pengiriman && !pembelian.tanggal_invoice
@@ -199,26 +179,19 @@ if (grid_container_pembelian) {
                 : `${helper.format_date(pembelian.tanggal_invoice)}`
             }`
           ),
-          pembelian.supplier_id,
-          pembelian.keterangan,
           pembelian.no_invoice_supplier,
-          pembelian.no_pengiriman,
           pembelian.total_qty,
           pembelian.ppn,
           pembelian.nominal_ppn,
-          pembelian.diskon,
           pembelian.nominal_pph,
+          pembelian.diskon,
+          pembelian.keterangan,
           pembelian.biaya_tambahan,
           pembelian.grand_total,
           helper.format_date_time(pembelian.created_on),
           pembelian.created_by,
-
           html(`
-          ${
-            pembelian.status === "aktif"
-              ? `<span class="badge text-bg-success">Aktif</span>`
-              : `<span class="badge text-bg-danger">Non Aktif</span>`
-          }
+          ${pembelian.status}
           `),
           null,
         ]),
@@ -483,6 +456,21 @@ async function handle_delete(button) {
     }
   }
 }
+function populate_supplier(data, current_supplier_id) {
+  const supplier_id_Field = $("#update_supplier_id");
+  supplier_id_Field.empty();
+  data.forEach((item) => {
+    const option = new Option(
+      `${item.supplier_id} - ${item.nama}`,
+      item.supplier_id,
+      false,
+      item.supplier_id == current_supplier_id
+    );
+    supplier_id_Field.append(option);
+  });
+
+  supplier_id_Field.trigger("change");
+}
 
 async function handle_update(button) {
   const row = button.closest("tr");
@@ -493,9 +481,31 @@ async function handle_update(button) {
   spinner.style.display = "inline-block";
 
   const pembelian_id = row.cells[0].textContent;
+  let tanggal_po = row.cells[1].textContent;
+  const supplier_id = row.cells[2].textContent;
+  const ppn = row.cells[10].textContent;
+  const nominal_pph = row.cells[12].textContent;
+  const diskon = row.cells[13].textContent;
+  const keterangan = row.cells[14].textContent;
+
+  tanggal_po = helper.unformat_date(tanggal_po);
+  const parts = tanggal_po.split("-"); // ["2025", "05", "02"]
+  const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+  pickdatejs_po.set("select", dateObj);
 
   document.getElementById("update_pembelian_id").value = pembelian_id;
-
+  document.getElementById("update_ppn").value = ppn;
+  document.getElementById("update_nominal_pph").value = nominal_pph;
+  document.getElementById("update_keterangan").value = keterangan;
+  document.getElementById("update_diskon").value = diskon;
+  try {
+    const response = await apiRequest(
+      `/PHP/API/supplier_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}&target=tb_pembelian&context=edit`
+    );
+    populate_supplier(response.data, supplier_id);
+  } catch (error) {}
   button_icon.style.display = "inline-block";
   spinner.style.display = "none";
   $("#update_modal_pembelian").modal("show");

@@ -6,6 +6,10 @@ const submit_pembelian = document.getElementById("submit_pembelian");
 const submit_detail_pembelian = document.getElementById(
   "create_detail_pembelian"
 );
+const create_biaya_tambahan = document.getElementById("create_biaya_tambahan");
+create_biaya_tambahan.addEventListener("click", function () {
+  add_biaya("create", "data_biaya_id");
+});
 function initPickadateOnce(selector) {
   const $el = $(selector);
   if (!$el.data("pickadate")) {
@@ -39,13 +43,75 @@ if (submit_pembelian) {
     helper.format_nominal("diskon");
 
     add_field("create", "produk_select", "satuan_select");
+    add_biaya("create", "data_biaya_id");
   });
 }
+async function select_data_biaya(
+  index,
+  action,
+  data_biaya_id,
+  current_data_biaya_id
+) {
+  if (action == "create") {
+    $(`#${data_biaya_id}${index}`).select2({
+      placeholder: "Pilih Biaya",
+      allowClear: true,
+      dropdownParent: $("#modal_pembelian"),
+    });
+  } else if (action == "update") {
+    $(`#${data_biaya_id}${index}`).select2({
+      placeholder: "Pilih Biaya",
+      allowClear: true,
+      dropdownParent: $("#update_modal_pembelian"),
+    });
+  }
+
+  delete_biaya_tambahan(action);
+  try {
+    const response = await apiRequest(
+      `/PHP/API/data_biaya_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}`
+    );
+
+    const select = $(`#${data_biaya_id}${index}`);
+    select.empty();
+    select.append(new Option("Pilih Biaya", "", false, false));
+
+    if (action == "create") {
+      response.data.forEach((item) => {
+        const option = new Option(
+          `${item.data_biaya_id} - ${item.nama}`,
+          item.data_biaya_id,
+          false,
+          false
+        );
+        select.append(option);
+      });
+      select.trigger("change");
+    } else if (action == "update") {
+      response.data.forEach((item) => {
+        const option = new Option(
+          `${item.data_biaya_id} - ${item.nama}`,
+          item.data_biaya_id,
+          false,
+          item.data_biaya_id === current_data_biaya_id
+        );
+        select.append(option);
+      });
+      select.val(current_data_biaya_id).trigger("change");
+    }
+  } catch (error) {
+    console.error("error:", error);
+  }
+}
+
 async function select_detail_pembelian(
   index,
   action,
   produk_element_id,
   satuan_element_id,
+
   current_produk_id,
   current_satuan_id
 ) {
@@ -176,6 +242,81 @@ function delete_detail_pembelian(action) {
   );
 }
 
+function delete_biaya_tambahan(action) {
+  $(`#${action}_biaya_tambahan_tbody`).on(
+    "click",
+    ".delete_biaya_tambahan",
+    async function () {
+      const result = await Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Anda tidak dapat mengembalikannya!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Iya, Hapus!",
+        cancelButtonText: "Batalkan",
+      });
+      if (result.isConfirmed) {
+        try {
+          $(this).closest("tr").remove();
+          Swal.fire("Berhasil", "Pembelian dihapus.", "success");
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: error.message,
+          });
+        }
+      }
+    }
+  );
+}
+function add_biaya(action, data_biaya_element_id) {
+  var myTable = document.getElementById(`${action}_biaya_tambahan_tbody`);
+  var currentIndex = index++;
+  const tr_detail = document.createElement("tr");
+
+  const td_biaya = document.createElement("td");
+  var biaya_select = document.createElement("select");
+  biaya_select.setAttribute("id", data_biaya_element_id + currentIndex);
+  biaya_select.classList.add("form-select");
+  td_biaya.appendChild(biaya_select);
+
+  const td_jumlah = document.createElement("td");
+  var input_jumlah = document.createElement("input");
+  input_jumlah.setAttribute("id", "jumlah" + currentIndex);
+  input_jumlah.classList.add("form-control");
+  input_jumlah.style.textAlign = "right";
+  td_jumlah.appendChild(input_jumlah);
+
+  const td_keterangan = document.createElement("td");
+  var input_keterangan = document.createElement("input");
+  input_keterangan.setAttribute("id", "keterangan" + currentIndex);
+  input_keterangan.classList.add("form-control");
+  input_keterangan.style.textAlign = "right";
+  td_keterangan.appendChild(input_keterangan);
+
+  const td_aksi = document.createElement("td");
+  td_aksi.setAttribute("id", "aksi_tbody");
+  var delete_button = document.createElement("button");
+  delete_button.type = "button";
+  delete_button.className = "btn btn-danger btn-sm delete_biaya_tambahan";
+  delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+  td_aksi.appendChild(delete_button);
+  td_aksi.style.textAlign = "center";
+
+  tr_detail.appendChild(td_biaya);
+  tr_detail.appendChild(td_jumlah);
+  tr_detail.appendChild(td_keterangan);
+  tr_detail.appendChild(td_aksi);
+
+  myTable.appendChild(tr_detail);
+
+  helper.format_nominal("jumlah" + currentIndex);
+  select_data_biaya(currentIndex, action, data_biaya_element_id);
+}
+
 function add_field(action, produk_element_id, satuan_element_id) {
   var myTable = document.getElementById(`${action}_detail_pembelian_tbody`);
   var currentIndex = index++;
@@ -275,7 +416,6 @@ async function submitPembelian() {
   let diskon = document.getElementById("diskon").value;
   const ppn = document.getElementById("ppn").value;
   let nominal_pph = document.getElementById("nominal_pph").value;
-  const biaya_tambahan = document.getElementById("biaya_tambahan").value;
 
   const status_pembelian = document.getElementById("status_pembelian").value;
 
@@ -326,6 +466,39 @@ async function submitPembelian() {
     });
   }
 
+  const biaya_tambahan = [];
+  const rows_biaya_tambahan = document.querySelectorAll(
+    "#create_biaya_tambahan_tbody tr"
+  );
+
+  for (const row of rows_biaya_tambahan) {
+    const biaya_select = row.querySelector("td:nth-child(1) select");
+    const jumlah_biaya = row.querySelector("td:nth-child(2) input");
+    const keterangan_biaya = row.querySelector("td:nth-child(3) input");
+
+    const data_biaya_id = biaya_select?.value?.trim();
+    let jumlah = jumlah_biaya?.value?.trim();
+    const keterangan = keterangan_biaya?.value?.trim();
+
+    if (
+      !data_biaya_id ||
+      data_biaya_id.trim() === "" ||
+      !jumlah ||
+      jumlah.trim() === "" ||
+      !keterangan ||
+      keterangan.trim() === ""
+    ) {
+      toastr.error("Semua field pada biaya tambahan wajib diisi.");
+      return;
+    }
+    jumlah = helper.format_angka(jumlah);
+    biaya_tambahan.push({
+      data_biaya_id: data_biaya_id,
+      jumlah: jumlah,
+      keterangan: keterangan,
+    });
+  }
+
   if (details.length === 0) {
     toastr.error("Minimal satu detail pembelian harus diisi.");
     return;
@@ -342,10 +515,11 @@ async function submitPembelian() {
     ppn: ppn,
     diskon: diskon,
     nominal_pph: nominal_pph,
-    biaya_tambahan: biaya_tambahan,
     status: status_pembelian,
     details: details,
+    biaya_tambahan: biaya_tambahan,
   };
+
   try {
     const response = await apiRequest(
       `/PHP/API/pembelian_API.php?action=create`,

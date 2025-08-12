@@ -240,7 +240,7 @@ async function handle_update(button) {
   document.getElementById("update_npwp_karyawan").value = currentnpwp;
   document.getElementById("update_status_karyawan").value = currentstatus;
 
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 100));
   try {
     const response = await apiRequest(
       `/PHP/API/role_API.php?action=select&user_id=${access.decryptItem(

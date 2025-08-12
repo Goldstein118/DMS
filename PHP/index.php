@@ -106,7 +106,8 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
         'tabel_frezzer',
         'tabel_promo',
         'tabel_satuan',
-        'tabel_pembelian'
+        'tabel_pembelian',
+        'tabel_data_biaya'
       ];
 
       if (in_array($page, $allowed_pages)) {
@@ -225,6 +226,12 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
       ?>
         <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_pembelian.js?v=2.0"></script>
         <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_pembelian.js?v=2.0"></script>
+      <?php
+        break;
+      case 'tabel_data_biaya':
+      ?>
+        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_data_biaya.js?v=2.0"></script>
+        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_data_biaya.js?v=2.0"></script>
     <?php
         break;
     }

@@ -104,7 +104,11 @@
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_satuan"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_satuan' ? 'active' : ''; ?>"> Satuan</a>
             </li>
-
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_data_biaya"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_data_biaya' ? 'active' : ''; ?>"> data biaya</a>
+            </li>
           </ul>
         </div>
       </li>
@@ -241,6 +245,8 @@
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_satuan"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_satuan' ? 'active' : ''; ?>"> Satuan</a>
             </li>
+
+
           </ul>
         </div>
       </li>
@@ -268,6 +274,11 @@
               <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_pembelian"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_pembelian' ? 'active' : ''; ?>"> Pembelian</a>
+            </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_data_biaya"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_data_biaya' ? 'active' : ''; ?>"> data biaya</a>
             </li>
           </ul>
         </div>

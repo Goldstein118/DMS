@@ -12,6 +12,7 @@ function checkContextAccess($conn, $userId, $context)
         'tb_armada'  => ['tb_karyawan'],
         'tb_promo'   => ['tb_brand', 'tb_customer', 'tb_produk', 'tb_channel', 'tb_satuan'],
         'tb_pembelian' => ['tb_supplier', 'tb_satuan', 'tb_produk'],
+        'tb_biaya_tambahan' => ['tb_supplier', 'tb_data_biaya', 'tb_pembelian'],
         // Add more mappings as needed
     ];
 
@@ -33,6 +34,8 @@ function checkContextAccess($conn, $userId, $context)
         'tb_promo'    => 56,
         'tb_satuan'   => 60,
         'tb_pembelian' => 64,
+        'tb_data_biaya' => 68,
+        'tb_biaya_tambahan' => 72
         // Add more tables and their base indices here
     ];
 

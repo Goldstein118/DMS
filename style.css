@@ -386,6 +386,7 @@ h3 {
   padding: 0px;
 }
 #create_detail_pricelist,
+#create_biaya_tambahan,
 #update_detail_pricelist_button,
 #create_detail_pembelian {
   max-width: fit-content !important;
@@ -406,7 +407,7 @@ h3 {
   float: right;
 }
 #detail_pricelist,
-#jenis_promo_kondisi,
+#biaya_tambahan #jenis_promo_kondisi,
 #table_bonus_barang,
 #update_jenis_promo_kondisi,
 #update_table_bonus_barang,
@@ -419,6 +420,7 @@ h3 {
 }
 
 #detail_pricelist thead,
+#biaya_tambahan thead,
 #jenis_promo_kondisi thead,
 #table_bonus_barang thead,
 #update_jenis_promo_kondisi thead,
@@ -435,6 +437,7 @@ h3 {
 }
 
 #detail_pricelist tbody,
+#biaya_tambahan tbody,
 #jenis_promo_kondisi tbody,
 #table_bonus_barang tbody,
 #update_jenis_promo_kondisi tbody,
@@ -454,6 +457,7 @@ h3 {
 }
 
 #detail_pricelist tbody tr,
+#biaya_tambahan tbody tr,
 #jenis_promo_kondisi tbody tr,
 #table_bonus_barang tbody tr,
 #update_jenis_promo_kondisi tbody tr,
@@ -518,7 +522,8 @@ h3 {
   width: 55px;
 }
 #accordion_body_pricelist,
-#update_accordion_body_pricelist {
+#update_accordion_body_pricelist,
+#biaya_tambahan_accordion_body {
   overflow-x: auto;
   overflow-y: hidden !important;
   width: 100%;

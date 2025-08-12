@@ -19,6 +19,8 @@ function checkAccess($conn, $userId, $table, $index, $target_user_id = null)
         'tb_promo'    => 56,
         'tb_satuan' => 60,
         'tb_pembelian' => 64,
+        'tb_data_biaya' => 68,
+        'tb_biaya_tambahan' => 72
     ];
 
 

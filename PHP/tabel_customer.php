@@ -15,7 +15,9 @@
               <label class="form-label mb-0 mt-2" for="name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
               <input class="form-control" type="text" id="name_customer" name="name_customer" value="">
               <label class="form-label mb-0 mt-2" for="address">Alamat:</label>
-              <input class="form-control" type="text" id="alamat_customer" name="alamat_customer" value="">
+              <input class="form-control" type="text" id="alamat_customer" placeholder="nama jalan">
+              <input class="form-control" type="text" id="alamat_customer" placeholder="RT/RW">
+              <input class="form-control" type="text" id="alamat_customer" placeholder="Kelurahan">
               <label class="form-label mb-0 mt-2" for="phone">Nomor Telepon:</label>
               <div class="input-group">
                 <span class="input-group-text" id="basic-addon1">+62</span>

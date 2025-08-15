@@ -32,19 +32,20 @@ try {
     // Insert main purchase
     executeInsert(
         $conn,
-        "INSERT INTO tb_pembelian (pembelian_id, tanggal_po, supplier_id, keterangan, ppn, nominal_pph, status, created_by)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO tb_pembelian (pembelian_id, tanggal_po, supplier_id, keterangan, ppn,diskon, nominal_pph, status, created_by)
+        VALUES (?, ?, ?, ?, ?, ?, ?,?,?)",
         [
             $pembelian_id,
             $tanggal_po,
             $supplier_id,
             $keterangan,
-            $ppn,
-            $nominal_pph,
+            $ppn_unformat,
+            $diskon_invoice_unformat,
+            $nominal_pph_unformat,
             $status,
             $created_by
         ],
-        "ssssssss"
+        "sssssssss"
     );
 
     $total_qty = 0;
@@ -79,9 +80,9 @@ try {
                     $detail_pembelian_id,
                     $pembelian_id,
                     $produk_id,
-                    $qty,
-                    $harga,
-                    $diskon,
+                    $qty_unformat,
+                    $harga_unformat,
+                    $diskon_unformat,
                     $satuan_id
                 ],
                 "sssssss"
@@ -113,7 +114,7 @@ try {
                     $biaya_tambahan_id,
                     $pembelian_id,
                     $data_biaya_id,
-                    $jumlah,
+                    $jumlah_unformat,
                     $keterangan_biaya
                 ],
                 "sssss"

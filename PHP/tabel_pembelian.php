@@ -315,12 +315,12 @@
                                                 <select class="form-select" id="update_status_pembelian">
                                                     <option value="proses">Proses PO</option>
                                                     <option value="delivery">Delivery</option>
-                                                    <option value="selesai">Selesai</option>
+                                                    <option value="invoice">Invoice</option>
                                                 </select>
                                             </div>
                                             <div class="col">
-                                                <label class="form-label mb-0 mt-2" for="update_pembelian_id">update_pembelian_id :<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                                <input class="form-control" type="text" id="update_pembelian_id" name="update_pembelian_id" value="">
+                                                <!-- <label class="form-label mb-0 mt-2" for="update_pembelian_id">update_pembelian_id :<i class="bi bi-asterisk text-danger align-middle"></i></label> -->
+                                                <input class="form-control d-none" type="text" id="update_pembelian_id" name="update_pembelian_id" value="" disabled>
                                                 <label class="form-label mb-0 mt-2" for="update_supplier_id">Supplier:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <select class="form-select" id="update_supplier_id"></select>
                                             </div>
@@ -347,7 +347,7 @@
                                     class="accordion-collapse collapse show"
                                     data-bs-parent="#update_accordion_detail_barang_pembelian">
                                     <div class="accordion-body" id="update_detail_pembelian_card_body">
-                                        <button class="btn btn-primary btn-sm mb-2" id="update_detail_pembelian">
+                                        <button class="btn btn-primary btn-sm mb-2" id="update_detail_pembelian_button">
                                             <i class="bi bi-plus-circle"></i> Tambah
                                         </button>
                                         <table class="table table-hover table-bordered table-sm" id="update_detail_pembelian">
@@ -361,7 +361,7 @@
                                                     <th id="update_aksi_thead">Aksi</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="update__detail_pembelian_tbody"></tbody>
+                                            <tbody id="update_detail_pembelian_tbody"></tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -446,10 +446,10 @@
                                     class="accordion-collapse collapse show"
                                     data-bs-parent="#update_accordion_biaya_tambahan_pembelian">
                                     <div class="accordion-body" id="update_biaya_tambahan_accordion_body">
-                                        <button class="btn btn-primary btn-sm mb-2" id="update__biaya_tambahan">
+                                        <button class="btn btn-primary btn-sm mb-2" id="update_biaya_tambahan_button">
                                             <i class="bi bi-plus-circle"></i> Tambah
                                         </button>
-                                        <table class="table table-hover table-bordered table-sm" id="biaya_tambahan">
+                                        <table class="table table-hover table-bordered table-sm" id="update_biaya_tambahan">
                                             <thead id="update_biaya_tambahan_thead">
                                                 <tr>
                                                     <th scope="col">Biaya</th>
@@ -458,7 +458,7 @@
                                                     <th id="update_aksi_thead">Aksi</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="update__biaya_tambahan_tbody"></tbody>
+                                            <tbody id="update_biaya_tambahan_tbody"></tbody>
                                         </table>
                                     </div>
                                 </div>

@@ -5,9 +5,91 @@ if (!$conn) {
     exit;
 }
 
-if (isset($data['pembelian_id'])) {
+
+if (isset($data['table']) && $data['table'] === 'detail_pembelian' && isset($data['pembelian_id'])) {
+    $pembelian_id = $data['pembelian_id'];
+
+    $sql = "SELECT * FROM tb_detail_pembelian WHERE pembelian_id=?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        http_response_code(500);
+        echo json_encode(["error" => "Failed to prepare statement: " . $conn->error]);
+        exit;
+    }
+
+    $stmt->bind_param("s", $pembelian_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $detail_data = [];
+    while ($row = $result->fetch_assoc()) {
+        $detail_data[] = $row;
+    }
+
+    echo json_encode(["data" => $detail_data]);
+    exit;
+} else if (isset($data["table"]) && $data["table"] === "biaya_tambahan" && isset($data["pembelian_id"])) {
+
+    $pembelian_id = $data['pembelian_id'];
+
+    $sql = "SELECT * FROM tb_biaya_tambahan WHERE pembelian_id=?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        http_response_code(500);
+        echo json_encode(["error" => "Failed to prepare statement: " . $conn->error]);
+        exit;
+    }
+
+    $stmt->bind_param("s", $pembelian_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $detail_data = [];
+    while ($row = $result->fetch_assoc()) {
+        $detail_data[] = $row;
+    }
+
+    echo json_encode(["data" => $detail_data]);
+    exit;
+} else if (isset($data['table']) && $data['table'] === 'view_detail_pembelian' && isset($data['pembelian_id'])) {
+    $pembelian_id = $data['pembelian_id'];
+
+    $sql = "SELECT 
+            d.detail_pembelian_id,
+            d.pembelian_id,
+            d.produk_id,
+            d.qty,
+            d.harga,
+            d.diskon,
+            d.satuan_id,
+            p.nama AS produk_nama,
+            s.nama AS satuan_nama
+        FROM tb_detail_pembelian d
+        LEFT JOIN tb_produk p ON p.produk_id = d.produk_id
+        LEFT JOIN tb_satuan s ON s.satuan_id = d.satuan_id
+        WHERE d.pembelian_id = ?";
+
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        http_response_code(500);
+        echo json_encode(["error" => "Failed to prepare statement: " . $conn->error]);
+        exit;
+    }
+
+    $stmt->bind_param("s", $pembelian_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $detail_data = [];
+    while ($row = $result->fetch_assoc()) {
+        $detail_data[] = $row;
+    }
+
+    echo json_encode(["data" => $detail_data]);
+    exit;
+} else if (isset($data['pembelian_id'])) {
     $pembelian_id = trim($data['pembelian_id']);
-    $sql = "SELECT tanggal_pengiriman,tanggal_terima,tanggal_invoice,no_pengiriman,no_invoice_supplier FROM tb_pembelian WHERE pembelian_id=?";
+    $sql = "SELECT tanggal_po,tanggal_pengiriman,tanggal_terima,tanggal_invoice,no_pengiriman,no_invoice_supplier FROM tb_pembelian WHERE pembelian_id=?";
     $stmt = $conn->prepare($sql);
     if ($stmt == false) {
         http_response_code(500);

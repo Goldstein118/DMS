@@ -11,10 +11,12 @@ try {
 
     $stmt_biaya_tambahan = $conn->prepare("DELETE FROM tb_biaya_tambahan WHERE pembelian_id=?");
     $stmt_biaya_tambahan->bind_param("s", $pembelian_id);
-    $execute_biaya_tambahan = $stmt_detail->execute();
+    $execute_biaya_tambahan = $stmt_biaya_tambahan->execute();
+
     $stmt_detail = $conn->prepare("DELETE FROM tb_detail_pembelian WHERE pembelian_id=?");
     $stmt_detail->bind_param("s", $pembelian_id);
     $execute_detail = $stmt_detail->execute();
+
     $stmt = $conn->prepare("DELETE FROM tb_pembelian WHERE pembelian_id = ?");
     $stmt->bind_param("s", $pembelian_id);
     $execute = $stmt->execute();

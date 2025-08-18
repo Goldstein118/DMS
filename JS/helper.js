@@ -58,7 +58,22 @@ export function custom_grid_header(
   search_Box.style.display = "flex";
   search_Box.style.justifyContent = "flex-end";
   search_Box.style.marginLeft = "auto";
-  if (input) input.placeholder = `Cari ${field}...`;
+
+  if (input) {
+    input.placeholder = `Cari ${field}...`;
+
+    // Just let Grid.js's own search event handler do the work
+    input.addEventListener("input", (e) => {
+      const keyword = e.target.value;
+      if (keyword.length >= 3 || keyword.length === 0) {
+        console.log("Typing:", keyword);
+        // Manually dispatch 'input' again to ensure Grid.js catches it
+        const event = new Event("input", { bubbles: true });
+        input.dispatchEvent(event);
+      }
+    });
+  }
+
   document.getElementById("loading_spinner").style.visibility = "hidden";
   $("#loading_spinner").fadeOut();
   // Attach event listener after header is rebuilt

@@ -89,17 +89,17 @@ if (strlen($search) >= 3 && $search !== '') {
         LEFT JOIN tb_channel ch ON c.channel_id = ch.channel_id
         LEFT JOIN tb_gambar g_ktp ON g_ktp.customer_id = c.customer_id AND g_ktp.tipe = 'ktp'
         LEFT JOIN tb_gambar g_npwp ON g_npwp.customer_id = c.customer_id AND g_npwp.tipe = 'npwp'
-        WHERE c.customer_id LIKE CONCAT('%', ?, '%') LIMIT 100
-           OR c.nama LIKE CONCAT('%', ?, '%')LIMIT 100
-           OR c.alamat LIKE CONCAT('%', ?, '%')LIMIT 100
-           OR c.no_telp LIKE CONCAT('%', ?, '%') LIMIT 100
-           OR c.ktp LIKE CONCAT('%', ?, '%') LIMIT 100
-           OR c.npwp LIKE CONCAT('%', ?, '%')LIMIT 100
-           OR c.status LIKE CONCAT('%', ?, '%')LIMIT 100
-           OR c.nitko LIKE CONCAT('%', ?, '%')LIMIT 100
-           OR c.term_pembayaran LIKE CONCAT('%', ?, '%') LIMIT 100
-           OR c.max_invoice LIKE CONCAT('%', ?, '%') LIMIT 100
-           OR c.max_piutang LIKE CONCAT('%', ?, '%')LIMIT 100
+        WHERE c.customer_id LIKE CONCAT('%', ?, '%') 
+           OR c.nama LIKE CONCAT('%', ?, '%')
+           OR c.alamat LIKE CONCAT('%', ?, '%')
+           OR c.no_telp LIKE CONCAT('%', ?, '%') 
+           OR c.ktp LIKE CONCAT('%', ?, '%') 
+           OR c.npwp LIKE CONCAT('%', ?, '%')
+           OR c.status LIKE CONCAT('%', ?, '%')
+           OR c.nitko LIKE CONCAT('%', ?, '%')
+           OR c.term_pembayaran LIKE CONCAT('%', ?, '%') 
+           OR c.max_invoice LIKE CONCAT('%', ?, '%') 
+           OR c.max_piutang LIKE CONCAT('%', ?, '%')
            OR ch.nama LIKE CONCAT('%', ?, '%') LIMIT 100
     ");
     $stmt->bind_param('ssssssssssss', $search, $search, $search, $search, $search, $search, $search, $search, $search, $search, $search, $search);

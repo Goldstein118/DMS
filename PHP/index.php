@@ -15,8 +15,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
   <!-- jQuery -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL'] ?>/jquery-3.6.0.min.js"></script>
-  <!-- DataTables CSS -->
-  <link href="<?php echo $_ENV['VENDOR_BASE_URL'] ?>/dataTables.min.css" rel="stylesheet" />
+
   <link href="<?php echo $_ENV['VENDOR_BASE_URL'] ?>/mermaid.min.css" rel="stylesheet" />
   <!-- Bootstrap 5 CSS -->
   <link href="<?php echo $_ENV['VENDOR_BASE_URL'] ?>/bootstrap.min.css" rel="stylesheet">
@@ -39,8 +38,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
   <!-- Select2 JS -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL'] ?>/select2.min.js"></script>
 
-  <!-- DataTables JS -->
-  <script src="<?php echo $_ENV['VENDOR_BASE_URL'] ?>/dataTables.min.js"></script>
+
 
   <!-- Popper.js -->
   <script src="<?php echo $_ENV['VENDOR_BASE_URL'] ?>/popper.min.js"></script>

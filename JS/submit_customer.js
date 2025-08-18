@@ -22,17 +22,32 @@ if (submit_customer) {
       if (jenis_customer.value === "pribadi") {
         document.getElementById("div_npwp_customer").style.display = "none";
         document.getElementById("div_nik_customer").style.display = "block";
+        document.getElementById("alamat_customer_pribadi").style.display =
+          "block";
+        document.getElementById("alamat_customer_perusahaan").style.display =
+          "none";
       } else if (jenis_customer.value === "perusahaan") {
         document.getElementById("div_npwp_customer").style.display = "block";
         document.getElementById("div_nik_customer").style.display = "none";
+        document.getElementById("alamat_customer_pribadi").style.display =
+          "none";
+        document.getElementById("alamat_customer_perusahaan").style.display =
+          "block";
       }
     });
     if (jenis_customer.value === "pribadi") {
       document.getElementById("div_npwp_customer").style.display = "none";
       document.getElementById("div_nik_customer").style.display = "block";
+      document.getElementById("alamat_customer_pribadi").style.display =
+        "block";
+      document.getElementById("alamat_customer_perusahaan").style.display =
+        "none";
     } else if (jenis_customer.value === "perusahaan") {
       document.getElementById("div_npwp_customer").style.display = "block";
       document.getElementById("div_nik_customer").style.display = "none";
+      document.getElementById("alamat_customer_pribadi").style.display = "none";
+      document.getElementById("alamat_customer_perusahaan").style.display =
+        "block";
     }
 
     document
@@ -112,6 +127,11 @@ async function submitCustomer() {
   const channel_id = document.getElementById("channel_id").value;
   const pricelist_id = document.getElementById("pricelist_id").value;
 
+  const nama_jalan = document.getElementById("nama_jalan").value;
+  const rt = document.getElementById("rt").value;
+  const kelurahan = document.getElementById("kelurahan").value;
+  const kecamatan = document.getElementById("kecamatan").value;
+
   if (
     !name_customer ||
     name_customer.trim() === "" ||
@@ -123,12 +143,17 @@ async function submitCustomer() {
     toastr.error("Kolom * wajib diisi.");
     return;
   }
-  let nik_npwp;
+
+  let nik_npwp_valid = true;
+
   if (jenis_customer.value == "pribadi") {
-    nik_npwp = !nik_customer || nik_customer.trim() === "";
+    nik_npwp_valid = nik_customer && nik_customer.trim() !== "";
+    console.log("pribadi");
   } else if (jenis_customer.value == "perusahaan") {
-    nik_npwp = !npwp_customer || npwp_customer.trim() === "";
+    nik_npwp_valid = npwp_customer && npwp_customer.trim() !== "";
+    console.log("usaha");
   }
+
   const is_valid =
     helper.validateField(
       name_customer,
@@ -186,7 +211,10 @@ async function submitCustomer() {
       "Format latitude tidak valid"
     );
 
-  if (!is_valid || !nik_npwp) return;
+  if (!is_valid || !nik_npwp_valid) {
+    toastr.error("Kolom NIK/NPWP harus diisi.");
+    return;
+  }
   npwp_customer = helper.format_npwp(npwp_customer);
   no_telp_customer = helper.format_no_telp(no_telp_customer);
 
@@ -203,6 +231,10 @@ async function submitCustomer() {
   formData.set("longitude", longitude);
   formData.set("latitude", latitude);
   formData.set("channel_id", channel_id);
+  formData.set("kecamatan", kecamatan);
+  formData.set("nama_jalan", nama_jalan);
+  formData.set("rt", rt);
+  formData.set("kelurahan", kelurahan);
   formData.set("pricelist_id", pricelist_id);
   formData.set("jenis_customer", jenis_customer.value);
   formData.set("action", "create");

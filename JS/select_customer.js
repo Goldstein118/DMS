@@ -12,18 +12,39 @@ if (grid_container_customer) {
         "none";
       document.getElementById("update_div_nik_customer").style.display =
         "block";
+
+      document.getElementById(
+        "update_alamat_customer_perusahaan"
+      ).style.display = "none";
+      document.getElementById("update_alamat_customer_pribadi").style.display =
+        "block";
     } else if (jenis_customer.value === "perusahaan") {
       document.getElementById("update_div_npwp_customer").style.display =
         "block";
       document.getElementById("update_div_nik_customer").style.display = "none";
+      document.getElementById("update_alamat_customer_pribadi").style.display =
+        "none";
+      document.getElementById(
+        "update_alamat_customer_perusahaan"
+      ).style.display = "block";
     }
   });
   if (jenis_customer.value === "pribadi") {
     document.getElementById("update_div_npwp_customer").style.display = "none";
     document.getElementById("update_div_nik_customer").style.display = "block";
+
+    document.getElementById("update_alamat_customer_perusahaan").style.display =
+      "none";
+    document.getElementById("update_alamat_customer_pribadi").style.display =
+      "block";
   } else if (jenis_customer.value === "perusahaan") {
     document.getElementById("update_div_npwp_customer").style.display = "block";
     document.getElementById("update_div_nik_customer").style.display = "none";
+
+    document.getElementById("update_alamat_customer_pribadi").style.display =
+      "none";
+    document.getElementById("update_alamat_customer_perusahaan").style.display =
+      "block";
   }
   $(document).ready(function () {
     $("#update_channel_id").select2({
@@ -63,7 +84,8 @@ if (grid_container_customer) {
           let button = "";
 
           if (edit) {
-            button += `<button type="button"  id ="update_customer_button" class="btn btn-warning update_customer btn-sm">
+            button += `
+        <button type="button"  id ="update_customer_button" class="btn btn-warning update_customer btn-sm">
             <span id ="button_icon" class="button_icon"><i class="bi bi-pencil-square"></i></span>
             <span id="spinner_update" class="spinner-border spinner-border-sm spinner_update" style="display: none;" role="status" aria-hidden="true"></span>
         </button>`;
@@ -78,22 +100,6 @@ if (grid_container_customer) {
         },
       },
     ],
-    search: {
-      enabled: true,
-      server: {
-        url: (prev, keyword) => {
-          if (keyword.length >= 3 && keyword !== "") {
-            const separator = prev.includes("?") ? "&" : "?";
-            return `${prev}${separator}search=${encodeURIComponent(keyword)}`;
-          } else {
-            return prev;
-          }
-        },
-        method: "GET",
-      },
-    },
-    sort: true,
-    pagination: { limit: 15 },
     server: {
       url: `${
         config.API_BASE_URL
@@ -160,6 +166,27 @@ if (grid_container_customer) {
           null,
         ]),
     },
+
+    search: {
+      enabled: true,
+      server: {
+        url: (prev, keyword) => {
+          if (keyword.length >= 3 && keyword !== "") {
+            const separator = prev.includes("?") ? "&" : "?";
+            const url = `${prev}${separator}search=${encodeURIComponent(
+              keyword
+            )}`;
+            console.log("Search URL: ", url);
+
+            return url;
+          } else {
+            return prev;
+          }
+        },
+      },
+    },
+    sort: true,
+    pagination: { limit: 15 },
   });
   window.customer_grid.render(document.getElementById("table_customer"));
   setTimeout(() => {

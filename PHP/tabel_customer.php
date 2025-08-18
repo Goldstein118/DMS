@@ -14,11 +14,19 @@
 
               <label class="form-label mb-0 mt-2" for="name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
               <input class="form-control" type="text" id="name_customer" name="name_customer" value="">
-              <label class="form-label mb-0 mt-2" for="address">Alamat:</label>
-              <input class="form-control" type="text" id="alamat_customer" placeholder="nama jalan">
-              <input class="form-control" type="text" id="alamat_customer" placeholder="RT/RW">
-              <input class="form-control" type="text" id="alamat_customer" placeholder="Kelurahan">
-              <label class="form-label mb-0 mt-2" for="phone">Nomor Telepon:</label>
+
+              <div id="alamat_customer_pribadi">
+                <label class="form-label mb-0 mt-2" for="nama_jalan">Alamat:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                <input class="form-control" type="text" id="nama_jalan" placeholder="Nama Jalan">
+                <input class="form-control mb-0 mt-2" type="text" id="rt" placeholder="RT/RW">
+                <input class="form-control mb-0 mt-2" type="text" id="kelurahan" placeholder="Kel/Desa">
+                <input class="form-control mb-0 mt-2" type="text" id="kecamatan" placeholder="Kecamatan">
+              </div>
+              <div id="alamat_customer_perusahaan">
+                <label class="form-label mb-0 mt-2" for="alamat_customer">Alamat:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                <input class="form-control" type="text" id="alamat_customer">
+              </div>
+              <label class="form-label mb-0 mt-2" for="no_telp_customer">Nomor Telepon:</label>
               <div class="input-group">
                 <span class="input-group-text" id="basic-addon1">+62</span>
                 <input class="form-control" type="text" id="no_telp_customer" name="no_telp_customer" aria-describedby="basic-addon1" value="">
@@ -62,16 +70,12 @@
               <input class="form-control" type="number" id="max_invoice" name="max_invoice" aria-describedby="basic-addon1" value="">
               <label class="form-label mb-0 mt-2" for="max_piutang">Max Piutang:</label>
               <input class="form-control" type="text" id="max_piutang" name="max_piutang" aria-describedby="basic-addon1" value="">
-              <label class="form-label mb-0 mt-2" for="latitude">Latidude:</label>
+              <label class="form-label mb-0 mt-2" for="latitude">Latitude:</label>
               <input class="form-control" type="text" id="latitude" name="latitude" aria-describedby="basic-addon1" value="">
               <label class="form-label mb-0 mt-2" for="longitude">Longitude:</label>
               <input class="form-control" type="text" id="longitude" name="longitude" aria-describedby="basic-addon1" value="">
             </div>
           </div>
-
-
-
-
           <label for="ktp_image" class="form-label mb-0 mt-2">Upload Gambar KTP:</label>
           <div class="input-group mb-3" id="ktp_input_group">
             <input type="file" class="form-control" id="ktp_image" name="ktp_image" accept=".jpg,.jpeg,.png">
@@ -109,9 +113,19 @@
               <input class="form-control" type="text" id="update_customer_id" disabled>
               <label class="form-label mb-0 mt-2" for="update_name_customer">Name:<i class="bi bi-asterisk text-danger align-middle "></i></label>
               <input class="form-control" type="text" id="update_name_customer" name="name_customer_update">
-              <label class="form-label mb-0 mt-2" for="update_address_customer">Alamat:</label>
-              <!-- alamat lengkap, RT, RW, provinsi, kota, dan kecamatan -->
-              <input class="form-control" type="text" id="update_address_customer" name="address_customer_update">
+
+              <div id="update_alamat_customer_pribadi">
+                <label class="form-label mb-0 mt-2" for="update_nama_jalan">Alamat:</label>
+                <input class="form-control" type="text" id="update_nama_jalan" placeholder="Nama Jalan">
+                <input class="form-control mb-0 mt-2" type="text" id="update_rt" placeholder="RT/RW">
+                <input class="form-control mb-0 mt-2" type="text" id="update_kelurahan" placeholder="Kel/Desa">
+                <input class="form-control mb-0 mt-2" type="text" id="update_kecamatan" placeholder="Kecamatan">
+              </div>
+              <div id="update_alamat_customer_perusahaan">
+                <label class="form-label mb-0 mt-2" for="update_address_customer">Alamat:</label>
+                <input class="form-control" type="text" id="update_address_customer">
+              </div>
+
               <label class="form-label mb-0 mt-2" for="update_phone_customer">Nomor Telepon:</label>
               <div class="input-group">
                 <span class="input-group-text" id="basic-addon1">+62</span>
@@ -146,7 +160,7 @@
               <input class="form-control" type="number" id="update_max_invoice" name="update_max_invoice" aria-describedby="basic-addon1" value="">
               <label class="form-label mb-0 mt-2" for="update_max_piutang">Max Piutang:</label>
               <input class="form-control" type="text" id="update_max_piutang" name="update_max_piutang" aria-describedby="basic-addon1" value="">
-              <label class="form-label mb-0 mt-2" for="update_latitude">Latidude:</label>
+              <label class="form-label mb-0 mt-2" for="update_latitude">Latitude:</label>
               <input class="form-control" type="text" id="update_latitude" name="update_latitude" aria-describedby="basic-addon1" value="">
               <label class="form-label mb-0 mt-2" for="update_longitude">Longitude:</label>
               <input class="form-control" type="text" id="update_longitude" name="update_longitude" aria-describedby="basic-addon1" value="">

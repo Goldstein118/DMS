@@ -2,9 +2,15 @@
 require_once __DIR__ . '/../utils/helpers.php';
 $upload_dir = __DIR__ . '/../../../uploads';
 $base_url = 'http://localhost/DMS/uploads/';
-
+$requiredFields = [];
 try {
-    $requiredFields = ['name_customer', 'status_customer', 'channel_id', 'pricelist_id'];
+    if (isset($data["jenis_customer"]) && $data["jenis_customer"] === "perusahaan") {
+        $requiredFields = ['name_customer', 'status_customer', 'channel_id', 'pricelist_id', 'alamat_customer'];
+    } else if (isset($data["jenis_customer"]) && $data["jenis_customer"] === "pribadi") {
+        $requiredFields = ['name_customer', 'status_customer', 'channel_id', 'pricelist_id', 'nama_jalan', 'rt', 'kelurahan', 'kecamatan'];
+    }
+
+
     $default = ['status_customer' => 'aktif'];
     $fields = validate_1($data, $requiredFields, $default);
     $nama_customer = $fields['name_customer'];
@@ -24,6 +30,12 @@ try {
     $channel_id = $fields['channel_id'];
     $pricelist_id = $fields['pricelist_id'];
 
+    $nama_jalan = $fields['nama_jalan'];
+    $rt = $fields['rt'];
+    $kelurahan = $fields["kelurahan"];
+    $kecamatan = $fields['kecamatan'];
+
+
     validate_2($nama_customer, '/^[a-zA-Z\s]+$/', "Invalid name format");
     validate_2($alamat_customer, '/^[a-zA-Z0-9, .-]+$/', "Invalid address format");
     validate_2($no_telp_customer, '/^[+]?[\d\s\-]+$/', "Invalid phone number format");
@@ -38,8 +50,10 @@ try {
     $customer_id = generateCustomID('CU', 'tb_customer', 'customer_id', $conn);
     executeInsert(
         $conn,
-        "INSERT INTO tb_customer (customer_id,nama,alamat,no_telp,ktp,npwp,status,nitko,term_pembayaran,max_invoice,max_piutang,longitude,latitude,channel_id,pricelist_id,jenis_customer) 
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        "INSERT INTO tb_customer (customer_id,nama,alamat,no_telp,ktp,npwp,status,
+        nitko,term_pembayaran,max_invoice,max_piutang,longitude,latitude,channel_id,pricelist_id,jenis_customer,
+        nama_jalan,rt,kelurahan,kecamatan) 
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         [
             $customer_id,
             $nama_customer,
@@ -56,9 +70,13 @@ try {
             $latitude,
             $channel_id,
             $pricelist_id,
+            $nama_jalan,
+            $rt,
+            $kelurahan,
+            $kecamatan,
             $jenis_customer
         ],
-        "sssssssssssddsss"
+        "sssssssssssddsssssss"
     );
 
 

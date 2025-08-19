@@ -189,6 +189,8 @@ if (grid_container_customer) {
     pagination: { limit: 15 },
   });
   window.customer_grid.render(document.getElementById("table_customer"));
+  // document.getElementById("loading_spinner").style.visibility = "hidden";
+  // $("#loading_spinner").fadeOut();
   setTimeout(() => {
     helper.custom_grid_header("customer", handle_delete, handle_update);
     const tooltipTriggerList = document.querySelectorAll(

@@ -61,17 +61,6 @@ export function custom_grid_header(
 
   if (input) {
     input.placeholder = `Cari ${field}...`;
-
-    // Just let Grid.js's own search event handler do the work
-    input.addEventListener("input", (e) => {
-      const keyword = e.target.value;
-      if (keyword.length >= 3 || keyword.length === 0) {
-        console.log("Typing:", keyword);
-        // Manually dispatch 'input' again to ensure Grid.js catches it
-        const event = new Event("input", { bubbles: true });
-        input.dispatchEvent(event);
-      }
-    });
   }
 
   document.getElementById("loading_spinner").style.visibility = "hidden";
@@ -79,6 +68,7 @@ export function custom_grid_header(
   // Attach event listener after header is rebuilt
   if (field == "pricelist" || field == "produk") {
     const tableElement = document.getElementById(`table_${field}`);
+    tableElement.removeEventListener("click", tableElement._customHandler);
     const handler = function (event) {
       const delete_btn = event.target.closest(`.delete_${field}`);
       const update_btn = event.target.closest(`.update_${field}`);
@@ -93,14 +83,11 @@ export function custom_grid_header(
       }
     };
 
-    // First remove any previously attached listeners by replacing the node
-    const newTableElement = tableElement.cloneNode(true);
-    tableElement.parentNode.replaceChild(newTableElement, tableElement);
-
-    // Now attach the listener
-    newTableElement.addEventListener("click", handler);
+    tableElement._customHandler = handler;
+    tableElement.addEventListener("click", handler);
   } else if (field == "pembelian") {
     const tableElement = document.getElementById(`table_${field}`);
+    tableElement.removeEventListener("click", tableElement._customHandler);
     const handler = function (event) {
       const delete_btn = event.target.closest(`.delete_${field}`);
       const update_btn = event.target.closest(`.update_${field}`);
@@ -125,14 +112,11 @@ export function custom_grid_header(
       }
     };
 
-    // First remove any previously attached listeners by replacing the node
-    const newTableElement = tableElement.cloneNode(true);
-    tableElement.parentNode.replaceChild(newTableElement, tableElement);
-
-    // Now attach the listener
-    newTableElement.addEventListener("click", handler);
+    tableElement._customHandler = handler;
+    tableElement.addEventListener("click", handler);
   } else {
     const tableElement = document.getElementById(`table_${field}`);
+    tableElement.removeEventListener("click", tableElement._customHandler);
     const handler = function (event) {
       const delete_btn = event.target.closest(`.delete_${field}`);
       const update_btn = event.target.closest(`.update_${field}`);
@@ -144,12 +128,8 @@ export function custom_grid_header(
       }
     };
 
-    // First remove any previously attached listeners by replacing the node
-    const newTableElement = tableElement.cloneNode(true);
-    tableElement.parentNode.replaceChild(newTableElement, tableElement);
-
-    // Now attach the listener
-    newTableElement.addEventListener("click", handler);
+    tableElement._customHandler = handler;
+    tableElement.addEventListener("click", handler);
   }
 }
 

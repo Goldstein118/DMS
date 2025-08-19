@@ -13,7 +13,7 @@ async function populate_table(pricelist_id) {
 
   tableBody.innerHTML = "";
   let nomor = 1;
-  if (result) {
+  if (result.data.length != 0) {
     result.data.forEach((detail) => {
       const tr_detail = document.createElement("tr");
 

@@ -19,6 +19,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  // For each collapse section in the sidebar
+  document.querySelectorAll(".collapse").forEach((collapse) => {
+    // If any link inside has the 'active' class
+    if (collapse.querySelector("a.active")) {
+      collapse.classList.add("show"); // Open the collapse
+      // Also set aria-expanded="true" on the toggle button
+      const toggleBtn = document.querySelector(
+        `[data-bs-target="#${collapse.id}"]`
+      );
+      if (toggleBtn) {
+        toggleBtn.setAttribute("aria-expanded", "true");
+        // Optionally, update the chevron icon
+        const icon = toggleBtn.querySelector(".toggle-icon");
+        if (icon) {
+          icon.classList.remove("bi-chevron-right");
+          icon.classList.add("bi-chevron-down");
+        }
+      }
+    }
+  });
+
   const secretKey = access.secretKey;
   const encrypt_user_id = sjcl.encrypt(secretKey, "US0525-041");
   localStorage.setItem("user_id", encrypt_user_id);

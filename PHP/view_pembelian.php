@@ -85,22 +85,27 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
 <body class="container py-4">
     <header class="mb-4">
-        <select class="form-select no_print" id="select_tanggal">
-            <option>PO</option>
-            <option>Penerimaan Barang</option>
-            <option>Invoice</option>
+        <select class="form-select no_print mb-5" id="select_tanggal">
+            <option value="po">PO</option>
+            <option value="pengirman">Pengiriman Barang</option>
+            <option value="terima">Penerimaan Barang</option>
+            <option value="invoice">Invoice</option>
         </select>
         <img src="../images/logo_joyday.png" alt="Logo" id="logo_joyday" />
 
         <div class="text-center">
             <h1 style="display: block">Pembelian</h1>
             <span class="text-muted" id="view_pembelian_id" style="display:inline-block"></span>
-            <span class="text-muted">/</span>
-            <span class="text-muted" id="nama_pembelian" style="display:inline-block"></span>
+            <!-- <span class="text-muted">/</span>
+            <span class="text-muted" id="nama_pembelian" style="display:inline-block"></span> -->
         </div>
         <button type="button" class="btn btn-outline-primary btn-sm no_print" onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
         <button type="button" class="btn btn-outline-danger btn-sm  no_print" onclick="window.close()"><i class="bi bi-x-lg"></i> Tutup</button>
+
         <span class="text-muted" id="view_tanggal_po" style="float: inline-end"></span>
+        <span class="text-muted" id="view_tanggal_terima" style="float: inline-end"></span>
+        <span class="text-muted" id="view_tanggal_pengiriman" style="float: inline-end"></span>
+        <span class="text-muted" id="view_tanggal_invoice" style="float: inline-end"></span>
     </header>
 
     <main>
@@ -120,6 +125,22 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
             </thead>
             <tbody id="view_detail_pembelian_tbody"></tbody>
         </table>
+
+        <table
+            class="table table-hover table-bordered table-sm table-striped"
+            id="biaya_tambahan">
+            <thead id="view_biaya_tambahan_thead">
+                <tr>
+                    <th scope="col" style="max-width: 9px; text-align:center">No</th>
+                    <th scope="col">Biaya</th>
+                    <th scope="col">Keterangan</th>
+                    <th scope="col">Jumlah</th>
+                </tr>
+            </thead>
+            <tbody id="view_biaya_tambahan_tbody"></tbody>
+        </table>
+
+
     </main>
     <?php
     ?>

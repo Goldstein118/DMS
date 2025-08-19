@@ -11,8 +11,14 @@
 </head>
 
 <body>
-    <!-- <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
-    <dotlottie-wc src="https://lottie.host/a7f7ef11-5190-400a-8dfd-92eac990725c/MxZMJwW8Oi.lottie" style="width: 300px;height: 300px" speed="1" autoplay loop></dotlottie-wc> -->
+    <main class="col-12 col-lg-10 ms-auto px-1">
+        <h1>Dashboard</h1>
+    </main>
 </body>
+<script>
+    document.getElementById("loading_spinner").style.visibility = "hidden";
+    $("#loading_spinner").fadeOut();
+</script>
+
 
 </html>

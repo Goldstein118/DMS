@@ -83,7 +83,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
       include('sidebar.php');
 
       // Get the page from the query string
-      $page = $_GET['page'] ?? 'tabel_karyawan';
+      $page = $_GET['page'] ?? 'dashboard';
 
       // Whitelist allowed pages for security
       $allowed_pages = [

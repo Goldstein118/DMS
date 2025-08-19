@@ -87,6 +87,34 @@ if (isset($data['table']) && $data['table'] === 'detail_pembelian' && isset($dat
 
     echo json_encode(["data" => $detail_data]);
     exit;
+} else if (isset($data['table']) && $data['table'] === "view_biaya_tambahan" && isset($data["pembelian_id"])) {
+
+    $pembelian_id = $data['pembelian_id'];
+
+    $sql = "SELECT 
+           b.data_biaya_id , b.keterangan ,b.jlh,d.nama AS biaya_nama
+        FROM tb_biaya_tambahan b
+        LEFT JOIN tb_data_biaya d ON b.data_biaya_id = d.data_biaya_id
+        WHERE b.pembelian_id = ?";
+
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        http_response_code(500);
+        echo json_encode(["error" => "Failed to prepare statement: " . $conn->error]);
+        exit;
+    }
+
+    $stmt->bind_param("s", $pembelian_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $detail_data = [];
+    while ($row = $result->fetch_assoc()) {
+        $detail_data[] = $row;
+    }
+
+    echo json_encode(["data" => $detail_data]);
+    exit;
 } else if (isset($data['pembelian_id'])) {
     $pembelian_id = trim($data['pembelian_id']);
     $sql = "SELECT tanggal_po,tanggal_pengiriman,tanggal_terima,tanggal_invoice,no_pengiriman,no_invoice_supplier FROM tb_pembelian WHERE pembelian_id=?";

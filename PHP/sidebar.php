@@ -12,17 +12,20 @@
   <div class="offcanvas-body d-flex flex-column h-100">
     <ul class="list-unstyled ps-0 flex-grow-1">
       <li class="mb-1">
+        <a
+          href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=dashboard"
+          class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'dashboard' ? 'active' : ''; ?>"> Dashboard</a>
         <button
           class="btn btn-toggle d-inline-flex align-items-center rounded border-0"
           data-bs-toggle="collapse"
           data-bs-target="#data-collapse"
           aria-expanded="true">
           <i
-            class="bi bi-chevron-down toggle-icon"
+            class="bi bi-chevron-right toggle-icon"
             data-bs-target="#data-collapse"></i>
           Data
         </button>
-        <div class="collapse show" id="data-collapse">
+        <div class="collapse hide" id="data-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
             <li>
               <a
@@ -119,11 +122,11 @@
           data-bs-target="#penjualan-collapse"
           aria-expanded="true">
           <i
-            class="bi bi-chevron-down toggle-icon"
+            class="bi bi-chevron-right toggle-icon"
             data-bs-target="#penjualan-collapse"></i>
           Pembelian
         </button>
-        <div class="collapse show" id="penjualan-collapse">
+        <div class="collapse hide" id="penjualan-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
             <li>
               <a
@@ -160,17 +163,20 @@
   <div class="sidebar_body d-flex flex-column flex-grow-1">
     <ul class="list-unstyled ps-0 flex-grow-1">
       <li class="mb-1">
+        <a
+          href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=dashboard"
+          class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'dashboard' ? 'active' : ''; ?>"> Dashboard</a>
         <button
           class="btn btn-toggle d-inline-flex align-items-center rounded border-0"
           data-bs-toggle="collapse"
           data-bs-target="#data-collapse"
           aria-expanded="true">
           <i
-            class="bi bi-chevron-down toggle-icon"
+            class="bi bi-chevron-right toggle-icon"
             data-bs-target="#data-collapse"></i>
           Data
         </button>
-        <div class="collapse show" id="data-collapse">
+        <div class="collapse hide" id="data-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
             <li>
               <a
@@ -250,8 +256,6 @@
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_satuan"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_satuan' ? 'active' : ''; ?>"> Satuan</a>
             </li>
-
-
           </ul>
         </div>
       </li>
@@ -263,11 +267,11 @@
           data-bs-target="#penjualan-collapse"
           aria-expanded="true">
           <i
-            class="bi bi-chevron-down toggle-icon"
+            class="bi bi-chevron-right toggle-icon"
             data-bs-target="#penjualan-collapse"></i>
           Pembelian
         </button>
-        <div class="collapse show" id="penjualan-collapse">
+        <div class="collapse hide" id="penjualan-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
             <li>
               <a

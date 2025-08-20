@@ -1,8 +1,9 @@
 <?php
-require_once 'createDB.php';
 require_once 'env_loader.php';
-include('db.php');
-include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
+require_once 'createDB.php';
+require_once 'db.php';
+require_once $_ENV['BASE_PATH'] . '/PHP/config/vendor_paths.php';
+
 
 ?>
 <!DOCTYPE html>

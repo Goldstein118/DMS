@@ -102,10 +102,12 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
         <button type="button" class="btn btn-outline-primary btn-sm no_print" onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
         <button type="button" class="btn btn-outline-danger btn-sm  no_print" onclick="window.close()"><i class="bi bi-x-lg"></i> Tutup</button>
 
-        <span class="text-muted" id="view_tanggal_po" style="float: inline-end"></span>
-        <span class="text-muted" id="view_tanggal_terima" style="float: inline-end"></span>
-        <span class="text-muted" id="view_tanggal_pengiriman" style="float: inline-end"></span>
-        <span class="text-muted" id="view_tanggal_invoice" style="float: inline-end"></span>
+        <div><span class="text-muted" id="view_tanggal_po" style="float: inline-end"></span></div>
+        <div><span class="text-muted" id="view_tanggal_terima" style="float: inline-end"></span></div>
+        <div><span class="text-muted" id="view_tanggal_pengiriman" style="float: inline-end"></span></div>
+        <div><span class="text-muted" id="view_tanggal_invoice" style="float: inline-end"></span></div>
+
+
     </header>
 
     <main>

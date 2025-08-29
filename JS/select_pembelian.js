@@ -9,10 +9,10 @@ const submit_pengiriman_button = document.getElementById(
 );
 let index = 0;
 const submit_terima_button = document.getElementById("submit_terima_button");
-const submit_invoice_button = document.getElementById("submit_invoice_button");
+
 submit_pengiriman_button.addEventListener("click", submit_pengiriman);
 submit_terima_button.addEventListener("click", submit_terima);
-submit_invoice_button.addEventListener("click", submit_invoice);
+
 const update_detail_pembelian_tbody = document.getElementById(
   "update_detail_pembelian_tbody"
 );
@@ -86,8 +86,6 @@ if (grid_container_pembelian) {
       "tanggal_pengiriman",
       "no_pengiriman",
       "tanggal_terima",
-      "tanggal_invoice",
-      "no_invoice_supplier",
       "total_qty",
       "ppn",
       "nominal_ppn",
@@ -214,27 +212,14 @@ if (grid_container_pembelian) {
             }`
           ),
 
-          html(
-            `${
-              !helper.isTwoWeeksLater(pembelian.tanggal_input_invoice) &&
-              pembelian.tanggal_terima
-                ? `${helper.format_date(pembelian.tanggal_invoice)} 
-                <button type="button"  class="btn btn-warning tanggal_invoice btn-sm" data-bs-toggle="modal" data-bs-target="#modal_invoice"
-                    >
-              <i class="bi bi-pencil-fill"></i> 
-            </button>`
-                : `${helper.format_date(pembelian.tanggal_invoice)}`
-            }`
-          ),
-          pembelian.no_invoice_supplier,
           pembelian.total_qty,
-          pembelian.ppn,
-          pembelian.nominal_ppn,
-          pembelian.nominal_pph,
-          pembelian.diskon,
+          helper.format_persen(pembelian.ppn),
+          helper.format_angka(pembelian.nominal_ppn),
+          helper.format_angka(pembelian.nominal_pph),
+          helper.format_angka(pembelian.diskon),
           pembelian.keterangan,
-          pembelian.biaya_tambahan,
-          pembelian.grand_total,
+          helper.format_angka(pembelian.biaya_tambahan),
+          helper.format_angka(pembelian.grand_total),
           helper.format_date_time(pembelian.created_on),
           pembelian.created_by,
           html(`
@@ -252,8 +237,7 @@ if (grid_container_pembelian) {
       handle_update,
       handle_view,
       handle_pengiriman,
-      handle_terima,
-      handle_invoice
+      handle_terima
     );
   }, 200);
 }
@@ -319,36 +303,6 @@ function handle_terima(button) {
   $("#modal_terima").modal("show");
 }
 
-function handle_invoice(button) {
-  $("#modal_invoice").on("shown.bs.modal", async function () {
-    // Prevent multiple bindings
-    $(this).off("shown.bs.modal");
-
-    const row = button.closest("tr");
-    window.currentRow = row;
-    const pembelian_id = row.cells[0].textContent;
-    document.getElementById("invoice_pembelian_id").value = pembelian_id;
-    const result = await apiRequest(
-      `/PHP/API/pembelian_API.php?action=select&user_id=${access.decryptItem(
-        "user_id"
-      )}`,
-      "POST",
-      { pembelian_id: pembelian_id }
-    );
-
-    result.data.forEach((item) => {
-      const parts = item.tanggal_invoice ? item.tanggal_invoice.split("-") : "";
-      if (parts.length === 3) {
-        const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-        pickdatejs_invoice.set("select", dateObj);
-      }
-      document.getElementById("no_invoice").value = item.no_invoice_supplier;
-    });
-  });
-
-  $("#modal_invoice").modal("show");
-}
-
 async function submit_terima() {
   const pembelian_id = document.getElementById("terima_pembelian_id").value;
 
@@ -359,6 +313,7 @@ async function submit_terima() {
     user_id: `${access.decryptItem("user_id")}`,
     pembelian_id: pembelian_id,
     tanggal_terima: tanggal_terima,
+    status: "terima",
   };
   try {
     const response = await apiRequest(
@@ -389,7 +344,7 @@ async function submit_pengiriman() {
     pembelian_id: pembelian_id,
     tanggal_pengiriman: tanggal_pengiriman,
     no_pengiriman: no_pengiriman,
-    status: "delivery",
+    status: "pengiriman",
   };
   try {
     const response = await apiRequest(
@@ -400,37 +355,6 @@ async function submit_pengiriman() {
     if (response.ok) {
       swal.fire("Berhasil", response.message, "success");
       $("#modal_pengiriman").modal("hide");
-      window.pembelian_grid.forceRender();
-      setTimeout(() => {
-        helper.custom_grid_header("pembelian");
-      }, 200);
-    }
-  } catch (error) {
-    toastr.error(error.message);
-  }
-}
-
-async function submit_invoice() {
-  const pembelian_id = document.getElementById("invoice_pembelian_id").value;
-  const picker_invoice = $("#tanggal_invoice").pickadate("picker");
-  const tanggal_invoice = picker_invoice.get("select", "yyyy-mm-dd");
-  const no_invoice = document.getElementById("no_invoice").value;
-  const body = {
-    user_id: `${access.decryptItem("user_id")}`,
-    pembelian_id: pembelian_id,
-    tanggal_invoice: tanggal_invoice,
-    no_invoice: no_invoice,
-    status: "invoice",
-  };
-  try {
-    const response = await apiRequest(
-      `/PHP/API/pembelian_API.php?action=update`,
-      "POST",
-      body
-    );
-    if (response.ok) {
-      swal.fire("Berhasil", response.message, "success");
-      $("#modal_invoice").modal("hide");
       window.pembelian_grid.forceRender();
       setTimeout(() => {
         helper.custom_grid_header("pembelian");
@@ -861,10 +785,13 @@ async function handle_update(button) {
   const pembelian_id = row.cells[0].textContent;
   let tanggal_po = row.cells[1].textContent;
   const supplier_id = row.cells[2].textContent;
-  const ppn = row.cells[10].textContent;
-  const nominal_pph = row.cells[12].textContent;
-  const diskon = row.cells[13].textContent;
-  const keterangan = row.cells[14].textContent;
+  let ppn = row.cells[8].textContent;
+  ppn = helper.unformat_persen(ppn);
+
+  const nominal_pph = row.cells[10].textContent;
+  const diskon = row.cells[11].textContent;
+  const keterangan = row.cells[12].textContent;
+  const status = row.cells[17].textContent.trim();
 
   tanggal_po = helper.unformat_date(tanggal_po);
   const parts = tanggal_po.split("-"); // ["2025", "05", "02"]
@@ -873,9 +800,12 @@ async function handle_update(button) {
 
   document.getElementById("update_pembelian_id").value = pembelian_id;
   document.getElementById("update_ppn").value = ppn;
-  document.getElementById("update_nominal_pph").value = nominal_pph;
+  document.getElementById("update_nominal_pph").value =
+    helper.unformat_angka(nominal_pph);
   document.getElementById("update_keterangan").value = keterangan;
-  document.getElementById("update_diskon").value = diskon;
+  document.getElementById("update_diskon").value =
+    helper.unformat_angka(diskon);
+  document.getElementById("update_status_pembelian").value = status;
 
   try {
     const response = await apiRequest(
@@ -1000,7 +930,7 @@ async function handle_update(button) {
       input_jumlah.setAttribute("id", "jumlah" + currentIndex);
       input_jumlah.classList.add("form-control");
       input_jumlah.style.textAlign = "right";
-      input_jumlah.value = detail.jlh;
+      input_jumlah.value = helper.unformat_angka(detail.jlh);
       td_jumlah.appendChild(input_jumlah);
 
       const td_keterangan = document.createElement("td");

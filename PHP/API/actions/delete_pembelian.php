@@ -4,7 +4,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 try {
     if (!isset($data['pembelian_id'])) {
         http_response_code(400);
-        echo json_encode(["error" => "Pricelist ID tidak ditemukan"]);
+        echo json_encode(["error" => "Pembelian id tidak ditemukan"]);
         exit;
     }
     $pembelian_id = trim($data['pembelian_id']);
@@ -25,10 +25,10 @@ try {
 
     if ($execute && $execute_detail && $stmt->affected_rows > 0) {
         http_response_code(200);
-        echo json_encode(["message" => "Pricelist berhasil terhapus"]);
+        echo json_encode(["message" => "Pembelian berhasil terhapus"]);
     } else {
         http_response_code(400);
-        echo json_encode(["error" => "Pricelist tidak ditemukan"]);
+        echo json_encode(["error" => "Pembelian tidak ditemukan"]);
     }
 } catch (mysqli_sql_exception $e) {
     if ($e->getCode() == 1451) {
@@ -37,7 +37,7 @@ try {
         if (preg_match('/fails \(`[^`]+`\.`([^`]+)`/', $e->getMessage(), $matches)) {
             $table = $matches[1];
         }
-        $errorMsg = "Pricelist tidak dapat dihapus karena masih digunakan";
+        $errorMsg = "Pembelian tidak dapat dihapus karena masih digunakan";
         if ($table) {
             $errorMsg .= " di tabel `$table`.";
         }

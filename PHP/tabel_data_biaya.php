@@ -41,7 +41,7 @@
 
 <main class="col-12 col-lg-10 ms-auto px-1">
     <div id="main" class="table-responsive">
-        <h3>Data Data biaya</h3>
+        <h3>Data biaya</h3>
         <div id="table_data_biaya"></div>
     </div>
 </main>

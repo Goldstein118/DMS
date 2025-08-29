@@ -47,7 +47,7 @@ async function populate_table(pricelist_id) {
 
       const tdHarga = document.createElement("td");
       tdHarga.setAttribute("id", "view_harga");
-      tdHarga.textContent = detail.harga;
+      tdHarga.textContent = helper.format_angka(detail.harga);
       tdHarga.style.textAlign = "right";
 
       // Append all tds to tr

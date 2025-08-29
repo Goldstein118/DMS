@@ -64,6 +64,15 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
             margin-bottom: 0;
         }
 
+        #td_sub_total,
+        #td_diskon,
+        #td_ppn,
+        #td_pph,
+        #td_grand_total,
+        #total_biaya_tambahan {
+            text-align: right;
+        }
+
         #logo_joyday {
             width: 15%;
         }
@@ -71,51 +80,78 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
         table th {
             background-color: #b2cef8 !important;
             color: #333;
-            ;
             font-weight: bold;
         }
 
         @media print {
+            .page-break {
+                page-break-before: always;
+
+            }
+
             .no_print {
                 display: none;
             }
         }
+
+        /* #td_keterangan {
+            background-color: #f0f0f0;
+            text-align: left;
+            font-weight: bold;
+            padding: 10px;
+        } */
     </style>
 </head>
 
 <body class="container py-4">
     <header class="mb-4">
-        <select class="form-select no_print mb-5" id="select_tanggal">
-            <option value="po">PO</option>
-            <option value="pengirman">Pengiriman Barang</option>
-            <option value="terima">Penerimaan Barang</option>
-            <option value="invoice">Invoice</option>
-        </select>
+
+
         <img src="../images/logo_joyday.png" alt="Logo" id="logo_joyday" />
 
+
         <div class="text-center">
-            <h1 style="display: block">Pembelian</h1>
+            <h1 style="display: block">Purchase Order</h1>
             <span class="text-muted" id="view_pembelian_id" style="display:inline-block"></span>
             <!-- <span class="text-muted">/</span>
             <span class="text-muted" id="nama_pembelian" style="display:inline-block"></span> -->
         </div>
-        <button type="button" class="btn btn-outline-primary btn-sm no_print" onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
-        <button type="button" class="btn btn-outline-danger btn-sm  no_print" onclick="window.close()"><i class="bi bi-x-lg"></i> Tutup</button>
 
-        <div><span class="text-muted" id="view_tanggal_po" style="float: inline-end"></span></div>
-        <div><span class="text-muted" id="view_tanggal_terima" style="float: inline-end"></span></div>
-        <div><span class="text-muted" id="view_tanggal_pengiriman" style="float: inline-end"></span></div>
-        <div><span class="text-muted" id="view_tanggal_invoice" style="float: inline-end"></span></div>
+        <button type="button" class="btn btn-outline-primary btn-sm no_print" id="print">
+            <i class="bi bi-printer"></i> Print
+        </button>
 
+        <button type="button" class="btn btn-outline-danger btn-sm no_print" onclick="window.close()">
+            <i class="bi bi-x-lg"></i> Tutup
+        </button>
+
+        <div style="display: grid; 
+                    justify-items: start;
+                    justify-content: end;">
+            <span class="text-muted" style="float : inline-end ; " id="view_tanggal_po"></span>
+            <span class="text-muted " style="float : inline-end ;" id="view_tanggal_terima"></span>
+            <span class="text-muted " style="float : inline-end ;" id="view_tanggal_pengiriman"></span>
+            <span class="text-muted " style="float : inline-end ;" id="view_tanggal_invoice"></span>
+            <span class="text-muted " style="float : inline-end ;" id="status_pembelian"></span>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span class="text-muted " style="float : inline-start ;" id="nama_supplier"></span>
+
+            </div>
+        </div>
 
     </header>
 
     <main>
 
         <table
-            class="table table-hover table-bordered table-sm table-striped"
+            class="table table-hover table-bordered table-sm table"
             id="detail_pembelian">
             <thead id="view_detail_pembelian_thead">
+                <tr>
+                    <th colspan="6" style="text-align: center;">Purchase Order</th>
+                </tr>
                 <tr>
                     <th scope="col" style="max-width: 9px; text-align:center">No</th>
                     <th scope="col">Produk</th>
@@ -126,12 +162,80 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
                 </tr>
             </thead>
             <tbody id="view_detail_pembelian_tbody"></tbody>
+            <tfoot id="view_detail_pembelian_tfoot">
+                <tr>
+                    <td colspan="4" rowspan="5" id="td_keterangan">
+                    </td>
+                    <td colspan="1">Sub total</td>
+                    <td colspan="1" id="td_sub_total"></td>
+                </tr>
+                <tr>
+
+                    <td colspan="1">Diskon</td>
+                    <td colspan="1" id="td_diskon"></td>
+                </tr>
+                <tr>
+
+                    <td colspan="1">PPN</td>
+                    <td colspan="1" id="td_ppn"></td>
+                </tr>
+
+                <tr>
+
+                    <td colspan="1">PPH</td>
+                    <td colspan="1" id="td_pph"></td>
+                </tr>
+                <tr>
+
+                    <td colspan="1">Grand total</td>
+                    <td colspan="1" id="td_grand_total"></td>
+                </tr>
+            </tfoot>
         </table>
+        <div class="page-break"></div>
+
+
+
+        <div class="mb-4" id="div_biaya_tambahan_header" style="display: none;">
+
+
+            <img src="../images/logo_joyday.png" alt="Logo" id="logo_joyday" />
+
+
+            <div class="text-center">
+                <h1 style="display: block">Purchase Order</h1>
+                <span class="text-muted" id="view_pembelian_id" style="display:inline-block"></span>
+                <!-- <span class="text-muted">/</span>
+            <span class="text-muted" id="nama_pembelian" style="display:inline-block"></span> -->
+            </div>
+
+
+
+            <div style="display: grid; 
+                    justify-items: start;
+                    justify-content: end;">
+                <span class="text-muted" style="float : inline-end ; " id="biaya_tanggal_po"></span>
+                <span class="text-muted " style="float : inline-end ;" id="biaya_tanggal_terima"></span>
+                <span class="text-muted " style="float : inline-end ;" id="biaya_tanggal_pengiriman"></span>
+                <span class="text-muted " style="float : inline-end ;" id="biaya_tanggal_invoice"></span>
+                <span class="text-muted " style="float : inline-end ;" id="biaya_status_pembelian"></span>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <span class="text-muted " style="float : inline-start ;" id="biaya_nama_supplier"></span>
+
+                </div>
+            </div>
+
+        </div>
 
         <table
-            class="table table-hover table-bordered table-sm table-striped"
+            class="table table-hover table-bordered table-sm"
             id="biaya_tambahan">
             <thead id="view_biaya_tambahan_thead">
+                <tr>
+                    <th colspan="4" style="text-align: center;">Biaya Tambahan</th>
+                </tr>
                 <tr>
                     <th scope="col" style="max-width: 9px; text-align:center">No</th>
                     <th scope="col">Biaya</th>
@@ -140,13 +244,20 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
                 </tr>
             </thead>
             <tbody id="view_biaya_tambahan_tbody"></tbody>
+            <tfoot id="view_biaya_tambahan_tfoot">
+                <tr>
+                    <td colspan="2"></td>
+                    <td>Total</td>
+                    <td id="total_biaya_tambahan"></td>
+                </tr>
+            </tfoot>
         </table>
 
 
     </main>
     <?php
     ?>
-    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/view_pembelian.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/view_pembelian.js?v=2.1"></script>
 
     <?php
     ?>

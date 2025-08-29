@@ -16,7 +16,7 @@ try {
     $npwp = $fields['npwp_karyawan'] ?? '';
 
     // Validate only if not empty
-    validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
+    // validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
     validate_2($alamat, '/^[a-zA-Z0-9,. ]+$/', "Invalid address format");
     validate_2($telp, '/^[+]?[\d\s\-]+$/', "Invalid phone format");
     validate_2($ktp, '/^[0-9]+$/', "Invalid KTP format");

@@ -1,16 +1,13 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
 
-function toFloat($value)
-{
-    return (float)str_replace(',', '', trim($value));
-}
+
 
 try {
     // Validation
     $requiredFields = ['tanggal_po'];
-    $default = ['status' => 'aktif'];
-    $fields = validate_1($data, $requiredFields, $default);
+
+    $fields = validate_1($data, $requiredFields);
 
     // Extract main fields
     $tanggal_po = $fields['tanggal_po'];
@@ -26,6 +23,9 @@ try {
     $diskon_invoice_unformat = toFloat($diskon_invoice);
     $nominal_pph_unformat = toFloat($nominal_pph);
 
+    // validate_2($ppn_unformat, '/^\d+$/', "Format ppn  tidak valid");
+    validate_2($diskon_invoice_unformat, '/^\d+$/', "Format diskon invoice unformat tidak valid");
+    validate_2($nominal_pph_unformat, '/^\d+$/', "Format nominal pph unformat tidak valid");
     // Generate ID
     $pembelian_id = generateCustomID('PE', 'tb_pembelian', 'pembelian_id', $conn);
 
@@ -45,12 +45,12 @@ try {
             $status,
             $created_by
         ],
-        "sssssssss"
+        "ssssdddss"
     );
 
     $total_qty = 0;
     $total_harga = 0;
-
+    $urutan_detail = 0;
     // === Process Detail Items ===
     if (isset($data['details'])) {
         foreach ($data['details'] as $detail) {
@@ -68,14 +68,18 @@ try {
             $harga_unformat = toFloat($harga);
             $diskon_unformat = toFloat($diskon);
 
+            validate_2($qty_unformat, '/^\d+$/', "Format qty detail tidak valid");
+            validate_2($harga_unformat, '/^\d+$/', "Format harga detail tidak valid");
+            validate_2($diskon_unformat, '/^\d+$/', "Format diskon detail tidak valid");
+
             $total_qty += $qty_unformat;
             $total_harga += $qty_unformat * ($harga_unformat - $diskon_unformat);
 
             $detail_pembelian_id = generateCustomID('DPE', 'tb_detail_pembelian', 'detail_pembelian_id', $conn);
             executeInsert(
                 $conn,
-                "INSERT INTO tb_detail_pembelian (detail_pembelian_id, pembelian_id, produk_id, qty, harga, diskon, satuan_id)
-                VALUES (?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO tb_detail_pembelian (detail_pembelian_id, pembelian_id, produk_id, qty, harga, diskon, satuan_id,urutan)
+                VALUES (?, ?, ?, ?, ?, ?, ?,?)",
                 [
                     $detail_pembelian_id,
                     $pembelian_id,
@@ -83,14 +87,16 @@ try {
                     $qty_unformat,
                     $harga_unformat,
                     $diskon_unformat,
-                    $satuan_id
+                    $satuan_id,
+                    $urutan_detail
                 ],
-                "sssssss"
+                "sssdddsd"
             );
+            $urutan_detail += 1;
         }
     }
 
-
+    $urutan_biaya_tambahan = 0;
     $total_biaya_tambahan = 0;
     if (isset($data['biaya_tambahan'])) {
         foreach ($data['biaya_tambahan'] as $biaya) {
@@ -101,6 +107,9 @@ try {
             $data_biaya_id = $biaya['data_biaya_id'];
             $jumlah = $biaya['jumlah'];
             $jumlah_unformat = toFloat($jumlah);
+            validate_2($jumlah_unformat, '/^\d+$/', "Format jumlah biaya tambahan tidak valid");
+
+
             $keterangan_biaya = $biaya['keterangan'];
 
             $total_biaya_tambahan += $jumlah_unformat;
@@ -108,17 +117,19 @@ try {
             $biaya_tambahan_id = generateCustomID('DBT', 'tb_biaya_tambahan', 'biaya_tambahan_id', $conn);
             executeInsert(
                 $conn,
-                "INSERT INTO tb_biaya_tambahan (biaya_tambahan_id, pembelian_id, data_biaya_id, jlh, keterangan)
-                VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO tb_biaya_tambahan (biaya_tambahan_id, pembelian_id, data_biaya_id, jlh, keterangan,urutan)
+                VALUES (?, ?, ?, ?, ?,?)",
                 [
                     $biaya_tambahan_id,
                     $pembelian_id,
                     $data_biaya_id,
                     $jumlah_unformat,
-                    $keterangan_biaya
+                    $keterangan_biaya,
+                    $urutan_biaya_tambahan
                 ],
-                "sssss"
+                "sssdsd"
             );
+            $urutan_biaya_tambahan += 1;
         }
     }
 
@@ -129,9 +140,9 @@ try {
 
     // === Update Purchase Summary ===
     $stmt = $conn->prepare("UPDATE tb_pembelian 
-                            SET total_qty = ?, grand_total = ?, nominal_ppn = ?,biaya_tambahan= ?
+                            SET total_qty = ?, grand_total = ?, nominal_ppn = ?,biaya_tambahan= ?,sub_total=?
                             WHERE pembelian_id = ?");
-    $stmt->bind_param("sssss", $total_qty, $grand_total, $nominal_ppn, $total_biaya_tambahan, $pembelian_id);
+    $stmt->bind_param("ddddds", $total_qty, $grand_total, $nominal_ppn, $total_biaya_tambahan, $sub_total, $pembelian_id);
     $stmt->execute();
     $stmt->close();
 

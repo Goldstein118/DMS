@@ -322,8 +322,8 @@ function populateDropdown(data, field, index, element_id, tipe) {
       );
     });
   } else if (field === "satuan") {
+    select.append(new Option("Pilih Satuan", "", false, false));
     data.forEach((item) => {
-      select.append(new Option("Pilih Satuan", "", false, false));
       select.append(
         new Option(
           `${item.satuan_id} - ${item.nama}`,

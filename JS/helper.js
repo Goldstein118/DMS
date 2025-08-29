@@ -6,8 +6,7 @@ export function custom_grid_header(
   handle_update,
   handle_view,
   handle_pengiriman,
-  handle_terima,
-  handle_invoice
+  handle_terima
 ) {
   const grid_header = document.querySelector(`#table_${field} .gridjs-head`);
   if (!grid_header) return;
@@ -31,6 +30,8 @@ export function custom_grid_header(
     field === "customer"
   ) {
     btn.innerHTML = `<i class="bi bi-person-plus-fill"></i> ${field}`;
+  } else if (field === "data_biaya") {
+    btn.innerHTML = `<i class="bi bi-plus-circle"></i> data biaya`;
   } else {
     if (field != "frezzer") {
       btn.innerHTML = `<i class="bi bi-plus-circle"></i> ${field}`;
@@ -60,11 +61,13 @@ export function custom_grid_header(
   search_Box.style.marginLeft = "auto";
 
   if (input) {
-    input.placeholder = `Cari ${field}...`;
+    if (field === "data_biaya") {
+      input.placeholder = `Cari data biaya...`;
+    } else {
+      input.placeholder = `Cari ${field}...`;
+    }
   }
 
-  document.getElementById("loading_spinner").style.visibility = "hidden";
-  $("#loading_spinner").fadeOut();
   // Attach event listener after header is rebuilt
   if (field == "pricelist" || field == "produk") {
     const tableElement = document.getElementById(`table_${field}`);
@@ -131,6 +134,8 @@ export function custom_grid_header(
     tableElement._customHandler = handler;
     tableElement.addEventListener("click", handler);
   }
+  document.getElementById("loading_spinner").style.visibility = "hidden";
+  $("#loading_spinner").fadeOut();
 }
 
 export function format_no_telp(str) {
@@ -696,4 +701,13 @@ export function isTwoWeeksLater(date) {
   ); // Add 2 weeks
 
   return inputDate >= twoWeeksLater;
+}
+
+export function format_persen(input) {
+  const percentage = (input * 100).toFixed(1) + "%";
+
+  return percentage;
+}
+export function unformat_persen(percentageStr) {
+  return parseFloat(percentageStr.replace("%", "")) / 100;
 }

@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../utils/helpers.php';
 
 try {
- $requiredFields = ['pricelist_id', 'nama', 'tanggal_berlaku'];
+    $requiredFields = ['pricelist_id', 'nama', 'tanggal_berlaku'];
     $fields = validate_1($data, $requiredFields);
 
     $pricelist_id = $fields['pricelist_id'];
@@ -32,12 +32,15 @@ try {
     foreach ($detail as $item) {
         $produk_id = $item['produk_id'];
         $harga = $item['harga'];
+        $harga = toFloat($harga);
+        validate_2($harga, '/^\d+$/', "Format harga tidak valid");
+
 
         if (!$produk_id || !$harga) continue;
 
 
         $detail_pricelist_id = generateCustomID('DE', 'tb_detail_pricelist', 'detail_pricelist_id', $conn);
-        $stmt_insert->bind_param("ssss", $detail_pricelist_id, $harga, $pricelist_id, $produk_id);
+        $stmt_insert->bind_param("sdss", $detail_pricelist_id, $harga, $pricelist_id, $produk_id);
         $stmt_insert->execute();
     }
 

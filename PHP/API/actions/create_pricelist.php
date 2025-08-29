@@ -27,7 +27,7 @@ try {
             $harga_default,
             $status_pricelist,
             $tanggal_berlaku
-        ], 
+        ],
         "sssss"
     );
 
@@ -39,13 +39,16 @@ try {
 
             $produk_id = $detail['produk_id'];
             $harga = $detail['harga'];
+            $harga = toFloat($harga);
+            validate_2($harga, '/^\d+$/', "Format harga tidak valid");
+
 
             $detail_pricelist_id = generateCustomID('DE', 'tb_detail_pricelist', 'detail_pricelist_id', $conn);
             executeInsert(
                 $conn,
                 "INSERT INTO tb_detail_pricelist (detail_pricelist_id ,harga ,pricelist_id, produk_id) VALUES (?, ?, ?, ?)",
-                [$detail_pricelist_id,$harga,$pricelist_id, $produk_id],
-                "ssss"
+                [$detail_pricelist_id, $harga, $pricelist_id, $produk_id],
+                "sdss"
             );
         }
     }

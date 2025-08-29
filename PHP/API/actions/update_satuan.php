@@ -14,7 +14,7 @@ try {
 
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
     $stmt = $conn->prepare("UPDATE tb_satuan SET nama=?,id_referensi=?,qty=? WHERE satuan_id=?");
-    $stmt->bind_param("ssss", $nama, $id_referensi, $qty, $satuan_id);
+    $stmt->bind_param("ssds", $nama, $id_referensi, $qty, $satuan_id);
 
     if ($stmt->execute()) {
         error_log("Satuan updated successfully: ID = $satuan_id");

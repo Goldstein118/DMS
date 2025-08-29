@@ -70,11 +70,11 @@ async function submitKaryawan() {
     return;
   }
   const is_valid =
-    helper.validateField(
-      name_karyawan,
-      /^[a-zA-Z\s]+$/,
-      "Format nama tidak valid"
-    ) &&
+    // helper.validateField(
+    //   name_karyawan,
+    //   /^[a-zA-Z\s]+$/,
+    //   "Format nama tidak valid"
+    // ) &&
     helper.validateField(
       address_karyawan,
       /^[a-zA-Z0-9,. ]+$/,

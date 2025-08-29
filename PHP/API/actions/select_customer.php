@@ -110,12 +110,18 @@ if (strlen($search) >= 3 && $search !== '') {
 
 
     $result = $conn->query($sql);
+} else if (isset($data['customer_id'])) {
+    $customer_id = $data['customer_id'];
+    $stmt = $conn->prepare("SELECT * FROM tb_customer WHERE customer_id=?");
+    $stmt->bind_param('s', $customer_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 } else {
 
 
     $sql = "SELECT c.customer_id, c.nama, c.alamat, c.no_telp, c.ktp, c.npwp, c.status,
         c.nitko, c.term_pembayaran, c.max_invoice, c.max_piutang, c.longitude, c.latitude,
-        c.channel_id,c.pricelist_id,p.nama AS pricelist_nama, ch.nama AS channel_nama,
+        c.channel_id,c.pricelist_id,c.jenis_customer,c.nama_jalan,c.rt,c.kelurahan,c.kecamatan,p.nama AS pricelist_nama, ch.nama AS channel_nama,
         g_ktp.gambar_id AS ktp_id,
         g_npwp.gambar_id AS npwp_id
         FROM tb_customer c

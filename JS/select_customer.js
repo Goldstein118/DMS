@@ -29,23 +29,7 @@ if (grid_container_customer) {
       ).style.display = "block";
     }
   });
-  if (jenis_customer.value === "pribadi") {
-    document.getElementById("update_div_npwp_customer").style.display = "none";
-    document.getElementById("update_div_nik_customer").style.display = "block";
 
-    document.getElementById("update_alamat_customer_perusahaan").style.display =
-      "none";
-    document.getElementById("update_alamat_customer_pribadi").style.display =
-      "block";
-  } else if (jenis_customer.value === "perusahaan") {
-    document.getElementById("update_div_npwp_customer").style.display = "block";
-    document.getElementById("update_div_nik_customer").style.display = "none";
-
-    document.getElementById("update_alamat_customer_pribadi").style.display =
-      "none";
-    document.getElementById("update_alamat_customer_perusahaan").style.display =
-      "block";
-  }
   $(document).ready(function () {
     $("#update_channel_id").select2({
       allowClear: true,
@@ -115,7 +99,14 @@ if (grid_container_customer) {
         data.map((customer) => [
           customer.customer_id,
           customer.nama,
-          customer.alamat,
+          html(
+            `${
+              customer.jenis_customer === "perusahaan"
+                ? `${customer.alamat}`
+                : `${customer.nama_jalan} ${customer.rt} ${customer.kelurahan} ${customer.kecamatan}`
+            },`
+          ),
+
           customer.no_telp,
           html(`
           ${customer.ktp}
@@ -147,7 +138,7 @@ if (grid_container_customer) {
           customer.nitko,
           customer.term_pembayaran,
           customer.max_invoice,
-          customer.max_piutang,
+          helper.format_angka(customer.max_piutang),
 
           html(`
           ${
@@ -289,11 +280,11 @@ async function handle_update(button) {
   button_icon.style.display = "none";
   spinner.style.display = "inline-block";
 
-  const customer_id = row.cells[0].textContent;
-  const current_nama = row.cells[1].textContent;
-  const current_alamat = row.cells[2].textContent;
-  let no_telp = row.cells[3].textContent;
-  const current_phone = no_telp.replace(/\+62|-|\s/g, "");
+  let customer_id = row.cells[0].textContent;
+  let current_nama = "";
+  let current_alamat = "";
+  let no_telp = "";
+  let current_phone = "";
 
   const ktpCell = row.cells[4];
   let current_ktp = "";
@@ -329,11 +320,10 @@ async function handle_update(button) {
     .toLowerCase()
     .replace(/\s+/g, " ");
 
-  const current_nitko = row.cells[7].textContent;
-  const current_term_pembayaran = row.cells[8].textContent;
-  const current_max_invoice = row.cells[9].textContent;
-  let current_max_piutang = row.cells[10].textContent;
-  current_max_piutang = helper.unformat_angka(current_max_piutang);
+  let current_nitko = "";
+  let current_term_pembayaran = "";
+  let current_max_invoice = "";
+  let current_max_piutang = "";
 
   const koordinatCell = row.cells[11];
   let latitude = null;
@@ -349,9 +339,13 @@ async function handle_update(button) {
     }
   }
 
-  const current_channel_id = row.cells[14].textContent;
-  const current_pricelist_id = row.cells[15].textContent;
-  const current_jenis_customer = row.cells[16].textContent;
+  let current_channel_id = row.cells[15].textContent;
+  let current_pricelist_id = row.cells[16].textContent;
+  let current_jenis_customer = "";
+  let current_nama_jalan = "";
+  let current_rt = "";
+  let current_kelurahan = "";
+  let current_kecamatan = "";
 
   const ktp_filename = ktp_link ? ktp_link.split("/").pop() : "Belum ada file";
   const npwp_filename = npwp_link
@@ -361,9 +355,71 @@ async function handle_update(button) {
   helper.load_input_file_name(ktp_link, "#update_ktp_image", ktp_filename);
   helper.load_input_file_name(npwp_link, "#update_npwp_image", npwp_filename);
 
+  try {
+    const response = await apiRequest(
+      `/PHP/API/customer_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}`,
+      "POST",
+      { customer_id: customer_id }
+    );
+    response.data.forEach((detail) => {
+      current_nama = detail.nama;
+      current_alamat = detail.alamat;
+      no_telp = detail.no_telp;
+      no_telp = no_telp.replace(/\+62|-|\s/g, "");
+      current_nitko = detail.nitko;
+      current_term_pembayaran = detail.term_pembayaran;
+      current_max_invoice = detail.max_invoice;
+      current_max_piutang = detail.max_piutang;
+      current_max_piutang = helper.unformat_angka(current_max_piutang);
+      current_jenis_customer = detail.jenis_customer;
+      current_nama_jalan = detail.nama_jalan;
+      current_rt = detail.rt;
+      current_kelurahan = detail.kelurahan;
+      current_kecamatan = detail.kecamatan;
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  if (current_jenis_customer === "pribadi") {
+    document.getElementById("update_div_npwp_customer").style.display = "none";
+    document.getElementById("update_div_nik_customer").style.display = "block";
+
+    document.getElementById("update_alamat_customer_perusahaan").style.display =
+      "none";
+    document.getElementById("update_alamat_customer_pribadi").style.display =
+      "block";
+  } else if (current_jenis_customer === "perusahaan") {
+    document.getElementById("update_div_npwp_customer").style.display = "block";
+    document.getElementById("update_div_nik_customer").style.display = "none";
+
+    document.getElementById("update_alamat_customer_pribadi").style.display =
+      "none";
+    document.getElementById("update_alamat_customer_perusahaan").style.display =
+      "block";
+  }
+
   document.getElementById("update_customer_id").value = customer_id;
   document.getElementById("update_name_customer").value = current_nama;
-  document.getElementById("update_address_customer").value = current_alamat;
+
+  if (current_jenis_customer === "perusahaan") {
+    document.getElementById("update_address_customer").value = current_alamat;
+
+    document.getElementById("update_nama_jalan").value = "";
+    document.getElementById("update_rt").value = "";
+    document.getElementById("update_kelurahan").value = "";
+    document.getElementById("update_kecamatan").value = "";
+  } else {
+    document.getElementById("update_nama_jalan").value = current_nama_jalan;
+    document.getElementById("update_rt").value = current_rt;
+    document.getElementById("update_kelurahan").value = current_kelurahan;
+    document.getElementById("update_kecamatan").value = current_kecamatan;
+
+    document.getElementById("update_address_customer").value = "";
+  }
+
   document.getElementById("update_phone_customer").value = current_phone;
   document.getElementById("update_nik_customer").value = current_ktp;
   document.getElementById("update_npwp_customer").value = current_npwp;
@@ -443,6 +499,10 @@ if (submit_customer_update) {
 
     const channel_id_new = $("#update_channel_id").val();
     const pricelist_id_new = $("#update_pricelist_id").val();
+    const nama_jalan = document.getElementById("update_nama_jalan").value;
+    const rt = document.getElementById("update_rt").value;
+    const kelurahan = document.getElementById("update_kelurahan").value;
+    const kecamatan = document.getElementById("update_kecamatan").value;
 
     if (
       !update_nama ||
@@ -463,11 +523,11 @@ if (submit_customer_update) {
         /^[a-zA-Z\s]+$/,
         "Format nama tidak valid"
       ) &&
-      helper.validateField(
-        update_alamat,
-        /^[a-zA-Z0-9,. ]+$/,
-        "Format alamat tidak valid"
-      ) &&
+      // helper.validateField(
+      //   update_alamat,
+      //   /^[a-zA-Z0-9,. ]+$/,
+      //   "Format alamat tidak valid"
+      // ) &&
       helper.validateField(
         update_phone,
         /^[0-9]{9,13}$/,
@@ -517,7 +577,6 @@ if (submit_customer_update) {
     if (is_valid) {
       const update_no_telp = helper.format_no_telp(update_phone);
       update_npwp = helper.format_npwp(update_npwp);
-      update_max_piutang = helper.format_angka(update_max_piutang);
       const formData = new FormData();
       formData.append("customer_id", customer_id);
       formData.append("nama", update_nama);
@@ -535,6 +594,11 @@ if (submit_customer_update) {
       formData.append("channel_id", channel_id_new);
       formData.append("pricelist_id", pricelist_id_new);
       formData.append("jenis_customer", jenis_customer.value);
+
+      formData.append("nama_jalan", nama_jalan);
+      formData.append("rt", rt);
+      formData.append("kelurahan", kelurahan);
+      formData.append("kecamatan", kecamatan);
 
       // Files
       const ktpFile = document.getElementById("update_ktp_image").files[0];

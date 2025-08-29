@@ -125,7 +125,7 @@ if (grid_container_produk) {
               : `<span class="badge text-bg-danger">Non Aktif</span>`
           }
           `),
-          produk.harga_minimal,
+          helper.format_angka(produk.harga_minimal),
           produk.kategori_id,
           produk.brand_id,
           html(`
@@ -472,11 +472,14 @@ if (submit_produk_update) {
         }
       }
 
-      const harga_min = parseFloat(harga_minimal_new.replace(/[^0-9.]/g, ""));
+      const harga_min = parseFloat(harga_minimal_new.replace(/,/g, ""));
       const banding_harga = details.some((item) => {
-        const harga_detail = parseFloat(item.harga.replace(/[^0-9.]/g, ""));
+        const harga_detail = parseFloat(item.harga.replace(/,/g, ""));
+        // console.log("harga detail " + harga_detail);
         return harga_detail < harga_min;
       });
+      // console.log("harga min " + harga_min);
+
       if (banding_harga) {
         const result = await Swal.fire({
           title: "Apakah Anda Yakin?",

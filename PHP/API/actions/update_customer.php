@@ -108,9 +108,13 @@ function handleImageUpload($field, $tipe, $customer_id, $conn, $upload_dir, $bas
         $stmt->close();
     }
 }
-
+$requiredFields = [];
 try {
-    $requiredFields = ['customer_id', 'nama', 'status', 'channel_id', 'pricelist_id'];
+    if (isset($data["jenis_customer"]) && $data["jenis_customer"] === "perusahaan") {
+        $requiredFields = ['nama', 'status', 'channel_id', 'pricelist_id', 'alamat'];
+    } else if (isset($data["jenis_customer"]) && $data["jenis_customer"] === "pribadi") {
+        $requiredFields = ['nama', 'status', 'channel_id', 'pricelist_id', 'nama_jalan', 'rt', 'kelurahan', 'kecamatan'];
+    }
     $fields = validate_1($data, $requiredFields);
 
     $customer_id = $fields['customer_id'];
@@ -124,23 +128,34 @@ try {
     $term_pembayaran = $fields['term_pembayaran'] ?? '';
     $max_invoice = $fields['max_invoice'] ?? '';
     $max_piutang = $fields['max_piutang'] ?? '';
+
     $longitude = ($fields['longitude'] ?? '') !== '' ? $fields['longitude'] : null;
     $latitude = ($fields['latitude'] ?? '') !== '' ? $fields['latitude'] : null;
     $channel_id = $fields['channel_id'];
     $pricelist_id = $fields['pricelist_id'];
     $jenis_customer = $fields['jenis_customer'];
+    $nama_jalan = $fields['nama_jalan'];
+    $rt = $fields["rt"];
+    $kelurahan = $fields['kelurahan'];
+    $kecamatan = $fields['kecamatan'];
 
+
+    $max_piutang_float = toFloat($max_piutang);
+    $term_pembayaran = toFloat($term_pembayaran);
+    $max_invoice = toFloat($max_invoice);
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
-    validate_2($alamat, '/^[a-zA-Z0-9,. ]+$/', "Invalid address format");
+    // validate_2($alamat, '/^[a-zA-Z0-9,. ]+$/', "Invalid address format");
     validate_2($no_telp, '/^[+]?[\d\s\-()]+$/', "Invalid phone format");
     validate_2($ktp, '/^[0-9]+$/', "Invalid KTP format");
     validate_2($npwp, '/^[0-9 .-]+$/', "Invalid NPWP format");
     validate_2($nitko, '/^[a-zA-Z0-9,. ]+$/', "Invalid NITKO format");
-    validate_2($term_pembayaran, '/^[0-9]+$/', "Invalid term pembayaran format");
-    validate_2($max_invoice, '/^[0-9]+$/', "Invalid max invoice format");
-    validate_2($max_piutang, '/^[0-9., ]+$/', "Invalid max piutang format");
+    validate_2($term_pembayaran,  '/^\d+$/', "Invalid term pembayaran format");
+    validate_2($max_invoice,  '/^\d+$/', "Invalid max invoice format");
+    validate_2($max_piutang_float, '/^\d+$/', "Invalid max piutang format");
     validate_2($longitude, '/^[-+]?((1[0-7]\d|\d{1,2})(\.\d{1,6})?|180(\.0{1,6})?)$/', "Invalid Longitude Format");
     validate_2($latitude, '/^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/', "Invalid Latidude Format");
+
+
     if (isset($data['remove_ktp_file']) && $data['remove_ktp_file'] === 'true') {
         handle_image_remove('ktp', $customer_id, $conn);
     }
@@ -149,9 +164,9 @@ try {
         handle_image_remove('npwp', $customer_id, $conn);
     }
     $stmt = $conn->prepare("UPDATE tb_customer SET nama=?, alamat=?, no_telp=?, ktp=?, npwp=?, status=?, nitko=?, 
-    term_pembayaran=?, max_invoice=?, max_piutang=?,longitude=?,latitude=?, channel_id=?,pricelist_id=?,jenis_customer WHERE customer_id=?");
+    term_pembayaran=?, max_invoice=?, max_piutang=?,longitude=?,latitude=?, channel_id=?,pricelist_id=?,jenis_customer =?, nama_jalan =?,rt=?,kelurahan=?, kecamatan=? WHERE customer_id=?");
     $stmt->bind_param(
-        "ssssssssssddsss",
+        "sssssssdddddssssssss",
         $nama,
         $alamat,
         $no_telp,
@@ -161,13 +176,18 @@ try {
         $nitko,
         $term_pembayaran,
         $max_invoice,
-        $max_piutang,
+        $max_piutang_float,
         $longitude,
         $latitude,
         $channel_id,
         $pricelist_id,
         $jenis_customer,
+        $nama_jalan,
+        $rt,
+        $kelurahan,
+        $kecamatan,
         $customer_id
+
     );
 
     if (!$stmt->execute()) {

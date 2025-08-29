@@ -1,14 +1,9 @@
 <?php
 require_once __DIR__ . '/../utils/helpers.php';
-function toFloat($value)
-{
-    return (float)str_replace(',', '', trim($value));
-}
+
 try {
 
-
-
-    if (isset($data['tanggal_pengiriman'])) {
+    if (isset($data['tanggal_pengiriman']) && $data['status'] === "pengiriman") {
 
         $pembelian_id = $data['pembelian_id'];
         $tanggal_pengiriman = $data['tanggal_pengiriman'];
@@ -23,39 +18,22 @@ try {
         echo json_encode(["ok" => true, "message" => "tanggal_pengiriman berhasil diupdate"]);
     }
 
-    if (isset($data['tanggal_terima'])) {
+    if (isset($data['tanggal_terima']) && $data['status'] === "terima") {
 
         $pembelian_id = $data['pembelian_id'];
         $tanggal_terima = $data['tanggal_terima'];
-
-        $stmt = $conn->prepare("UPDATE tb_pembelian SET tanggal_terima = ? WHERE pembelian_id = ?");
-        $stmt->bind_param("ss", $tanggal_terima, $pembelian_id);
+        $status = $data['status'];
+        $stmt = $conn->prepare("UPDATE tb_pembelian SET tanggal_terima = ?,status =? WHERE pembelian_id = ?");
+        $stmt->bind_param("sss", $tanggal_terima, $status, $pembelian_id);
         $stmt->execute();
         $stmt->close();
         http_response_code(200);
         echo json_encode(["ok" => true, "message" => "tanggal_terima berhasil diupdate"]);
     }
 
-    if (isset($data['tanggal_invoice'])) {
-
-        $pembelian_id = $data['pembelian_id'];
-        $tanggal_invoice = $data['tanggal_invoice'];
-        $no_invoice = $data['no_invoice'];
-        $tanggal_input_invoice = date("Y-m-d");
-        $status = $data['status'];
-
-        $stmt = $conn->prepare("UPDATE tb_pembelian SET tanggal_invoice = ? ,no_invoice_supplier=? ,tanggal_input_invoice=? ,status =? WHERE pembelian_id = ?");
-        $stmt->bind_param("sssss", $tanggal_invoice, $no_invoice, $tanggal_input_invoice, $status, $pembelian_id);
-        $stmt->execute();
-        $stmt->close();
-        http_response_code(200);
-        echo json_encode(["ok" => true, "message" => "tanggal_invoice berhasil diupdate"]);
-    }
 
 
-
-
-    if (isset($data['pembelian_id'])) {
+    if (isset($data['pembelian_id']) && isset($data['tanggal_po'])) {
         $requiredFields = ['pembelian_id', 'tanggal_po', 'supplier_id'];
         $fields = validate_1($data, $requiredFields);
         $pembelian_id = $fields['pembelian_id'];
@@ -70,11 +48,16 @@ try {
         $ppn_unformat = toFloat($ppn);
         $diskon_invoice_unformat = toFloat($diskon);
         $nominal_pph_unformat = toFloat($nominal_pph);
+
+
+        validate_2($ppn_unformat, '/^\d+(\.\d+)?$/', "Format ppn unformat tidak valid");
+        validate_2($diskon_invoice_unformat, '/^\d+$/', "Format diskon invoice unformat tidak valid");
+        validate_2($nominal_pph_unformat, '/^\d+$/', "Format nominal pph unformat tidak valid");
         $stmt = $conn->prepare("UPDATE tb_pembelian SET tanggal_po =?,supplier_id=?,keterangan=?,ppn=?
                                 ,diskon=?,nominal_pph=?,status=?
         WHERE pembelian_id = ?");
         $stmt->bind_param(
-            "ssssssss",
+            "sssdddss",
             $tanggal_po,
             $supplier_id,
             $keterangan,
@@ -114,6 +97,10 @@ try {
                 $harga_unformat = toFloat($harga);
                 $diskon_unformat = toFloat($diskon);
 
+                validate_2($qty_unformat, '/^\d+$/', "Format qty detail tidak valid");
+                validate_2($harga_unformat, '/^\d+$/', "Format harga detail tidak valid");
+                validate_2($diskon_unformat, '/^\d+$/', "Format diskon detail tidak valid");
+
                 $total_qty += $qty_unformat;
                 $total_harga += $qty_unformat * ($harga_unformat - $diskon_unformat);
 
@@ -131,7 +118,7 @@ try {
                         $diskon_unformat,
                         $satuan_id
                     ],
-                    "sssssss"
+                    "sssddds"
                 );
             }
         }
@@ -151,6 +138,8 @@ try {
                 $data_biaya_id = $biaya['data_biaya_id'];
                 $jumlah = $biaya['jumlah'];
                 $jumlah_unformat = toFloat($jumlah);
+
+                validate_2($jumlah_unformat, '/^\d+$/', "Format jumlah biaya tambahan tidak valid");
                 $keterangan_biaya = $biaya['keterangan'];
 
                 $total_biaya_tambahan += $jumlah_unformat;
@@ -167,7 +156,7 @@ try {
                         $jumlah_unformat,
                         $keterangan_biaya
                     ],
-                    "sssss"
+                    "sssds"
                 );
             }
         }
@@ -179,9 +168,9 @@ try {
 
         // === Update Purchase Summary ===
         $stmt = $conn->prepare("UPDATE tb_pembelian 
-                            SET total_qty = ?, grand_total = ?, nominal_ppn = ?,biaya_tambahan= ?
+                            SET total_qty = ?, grand_total = ?, nominal_ppn = ?,biaya_tambahan= ?,sub_total=?
                             WHERE pembelian_id = ?");
-        $stmt->bind_param("sssss", $total_qty, $grand_total, $nominal_ppn, $total_biaya_tambahan, $pembelian_id);
+        $stmt->bind_param("ddddds", $total_qty, $grand_total, $nominal_ppn, $total_biaya_tambahan, $sub_total, $pembelian_id);
         $stmt->execute();
         $stmt->close();
         http_response_code(200);

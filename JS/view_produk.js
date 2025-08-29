@@ -1,6 +1,6 @@
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
-
+import * as helper from "./helper.js";
 async function populate_table(produk_id) {
   const result = await apiRequest(
     `/PHP/API/pricelist_API.php?action=select&user_id=${access.decryptItem(
@@ -29,7 +29,7 @@ async function populate_table(produk_id) {
 
       const tdHarga = document.createElement("td");
       tdHarga.setAttribute("id", "view_harga");
-      tdHarga.textContent = detail.harga;
+      tdHarga.textContent = helper.format_angka(detail.harga);
       tdHarga.style.textAlign = "right";
 
       // Append all tds to tr
@@ -113,7 +113,7 @@ async function data_produk(produk_id) {
       const harga_minimal = document.getElementById("harga_minimal");
       // harga_minimal.style.textAlign = "right";
       item.harga_minimal
-        ? (harga_minimal.textContent = item.harga_minimal)
+        ? (harga_minimal.textContent = helper.format_angka(item.harga_minimal))
         : (document.getElementById("tr_harga_minimal").style.display = "none");
 
       const status = document.getElementById("status");

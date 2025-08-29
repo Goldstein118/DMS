@@ -22,6 +22,7 @@ try {
     $term_payment = $fields['term_payment'] ?? '';
     $max_invoice = $fields['max_invoice'] ?? '';
     $max_piutang = $fields['max_piutang'] ?? '';
+
     $longitude = ($fields['longitude'] ?? '') !== '' ? $fields['longitude'] : null;
     $latitude = ($fields['latitude'] ?? '') !== '' ? $fields['latitude'] : null;
     $jenis_customer = $fields['jenis_customer'];
@@ -35,18 +36,22 @@ try {
     $kelurahan = $fields["kelurahan"];
     $kecamatan = $fields['kecamatan'];
 
-
+    $max_piutang_float = toFloat($max_piutang);
+    $term_payment = toFloat($term_payment);
+    $max_invoice = toFloat($max_invoice);
     validate_2($nama_customer, '/^[a-zA-Z\s]+$/', "Invalid name format");
     validate_2($alamat_customer, '/^[a-zA-Z0-9, .-]+$/', "Invalid address format");
     validate_2($no_telp_customer, '/^[+]?[\d\s\-]+$/', "Invalid phone number format");
     validate_2($ktp_customer, '/^[0-9]+$/', "Invalid KTP format");
     validate_2($npwp_customer, '/^[0-9 .-]+$/', "Invalid NPWP format");
     validate_2($nitko, '/^[a-zA-Z0-9, .-]+$/', "Invalid nitko format");
-    validate_2($term_payment, '/^[0-9]+$/', "Invalid term payment format");
-    validate_2($max_invoice, '/^[0-9]+$/', "Invalid max invoice format");
-    validate_2($max_piutang, '/^[0-9., ]+$/', "Invalid max piutang format");
+    validate_2($term_payment,  '/^\d+$/', "Invalid term payment format");
+    validate_2($max_invoice,  '/^\d+$/', "Invalid max invoice format");
+    validate_2($max_piutang_float,  '/^\d+$/', "Invalid max piutang format");
     validate_2($longitude, '/^[-+]?((1[0-7]\d|\d{1,2})(\.\d{1,6})?|180(\.0{1,6})?)$/', "Invalid Longitude Format");
     validate_2($latitude, '/^[-+]?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/', "Invalid Latidude Format");
+
+
     $customer_id = generateCustomID('CU', 'tb_customer', 'customer_id', $conn);
     executeInsert(
         $conn,
@@ -65,18 +70,19 @@ try {
             $nitko,
             $term_payment,
             $max_invoice,
-            $max_piutang,
+            $max_piutang_float,
             $longitude,
             $latitude,
             $channel_id,
             $pricelist_id,
+            $jenis_customer,
             $nama_jalan,
             $rt,
             $kelurahan,
             $kecamatan,
-            $jenis_customer
+
         ],
-        "sssssssssssddsssssss"
+        "ssssssssdddddsssssss"
     );
 
 

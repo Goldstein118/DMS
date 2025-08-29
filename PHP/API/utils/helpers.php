@@ -1,5 +1,8 @@
 <?php
-
+function toFloat($value)
+{
+    return (float)str_replace(',', '', trim($value));
+}
 function generateCustomID($prefix, $table, $column, $conn)
 {
     $year = date('y'); // Get last two digits of current year
@@ -13,7 +16,7 @@ function generateCustomID($prefix, $table, $column, $conn)
 
     // Extract last 7 digits and increment
     $next = $last ? str_pad(((int)substr($last, -7)) + 1, 7, '0', STR_PAD_LEFT) : '0000001';
-    
+
     return "$prefix$year-$next";
 }
 

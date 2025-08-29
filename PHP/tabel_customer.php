@@ -15,6 +15,12 @@
               <label class="form-label mb-0 mt-2" for="name">Nama:<i class="bi bi-asterisk text-danger align-middle "></i></label>
               <input class="form-control" type="text" id="name_customer" name="name_customer" value="">
 
+              <label class="form-label mb-0 mt-2" for="jenis_customer">Jenis Customer:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+              <select class="form-select" id="jenis_customer">
+                <option value="pribadi">Pribadi</option>
+                <option value="perusahaan">Perusahaan</option>
+              </select>
+
               <div id="alamat_customer_pribadi">
                 <label class="form-label mb-0 mt-2" for="nama_jalan">Alamat:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                 <input class="form-control" type="text" id="nama_jalan" placeholder="Nama Jalan">
@@ -32,11 +38,7 @@
                 <input class="form-control" type="text" id="no_telp_customer" name="no_telp_customer" aria-describedby="basic-addon1" value="">
               </div>
 
-              <label class="form-label mb-0 mt-2" for="jenis_customer">Jenis Customer:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-              <select class="form-select" id="jenis_customer">
-                <option value="pribadi">Pribadi</option>
-                <option value="perusahaan">Perusahaan</option>
-              </select>
+
 
               <div id="div_nik_customer">
                 <label class="form-label mb-0 mt-2" for="nik_customer">NIK:<i class="bi bi-asterisk text-danger align-middle "></i></label>
@@ -113,7 +115,11 @@
               <input class="form-control" type="text" id="update_customer_id" disabled>
               <label class="form-label mb-0 mt-2" for="update_name_customer">Name:<i class="bi bi-asterisk text-danger align-middle "></i></label>
               <input class="form-control" type="text" id="update_name_customer" name="name_customer_update">
-
+              <label class="form-label mb-0 mt-2" for="update_jenis_customer">Jenis Customer:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+              <select class="form-select" id="update_jenis_customer">
+                <option value="pribadi">Pribadi</option>
+                <option value="perusahaan">Perusahaan</option>
+              </select>
               <div id="update_alamat_customer_pribadi">
                 <label class="form-label mb-0 mt-2" for="update_nama_jalan">Alamat:</label>
                 <input class="form-control" type="text" id="update_nama_jalan" placeholder="Nama Jalan">
@@ -131,11 +137,7 @@
                 <span class="input-group-text" id="basic-addon1">+62</span>
                 <input class="form-control" type="text" id="update_phone_customer" name="phone_customer_update" aria-describedby="basic-addon1" value="">
               </div>
-              <label class="form-label mb-0 mt-2" for="update_jenis_customer">Jenis Customer:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-              <select class="form-select" id="update_jenis_customer">
-                <option value="pribadi">Pribadi</option>
-                <option value="perusahaan">Perusahaan</option>
-              </select>
+
               <div id="update_div_nik_customer">
                 <label class="form-label mb-0 mt-2" for="update_nik_customer">NIK:</label>
                 <input class="form-control" type="text" id="update_nik_customer" name="nik_customer_update">

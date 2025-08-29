@@ -227,7 +227,7 @@ async function submitCustomer() {
   formData.set("nitko", nitko);
   formData.set("term_payment", term_payment);
   formData.set("max_invoice", max_invoice);
-  formData.set("max_piutang", helper.format_angka(max_piutang));
+  formData.set("max_piutang", max_piutang);
   formData.set("longitude", longitude);
   formData.set("latitude", latitude);
   formData.set("channel_id", channel_id);

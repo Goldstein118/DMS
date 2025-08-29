@@ -121,16 +121,21 @@ try {
     $stock_awal = $fields['stock_awal'] ?? '';
     $satuan_id = $fields['satuan_id'];
 
+    $harga_minimal = toFloat($harga_minimal);
+    $stock_awal = toFloat($stock_awal);
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
     validate_2($no_sku, '/^[a-zA-Z0-9,.\- ]*$/', "Invalid SKU format");
-    validate_2($harga_minimal, '/^[0-9., ]+$/', "Invalid harga minimal format");
+    validate_2($harga_minimal, '/^\d+$/', "Invalid no harga minimal format");
+    validate_2($stock_awal, '/^\d+$/', "Format stock awal tidak valid");
+
+
     if (isset($data['remove_produk_file']) && $data['remove_produk_file'] === 'true') {
         handle_image_remove($produk_id, $conn);
     }
 
     $stmt = $conn->prepare("UPDATE tb_produk SET nama = ?, no_sku = ?, status = ?, harga_minimal = ?, kategori_id = ?, brand_id = ? ,stock_awal=?,satuan_id=?
                             WHERE produk_id = ?");
-    $stmt->bind_param("sssssssss", $nama, $no_sku, $status, $harga_minimal, $kategori_id, $brand_id, $stock_awal, $satuan_id, $produk_id);
+    $stmt->bind_param("sssdssdss", $nama, $no_sku, $status, $harga_minimal, $kategori_id, $brand_id, $stock_awal, $satuan_id, $produk_id);
     if (!$stmt->execute()) throw new Exception("Product update failed: " . $stmt->error);
     $stmt->close();
 
@@ -143,13 +148,14 @@ try {
         foreach ($data['details'] as $item) {
             $pricelist_id = $item['pricelist_id'];
             $harga = $item['harga'];
-
+            $harga = toFloat($harga);
+            validate_2($harga, '/^\d+$/', "Format harga tidak valid");
             $stmt_delete->bind_param("ss", $pricelist_id, $produk_id);
             $stmt_delete->execute();
 
 
             $detail_pricelist_id = generateCustomID('DE', 'tb_detail_pricelist', 'detail_pricelist_id', $conn);
-            $stmt_insert->bind_param("ssss", $detail_pricelist_id, $harga, $pricelist_id, $produk_id);
+            $stmt_insert->bind_param("sdss", $detail_pricelist_id, $harga, $pricelist_id, $produk_id);
             $stmt_insert->execute();
         }
 

@@ -25,10 +25,15 @@ try {
     $status_promo = $field['status_promo'];
     $quota = $field['quota'];
     $satuan_id = $field['satuan_id'];
+    $jumlah_diskon = toFloat($jumlah_diskon);
+    if ($jenis_diskon === "nominal") {
+        validate_2($jumlah_diskon, '/^\d+$/', "Format jumlah diskon tidak valid");
+    }
 
+    $prioritas = toFloat($prioritas);
+    $quota = toFloat($quota);
     validate_2($nama, '/^[a-zA-Z0-9\s]+$/', "Format nama tidak valid");
     validate_2($prioritas, '/^\d+$/', "Format prioritas tidak valid");
-    validate_2($jumlah_diskon, '/^\d+$/', "Format jumlah diskon tidak valid");
     validate_2($quota, '/^\d+$/', "Format quota tidak valid");
 
 
@@ -52,7 +57,7 @@ try {
             $status_promo,
             $satuan_id
         ],
-        "ssssssssssss"
+        "sssssssdddss"
     );
     if (isset($data['promo_kondisi'])) {
 
@@ -67,6 +72,18 @@ try {
             $qty_min = $promo['qty_min'];
             $qty_max = $promo['qty_max'];
             $exclude_include = $promo['exclude_include'];
+
+
+            $qty_akumulasi = toFloat($qty_akumulasi);
+            $qty_max = toFloat($qty_max);
+            $qty_min = toFloat($qty_min);
+            validate_2($qty_akumulasi, '/^\d+$/', "Format qty akumulasi tidak valid");
+            validate_2($qty_max, '/^\d+$/', "Format qty max tidak valid");
+            validate_2($qty_min, '/^\d+$/', "Format qty min tidak valid");
+
+
+
+
 
             $promo_kondisi_id = generateCustomID('PRK', 'tb_promo_kondisi', 'promo_kondisi_id', $conn);
             executeInsert(
@@ -85,7 +102,7 @@ try {
                     $qty_max
 
                 ],
-                "ssssssss"
+                "ssssddsd"
             );
         }
     }
@@ -100,12 +117,18 @@ try {
             $jenis_diskon = $promo['jenis_diskon'];
             $jlh_diskon = $promo['jlh_diskon'];
 
+            $qty_bonus = toFloat($qty_bonus);
+            $jlh_diskon = toFloat($jlh_diskon);
+            validate_2($qty_bonus, '/^\d+$/', "Format qty bonus tidak valid");
+            validate_2($jlh_diskon, '/^\d+$/', "Format jlh diskon tidak valid");
+
+
 
 
             $promo_bonus_barang_id = generateCustomID('PRB', 'tb_promo_bonus_barang', 'promo_bonus_barang_id', $conn);
 
             executeInsert($conn, "INSERT INTO tb_promo_bonus_barang(promo_bonus_barang_id,promo_id,qty_bonus,jenis_diskon,jlh_diskon,produk_id) 
-        VALUES (?,?,?,?,?,?)", [$promo_bonus_barang_id, $promo_id, $qty_bonus, $jenis_diskon, $jlh_diskon, $produk_id], "ssssss");
+        VALUES (?,?,?,?,?,?)", [$promo_bonus_barang_id, $promo_id, $qty_bonus, $jenis_diskon, $jlh_diskon, $produk_id], "ssdsds");
         }
     }
     echo json_encode(["success" => true, "message" => "Berhasil", "data" => ["promo_id" => $promo_id]]);

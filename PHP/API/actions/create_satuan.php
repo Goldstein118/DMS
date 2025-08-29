@@ -14,7 +14,7 @@ try {
         $conn,
         "INSERT INTO tb_satuan(satuan_id,nama,id_referensi,qty)VALUES (?,?,?,?)",
         [$satuan_id, $nama_satuan, $id_referensi, $qty_satuan],
-        "ssss"
+        "sssd"
     );
 
     echo json_encode(["success" => true, "message" => "Berhasil", "data" => ["satuan_id" => $satuan_id]]);

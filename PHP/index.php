@@ -65,12 +65,14 @@ require_once $_ENV['BASE_PATH'] . '/PHP/config/vendor_paths.php';
 </head>
 
 <body>
-  <!--spinner-->
   <div id="loading_spinner" class="d-flex justify-content-center align-items-center" style="height: 100vh; visibility : visible">
     <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
-    <dotlottie-wc src="https://lottie.host/a7f7ef11-5190-400a-8dfd-92eac990725c/MxZMJwW8Oi.lottie" style="width: 300px;height: 300px" speed="1" autoplay loop></dotlottie-wc>
+    <dotlottie-wc src="https://lottie.host/a7f7ef11-5190-400a-8dfd-92eac990725c/MxZMJwW8Oi.lottie" style="width: 500px;height: 500px" speed="2.5" autoplay loop></dotlottie-wc>
   </div>
 
+
+  <!-- https://lottie.host/ae531907-211c-4d6b-a8e1-4e26dc786593/mcCjC4AkcM.lottie -->
+  <!-- https://lottie.host/a7f7ef11-5190-400a-8dfd-92eac990725c/MxZMJwW8Oi.lottie -->
 
   <div id="menu_container">
     <button class="btn btn-primary d-lg-none m-2 btn-sm" id="menu" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
@@ -106,7 +108,8 @@ require_once $_ENV['BASE_PATH'] . '/PHP/config/vendor_paths.php';
         'tabel_promo',
         'tabel_satuan',
         'tabel_pembelian',
-        'tabel_data_biaya'
+        'tabel_data_biaya',
+        'tabel_invoice'
       ];
 
       if (in_array($page, $allowed_pages)) {
@@ -150,7 +153,7 @@ require_once $_ENV['BASE_PATH'] . '/PHP/config/vendor_paths.php';
       case 'tabel_customer':
       ?>
         <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_customer.js?v=2.0"></script>
-        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_customer.js?v=2.0"></script>
+        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_customer.js?v=2.0.1"></script>
       <?php
         break;
       case 'tabel_channel':
@@ -229,14 +232,20 @@ require_once $_ENV['BASE_PATH'] . '/PHP/config/vendor_paths.php';
         break;
       case 'tabel_data_biaya':
       ?>
-        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_data_biaya.js?v=2.0"></script>
+        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_data_biaya.js?v=2.0.2"></script>
         <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_data_biaya.js?v=2.0"></script>
+      <?php
+        break;
+      case 'tabel_invoice':
+      ?>
+        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_invoice.js?v=2.0"></script>
+        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_invoice.js?v=2.0"></script>
     <?php
         break;
     }
     ?>
     <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/side_bar.js?v=2.0"></script>
-    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/helper.js?v=2.0"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/helper.js?v=2.0.1"></script>
 </body>
 
 

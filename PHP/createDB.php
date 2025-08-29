@@ -33,7 +33,7 @@ $karyawan = "CREATE TABLE IF NOT EXISTS tb_karyawan (
     role_id VARCHAR(20),
     departement VARCHAR(20) DEFAULT 'lainnya',
     no_telp VARCHAR(20),
-    alamat VARCHAR(100),
+    alamat VARCHAR(255),
     ktp VARCHAR(100),
     npwp VARCHAR(100),
     status VARCHAR(20) DEFAULT 'aktif',
@@ -62,7 +62,7 @@ if ($conn->query($user)) {
 $supplier = "CREATE TABLE IF NOT EXISTS tb_supplier (
         supplier_id VARCHAR(20) PRIMARY KEY NOT NULL, 
         nama VARCHAR(100) NOT NULL,
-        alamat VARCHAR(100),
+        alamat VARCHAR(255),
         no_telp VARCHAR(20),
         ktp VARCHAR(100),
         npwp VARCHAR(100),
@@ -78,24 +78,24 @@ if ($conn->query($supplier)) {
 $customer = "CREATE TABLE IF NOT EXISTS tb_customer (
         customer_id VARCHAR(20) PRIMARY KEY NOT NULL, 
         nama VARCHAR(100) NOT NULL,
-        alamat VARCHAR(100),
+        alamat VARCHAR(255),
         no_telp VARCHAR(20),
         ktp VARCHAR(100),
         npwp VARCHAR(100),
         status VARCHAR(20) DEFAULT 'aktif', 
         nitko VARCHAR(100), 
-        term_pembayaran VARCHAR(100),
-        max_invoice VARCHAR(20), 
-        max_piutang VARCHAR(20),
+        term_pembayaran INT,
+        max_invoice INT, 
+        max_piutang DECIMAL(20,2),
         latitude DECIMAL(9,6),
         longitude DECIMAL (9,6),
         channel_id VARCHAR(20), FOREIGN KEY (channel_id) REFERENCES tb_channel(channel_id) ON DELETE RESTRICT,
         pricelist_id VARCHAR (20), FOREIGN KEY (pricelist_id) REFERENCES tb_pricelist(pricelist_id) ON DELETE RESTRICT,
         jenis_customer VARCHAR(20),
-        nama_jalan VARCHAR(100),
-        rt VARCHAR(100),
-        kelurahan VARCHAR(100),
-        kecamatan VARCHAR(100)
+        nama_jalan VARCHAR(255),
+        rt VARCHAR(255),
+        kelurahan VARCHAR(255),
+        kecamatan VARCHAR(255)
         )";
 if ($conn->query($customer)) {
     try {
@@ -141,10 +141,10 @@ produk_id VARCHAR(20) PRIMARY KEY NOT NULL,
 nama VARCHAR(100),
 no_sku VARCHAR(100),
 status VARCHAR(20) DEFAULT 'aktif',
-harga_minimal VARCHAR(20),
+harga_minimal DECIMAL(12,2),
 kategori_id VARCHAR(20),
 brand_id VARCHAR(20),
-stock_awal VARCHAR(20),
+stock_awal INT,
 satuan_id VARCHAR(20),
 FOREIGN KEY (kategori_id) REFERENCES tb_kategori(kategori_id) ON DELETE RESTRICT,
 FOREIGN KEY (brand_id) REFERENCES tb_brand(brand_id) ON DELETE RESTRICT,
@@ -218,7 +218,7 @@ if ($conn->query($pricelist)) {
 
 $detail_pricelist = "CREATE TABLE IF NOT EXISTS tb_detail_pricelist(
 detail_pricelist_id VARCHAR(20) PRIMARY KEY NOT NULL,
-harga VARCHAR(20),
+harga DECIMAL(20,2),
 pricelist_id VARCHAR(20),
 produk_id VARCHAR(20),
 FOREIGN KEY (pricelist_id) REFERENCES tb_pricelist(pricelist_id) ON DELETE RESTRICT,
@@ -268,8 +268,8 @@ if ($conn->query($frezzer)) {
 
 $promo = "CREATE TABLE IF NOT EXISTS tb_promo (promo_id VARCHAR(20) PRIMARY KEY NOT NULL, nama VARCHAR (50),
         tanggal_berlaku DATE ,tanggal_selesai DATE, jenis_bonus VARCHAR (20) DEFAULT 'barang',
-        akumulasi VARCHAR(20),prioritas VARCHAR(20),created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,jenis_diskon VARCHAR(20),
-        jumlah_diskon VARCHAR(20),quota VARCHAR (20), status VARCHAR(20) DEFAULT 'aktif',satuan_id VARCHAR(20), 
+        akumulasi VARCHAR(20),prioritas INT,created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,jenis_diskon VARCHAR(20),
+        jumlah_diskon DECIMAL(20,2),quota INT, status VARCHAR(20) DEFAULT 'aktif',satuan_id VARCHAR(20), 
         FOREIGN KEY (satuan_id) REFERENCES tb_satuan(satuan_id) ON DELETE RESTRICT)";
 
 if ($conn->query($promo)) {
@@ -282,8 +282,8 @@ if ($conn->query($promo)) {
 $promo_kondisi = "CREATE TABLE IF NOT EXISTS tb_promo_kondisi 
                   (promo_kondisi_id VARCHAR(20) PRIMARY KEY NOT NULL,promo_id VARCHAR(20),
                   jenis_kondisi VARCHAR (20),kondisi JSON,
-                  qty_akumulasi VARCHAR(20), qty_min VARCHAR(20),exclude_include VARCHAR(20),
-                  qty_max VARCHAR(20),FOREIGN KEY (promo_id) REFERENCES tb_promo(promo_id) ON DELETE RESTRICT)";
+                  qty_akumulasi INT, qty_min INT,exclude_include VARCHAR(20),
+                  qty_max INT,FOREIGN KEY (promo_id) REFERENCES tb_promo(promo_id) ON DELETE RESTRICT)";
 if ($conn->query($promo_kondisi)) {
     try {
     } catch (Error) {
@@ -292,7 +292,7 @@ if ($conn->query($promo_kondisi)) {
 }
 
 $promo_bonus_barang = "CREATE TABLE IF NOT EXISTS tb_promo_bonus_barang(promo_bonus_barang_id VARCHAR(20) PRIMARY KEY NOT NULL,
-                       promo_id VARCHAR(20),qty_bonus VARCHAR(20),jenis_diskon VARCHAR(20), jlh_diskon VARCHAR(20),
+                       promo_id VARCHAR(20),qty_bonus INT,jenis_diskon VARCHAR(20), jlh_diskon DECIMAL(20,2),
                        produk_id VARCHAR(20),FOREIGN KEY (promo_id) REFERENCES tb_promo(promo_id) ON DELETE RESTRICT)";
 
 if ($conn->query($promo_bonus_barang)) {
@@ -302,7 +302,7 @@ if ($conn->query($promo_bonus_barang)) {
     }
 }
 
-$satuan = "CREATE TABLE IF NOT EXISTS tb_satuan(satuan_id VARCHAR (20) PRIMARY KEY NOT NULL, nama VARCHAR (20),id_referensi VARCHAR(20),qty VARCHAR (20))";
+$satuan = "CREATE TABLE IF NOT EXISTS tb_satuan(satuan_id VARCHAR (20) PRIMARY KEY NOT NULL, nama VARCHAR (20),id_referensi VARCHAR(20),qty INT)";
 
 if ($conn->query($satuan)) {
     try {
@@ -311,9 +311,10 @@ if ($conn->query($satuan)) {
     }
 }
 
-$pembelian = "CREATE TABLE IF NOT EXISTS tb_pembelian(pembelian_id VARCHAR(20) PRIMARY KEY NOT NULL,tanggal_po DATE,tanggal_pengiriman DATE,tanggal_terima DATE,tanggal_invoice DATE,
-supplier_id VARCHAR(20),keterangan VARCHAR(100),no_invoice_supplier VARCHAR(20),no_pengiriman VARCHAR(20),total_qty VARCHAR(20),ppn VARCHAR(20),nominal_ppn VARCHAR(20),diskon VARCHAR(20),nominal_pph VARCHAR(20),
-biaya_tambahan VARCHAR(20),grand_total VARCHAR(20),created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,created_by VARCHAR(50), status VARCHAR (20),tanggal_input_invoice DATE ,FOREIGN KEY (supplier_id) REFERENCES tb_supplier(supplier_id) ON DELETE RESTRICT)
+$pembelian = "CREATE TABLE IF NOT EXISTS tb_pembelian(pembelian_id VARCHAR(20) PRIMARY KEY NOT NULL,tanggal_po DATE,tanggal_pengiriman DATE,tanggal_terima DATE,
+supplier_id VARCHAR(20),keterangan VARCHAR(255),no_pengiriman VARCHAR(20),total_qty INT,ppn DECIMAL(20,2),nominal_ppn DECIMAL(20,2),diskon DECIMAL(20,2),
+nominal_pph DECIMAL(20,2),biaya_tambahan DECIMAL(20,2),sub_total DECIMAL(20,2),grand_total DECIMAL(20,2),created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,created_by VARCHAR(50), status VARCHAR (20),
+tanggal_input_invoice DATE ,FOREIGN KEY (supplier_id) REFERENCES tb_supplier(supplier_id) ON DELETE RESTRICT)
 ";
 
 if ($conn->query($pembelian)) {
@@ -324,7 +325,8 @@ if ($conn->query($pembelian)) {
 }
 
 
-$detail_pembelian = "CREATE TABLE IF NOT EXISTS tb_detail_pembelian(detail_pembelian_id VARCHAR(20) PRIMARY KEY NOT NULL,pembelian_id VARCHAR(20), produk_id VARCHAR(20),urutan VARCHAR(20),qty VARCHAR(20),harga VARCHAR(20),diskon VARCHAR(20),satuan_id VARCHAR(20),
+$detail_pembelian = "CREATE TABLE IF NOT EXISTS tb_detail_pembelian(detail_pembelian_id VARCHAR(20) PRIMARY KEY NOT NULL,pembelian_id VARCHAR(20), produk_id VARCHAR(20),urutan INT,
+qty INT,harga DECIMAL(20,2),diskon DECIMAL(20,2),satuan_id VARCHAR(20),
 FOREIGN KEY (pembelian_id) REFERENCES tb_pembelian(pembelian_id) ON DELETE RESTRICT,FOREIGN KEY (satuan_id) REFERENCES tb_satuan(satuan_id) ON DELETE RESTRICT)";
 
 if ($conn->query($detail_pembelian)) {
@@ -344,8 +346,9 @@ if ($conn->query($data_biaya)) {
     }
 }
 
-$biaya_tambahan = "CREATE TABLE IF NOT EXISTS tb_biaya_tambahan(biaya_tambahan_id VARCHAR(20) PRIMARY KEY NOT NULL,data_biaya_id VARCHAR(20),pembelian_id VARCHAR(20),keterangan VARCHAR(100),jlh VARCHAR(20),urutan VARCHAR(20),
-FOREIGN KEY (data_biaya_id) REFERENCES tb_data_biaya(data_biaya_id),FOREIGN KEY (pembelian_id) REFERENCES tb_pembelian(pembelian_id) ON DELETE RESTRICT)";
+$biaya_tambahan = "CREATE TABLE IF NOT EXISTS tb_biaya_tambahan(biaya_tambahan_id VARCHAR(20) PRIMARY KEY NOT NULL,data_biaya_id VARCHAR(20),pembelian_id VARCHAR(20),
+keterangan VARCHAR(255),jlh DECIMAL(20,2),urutan INT,
+FOREIGN KEY (data_biaya_id) REFERENCES tb_data_biaya(data_biaya_id) ON DELETE RESTRICT,FOREIGN KEY (pembelian_id) REFERENCES tb_pembelian(pembelian_id) ON DELETE RESTRICT)";
 
 if ($conn->query($biaya_tambahan)) {
     try {
@@ -353,4 +356,14 @@ if ($conn->query($biaya_tambahan)) {
         echo mysqli_error($conn);
     }
 }
+
+$invoice = "CREATE TABLE IF NOT EXISTS tb_invoice(invoice_id VARCHAR(20),tanggal_invoice DATE,no_invoice_supplier VARCHAR(20),tanggal_input_invoice DATE,pembelian_id VARCHAR (20),FOREIGN KEY (pembelian_id) REFERENCES tb_pembelian(pembelian_id) ON DELETE RESTRICT)";
+if ($conn->query($invoice)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+
 mysqli_close($conn);

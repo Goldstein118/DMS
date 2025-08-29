@@ -207,7 +207,7 @@ async function populate_bonus_barang_update_modal(promo_id) {
       );
       jumlah_diskon_nominal.setAttribute("type", "number");
       jumlah_diskon_nominal.setAttribute("min", "0");
-      jumlah_diskon_nominal.value = item.jlh_diskon;
+      jumlah_diskon_nominal.value = helper.unformat_angka(item.jlh_diskon);
       td_jumlah_diskon_nominal.appendChild(jumlah_diskon_nominal);
 
       const td_aksi = document.createElement("td");
@@ -903,7 +903,8 @@ async function handle_update(button) {
 
     document.getElementById("update_prioritas").value = prioritas;
     document.getElementById("update_jenis_diskon").value = jenis_diskon;
-    document.getElementById("update_jumlah_diskon").value = jumlah_diskon;
+    document.getElementById("update_jumlah_diskon").value =
+      helper.unformat_angka(jumlah_diskon);
     document.getElementById("update_quota").value = quota;
     document.getElementById("update_status_promo").value = status;
     fetch_fk("satuan", "", "update_satuan_id", "", current_satuan_id);
@@ -1011,8 +1012,8 @@ if (submit_promo_update) {
       const jenis_select = row.querySelector("td:nth-child(1) select"); // Jenis
       const dynamic_select = row.querySelector("td:nth-child(2) select"); // Dynamic
       const exclude_select = row.querySelector("td:nth-child(3) select"); // Include/Exclude
-      const qty_max = row.querySelector("td:nth-child(4) input"); // Qty Max
-      const qty_min = row.querySelector("td:nth-child(5) input"); // Qty Min
+      const qty_min = row.querySelector("td:nth-child(4) input"); // Qty Max
+      const qty_max = row.querySelector("td:nth-child(5) input"); // Qty Min
       const qty_akumulasi = row.querySelector("td:nth-child(6) input"); // Qty Akumulasi
 
       const selected_jenis = jenis_select?.value || "";

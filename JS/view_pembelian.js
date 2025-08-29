@@ -41,12 +41,12 @@ async function populate_table_detail(pembelian_id) {
 
       const tdHarga = document.createElement("td");
       tdHarga.setAttribute("id", "view_harga");
-      tdHarga.textContent = detail.harga;
+      tdHarga.textContent = helper.format_angka(detail.harga);
       tdHarga.style.textAlign = "right";
 
       const tdDiskon = document.createElement("td");
       tdDiskon.setAttribute("id", "view_diskon");
-      tdDiskon.textContent = detail.diskon;
+      tdDiskon.textContent = helper.format_angka(detail.diskon);
       tdDiskon.style.textAlign = "right";
 
       // Append all tds to tr
@@ -56,6 +56,7 @@ async function populate_table_detail(pembelian_id) {
       tr_detail.appendChild(tdSatuan);
       tr_detail.appendChild(tdHarga);
       tr_detail.appendChild(tdDiskon);
+
       nomor += 1;
       // Append tr to tbody
       tableBody.appendChild(tr_detail);
@@ -77,16 +78,27 @@ function getQueryParam(key) {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(key);
 }
+const print = document.getElementById("print");
+print.addEventListener("click", () => {
+  document.getElementById("div_biaya_tambahan_header").style.display = "block";
+  window.onafterprint = () => {
+    document.getElementById("div_biaya_tambahan_header").style.display = "none";
+  };
 
-const select_tanggal = document.getElementById("select_tanggal");
+  window.print();
+});
+
 const tanggal_po = document.getElementById("view_tanggal_po");
 const tanggal_terima = document.getElementById("view_tanggal_terima");
 const tanggal_pengiriman = document.getElementById("view_tanggal_pengiriman");
 const tanggal_invoice = document.getElementById("view_tanggal_invoice");
 
-select_tanggal.addEventListener("change", () => {
-  populate_tanggal(pembelian_id);
-});
+const biaya_tanggal_po = document.getElementById("biaya_tanggal_po");
+const biaya_tanggal_terima = document.getElementById("biaya_tanggal_terima");
+const biaya_tanggal_pengiriman = document.getElementById(
+  "biaya_tanggal_pengiriman"
+);
+const biaya_tanggal_invoice = document.getElementById("biaya_tanggal_invoice");
 
 async function populate_tanggal(pembelian_id) {
   const result = await apiRequest(
@@ -97,17 +109,47 @@ async function populate_tanggal(pembelian_id) {
     { pembelian_id: pembelian_id }
   );
   result.data.forEach((detail) => {
-    tanggal_po.textContent =
-      "Tanggal Po: " + helper.format_date(detail.tanggal_po);
+    detail.tanggal_po
+      ? (tanggal_po.textContent =
+          "Tanggal Po: " + helper.format_date(detail.tanggal_po))
+      : (tanggal_po.textContent = "");
 
-    tanggal_terima.textContent =
-      "Tanggal Terima: " + helper.format_date(detail.tanggal_terima);
+    detail.tanggal_pengiriman
+      ? (tanggal_pengiriman.textContent =
+          "Tanggal Pengiriman: " +
+          helper.format_date(detail.tanggal_pengiriman))
+      : (tanggal_pengiriman.textContent = "");
 
-    tanggal_pengiriman.textContent =
-      "Tanggal Pengiriman: " + helper.format_date(detail.tanggal_pengiriman);
+    detail.tanggal_terima
+      ? (tanggal_terima.textContent =
+          "Tanggal Terima: " + helper.format_date(detail.tanggal_terima))
+      : (tanggal_terima.textContent = "");
 
-    tanggal_invoice.textContent =
-      "Tanggal Invoice: " + helper.format_date(detail.tanggal_invoice);
+    detail.tanggal_invoice
+      ? (tanggal_invoice.textContent =
+          "Tanggal Invoice: " + helper.format_date(detail.tanggal_invoice))
+      : (tanggal_invoice.textContent = "");
+
+    detail.tanggal_po
+      ? (biaya_tanggal_po.textContent =
+          "Tanggal Po: " + helper.format_date(detail.tanggal_po))
+      : (biaya_tanggal_po.textContent = "");
+
+    detail.tanggal_pengiriman
+      ? (biaya_tanggal_pengiriman.textContent =
+          "Tanggal Pengiriman: " +
+          helper.format_date(detail.tanggal_pengiriman))
+      : (biaya_tanggal_pengiriman.textContent = "");
+
+    detail.tanggal_terima
+      ? (biaya_tanggal_terima.textContent =
+          "Tanggal Terima: " + helper.format_date(detail.tanggal_terima))
+      : (biaya_tanggal_terima.textContent = "");
+
+    detail.tanggal_invoice
+      ? (biaya_tanggal_invoice.textContent =
+          "Tanggal Invoice: " + helper.format_date(detail.tanggal_invoice))
+      : (biaya_tanggal_invoice.textContent = "");
   });
 }
 
@@ -140,7 +182,7 @@ async function populate_biaya_tambahan(pembelian_id) {
 
       const tdJumlah = document.createElement("td");
       tdJumlah.setAttribute("id", "view_jumlah");
-      tdJumlah.textContent = detail.jlh;
+      tdJumlah.textContent = helper.format_angka(detail.jlh);
       tdJumlah.style.textAlign = "right";
 
       // Append all tds to tr
@@ -165,6 +207,51 @@ async function populate_biaya_tambahan(pembelian_id) {
   }
 }
 
+async function populate_pembelian(pembelian_id) {
+  const result = await apiRequest(
+    `/PHP/API/pembelian_API.php?action=select&user_id=${access.decryptItem(
+      "user_id"
+    )}`,
+    "POST",
+    { pembelian_id: pembelian_id, table: "pembelian" }
+  );
+
+  result.data.forEach((detail) => {
+    document.getElementById("nama_supplier").textContent =
+      "Nama supplier : " + detail.supplier_nama;
+    document.getElementById("status_pembelian").textContent =
+      "Status : " + detail.status;
+
+    document.getElementById("td_keterangan").textContent =
+      "Keterangan : " + detail.keterangan;
+
+    document.getElementById("td_sub_total").textContent = helper.format_angka(
+      detail.sub_total
+    );
+    document.getElementById("td_diskon").textContent = helper.format_angka(
+      detail.diskon
+    );
+    document.getElementById("td_ppn").textContent = helper.format_persen(
+      detail.ppn
+    );
+
+    document.getElementById("td_pph").textContent = helper.format_angka(
+      detail.pph
+    );
+    document.getElementById("td_grand_total").textContent = helper.format_angka(
+      detail.grand_total
+    );
+
+    document.getElementById("total_biaya_tambahan").textContent =
+      helper.format_angka(detail.biaya_tambahan);
+
+    document.getElementById("biaya_status_pembelian").textContent =
+      "Status : " + detail.status;
+
+    document.getElementById("biaya_nama_supplier").textContent =
+      "Nama supplier : " + detail.supplier_nama;
+  });
+}
 const pembelian_id = getQueryParam("pembelian_id");
 
 if (pembelian_id) {
@@ -175,3 +262,4 @@ if (pembelian_id) {
 populate_table_detail(pembelian_id);
 populate_tanggal(pembelian_id);
 populate_biaya_tambahan(pembelian_id);
+populate_pembelian(pembelian_id);

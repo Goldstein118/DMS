@@ -109,6 +109,11 @@
             </li>
             <li>
               <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_promo"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_promo' ? 'active' : ''; ?>"> Promo</a>
+            </li>
+            <li>
+              <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_data_biaya"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_data_biaya' ? 'active' : ''; ?>"> data biaya</a>
             </li>
@@ -128,23 +133,19 @@
         </button>
         <div class="collapse hide" id="penjualan-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li>
-              <a
-                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_promo"
-                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_promo' ? 'active' : ''; ?>"> Promo</a>
-            </li>
+
 
             <li>
               <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_pembelian"
-                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_pembelian' ? 'active' : ''; ?>"> Pembelian</a>
-            </li>
-            <li>
-              <a
-                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_data_biaya"
-                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_data_biaya' ? 'active' : ''; ?>"> data biaya</a>
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_pembelian' ? 'active' : ''; ?>"> Purchase Order</a>
             </li>
 
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_invoice"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_invoice' ? 'active' : ''; ?>">Pembelian</a>
+            </li>
           </ul>
         </div>
       </li>
@@ -256,6 +257,17 @@
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_satuan"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_satuan' ? 'active' : ''; ?>"> Satuan</a>
             </li>
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_promo"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_promo' ? 'active' : ''; ?>"> Promo</a>
+            </li>
+
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_data_biaya"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_data_biaya' ? 'active' : ''; ?>"> Data biaya</a>
+            </li>
           </ul>
         </div>
       </li>
@@ -273,22 +285,21 @@
         </button>
         <div class="collapse hide" id="penjualan-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li>
-              <a
-                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_promo"
-                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_promo' ? 'active' : ''; ?>"> Promo</a>
-            </li>
+
 
             <li>
               <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_pembelian"
-                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_pembelian' ? 'active' : ''; ?>"> Pembelian</a>
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_pembelian' ? 'active' : ''; ?>"> Purchase Order</a>
             </li>
+
+
             <li>
               <a
-                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_data_biaya"
-                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_data_biaya' ? 'active' : ''; ?>"> data biaya</a>
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_invoice"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_invoice' ? 'active' : ''; ?>"> Pembelian</a>
             </li>
+
           </ul>
         </div>
       </li>

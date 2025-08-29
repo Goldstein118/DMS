@@ -42,14 +42,19 @@ try {
     $promo_bonus_barang = $data['promo_bonus_barang'] ?? [];
     $satuan_id = $data['satuan_id'];
 
-
+    $prioritas = toFloat($prioritas);
+    $jumlah_diskon = toFloat($jumlah_diskon);
+    $quota = toFloat($quota);
     // Basic input validation
     validate_2($nama, '/^[a-zA-Z0-9\s]+$/', "Format nama tidak valid");
     validate_2($prioritas, '/^\d+$/', "Format prioritas tidak valid");
-    validate_2($jumlah_diskon, '/^\d+$/', "Format jumlah diskon tidak valid");
     validate_2($quota, '/^\d+$/', "Format quota tidak valid");
 
 
+
+    if ($jenis_diskon === "nominal") {
+        validate_2($jumlah_diskon, '/^\d+$/', "Format jumlah diskon tidak valid");
+    }
     // Update main promo
     $stmt = $conn->prepare("UPDATE tb_promo SET 
         nama = ?, tanggal_berlaku = ?, tanggal_selesai = ?, 
@@ -57,7 +62,7 @@ try {
         jenis_diskon = ?, jumlah_diskon = ?, quota = ?, status = ?,satuan_id =?
         WHERE promo_id = ?");
     $stmt->bind_param(
-        "ssssssssssss",
+        "sssssssdddss",
         $nama,
         $tanggal_berlaku,
         $tanggal_selesai,
@@ -89,11 +94,19 @@ try {
         $qty_max = $promo['qty_max'] ?? null;
         $promo_kondisi_id = generateCustomID('PRK', 'tb_promo_kondisi', 'promo_kondisi_id', $conn);
 
+        $qty_akumulasi = toFloat($qty_akumulasi);
+        $qty_max = toFloat($qty_max);
+        $qty_min = toFloat($qty_min);
+        validate_2($qty_akumulasi, '/^\d+$/', "Format qty akumulasi tidak valid");
+        validate_2($qty_max, '/^\d+$/', "Format qty max tidak valid");
+        validate_2($qty_min, '/^\d+$/', "Format qty min tidak valid");
+
+
         $stmt_insert = $conn->prepare("INSERT INTO tb_promo_kondisi (
         promo_kondisi_id, promo_id, jenis_kondisi, kondisi, qty_akumulasi, qty_min, exclude_include, qty_max
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt_insert->bind_param(
-            "ssssssss",
+            "ssssddsd",
             $promo_kondisi_id,
             $promo_id,
             $jenis_kondisi,
@@ -123,11 +136,18 @@ try {
         $produk_id = $promo['produk_id'] ?? null;
         $promo_bonus_barang_id = generateCustomID('PRB', 'tb_promo_bonus_barang', 'promo_bonus_barang_id', $conn);
 
+        $qty_bonus = toFloat($qty_bonus);
+        $jlh_diskon = toFloat($jlh_diskon);
+        validate_2($qty_bonus, '/^\d+$/', "Format qty bonus tidak valid");
+        validate_2($jlh_diskon, '/^\d+$/', "Format jlh diskon tidak valid");
+
+
+
         $stmt_insert = $conn->prepare("INSERT INTO tb_promo_bonus_barang (
         promo_bonus_barang_id, promo_id, qty_bonus, jenis_diskon, jlh_diskon, produk_id
     ) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt_insert->bind_param(
-            "ssssss",
+            "ssssds",
             $promo_bonus_barang_id,
             $promo_id,
             $qty_bonus,

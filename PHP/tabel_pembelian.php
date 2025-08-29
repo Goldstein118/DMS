@@ -3,13 +3,13 @@
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Tambah Pembelian</h5>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Tambah Purchase Order</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
                 <div class="card">
-                    <div class="card-header">Pembelian</div>
+                    <div class="card-header">Purchase Order</div>
                     <div class="card-body" id="pembelian_card_body">
 
                         <!-- Informasi Dasar -->
@@ -34,10 +34,9 @@
                                                 <label class="form-label mb-0 mt-2" for="tanggal_po">Tanggal PO:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <input class="form-control" type="text" id="tanggal_po" name="tanggal_po" value="">
                                                 <label class="form-label mb-0 mt-2" for="status_pembelian">Status:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                                <select class="form-select" id="status_pembelian">
+                                                <select class="form-select" id="status_pembelian" disabled>
                                                     <option value="proses">Proses PO</option>
-                                                    <option value="delivery">Delivery</option>
-                                                    <option value="selesai">Selesai</option>
+
                                                 </select>
                                             </div>
                                             <div class="col">
@@ -109,8 +108,9 @@
                                             <div class="col">
                                                 <label class="form-label mb-0 mt-2" for="ppn">PPN:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <select class="form-select" id="ppn">
-                                                    <option value="0.1">10%</option>
                                                     <option value="0.11">11%</option>
+                                                    <option value="0.10">10%</option>
+
                                                 </select>
                                             </div>
                                             <div class="col">
@@ -140,10 +140,17 @@
                                     class="accordion-collapse collapse show"
                                     data-bs-parent="#accordion_tambahan_pembelian">
                                     <div class="accordion-body">
-                                        <label class="form-label mb-0 mt-2" for="keterangan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                        <input type="text" class="form-control" id="keterangan" name="keterangan" />
-                                        <label class="form-label mb-0 mt-2" for="diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                        <input type="text" class="form-control" id="diskon" name="diskon" />
+
+                                        <div class="row g-2">
+                                            <div class="col"> <label class="form-label mb-0 mt-2" for="keterangan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                <input type="text" class="form-control" id="keterangan" name="keterangan" />
+                                            </div>
+                                            <div class="col"> <label class="form-label mb-0 mt-2" for="diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                <input type="text" class="form-control" id="diskon" name="diskon" />
+                                            </div>
+                                        </div>
+
+
                                     </div>
                                 </div>
                             </div>
@@ -205,7 +212,7 @@
     <div class="modal-dialog  modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalCenterTitle">Modal title</h1>
+                <h1 class="modal-title fs-5" id="exampleModalCenterTitle">Pengiriman</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -230,7 +237,7 @@
     <div class="modal-dialog   modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalCenterTitle">Modal title</h1>
+                <h1 class="modal-title fs-5" id="exampleModalCenterTitle">Penerimaan</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -254,7 +261,7 @@
     <div class="modal-dialog  modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalCenterTitle">Modal title</h1>
+                <h1 class="modal-title fs-5" id="exampleModalCenterTitle">Invoice</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -281,13 +288,13 @@
     <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Tambah Pembelian</h5>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Purchase Order</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
                 <div class="card">
-                    <div class="card-header">Update Pembelian</div>
+                    <div class="card-header">Update Purchase Order</div>
                     <div class="card-body" id="update_pembelian_card_body">
 
                         <!-- Informasi Dasar -->
@@ -312,9 +319,10 @@
                                                 <label class="form-label mb-0 mt-2" for="update_tanggal_po">Tanggal PO:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <input class="form-control" type="text" id="update_tanggal_po" name="update_tanggal_po" value="">
                                                 <label class="form-label mb-0 mt-2" for="update_status_pembelian">Status:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                                <select class="form-select" id="update_status_pembelian">
-                                                    <option value="proses">Proses PO</option>
-                                                    <option value="delivery">Delivery</option>
+                                                <select class="form-select" id="update_status_pembelian" disabled>
+                                                    <option value="proses">Proses Purchase Order</option>
+                                                    <option value="pengiriman">Pengiriman Barang</option>
+                                                    <option value="terima">Penerimaan Barang</option>
                                                     <option value="invoice">Invoice</option>
                                                 </select>
                                             </div>
@@ -389,8 +397,9 @@
                                             <div class="col">
                                                 <label class="form-label mb-0 mt-2" for="update_ppn">PPN:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <select class="form-select" id="update_ppn">
-                                                    <option value="0.1">10%</option>
                                                     <option value="0.11">11%</option>
+                                                    <option value="0.10">10%</option>
+
                                                 </select>
                                             </div>
                                             <div class="col">
@@ -420,10 +429,14 @@
                                     class="accordion-collapse collapse show"
                                     data-bs-parent="#update_accordion_tambahan_pembelian">
                                     <div class="accordion-body">
-                                        <label class="form-label mb-0 mt-2" for="update_keterangan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                        <input type="text" class="form-control" id="update_keterangan" name="update_keterangan" />
-                                        <label class="form-label mb-0 mt-2" for="update_diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                        <input type="text" class="form-control" id="update_diskon" name="update_diskon" />
+                                        <div class="row g-2">
+                                            <div class="col"> <label class="form-label mb-0 mt-2" for="update_keterangan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                <input type="text" class="form-control" id="update_keterangan" name="update_keterangan" />
+                                            </div>
+                                            <div class="col"> <label class="form-label mb-0 mt-2" for="update_diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                <input type="text" class="form-control" id="update_diskon" name="update_diskon" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -484,7 +497,7 @@
 
 <main class="col-12 col-lg-10 ms-auto px-1">
     <div id="main" class="table-responsive">
-        <h3>Data Pembelian</h3>
+        <h3>Data Purchase Order</h3>
         <div id="table_pembelian"></div>
     </div>
 </main>

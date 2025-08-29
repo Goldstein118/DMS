@@ -17,17 +17,20 @@ try {
     $stock_awal = $fields['stock_awal'] ?? '';
     $satuan_id = $fields['satuan_id'];
 
-
+    $harga_minimal = toFloat($harga_minimal);
+    $stock_awal = toFloat($stock_awal);
     validate_2($nama, '/^[a-zA-Z\s]+$/', "Invalid name format");
     validate_2($no_sku, '/^[a-zA-Z0-9,.\- ]+$/', "Invalid no sku format");
-    validate_2($harga_minimal, '/^[0-9., ]+$/', "Invalid no harga minimal format");
+    validate_2($harga_minimal, '/^\d+$/', "Invalid harga minimal format");
+    validate_2($stock_awal, '/^\d+$/', "Format stock awal tidak valid");
+
 
     // Generate ID and insert
     $produk_id = generateCustomID('PR', 'tb_produk', 'produk_id', $conn);
 
     $stmt_produk = $conn->prepare("INSERT INTO tb_produk (produk_id, nama,no_sku,status,harga_minimal,kategori_id,brand_id,stock_awal,satuan_id) 
                                     VALUES (?,?,?,?,?,?,?,?,?)");
-    $stmt_produk->bind_param("sssssssss", $produk_id, $nama, $no_sku, $status, $harga_minimal, $kategori_id, $brand_id, $stock_awal, $satuan_id);
+    $stmt_produk->bind_param("ssssdssds", $produk_id, $nama, $no_sku, $status, $harga_minimal, $kategori_id, $brand_id, $stock_awal, $satuan_id);
     if (!$stmt_produk->execute()) {
         throw new Exception("DB insert error: " . $stmt_produk->error);
     }
@@ -44,13 +47,14 @@ try {
 
             $pricelist_id = $detail['pricelist_id'];
             $harga = $detail['harga'];
-
+            $harga = toFloat($harga);
+            validate_2($harga, '/^\d+$/', "Format harga tidak valid");
             $detail_pricelist_id = generateCustomID('DE', 'tb_detail_pricelist', 'detail_pricelist_id', $conn);
             executeInsert(
                 $conn,
                 "INSERT INTO tb_detail_pricelist (detail_pricelist_id ,harga ,pricelist_id, produk_id) VALUES (?, ?, ?, ?)",
                 [$detail_pricelist_id, $harga, $pricelist_id, $produk_id],
-                "ssss"
+                "sdss"
             );
         }
     } else {

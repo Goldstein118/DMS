@@ -5,24 +5,24 @@ import * as helper from "./helper.js";
 let index = 0;
 
 const update_detail_pembelian_tbody = document.getElementById(
-  "update_detail_pembelian_tbody"
+  "create_detail_pembelian_tbody"
 );
 const update_biaya_tambahan_tbody = document.getElementById(
-  "update_biaya_tambahan_tbody"
+  "create_biaya_tambahan_tbody"
 );
 
 const update_detail_pembelian_button = document.getElementById(
   "update_detail_pembelian_button"
 );
 update_detail_pembelian_button.addEventListener("click", function () {
-  add_field("update", "update_produk_id", "update_satuan_id");
+  add_field("create", "update_produk_id", "update_satuan_id");
 });
 
 const update_biaya_tambahan_button = document.getElementById(
   "update_biaya_tambahan_button"
 );
 update_biaya_tambahan_button.addEventListener("click", function () {
-  add_biaya("update", "update_data_biaya_id");
+  add_biaya("create", "update_data_biaya_id");
 });
 
 const pickdatejs_po = $("#update_tanggal_po")
@@ -34,7 +34,7 @@ const pickdatejs_po = $("#update_tanggal_po")
   })
   .pickadate("picker");
 
-const pickdatejs_terima = $("#tanggal_terima")
+const pickdatejs_terima = $("#update_tanggal_terima")
   .pickadate({
     format: "dd mmm yyyy", // user sees: 01 Jan 2025
     formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
@@ -43,7 +43,7 @@ const pickdatejs_terima = $("#tanggal_terima")
   })
   .pickadate("picker");
 
-const pickdatejs_pengiriman = $("#tanggal_pengiriman")
+const pickdatejs_pengiriman = $("#update_tanggal_pengiriman")
   .pickadate({
     format: "dd mmm yyyy", // user sees: 01 Jan 2025
     formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
@@ -72,6 +72,8 @@ if (submit_invoice_button) {
         dropdownParent: $("#modal_invoice"),
       });
       $("#purchase_order").on("change", function () {
+        update_detail_pembelian_tbody.innerHTML = "";
+        update_biaya_tambahan_tbody.innerHTML = "";
         const selectedValue = $(this).val();
         populate_po(selectedValue);
       });
@@ -236,7 +238,7 @@ async function populate_po(purchase_order_id) {
         helper.format_nominal("diskon" + currentIndex);
         select_detail_pembelian(
           currentIndex,
-          "update",
+          "create",
           "produk_element_id",
           "satuan_element_id",
           current_produk_id,
@@ -305,7 +307,7 @@ async function populate_po(purchase_order_id) {
         helper.format_nominal("jumlah" + currentIndex);
         select_data_biaya(
           currentIndex,
-          "update",
+          "create",
           "data_biaya_element_id",
           current_data_biaya_id
         );
@@ -403,13 +405,13 @@ async function select_data_biaya(
     $(`#${data_biaya_id}${index}`).select2({
       placeholder: "Pilih Biaya",
       allowClear: true,
-      dropdownParent: $("#modal_pembelian"),
+      dropdownParent: $("#modal_invoice"),
     });
   } else if (action == "update") {
     $(`#${data_biaya_id}${index}`).select2({
       placeholder: "Pilih Biaya",
       allowClear: true,
-      dropdownParent: $("#update_modal_pembelian"),
+      dropdownParent: $("#update_modal_invoice"),
     });
   }
 
@@ -431,11 +433,11 @@ async function select_data_biaya(
           `${item.data_biaya_id} - ${item.nama}`,
           item.data_biaya_id,
           false,
-          false
+          item.data_biaya_id === current_data_biaya_id
         );
         select.append(option);
       });
-      select.trigger("change");
+      select.val(current_data_biaya_id).trigger("change");
     } else if (action == "update") {
       response.data.forEach((item) => {
         const option = new Option(
@@ -450,53 +452,6 @@ async function select_data_biaya(
     }
   } catch (error) {
     console.error("error:", error);
-  }
-}
-// Attach delete listeners
-async function handle_delete(button) {
-  const row = button.closest("tr");
-  const pembelian_id = row.cells[0].textContent;
-
-  const result = await Swal.fire({
-    title: "Apakah Anda Yakin?",
-    text: "Anda tidak dapat mengembalikannya!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Iya, Hapus!",
-    cancelButtonText: "Batalkan",
-  });
-  if (result.isConfirmed) {
-    try {
-      const response = await apiRequest(
-        `/PHP/API/pembelian_API.php?action=delete&user_id=${access.decryptItem(
-          "user_id"
-        )}`,
-        "DELETE",
-        { pembelian_id }
-      );
-      if (response.ok) {
-        row.remove();
-        Swal.fire(
-          "Berhasil",
-          response.message || "Pricelist dihapus.",
-          "success"
-        );
-      } else {
-        Swal.fire(
-          "Gagal",
-          response.error || "Gagal menghapus pembelian.",
-          "error"
-        );
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Gagal",
-        text: error.message,
-      });
-    }
   }
 }
 
@@ -543,23 +498,23 @@ async function select_detail_pembelian(
     $(`#${produk_element_id}${index}`).select2({
       placeholder: "Pilih produk",
       allowClear: true,
-      dropdownParent: $("#modal_pembelian"),
+      dropdownParent: $("#modal_invoice"),
     });
     $(`#${satuan_element_id}${index}`).select2({
       placeholder: "Pilih satuan",
       allowClear: true,
-      dropdownParent: $("#modal_pembelian"),
+      dropdownParent: $("#modal_invoice"),
     });
   } else if (action == "update") {
     $(`#${produk_element_id}${index}`).select2({
       placeholder: "Pilih produk",
       allowClear: true,
-      dropdownParent: $("#update_modal_pembelian"),
+      dropdownParent: $("#update_modal_invoice"),
     });
     $(`#${satuan_element_id}${index}`).select2({
       placeholder: "Pilih satuan",
       allowClear: true,
-      dropdownParent: $("#update_modal_pembelian"),
+      dropdownParent: $("#update_modal_invoice"),
     });
   }
 
@@ -591,22 +546,22 @@ async function select_detail_pembelian(
           `${produk.produk_id} - ${produk.nama}`,
           produk.produk_id,
           false,
-          false
+          produk.produk_id === current_produk_id
         );
         select_produk.append(option);
       });
-      select_produk.trigger("change");
+      select_produk.val(current_produk_id).trigger("change");
 
       response_satuan.data.forEach((satuan) => {
         const option = new Option(
           `${satuan.satuan_id} - ${satuan.nama}`,
           satuan.satuan_id,
           false,
-          false
+          satuan.satuan_id === current_satuan_id
         );
         select_satuan.append(option);
       });
-      select_satuan.trigger("change");
+      select_satuan.val(current_satuan_id).trigger("change");
     } else if (action == "update") {
       response_produk.data.forEach((produk) => {
         const option = new Option(
@@ -701,6 +656,11 @@ function add_field(action, produk_element_id, satuan_element_id) {
 }
 
 function populate_supplier(data, current_supplier_id) {
+  $(`#update_supplier_id`).select2({
+    allowClear: true,
+    dropdownParent: $("#modal_invoice"),
+  });
+
   const supplier_id_Field = $("#update_supplier_id");
   supplier_id_Field.empty();
   data.forEach((item) => {
@@ -751,33 +711,25 @@ function populateRoleDropdown(data) {
 }
 
 async function submitInvoice() {
-  let success_pembelian = false;
-  let success_purchase_order = false;
   const pembelian_id = document.getElementById("purchase_order").value;
   const picker_invoice = $("#tanggal_invoice").pickadate("picker");
   const tanggal_invoice = picker_invoice.get("select", "yyyy-mm-dd");
   const no_invoice = document.getElementById("no_invoice").value;
-  const body = {
-    user_id: `${access.decryptItem("user_id")}`,
-    pembelian_id: pembelian_id,
-    tanggal_invoice: tanggal_invoice,
-    no_invoice: no_invoice,
-    status: "invoice",
-  };
-  try {
-    const response = await apiRequest(
-      `/PHP/API/invoice_API.php?action=create`,
-      "POST",
-      body
-    );
-    if (response.ok) {
-      success_pembelian = true;
-    }
-  } catch (error) {
-    toastr.error(error.message);
-  }
+
   const picker_po = $("#update_tanggal_po").pickadate("picker");
   const tanggal_po = picker_po.get("select", "yyyy-mm-dd");
+
+  const picker_pengiriman = $("#update_tanggal_pengiriman").pickadate("picker");
+  const tanggal_pengiriman = picker_pengiriman.get("select", "yyyy-mm-dd");
+  const no_pengiriman = document.getElementById("update_no_pengiriman").value;
+
+  const picker_terima = $("#update_tanggal_terima").pickadate("picker");
+  const tanggal_terima = picker_terima.get("select", "yyyy-mm-dd");
+
+  console.log(tanggal_po);
+  console.log(tanggal_pengiriman);
+  console.log(tanggal_terima);
+
   const supplier_id = document.getElementById("update_supplier_id").value;
   const keterangan = document.getElementById("update_keterangan").value;
   let diskon = document.getElementById("update_diskon").value;
@@ -859,11 +811,20 @@ async function submitInvoice() {
     });
   }
 
-  const data_pembelian = {
+  const body = {
+    user_id: `${access.decryptItem("user_id")}`,
+    pembelian_id: pembelian_id,
+    tanggal_invoice: tanggal_invoice,
+    no_invoice: no_invoice,
+    status: "invoice",
     user_id: `${access.decryptItem("user_id")}`,
     created_by: `${access.decryptItem("nama")}`,
     pembelian_id: pembelian_id,
     tanggal_po: tanggal_po,
+    tanggal_pengiriman: tanggal_pengiriman,
+    no_pengiriman: no_pengiriman,
+    tanggal_terima: tanggal_terima,
+
     supplier_id: supplier_id,
     keterangan: keterangan,
     ppn: ppn,
@@ -875,32 +836,19 @@ async function submitInvoice() {
   };
   try {
     const response = await apiRequest(
-      `/PHP/API/pembelian_API.php?action=update&user_id=${access.decryptItem(
-        "user_id"
-      )}`,
+      `/PHP/API/invoice_API.php?action=create`,
       "POST",
-      data_pembelian
+      body
     );
-
     if (response.ok) {
-      success_purchase_order = true;
-    } else {
-      Swal.fire("Gagal", response.message || "Update gagal.", "error");
+      swal.fire("Berhasil", "success", "success");
+      $("#modal_invoice").modal("hide");
+      window.pembelian_grid.forceRender();
+      setTimeout(() => {
+        helper.custom_grid_header("pembelian");
+      }, 200);
     }
   } catch (error) {
-    Swal.fire({
-      icon: "error",
-      title: "Gagal",
-      text: error.message,
-    });
-  }
-
-  if (success_pembelian && success_purchase_order) {
-    swal.fire("Berhasil", "success", "success");
-    $("#modal_invoice").modal("hide");
-    window.pembelian_grid.forceRender();
-    setTimeout(() => {
-      helper.custom_grid_header("pembelian");
-    }, 200);
+    toastr.error(error.message);
   }
 }

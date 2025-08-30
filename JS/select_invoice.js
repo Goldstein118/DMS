@@ -8,7 +8,7 @@ const grid_container_invoice = document.querySelector("#table_invoice");
 if (grid_container_invoice) {
   window.invoice_grid = new Grid({
     columns: [
-      "Kode Invoice",
+      "Kode Pembelian",
       "Tanggal Invoice",
       "Status",
       {

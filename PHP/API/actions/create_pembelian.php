@@ -27,7 +27,7 @@ try {
     validate_2($diskon_invoice_unformat, '/^\d+$/', "Format diskon invoice unformat tidak valid");
     validate_2($nominal_pph_unformat, '/^\d+$/', "Format nominal pph unformat tidak valid");
     // Generate ID
-    $pembelian_id = generateCustomID('PE', 'tb_pembelian', 'pembelian_id', $conn);
+    $pembelian_id = generateCustomID('PO', 'tb_pembelian', 'pembelian_id', $conn);
 
     // Insert main purchase
     executeInsert(

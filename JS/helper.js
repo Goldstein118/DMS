@@ -32,6 +32,10 @@ export function custom_grid_header(
     btn.innerHTML = `<i class="bi bi-person-plus-fill"></i> ${field}`;
   } else if (field === "data_biaya") {
     btn.innerHTML = `<i class="bi bi-plus-circle"></i> data biaya`;
+  } else if (field === "pembelian") {
+    btn.innerHTML = `<i class="bi bi-plus-circle"></i> purchase order`;
+  } else if (field === "invoice") {
+    btn.innerHTML = `<i class="bi bi-plus-circle"></i> pembelian`;
   } else {
     if (field != "frezzer") {
       btn.innerHTML = `<i class="bi bi-plus-circle"></i> ${field}`;
@@ -63,6 +67,10 @@ export function custom_grid_header(
   if (input) {
     if (field === "data_biaya") {
       input.placeholder = `Cari data biaya...`;
+    } else if (field === "pembelian") {
+      input.placeholder = `Cari purchase order...`;
+    } else if (field === "invoice") {
+      input.placeholder = `Cari pembelian...`;
     } else {
       input.placeholder = `Cari ${field}...`;
     }
@@ -98,7 +106,6 @@ export function custom_grid_header(
 
       const pengiriman = event.target.closest(`.tanggal_pengiriman`);
       const terima = event.target.closest(`.tanggal_terima`);
-      const invoice = event.target.closest(`.tanggal_invoice`);
 
       if (delete_btn && typeof handle_delete === "function") {
         handle_delete(delete_btn);
@@ -110,8 +117,6 @@ export function custom_grid_header(
         handle_pengiriman(pengiriman);
       } else if (terima && typeof handle_terima === "function") {
         handle_terima(terima);
-      } else if (invoice && typeof handle_invoice === "function") {
-        handle_invoice(invoice);
       }
     };
 

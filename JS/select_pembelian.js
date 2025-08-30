@@ -61,15 +61,6 @@ const pickdatejs_pengiriman = $("#tanggal_pengiriman")
   })
   .pickadate("picker");
 
-const pickdatejs_invoice = $("#tanggal_invoice")
-  .pickadate({
-    format: "dd mmm yyyy", // user sees: 01 Jan 2025
-    formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
-    selectYears: 25,
-    selectMonths: true,
-  })
-  .pickadate("picker");
-
 if (grid_container_pembelian) {
   $(document).ready(function () {
     $("#update_supplier_id").select2({
@@ -80,22 +71,22 @@ if (grid_container_pembelian) {
   window.pembelian_grid = new Grid({
     columns: [
       "Kode Pembelian",
-      "tanggal_po",
+      "Tanggal PO",
       "supplier_id",
-      "supplier",
-      "tanggal_pengiriman",
-      "no_pengiriman",
-      "tanggal_terima",
-      "total_qty",
-      "ppn",
-      "nominal_ppn",
-      "nominal_pph",
-      "diskon",
-      "keterangan",
-      "biaya_tambahan",
-      "grand_total",
-      "created_on",
-      "created_by",
+      "Supplier",
+      "Tanggal Tengiriman",
+      "No Pengiriman",
+      "Tanggal Terima",
+      "Total Qty",
+      "Ppn",
+      "Nominal PPN",
+      "Nominal PPH",
+      "Diskon",
+      "Keterangan",
+      "Biaya Tambahan",
+      "Grand Total",
+      "Created On",
+      "Created By",
       "Status",
       {
         name: "Aksi",
@@ -199,7 +190,7 @@ if (grid_container_pembelian) {
           pembelian.no_pengiriman,
           html(
             `${
-              pembelian.tanggal_pengiriman && !pembelian.tanggal_invoice
+              pembelian.tanggal_pengiriman && !pembelian.tanggal_terima
                 ? `${helper.format_date(pembelian.tanggal_terima)}
                 <button
                 type="button"

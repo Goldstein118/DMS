@@ -192,7 +192,7 @@ if (isset($data['table']) && $data['table'] === 'detail_pembelian' && isset($dat
         echo json_encode(["error" => "No details found for this pembelian id"]);
     }
 } else {
-    $sql = "SELECT p.pembelian_id,p.tanggal_po,p.tanggal_pengiriman,p.tanggal_terima,p.tanggal_invoice,p.supplier_id,p.keterangan,p.no_invoice_supplier,
+    $sql = "SELECT p.pembelian_id,p.tanggal_po,p.tanggal_pengiriman,p.tanggal_terima,p.supplier_id,p.keterangan,
     p.no_pengiriman,p.total_qty,p.ppn,p.nominal_ppn,p.diskon,p.nominal_pph,p.biaya_tambahan,p.grand_total,p.created_on,p.created_by,p.status,s.nama AS supplier_nama
      FROM tb_pembelian p LEFT JOIN tb_supplier s ON p.supplier_id=s.supplier_id";
     $result = $conn->query($sql);

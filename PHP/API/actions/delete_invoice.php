@@ -9,6 +9,14 @@ try {
     }
     $invoice_id = trim($data['invoice_id']);
 
+    $stmt_biaya_tambahan = $conn->prepare("DELETE FROM tb_biaya_tambahan_invoice WHERE invoice_id=?");
+    $stmt_biaya_tambahan->bind_param("s", $invoice_id);
+    $execute_biaya_tambahan = $stmt_biaya_tambahan->execute();
+
+    $stmt_detail = $conn->prepare("DELETE FROM tb_detail_invoice WHERE invoice_id=?");
+    $stmt_detail->bind_param("s", $invoice_id);
+    $execute_detail = $stmt_detail->execute();
+
     $stmt = $conn->prepare("DELETE FROM tb_invoice WHERE invoice_id = ?");
     $stmt->bind_param("s", $invoice_id);
     $execute = $stmt->execute();

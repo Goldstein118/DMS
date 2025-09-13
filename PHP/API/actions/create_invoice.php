@@ -11,6 +11,8 @@
         $no_invoice = $data['no_invoice'];
         $status = $data['status'];
         $invoice_id = generateCustomID('IN', 'tb_invoice', 'invoice_id', $conn);
+        $invoice_history_id = generateCustomID('IH', 'tb_invoice_history', 'invoice_history_id', $conn);
+
         $tanggal_input_invoice = date("Y-m-d");
         $tanggal_po = $fields['tanggal_po'];
         $supplier_id = $fields['supplier_id'];
@@ -21,10 +23,11 @@
         $status = $fields['status'];
         $created_by = $fields['created_by'];
         $no_pengiriman = $fields['no_pengiriman'];
-
+        $tipe_detail_invoice_history = "A";
+        $tipe_biaya_tambahan_invoice = "A";
         $tanggal_terima = $fields['tanggal_terima'];
         $tanggal_pengiriman = $fields['tanggal_pengiriman'];
-
+        $created_status = "new";
         $ppn_unformat = toFloat($ppn);
         $diskon_invoice_unformat = toFloat($diskon_invoice);
         $nominal_pph_unformat = toFloat($nominal_pph);
@@ -35,7 +38,7 @@
 
 
 
-        executeInsert($conn, "INSERT INTO tb_invoice(invoice_id,tanggal_invoice,no_invoice_supplier,tanggal_input_invoice,pembelian_id, tanggal_po, supplier_id, keterangan, ppn,diskon, nominal_pph, status, created_by,no_pengiriman,tanggal_terima,tanggal_pengiriman) VALUES (?,?,?,?,?,?, ?, ?, ?, ?, ?, ?,?,?,?,?)", [
+        executeInsert($conn, "INSERT INTO tb_invoice(invoice_id,tanggal_invoice,no_invoice_supplier,tanggal_input_invoice,pembelian_id, tanggal_po, supplier_id, keterangan, ppn,diskon, nominal_pph, status, created_by,no_pengiriman,tanggal_terima,tanggal_pengiriman) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [
             $invoice_id,
             $tanggal_invoice,
             $no_invoice,
@@ -59,6 +62,31 @@
         $stmt->execute();
         $stmt->close();
 
+        executeInsert(
+            $conn,
+            "INSERT INTO tb_invoice_history(invoice_id,invoice_history_id,tanggal_invoice_after,no_invoice_supplier_after,tanggal_input_invoice_after,pembelian_id_after, tanggal_po_after, supplier_id_after, keterangan_after, ppn_after,diskon_after, nominal_pph_after, status_after, created_by_after,no_pengiriman_after,tanggal_terima_after,tanggal_pengiriman_after,created_status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            [
+                $invoice_id,
+                $invoice_history_id,
+                $tanggal_invoice,
+                $no_invoice,
+                $tanggal_input_invoice,
+                $pembelian_id,
+                $tanggal_po,
+                $supplier_id,
+                $keterangan,
+                $ppn_unformat,
+                $diskon_invoice_unformat,
+                $nominal_pph_unformat,
+                $status,
+                $created_by,
+                $no_pengiriman,
+                $tanggal_terima,
+                $tanggal_pengiriman,
+                $created_status
+            ],
+            "sssssssssdddssssss"
+        );
 
 
         $total_qty = 0;
@@ -89,6 +117,8 @@
                 $total_harga += $qty_unformat * ($harga_unformat - $diskon_unformat);
 
                 $detail_pembelian_id = generateCustomID('DPI', 'tb_detail_invoice', 'detail_invoice_id', $conn);
+                $detail_invoice_history_id = generateCustomID('DIH', 'tb_detail_invoice_history', 'detail_invoice_history_id', $conn);
+
                 executeInsert(
                     $conn,
                     "INSERT INTO tb_detail_invoice (detail_invoice_id, pembelian_id, produk_id, qty, harga, diskon, satuan_id,urutan,invoice_id)
@@ -106,6 +136,27 @@
                     ],
                     "sssdddsds"
                 );
+
+
+                executeInsert(
+                    $conn,
+                    "INSERT INTO tb_detail_invoice_history (detail_invoice_history_id, pembelian_id, produk_id, qty, harga, diskon, satuan_id,urutan,invoice_id,tipe_detail_invoice_history)
+                VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?)",
+                    [
+                        $detail_invoice_history_id,
+                        $pembelian_id,
+                        $produk_id,
+                        $qty_unformat,
+                        $harga_unformat,
+                        $diskon_unformat,
+                        $satuan_id,
+                        $urutan_detail,
+                        $invoice_id,
+                        $tipe_detail_invoice_history
+                    ],
+                    "sssdddsdss"
+                );
+
                 $urutan_detail += 1;
             }
         }
@@ -128,6 +179,7 @@
                 $total_biaya_tambahan += $jumlah_unformat;
 
                 $biaya_tambahan_id = generateCustomID('DBT', 'tb_biaya_tambahan_invoice', 'biaya_tambahan_invoice_id', $conn);
+                $biaya_tambahan_invoice_history_id = generateCustomID('BIH', 'tb_biaya_tambahan_invoice_history', 'biaya_tambahan_invoice_history_id', $conn);
                 executeInsert(
                     $conn,
                     "INSERT INTO tb_biaya_tambahan_invoice (biaya_tambahan_invoice_id, pembelian_id, data_biaya_id, jlh, keterangan,urutan,invoice_id)
@@ -143,6 +195,25 @@
                     ],
                     "sssdsds"
                 );
+
+
+                executeInsert(
+                    $conn,
+                    "INSERT INTO tb_biaya_tambahan_invoice_history (biaya_tambahan_invoice_history_id, pembelian_id, data_biaya_id, jlh, keterangan,urutan,invoice_id,tipe_biaya_tambahan_invoice)
+                VALUES (?, ?, ?, ?, ?,?,?,?)",
+                    [
+                        $biaya_tambahan_invoice_history_id,
+                        $pembelian_id,
+                        $data_biaya_id,
+                        $jumlah_unformat,
+                        $keterangan_biaya,
+                        $urutan_biaya_tambahan,
+                        $invoice_id,
+                        $tipe_biaya_tambahan_invoice
+                    ],
+                    "sssdsdss"
+                );
+
                 $urutan_biaya_tambahan += 1;
             }
         }
@@ -159,6 +230,14 @@
         $stmt->bind_param("ddddds", $total_qty, $grand_total, $nominal_ppn, $total_biaya_tambahan, $sub_total, $pembelian_id);
         $stmt->execute();
         $stmt->close();
+
+
+        $stmt_history = $conn->prepare("UPDATE tb_invoice_history
+                            SET total_qty_after = ?, grand_total_after = ?, nominal_ppn_after = ?,biaya_tambahan_after= ?,sub_total_after=?
+                            WHERE pembelian_id_after = ?");
+        $stmt_history->bind_param("ddddds", $total_qty, $grand_total, $nominal_ppn, $total_biaya_tambahan, $sub_total, $pembelian_id);
+        $stmt_history->execute();
+        $stmt_history->close();
         http_response_code(200);
         echo json_encode([
             "success" => true,

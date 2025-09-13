@@ -157,7 +157,8 @@ function handle_view(button) {
   const produk_id = row.cells[0].textContent.trim();
   window.open(
     `../PHP/view_produk.php?produk_id=${encodeURIComponent(produk_id)}`,
-    "_blank"
+    "_blank",
+    "toolbar=0,location=0,menubar=0"
   );
 }
 async function handle_delete(button) {

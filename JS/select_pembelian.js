@@ -70,7 +70,7 @@ if (grid_container_pembelian) {
   });
   window.pembelian_grid = new Grid({
     columns: [
-      "Kode Pembelian",
+      "No Purchase Order",
       "Tanggal PO",
       "supplier_id",
       "Supplier",
@@ -90,7 +90,8 @@ if (grid_container_pembelian) {
       "Status",
       {
         name: "Aksi",
-        formatter: () => {
+        formatter: (cell, row) => {
+          const status = row.cells[17].data;
           let edit;
           let can_delete;
           if (access.isOwner()) {
@@ -105,7 +106,12 @@ if (grid_container_pembelian) {
           }
           let button = "";
 
-          if (edit) {
+          if (
+            edit &&
+            status != "terima" &&
+            status != "invoice" &&
+            status != "cancel"
+          ) {
             button += `<button
                 type="button"
                 id="update_pembelian_button"
@@ -123,18 +129,21 @@ if (grid_container_pembelian) {
                 ></span>
               </button>`;
           }
-          if (can_delete) {
+          if (can_delete && status != "cancel") {
             button += `
         <button type="button" class="btn btn-danger delete_pembelian btn-sm">
-          <i class="bi bi-trash-fill"></i>
+         <i class="bi bi-x-circle"></i>
         </button>
         `;
           }
-          button += `
+          if (status != "cancel") {
+            button += `
         <button type="button" class="btn btn btn-info view_pembelian btn-sm" >
           <i class="bi bi-eye"></i>
         </button>
         `;
+          }
+
           return html(button);
         },
       },
@@ -175,7 +184,9 @@ if (grid_container_pembelian) {
           html(`
             
             ${
-              pembelian.tanggal_po && !pembelian.tanggal_terima
+              pembelian.tanggal_po &&
+              !pembelian.tanggal_terima &&
+              pembelian.status != "cancel"
                 ? `${helper.format_date(pembelian.tanggal_pengiriman)} 
                 <button
                 type="button"
@@ -190,7 +201,9 @@ if (grid_container_pembelian) {
           pembelian.no_pengiriman,
           html(
             `${
-              pembelian.tanggal_pengiriman && !pembelian.tanggal_terima
+              pembelian.tanggal_pengiriman &&
+              !pembelian.tanggal_terima &&
+              pembelian.status != "cancel"
                 ? `${helper.format_date(pembelian.tanggal_terima)}
                 <button
                 type="button"
@@ -213,9 +226,7 @@ if (grid_container_pembelian) {
           helper.format_angka(pembelian.grand_total),
           helper.format_date_time(pembelian.created_on),
           pembelian.created_by,
-          html(`
-          ${pembelian.status}
-          `),
+          pembelian.status,
           null,
         ]),
     },
@@ -274,6 +285,7 @@ function handle_terima(button) {
     window.currentRow = row;
     const pembelian_id = row.cells[0].textContent;
     document.getElementById("terima_pembelian_id").value = pembelian_id;
+    console.log(pembelian_id);
     const result = await apiRequest(
       `/PHP/API/pembelian_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
@@ -307,18 +319,41 @@ async function submit_terima() {
     status: "terima",
   };
   try {
-    const response = await apiRequest(
-      `/PHP/API/pembelian_API.php?action=update`,
-      "POST",
-      body
-    );
-    if (response.ok) {
-      swal.fire("Berhasil", response.message, "success");
-      $("#modal_terima").modal("hide");
-      window.pembelian_grid.forceRender();
-      setTimeout(() => {
-        helper.custom_grid_header("pembelian");
-      }, 200);
+    const result = await Swal.fire({
+      title: "Apakah Anda Yakin?",
+      text: "Setelah submit tidak bisa diganti lagi!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Iya, Submit!",
+      cancelButtonText: "Batalkan",
+    });
+    if (result.isConfirmed) {
+      try {
+        const response = await apiRequest(
+          `/PHP/API/pembelian_API.php?action=update`,
+          "POST",
+          body
+        );
+
+        if (response.ok) {
+          swal.fire("Berhasil", response.message, "success");
+          $("#modal_terima").modal("hide");
+          window.pembelian_grid.forceRender();
+          setTimeout(() => {
+            helper.custom_grid_header("pembelian");
+          }, 200);
+        } else {
+          Swal.fire("Gagal", response.error || "Gagal.", "error");
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: error.message,
+        });
+      }
     }
   } catch (error) {
     toastr.error(error.message);
@@ -364,7 +399,8 @@ function handle_view(button) {
     `../PHP/view_pembelian.php?pembelian_id=${encodeURIComponent(
       pembelian_id
     )}`,
-    "_blank"
+    "_blank",
+    "toolbar=0,location=0,menubar=0"
   );
 }
 function add_biaya(action, data_biaya_element_id) {
@@ -502,49 +538,61 @@ async function select_data_biaya(
 }
 // Attach delete listeners
 async function handle_delete(button) {
+  $("#modal_cancel").modal("show");
   const row = button.closest("tr");
   const pembelian_id = row.cells[0].textContent;
 
-  const result = await Swal.fire({
-    title: "Apakah Anda Yakin?",
-    text: "Anda tidak dapat mengembalikannya!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Iya, Hapus!",
-    cancelButtonText: "Batalkan",
-  });
-  if (result.isConfirmed) {
-    try {
-      const response = await apiRequest(
-        `/PHP/API/pembelian_API.php?action=delete&user_id=${access.decryptItem(
-          "user_id"
-        )}`,
-        "DELETE",
-        { pembelian_id }
-      );
-      if (response.ok) {
-        row.remove();
-        Swal.fire(
-          "Berhasil",
-          response.message || "Pricelist dihapus.",
-          "success"
-        );
-      } else {
-        Swal.fire(
-          "Gagal",
-          response.error || "Gagal menghapus pembelian.",
-          "error"
-        );
+  const submit_cancel = document.getElementById("submit_cancel_button");
+  if (submit_cancel) {
+    submit_cancel.addEventListener("click", async function () {
+      const keterangan_cancel =
+        document.getElementById("keterangan_cancel").value;
+      if (!keterangan_cancel || keterangan_cancel.trim() === "") {
+        toastr.error("Keterangan Cancel harus diisi.");
+        return;
       }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Gagal",
-        text: error.message,
+      const result = await Swal.fire({
+        title: "Cancel Purchase Order?",
+        text: "Setelah submit tidak bisa diganti lagi!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Iya, Cancel!",
+        cancelButtonText: "Batalkan",
       });
-    }
+      if (result.isConfirmed) {
+        try {
+          const response = await apiRequest(
+            `/PHP/API/pembelian_API.php?action=delete&user_id=${access.decryptItem(
+              "user_id"
+            )}`,
+            "DELETE",
+            {
+              pembelian_id: pembelian_id,
+              keterangan_cancel: keterangan_cancel,
+              status: "cancel",
+              cancel_by: `${access.decryptItem("nama")}`,
+            }
+          );
+          if (response.ok) {
+            Swal.fire(
+              "Berhasil",
+              response.message || "Purchase Order dicancel.",
+              "success"
+            );
+          } else {
+            Swal.fire("Gagal", response.error || "Gagal.", "error");
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: error.message,
+          });
+        }
+      }
+    });
   }
 }
 
@@ -1093,7 +1141,12 @@ if (submit_pembelian_update) {
 
         window.pembelian_grid.forceRender();
         setTimeout(() => {
-          helper.custom_grid_header("pembelian", handle_delete, handle_update);
+          helper.custom_grid_header(
+            "pembelian",
+            handle_delete,
+            handle_update,
+            handle_view
+          );
         }, 200);
       } else {
         Swal.fire("Gagal", response.message || "Update gagal.", "error");

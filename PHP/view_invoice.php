@@ -9,7 +9,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
 <head>
     <meta charset="UTF-8" />
-    <title>Purchase Order</title>
+    <title>Pembelian</title>
 
     <!-- jQuery -->
     <script src="<?php echo $_ENV['VENDOR_BASE_URL'] ?>/jquery-3.6.0.min.js"></script>
@@ -111,7 +111,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
 
         <div class="text-center">
-            <h1 style="display: block">Purchase Order</h1>
+            <h1 style="display: block">Pembelian</h1>
             <span class="text-muted" id="view_pembelian_id" style="display:inline-block"></span>
             <!-- <span class="text-muted">/</span>
             <span class="text-muted" id="nama_pembelian" style="display:inline-block"></span> -->
@@ -150,7 +150,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
             id="detail_pembelian">
             <thead id="view_detail_pembelian_thead">
                 <tr>
-                    <th colspan="6" style="text-align: center;">Purchase Order</th>
+                    <th colspan="6" style="text-align: center;">Pembelian</th>
                 </tr>
                 <tr>
                     <th scope="col" style="max-width: 9px; text-align:center">No</th>
@@ -203,7 +203,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
 
             <div class="text-center">
-                <h1 style="display: block">Purchase Order</h1>
+                <h1 style="display: block">Pembelian</h1>
                 <span class="text-muted" id="biaya_view_pembelian_id" style="display:inline-block"></span>
                 <!-- <span class="text-muted">/</span>
             <span class="text-muted" id="nama_pembelian" style="display:inline-block"></span> -->
@@ -257,7 +257,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
     </main>
     <?php
     ?>
-    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/view_pembelian.js?v=2.1"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/view_invoice.js"></script>
 
     <?php
     ?>

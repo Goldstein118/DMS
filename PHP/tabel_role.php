@@ -742,6 +742,196 @@
                       <hr />
                     </div>
 
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Satuan</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_satuan" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_satuan" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_satuan" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_satuan" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_satuan" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Pembelian</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_pembelian" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_pembelian" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_pembelian" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_pembelian" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_pembelian" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data biaya</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_data_biaya" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_data_biaya" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_data_biaya" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_data_biaya" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_data_biaya" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data invoice</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_invoice" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_invoice" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_invoice" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_invoice" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_invoice" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+
                   </div>
                 </div>
               </div>
@@ -1513,6 +1703,196 @@
                       </div>
                       <hr />
                     </div>
+
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Satuan</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_satuan_update" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_satuan_update" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_satuan_update" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_satuan_update" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_satuan_update" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data Pembelian</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_pembelian_update" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_pembelian_update" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_pembelian_update" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_pembelian_update" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_pembelian_update" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data biaya</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_data_biaya_update" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_data_biaya_update" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_data_biaya_update" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_data_biaya_update" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_data_biaya_update" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
+                    <div class="permission-group">
+                      <p class="label-check-box">Data invoice</p>
+
+                      <div class="permission-row">
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="checkbox"
+                            id="check_all_invoice_update" />
+                          Select All
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_view_invoice_update" />
+                          View
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_create_invoice_update" />
+                          Create
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_edit_invoice_update" />
+                          Edit
+                        </label>
+
+                        <label class="form-check form-check-inline">
+                          <input
+                            class="form-check-input perm-checkbox"
+                            type="checkbox"
+                            id="check_delete_invoice_update" />
+                          Delete
+                        </label>
+                      </div>
+                      <hr />
+                    </div>
+
 
                   </div>
                 </div>

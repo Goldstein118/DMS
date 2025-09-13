@@ -2,7 +2,7 @@
 
 <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="mobileSidebar" style="width: 200px;">
   <div class="offcanvas-header">
-    <img src="../images/8.jpg" class="img-fluid d-block mx-auto my-3" style="max-height: 60px;" alt="DMS"><br>
+    <img src="../images/logo_joyday.png" class="img-fluid d-block mx-auto my-3" style="max-height: 40px;" alt="DMS"><br>
     <div><span id="welcomeText" class="fw-bold">Selamat Datang,</span><br>
       <span id="username_mobile" class="text-muted small"></span>
     </div>
@@ -157,7 +157,7 @@
 
 <div class="sidebar col-lg-2 d-none d-lg-block bg-white p-2 d-flex flex-column ">
   <div class="d-flex align-items-center justify-content-center mb-3 border-bottom py-2 flex-column text-center">
-    <img src="../images/8.jpg" alt="DMS" class="img-fluid d-block mb-2" style="max-height: 60px;">
+    <img src="../images/logo_joyday.png" alt="DMS" class="img-fluid d-block mb-4" style="max-height: 50px;">
     <span id="welcomeText" class="fw-bold">Selamat Datang,</span>
     <span id="username" class="text-muted small"></span>
   </div>

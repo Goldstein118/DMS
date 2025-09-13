@@ -52,23 +52,23 @@ switch ($action) {
             }
         } else {
             // No context info, fall back to normal access check
-            checkAccess($conn, $user_id, 'tb_invoice', 76); // View access
+            checkAccess($conn, $user_id, 'tb_invoice', 72); // View access
         }
         require __DIR__ . '/actions/select_invoice.php';
         break;
 
     case 'create':
-        checkAccess($conn, $user_id, 'tb_invoice', 77); // Create access
+        checkAccess($conn, $user_id, 'tb_invoice', 73); // Create access
         require  __DIR__ . '/actions/create_invoice.php';
         break;
 
     case 'update':
-        checkAccess($conn, $user_id, 'tb_invoice', 78); // Edit access
+        checkAccess($conn, $user_id, 'tb_invoice', 74); // Edit access
         require  __DIR__ . '/actions/update_invoice.php';
         break;
 
     case 'delete':
-        checkAccess($conn, $user_id, 'tb_invoice', 79); // Delete access
+        checkAccess($conn, $user_id, 'tb_invoice', 75); // Delete access
         require  __DIR__ . '/actions/delete_invoice.php';
         break;
 

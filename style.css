@@ -284,10 +284,6 @@ body::-webkit-scrollbar {
   text-align: center;
 }
 
-#aksi_thead,
-#aksi_tbody {
-  width: 50px;
-}
 .ms-auto {
   margin-right: auto !important;
 }
@@ -395,11 +391,13 @@ h3 {
   padding: 0px;
 }
 #create_detail_pricelist,
-#create_biaya_tambahan,
 #update_detail_pricelist_button,
-#create_detail_pembelian,
 #update_detail_pembelian_button,
-#update_biaya_tambahan_button {
+#update_biaya_tambahan_button,
+#create_detail_pembelian_button,
+#detail_pembelian_button,
+#biaya_tambahan_button,
+#create_biaya_tambahan_button {
   max-width: fit-content !important;
 }
 .view_modal_pricelist {
@@ -418,14 +416,17 @@ h3 {
   float: right;
 }
 #detail_pricelist,
-#biaya_tambahan #jenis_promo_kondisi,
+#biaya_tambahan,
+#jenis_promo_kondisi,
 #table_bonus_barang,
 #update_jenis_promo_kondisi,
 #update_table_bonus_barang,
 #update_detail_pricelist,
 #detail_pembelian,
-#update_detail_pembelian,
-#update_biaya_tambahan {
+#update_biaya_tambahan,
+#create_detail_pembelian,
+#create_biaya_tambahan,
+#update_detail_pembelian_table {
   border-collapse: collapse;
   width: 100%;
   table-layout: fixed;
@@ -440,14 +441,15 @@ h3 {
 #update_table_bonus_barang thead,
 #update_detail_pricelist thead,
 #detail_pembelian thead,
-#update_detail_pembelian thead,
-#update_biaya_tambahan thead {
+#update_detail_pembelian_table thead,
+#update_biaya_tambahan thead,
+#create_detail_pembelian thead,
+#create_biaya_tambahan thead {
   display: table;
   width: 100%;
   table-layout: fixed;
   overflow-x: auto;
   overflow-y: hidden !important;
-
   vertical-align: middle;
 }
 
@@ -459,8 +461,10 @@ h3 {
 #update_table_bonus_barang tbody,
 #update_detail_pricelist tbody,
 #detail_pembelian tbody,
-#update_detail_pembelian tbody,
-#update_biaya_tambahan tbody {
+#update_detail_pembelian_table tbody,
+#update_biaya_tambahan tbody,
+#create_detail_pembelian tbody,
+#create_biaya_tambahan tbody {
   display: block;
   max-height: 200px;
   overflow-y: scroll;
@@ -481,8 +485,10 @@ h3 {
 #update_table_bonus_barang tbody tr,
 #update_detail_pricelist tbody tr,
 #detail_pembelian tbody tr,
-#update_detail_pembelian tbody tr,
-#update_biaya_tambahan tbody tr {
+#update_detail_pembelian_table tbody tr,
+#update_biaya_tambahan tbody tr,
+#create_detail_pembelian tbody tr,
+#create_biaya_tambahan tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
@@ -561,6 +567,21 @@ h3 {
   overflow-y: hidden !important;
   width: 100%;
 }
+#detail_pembelian th:nth-child(6),
+#detail_pembelian td:nth-child(6),
+#biaya_tambahan th:nth-child(4),
+#biaya_tambahan td:nth-child(4),
+#update_detail_pembelian_table td:nth-child(6),
+#update_detail_pembelian_table th:nth-child(6),
+#update_biaya_tambahan th:nth-child(4),
+#update_biaya_tambahan td:nth-child(4),
+#create_detail_pembelian td:nth-child(6),
+#create_detail_pembelian th:nth-child(6),
+#create_biaya_tambahan th:nth-child(4),
+#create_biaya_tambahan td:nth-child(4) {
+  width: 5%;
+}
+
 @font-face {
   font-family: "Roboto";
   src: url("/DMS/Vendor/fonts/Roboto/static/Roboto-Regular.ttf") format("woff2"),

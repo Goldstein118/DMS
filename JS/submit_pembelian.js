@@ -4,9 +4,11 @@ import * as helper from "./helper.js";
 let index = 0;
 const submit_pembelian = document.getElementById("submit_pembelian");
 const submit_detail_pembelian = document.getElementById(
-  "create_detail_pembelian"
+  "create_detail_pembelian_button"
 );
-const create_biaya_tambahan = document.getElementById("create_biaya_tambahan");
+const create_biaya_tambahan = document.getElementById(
+  "create_biaya_tambahan_button"
+);
 create_biaya_tambahan.addEventListener("click", function () {
   add_biaya("create", "data_biaya_id");
 });

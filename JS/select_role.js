@@ -165,6 +165,10 @@ async function handle_update(button) {
     "armada",
     "frezzer",
     "promo",
+    "satuan",
+    "pembelian",
+    "data_biaya",
+    "invoice",
   ];
 
   document.getElementById("update_role_ID").value = role_ID;

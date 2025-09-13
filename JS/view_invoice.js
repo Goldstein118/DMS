@@ -1,13 +1,13 @@
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 import * as helper from "./helper.js";
-async function populate_table_detail(pembelian_id) {
+async function populate_table_detail(invoice_id) {
   const result = await apiRequest(
-    `/PHP/API/pembelian_API.php?action=select&user_id=${access.decryptItem(
+    `/PHP/API/invoice_API.php?action=select&user_id=${access.decryptItem(
       "user_id"
     )}`,
     "POST",
-    { pembelian_id: pembelian_id, table: "view_detail_pembelian" }
+    { invoice_id: invoice_id, table: "detail_invoice" }
   );
   const tableBody = document.getElementById("view_detail_pembelian_tbody");
 
@@ -28,6 +28,7 @@ async function populate_table_detail(pembelian_id) {
         "biaya_view_pembelian_id"
       );
       biaya_view_pembelian_id.textContent = detail.pembelian_id;
+
       //   const td_status = document.getElementById("view_status");
       //   td_status.textContent = detail.status;
 
@@ -104,13 +105,13 @@ const biaya_tanggal_pengiriman = document.getElementById(
 );
 const biaya_tanggal_invoice = document.getElementById("biaya_tanggal_invoice");
 
-async function populate_tanggal(pembelian_id) {
+async function populate_tanggal(invoice_id) {
   const result = await apiRequest(
-    `/PHP/API/pembelian_API.php?action=select&user_id=${access.decryptItem(
+    `/PHP/API/invoice_API.php?action=select&user_id=${access.decryptItem(
       "user_id"
     )}`,
     "POST",
-    { pembelian_id: pembelian_id }
+    { invoice_id: invoice_id, table: "invoice" }
   );
   result.data.forEach((detail) => {
     detail.tanggal_po
@@ -154,16 +155,50 @@ async function populate_tanggal(pembelian_id) {
       ? (biaya_tanggal_invoice.textContent =
           "Tanggal Invoice: " + helper.format_date(detail.tanggal_invoice))
       : (biaya_tanggal_invoice.textContent = "");
+
+    document.getElementById("nama_supplier").textContent =
+      "Nama supplier : " + detail.supplier_nama;
+    document.getElementById("status_pembelian").textContent =
+      "Status : " + detail.status;
+
+    document.getElementById("td_keterangan").textContent =
+      "Keterangan : " + detail.keterangan;
+
+    document.getElementById("td_sub_total").textContent = helper.format_angka(
+      detail.sub_total
+    );
+    document.getElementById("td_diskon").textContent = helper.format_angka(
+      detail.diskon
+    );
+    document.getElementById("td_ppn").textContent = helper.format_persen(
+      detail.ppn
+    );
+
+    document.getElementById("td_pph").textContent = detail.nominal_pph
+      ? helper.format_angka(detail.nominal_pph)
+      : 0;
+    document.getElementById("td_grand_total").textContent = helper.format_angka(
+      detail.grand_total
+    );
+
+    document.getElementById("total_biaya_tambahan").textContent =
+      helper.format_angka(detail.biaya_tambahan);
+
+    document.getElementById("biaya_status_pembelian").textContent =
+      "Status : " + detail.status;
+
+    document.getElementById("biaya_nama_supplier").textContent =
+      "Nama supplier : " + detail.supplier_nama;
   });
 }
 
-async function populate_biaya_tambahan(pembelian_id) {
+async function populate_biaya_tambahan(invoice_id) {
   const result = await apiRequest(
-    `/PHP/API/pembelian_API.php?action=select&user_id=${access.decryptItem(
+    `/PHP/API/invoice_API.php?action=select&user_id=${access.decryptItem(
       "user_id"
     )}`,
     "POST",
-    { pembelian_id: pembelian_id, table: "view_biaya_tambahan" }
+    { invoice_id: invoice_id, table: "biaya_tambahan_invoice" }
   );
 
   const tableBody = document.getElementById("view_biaya_tambahan_tbody");
@@ -211,59 +246,13 @@ async function populate_biaya_tambahan(pembelian_id) {
   }
 }
 
-async function populate_pembelian(pembelian_id) {
-  const result = await apiRequest(
-    `/PHP/API/pembelian_API.php?action=select&user_id=${access.decryptItem(
-      "user_id"
-    )}`,
-    "POST",
-    { pembelian_id: pembelian_id, table: "pembelian" }
-  );
+const invoice_id = getQueryParam("invoice_id");
 
-  result.data.forEach((detail) => {
-    document.getElementById("nama_supplier").textContent =
-      "Nama supplier : " + detail.supplier_nama;
-    document.getElementById("status_pembelian").textContent =
-      "Status : " + detail.status;
-
-    document.getElementById("td_keterangan").textContent =
-      "Keterangan : " + detail.keterangan;
-
-    document.getElementById("td_sub_total").textContent = helper.format_angka(
-      detail.sub_total
-    );
-    document.getElementById("td_diskon").textContent = helper.format_angka(
-      detail.diskon
-    );
-    document.getElementById("td_ppn").textContent = helper.format_persen(
-      detail.ppn
-    );
-
-    document.getElementById("td_pph").textContent = detail.nominal_pph
-      ? helper.format_angka(detail.nominal_pph)
-      : 0;
-    document.getElementById("td_grand_total").textContent = helper.format_angka(
-      detail.grand_total
-    );
-
-    document.getElementById("total_biaya_tambahan").textContent =
-      helper.format_angka(detail.biaya_tambahan);
-
-    document.getElementById("biaya_status_pembelian").textContent =
-      "Status : " + detail.status;
-
-    document.getElementById("biaya_nama_supplier").textContent =
-      "Nama supplier : " + detail.supplier_nama;
-  });
-}
-const pembelian_id = getQueryParam("pembelian_id");
-
-if (pembelian_id) {
-  console.log("Loaded pembelian_id:", pembelian_id);
+if (invoice_id) {
+  console.log("Loaded invoice_id:", invoice_id);
   // Use pembelian_id to fetch and populate your table
 }
 
-populate_table_detail(pembelian_id);
-populate_tanggal(pembelian_id);
-populate_biaya_tambahan(pembelian_id);
-populate_pembelian(pembelian_id);
+populate_table_detail(invoice_id);
+populate_tanggal(invoice_id);
+populate_biaya_tambahan(invoice_id);

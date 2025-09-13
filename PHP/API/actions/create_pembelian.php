@@ -18,6 +18,8 @@ try {
     $nominal_pph = $fields['nominal_pph'];
     $status = $fields['status'];
     $created_by = $fields['created_by'];
+    $created_status = "new";
+
 
     $ppn_unformat = toFloat($ppn);
     $diskon_invoice_unformat = toFloat($diskon_invoice);
@@ -28,6 +30,7 @@ try {
     validate_2($nominal_pph_unformat, '/^\d+$/', "Format nominal pph unformat tidak valid");
     // Generate ID
     $pembelian_id = generateCustomID('PO', 'tb_pembelian', 'pembelian_id', $conn);
+    $pembelian_history_id = generateCustomID('POH', 'tb_pembelian_history', 'pembelian_history_id', $conn);
 
     // Insert main purchase
     executeInsert(
@@ -48,6 +51,26 @@ try {
         "ssssdddss"
     );
 
+    executeInsert(
+        $conn,
+        "INSERT INTO tb_pembelian_history (pembelian_history_id,pembelian_id_after, tanggal_po_after, supplier_id_after, keterangan_after, ppn_after,diskon_after, nominal_ppn_after, status_after, cancel_by_after,created_status)
+        VALUES (?,?, ?, ?, ?, ?, ?, ?,?,?,?)",
+        [
+            $pembelian_history_id,
+            $pembelian_id,
+            $tanggal_po,
+            $supplier_id,
+            $keterangan,
+            $ppn_unformat,
+            $diskon_invoice_unformat,
+            $nominal_pph_unformat,
+            $status,
+            $created_by,
+            $created_status
+        ],
+        "sssssdddsss"
+    );
+
     $total_qty = 0;
     $total_harga = 0;
     $urutan_detail = 0;
@@ -63,6 +86,7 @@ try {
             $harga = $detail['harga'];
             $diskon = $detail['diskon'];
             $satuan_id = $detail['satuan_id'];
+            $tipe_detail_pembelian_history = "A";
 
             $qty_unformat = toFloat($qty);
             $harga_unformat = toFloat($harga);
@@ -76,6 +100,7 @@ try {
             $total_harga += $qty_unformat * ($harga_unformat - $diskon_unformat);
 
             $detail_pembelian_id = generateCustomID('DPE', 'tb_detail_pembelian', 'detail_pembelian_id', $conn);
+            $detail_pembelian_history_id = generateCustomID('DPH', 'tb_detail_pembelian_history', 'detail_pembelian_history_id', $conn);
             executeInsert(
                 $conn,
                 "INSERT INTO tb_detail_pembelian (detail_pembelian_id, pembelian_id, produk_id, qty, harga, diskon, satuan_id,urutan)
@@ -92,6 +117,24 @@ try {
                 ],
                 "sssdddsd"
             );
+
+            executeInsert(
+                $conn,
+                "INSERT INTO tb_detail_pembelian_history (detail_pembelian_history_id, pembelian_history_id, produk_id, qty, harga, diskon, satuan_id,urutan,tipe_detail_pembelian_history)
+                VALUES (?, ?, ?, ?, ?, ?, ?,?,?)",
+                [
+                    $detail_pembelian_history_id,
+                    $pembelian_history_id,
+                    $produk_id,
+                    $qty_unformat,
+                    $harga_unformat,
+                    $diskon_unformat,
+                    $satuan_id,
+                    $urutan_detail,
+                    $tipe_detail_pembelian_history
+                ],
+                "sssdddsds"
+            );
             $urutan_detail += 1;
         }
     }
@@ -106,6 +149,8 @@ try {
 
             $data_biaya_id = $biaya['data_biaya_id'];
             $jumlah = $biaya['jumlah'];
+
+            $tipe_biaya_tambahan_history = "A";
             $jumlah_unformat = toFloat($jumlah);
             validate_2($jumlah_unformat, '/^\d+$/', "Format jumlah biaya tambahan tidak valid");
 
@@ -115,6 +160,7 @@ try {
             $total_biaya_tambahan += $jumlah_unformat;
 
             $biaya_tambahan_id = generateCustomID('DBT', 'tb_biaya_tambahan', 'biaya_tambahan_id', $conn);
+            $biaya_tambahan_history_id = generateCustomID('BTH', 'tb_biaya_tambahan_history', 'biaya_tambahan_history_id', $conn);
             executeInsert(
                 $conn,
                 "INSERT INTO tb_biaya_tambahan (biaya_tambahan_id, pembelian_id, data_biaya_id, jlh, keterangan,urutan)
@@ -128,6 +174,24 @@ try {
                     $urutan_biaya_tambahan
                 ],
                 "sssdsd"
+            );
+
+
+
+            executeInsert(
+                $conn,
+                "INSERT INTO tb_biaya_tambahan_history (biaya_tambahan_history_id, pembelian_history_id, data_biaya_id, jlh, keterangan,urutan,tipe_biaya_tambahan_history)
+                VALUES (?, ?, ?, ?, ?,?,?)",
+                [
+                    $biaya_tambahan_history_id,
+                    $pembelian_history_id,
+                    $data_biaya_id,
+                    $jumlah_unformat,
+                    $keterangan_biaya,
+                    $urutan_biaya_tambahan,
+                    $tipe_biaya_tambahan_history
+                ],
+                "sssdsds"
             );
             $urutan_biaya_tambahan += 1;
         }
@@ -146,6 +210,13 @@ try {
     $stmt->execute();
     $stmt->close();
 
+
+    $stmt = $conn->prepare("UPDATE tb_pembelian_history 
+                            SET total_qty_after = ?, grand_total_after = ?, nominal_ppn_after = ?,biaya_tambahan_after = ?,sub_total_after =?
+                            WHERE pembelian_history_id = ?");
+    $stmt->bind_param("ddddds", $total_qty, $grand_total, $nominal_ppn, $total_biaya_tambahan, $sub_total, $pembelian_history_id);
+    $stmt->execute();
+    $stmt->close();
     echo json_encode([
         "success" => true,
         "message" => "Berhasil",

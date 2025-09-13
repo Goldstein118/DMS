@@ -150,14 +150,14 @@ async function populate_po(purchase_order_id) {
     document.getElementById("update_keterangan").value = keterangan;
     document.getElementById("update_diskon").value =
       helper.unformat_angka(diskon);
-    document.getElementById("no_pengiriman").value = no_pengiriman;
+    document.getElementById("update_no_pengiriman").value = no_pengiriman;
     document.getElementById("update_status_pembelian").value = status;
 
     try {
       const response = await apiRequest(
         `/PHP/API/supplier_API.php?action=select&user_id=${access.decryptItem(
           "user_id"
-        )}&target=tb_pembelian&context=edit`
+        )}&target=tb_invoice&context=edit`
       );
       populate_supplier(response.data, supplier_id);
     } catch (error) {
@@ -365,36 +365,7 @@ function add_biaya(action, data_biaya_element_id) {
   helper.format_nominal("jumlah" + currentIndex);
   select_data_biaya(currentIndex, action, data_biaya_element_id);
 }
-function delete_biaya_tambahan(action) {
-  $(`#${action}_biaya_tambahan_tbody`).on(
-    "click",
-    ".delete_biaya_tambahan",
-    async function () {
-      const result = await Swal.fire({
-        title: "Apakah Anda Yakin?",
-        text: "Anda tidak dapat mengembalikannya!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Iya, Hapus!",
-        cancelButtonText: "Batalkan",
-      });
-      if (result.isConfirmed) {
-        try {
-          $(this).closest("tr").remove();
-          Swal.fire("Berhasil", "Pembelian dihapus.", "success");
-        } catch (error) {
-          Swal.fire({
-            icon: "error",
-            title: "Gagal",
-            text: error.message,
-          });
-        }
-      }
-    }
-  );
-}
+
 async function select_data_biaya(
   index,
   action,
@@ -420,7 +391,7 @@ async function select_data_biaya(
     const response = await apiRequest(
       `/PHP/API/data_biaya_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
-      )}`
+      )}&target=tb_invoice&context=create`
     );
 
     const select = $(`#${data_biaya_id}${index}`);
@@ -454,7 +425,36 @@ async function select_data_biaya(
     console.error("error:", error);
   }
 }
-
+function delete_biaya_tambahan(action) {
+  $(`#${action}_biaya_tambahan_tbody`).on(
+    "click",
+    ".delete_biaya_tambahan",
+    async function () {
+      const result = await Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Anda tidak dapat mengembalikannya!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Iya, Hapus!",
+        cancelButtonText: "Batalkan",
+      });
+      if (result.isConfirmed) {
+        try {
+          $(this).closest("tr").remove();
+          Swal.fire("Berhasil", "Pembelian dihapus.", "success");
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: error.message,
+          });
+        }
+      }
+    }
+  );
+}
 function delete_detail_pembelian(action) {
   $(`#${action}_detail_pembelian_tbody`).on(
     "click",
@@ -523,13 +523,13 @@ async function select_detail_pembelian(
     const response_produk = await apiRequest(
       `/PHP/API/produk_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
-      )}&target=tb_pembelian&context=create`
+      )}&target=tb_invoice&context=create`
     );
 
     const response_satuan = await apiRequest(
       `/PHP/API/satuan_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
-      )}&target=tb_pembelian&context=create`
+      )}&target=tb_invoice&context=create`
     );
 
     const select_produk = $(`#${produk_element_id}${index}`);
@@ -726,10 +726,6 @@ async function submitInvoice() {
   const picker_terima = $("#update_tanggal_terima").pickadate("picker");
   const tanggal_terima = picker_terima.get("select", "yyyy-mm-dd");
 
-  console.log(tanggal_po);
-  console.log(tanggal_pengiriman);
-  console.log(tanggal_terima);
-
   const supplier_id = document.getElementById("update_supplier_id").value;
   const keterangan = document.getElementById("update_keterangan").value;
   let diskon = document.getElementById("update_diskon").value;
@@ -737,7 +733,7 @@ async function submitInvoice() {
   let nominal_pph = document.getElementById("update_nominal_pph").value;
 
   const details = [];
-  const rows = document.querySelectorAll("#update_detail_pembelian_tbody tr");
+  const rows = document.querySelectorAll("#create_detail_pembelian_tbody tr");
 
   for (const row of rows) {
     const produk_select = row.querySelector("td:nth-child(1) select");
@@ -780,7 +776,7 @@ async function submitInvoice() {
 
   const biaya_tambahan = [];
   const rows_biaya_tambahan = document.querySelectorAll(
-    "#update_biaya_tambahan_tbody tr"
+    "#create_biaya_tambahan_tbody tr"
   );
 
   for (const row of rows_biaya_tambahan) {
@@ -813,7 +809,6 @@ async function submitInvoice() {
 
   const body = {
     user_id: `${access.decryptItem("user_id")}`,
-    pembelian_id: pembelian_id,
     tanggal_invoice: tanggal_invoice,
     no_invoice: no_invoice,
     status: "invoice",
@@ -830,7 +825,6 @@ async function submitInvoice() {
     ppn: ppn,
     diskon: diskon,
     nominal_pph: nominal_pph,
-    status: "invoice",
     details: details,
     biaya_tambahan: biaya_tambahan,
   };
@@ -843,9 +837,9 @@ async function submitInvoice() {
     if (response.ok) {
       swal.fire("Berhasil", "success", "success");
       $("#modal_invoice").modal("hide");
-      window.pembelian_grid.forceRender();
+      window.invoice_grid.forceRender();
       setTimeout(() => {
-        helper.custom_grid_header("pembelian");
+        helper.custom_grid_header("invoice");
       }, 200);
     }
   } catch (error) {

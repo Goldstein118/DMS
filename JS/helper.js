@@ -77,7 +77,7 @@ export function custom_grid_header(
   }
 
   // Attach event listener after header is rebuilt
-  if (field == "pricelist" || field == "produk") {
+  if (field == "pricelist" || field == "produk" || field === "invoice") {
     const tableElement = document.getElementById(`table_${field}`);
     tableElement.removeEventListener("click", tableElement._customHandler);
     const handler = function (event) {
@@ -699,13 +699,15 @@ export function format_date_time(inputStr) {
 }
 
 export function isTwoWeeksLater(date) {
-  if (!date) return "";
+  if (!date) return "false";
   const inputDate = new Date(date);
   const twoWeeksLater = new Date(
     inputDate.getTime() + 14 * 24 * 60 * 60 * 1000
   ); // Add 2 weeks
 
-  return inputDate >= twoWeeksLater;
+  var today = new Date();
+
+  return today >= twoWeeksLater;
 }
 
 export function format_persen(input) {

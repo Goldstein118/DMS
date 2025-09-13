@@ -12,7 +12,7 @@ function checkContextAccess($conn, $userId, $context)
         'tb_armada'  => ['tb_karyawan'],
         'tb_promo'   => ['tb_brand', 'tb_customer', 'tb_produk', 'tb_channel', 'tb_satuan'],
         'tb_pembelian' => ['tb_supplier', 'tb_satuan', 'tb_produk', 'tb_data_biaya'],
-        'tb_invoice' => ['tb_pembelian']
+        'tb_invoice' => ['tb_pembelian', 'tb_supplier', 'tb_satuan', 'tb_produk', 'tb_data_biaya']
 
         // Add more mappings as needed
     ];

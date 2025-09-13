@@ -56,7 +56,7 @@
                                             <option value="ya">Ya</option>
                                             <option value="tidak">Tidak</option>
                                         </select>
-                                        <label class="form-label mb-0 mt-2" for="prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <label class="form-label mb-0 mt-2" for="prioritas">Prioritas:</label>
                                         <input type="text" class="form-control" id="prioritas" name="prioritas" />
 
 

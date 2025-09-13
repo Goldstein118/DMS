@@ -26,6 +26,10 @@ if (submit_role) {
       "armada",
       "frezzer",
       "promo",
+      "satuan",
+      "pembelian",
+      "data_biaya",
+      "invoice",
     ];
 
     checkboxFields.forEach((field) => {

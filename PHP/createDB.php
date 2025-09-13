@@ -313,7 +313,9 @@ if ($conn->query($satuan)) {
 
 $pembelian = "CREATE TABLE IF NOT EXISTS tb_pembelian(pembelian_id VARCHAR(20) PRIMARY KEY NOT NULL,tanggal_po DATE,tanggal_pengiriman DATE,tanggal_terima DATE,
 supplier_id VARCHAR(20),keterangan VARCHAR(255),no_pengiriman VARCHAR(20),total_qty INT,ppn DECIMAL(20,2),nominal_ppn DECIMAL(20,2),diskon DECIMAL(20,2),
-nominal_pph DECIMAL(20,2),biaya_tambahan DECIMAL(20,2),sub_total DECIMAL(20,2),grand_total DECIMAL(20,2),created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,created_by VARCHAR(50), status VARCHAR (20),FOREIGN KEY (supplier_id) REFERENCES tb_supplier(supplier_id) ON DELETE RESTRICT)
+nominal_pph DECIMAL(20,2),biaya_tambahan DECIMAL(20,2),sub_total DECIMAL(20,2),grand_total DECIMAL(20,2),created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+created_by VARCHAR(50), status VARCHAR (20),keterangan_cancel VARCHAR(255),cancel_by VARCHAR (100),
+FOREIGN KEY (supplier_id) REFERENCES tb_supplier(supplier_id) ON DELETE RESTRICT)
 ";
 
 if ($conn->query($pembelian)) {
@@ -404,11 +406,144 @@ if ($conn->query($detail_invoice)) {
 }
 
 
-$biaya_tambahan_invoice = "CREATE TABLE IF NOT EXISTS tb_biaya_tambahan_invoice(biaya_tambahan_invoice_id VARCHAR(20) PRIMARY KEY NOT NULL,data_biaya_id VARCHAR(20),pembelian_id VARCHAR(20),invoice_id VARCHAR(20),
+$biaya_tambahan_invoice = "CREATE TABLE IF NOT EXISTS tb_biaya_tambahan_invoice(
+biaya_tambahan_invoice_id VARCHAR(20) PRIMARY KEY NOT NULL,data_biaya_id VARCHAR(20),pembelian_id VARCHAR(20),invoice_id VARCHAR(20),
 keterangan VARCHAR(255),jlh DECIMAL(20,2),urutan INT,
 FOREIGN KEY (data_biaya_id) REFERENCES tb_data_biaya(data_biaya_id) ON DELETE RESTRICT,FOREIGN KEY (invoice_id) REFERENCES tb_invoice(invoice_id) ON DELETE RESTRICT)";
 
 if ($conn->query($biaya_tambahan_invoice)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+$invoice_history = "CREATE TABLE IF NOT EXISTS tb_invoice_history(
+  invoice_history_id VARCHAR(20) PRIMARY KEY NOT NULL,
+  invoice_id VARCHAR(20),
+  tanggal_invoice_before DATE,
+  no_invoice_supplier_before VARCHAR(20),
+  tanggal_input_invoice_before DATE,
+  tanggal_po_before DATE,
+  tanggal_pengiriman_before DATE,
+  tanggal_terima_before DATE,
+  supplier_id_before VARCHAR(20),
+  pembelian_id_before VARCHAR(20),
+  keterangan_before VARCHAR(255),
+  no_pengiriman_before VARCHAR(20),
+  total_qty_before INT,
+  ppn_before DECIMAL(20,2),
+  nominal_ppn_before DECIMAL(20,2),
+  diskon_before DECIMAL(20,2),
+  nominal_pph_before DECIMAL(20,2),
+  biaya_tambahan_before DECIMAL(20,2),
+  sub_total_before DECIMAL(20,2),
+  grand_total_before DECIMAL(20,2),
+  created_on_before TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by_before VARCHAR(50),
+  status_before VARCHAR(20),  
+  tanggal_invoice_after DATE,
+  no_invoice_supplier_after VARCHAR(20),
+  tanggal_input_invoice_after DATE,
+  tanggal_po_after DATE,
+  tanggal_pengiriman_after DATE,
+  tanggal_terima_after DATE,
+  supplier_id_after VARCHAR(20),
+  pembelian_id_after VARCHAR(20),
+  keterangan_after VARCHAR(255),
+  no_pengiriman_after VARCHAR(20),
+  total_qty_after INT,
+  ppn_after DECIMAL(20,2),
+  nominal_ppn_after DECIMAL(20,2),
+  diskon_after DECIMAL(20,2),
+  nominal_pph_after DECIMAL(20,2),
+  biaya_tambahan_after DECIMAL(20,2),
+  sub_total_after DECIMAL(20,2),
+  grand_total_after DECIMAL(20,2),
+  created_on_after TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_by_after VARCHAR(50),
+  created_status VARCHAR(20),
+  status_after VARCHAR(20))
+  ";
+
+if ($conn->query($invoice_history)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+$detail_invoice_history = "CREATE TABLE IF NOT EXISTS tb_detail_invoice_history(
+detail_invoice_history_id VARCHAR(20) PRIMARY KEY NOT NULL,
+pembelian_id VARCHAR(20),
+invoice_id VARCHAR(20),
+produk_id VARCHAR(20),
+urutan INT,
+qty INT,
+harga DECIMAL(20,2),
+diskon DECIMAL(20,2),
+satuan_id VARCHAR(20),
+tipe_detail_invoice_history VARCHAR(10))";
+
+if ($conn->query($detail_invoice_history)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+$biaya_tambahan_invoice_history = "CREATE TABLE IF NOT EXISTS tb_biaya_tambahan_invoice_history(
+biaya_tambahan_invoice_history_id VARCHAR(20) PRIMARY KEY NOT NULL,
+data_biaya_id VARCHAR(20),
+pembelian_id VARCHAR(20),
+invoice_id VARCHAR(20),
+keterangan VARCHAR(255),
+jlh DECIMAL(20,2),
+urutan INT,
+tipe_biaya_tambahan_invoice VARCHAR(10))";
+if ($conn->query($biaya_tambahan_invoice_history)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+
+
+$pembelian_history = "CREATE TABLE IF NOT EXISTS tb_pembelian_history(pembelian_history_id VARCHAR(20) PRIMARY KEY NOT NULL,pembelian_id_before VARCHAR(20),tanggal_po_before DATE,tanggal_pengiriman_before DATE,tanggal_terima_before DATE,
+supplier_id_before VARCHAR(20),keterangan_before VARCHAR(255),no_pengiriman_before VARCHAR(20),total_qty_before INT,ppn_before DECIMAL(20,2),nominal_ppn_before DECIMAL(20,2),diskon_before DECIMAL(20,2),
+nominal_pph_before DECIMAL(20,2),biaya_tambahan_before DECIMAL(20,2),sub_total_before DECIMAL(20,2),grand_total_before DECIMAL(20,2),created_on_before timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+created_by_before VARCHAR(50), status_before VARCHAR (20),keterangan_cancel_before VARCHAR(255),cancel_by_before VARCHAR (100),
+pembelian_id_after VARCHAR(10),
+tanggal_po_after DATE,tanggal_pengiriman_after DATE,tanggal_terima_after DATE,
+supplier_id_after VARCHAR(20),keterangan_after VARCHAR(255),no_pengiriman_after VARCHAR(20),total_qty_after INT,ppn_after DECIMAL(20,2),nominal_ppn_after DECIMAL(20,2),diskon_after DECIMAL(20,2),
+nominal_pph_after DECIMAL(20,2),biaya_tambahan_after DECIMAL(20,2),sub_total_after DECIMAL(20,2),grand_total_after DECIMAL(20,2),created_on_after timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+created_by_after VARCHAR(50), status_after VARCHAR (20),keterangan_cancel_after VARCHAR(255),cancel_by_after VARCHAR (100),created_status VARCHAR(20)
+)
+";
+if ($conn->query($pembelian_history)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+
+
+$detail_pembelian_history = "CREATE TABLE IF NOT EXISTS tb_detail_pembelian_history(detail_pembelian_history_id VARCHAR(20) PRIMARY KEY NOT NULL,pembelian_history_id VARCHAR(20), produk_id VARCHAR(20),urutan INT,
+qty INT,harga DECIMAL(20,2),diskon DECIMAL(20,2),satuan_id VARCHAR(20),tipe_detail_pembelian_history VARCHAR(10))";
+
+if ($conn->query($detail_pembelian_history)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+$biaya_tambahan_history = "CREATE TABLE IF NOT EXISTS tb_biaya_tambahan_history(biaya_tambahan_history_id VARCHAR(20) PRIMARY KEY NOT NULL,data_biaya_id VARCHAR(20),pembelian_history_id VARCHAR(20),
+keterangan VARCHAR(255),jlh DECIMAL(20,2),urutan INT,tipe_biaya_tambahan_history VARCHAR(10))";
+
+if ($conn->query($biaya_tambahan_history)) {
     try {
     } catch (Error) {
         echo mysqli_error($conn);

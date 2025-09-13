@@ -142,7 +142,8 @@ function handle_view(button) {
     `../PHP/view_pricelist.php?pricelist_id=${encodeURIComponent(
       pricelist_id
     )}`,
-    "_blank"
+    "_blank",
+    "toolbar=0,location=0,menubar=0"
   );
 }
 

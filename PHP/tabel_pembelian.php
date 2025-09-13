@@ -36,7 +36,6 @@
                                                 <label class="form-label mb-0 mt-2" for="status_pembelian">Status:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <select class="form-select" id="status_pembelian" disabled>
                                                     <option value="proses">Proses PO</option>
-
                                                 </select>
                                             </div>
                                             <div class="col">
@@ -66,7 +65,7 @@
                                     class="accordion-collapse collapse show"
                                     data-bs-parent="#accordion_detail_barang_pembelian">
                                     <div class="accordion-body" id="detail_pembelian_card_body">
-                                        <button class="btn btn-primary btn-sm mb-2" id="create_detail_pembelian">
+                                        <button class="btn btn-primary btn-sm mb-2" id="create_detail_pembelian_button">
                                             <i class="bi bi-plus-circle"></i> Tambah
                                         </button>
                                         <table class="table table-hover table-bordered table-sm" id="detail_pembelian">
@@ -109,7 +108,7 @@
                                                 <label class="form-label mb-0 mt-2" for="ppn">PPN:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <select class="form-select" id="ppn">
                                                     <option value="0.11">11%</option>
-                                                    <option value="0.10">10%</option>
+                                                    <option value="0.1">10%</option>
 
                                                 </select>
                                             </div>
@@ -173,7 +172,7 @@
                                     class="accordion-collapse collapse show"
                                     data-bs-parent="#accordion_biaya_tambahan_pembelian">
                                     <div class="accordion-body" id="biaya_tambahan_accordion_body">
-                                        <button class="btn btn-primary btn-sm mb-2" id="create_biaya_tambahan">
+                                        <button class="btn btn-primary btn-sm mb-2" id="create_biaya_tambahan_button">
                                             <i class="bi bi-plus-circle"></i> Tambah
                                         </button>
                                         <table class="table table-hover table-bordered table-sm" id="biaya_tambahan">
@@ -257,25 +256,22 @@
 
 
 
-<div class="modal fade" id="modal_invoice" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modal_cancel" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog  modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalCenterTitle">Invoice</h1>
+                <h1 class="modal-title fs-5" id="exampleModalCenterTitle">Cancel</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
-                <input type="text" class="form-control d-none" id="invoice_pembelian_id" />
-                <label class="form-label mb-0 mt-2" for="tanggal_invoice">Tanggal Invoice:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                <input type="text" class="form-control" id="tanggal_invoice" name="tanggal_invoice" />
 
-                <label class="form-label mb-0 mt-2" for="no_invoice">No Incvoice Supplier:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                <input type="text" class="form-control" id="no_invoice" name="no_invoice" />
+                <label class="form-label mb-0 mt-2" for="keterangan_cancel">Keterangan Cancel:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                <input type="text" class="form-control" id="keterangan_cancel" name="keterangan_cancel" />
 
             </div>
             <div class="modal-footer">
-                <button id="submit_invoice_button" type="button" class="btn btn-primary">Simpan</button>
+                <button id="submit_cancel_button" type="button" class="btn btn-primary">Simpan</button>
             </div>
         </div>
     </div>
@@ -345,20 +341,20 @@
                                     <button class="accordion-button"
                                         type="button"
                                         data-bs-toggle="collapse"
-                                        data-bs-target="#collapseDetailBarang_pembelian"
+                                        data-bs-target="#collapseUpdateDetailBarang_pembelian"
                                         aria-expanded="true"
-                                        aria-controls="collapseDetailBarang_pembelian">
+                                        aria-controls="collapseUpdateDetailBarang_pembelian">
                                         Informasi Detail Barang
                                     </button>
                                 </h2>
-                                <div id="collapseDetailBarang_pembelian"
+                                <div id="collapseUpdateDetailBarang_pembelian"
                                     class="accordion-collapse collapse show"
                                     data-bs-parent="#update_accordion_detail_barang_pembelian">
                                     <div class="accordion-body" id="update_detail_pembelian_card_body">
                                         <button class="btn btn-primary btn-sm mb-2" id="update_detail_pembelian_button">
                                             <i class="bi bi-plus-circle"></i> Tambah
                                         </button>
-                                        <table class="table table-hover table-bordered table-sm" id="update_detail_pembelian">
+                                        <table class="table table-hover table-bordered table-sm" id="update_detail_pembelian_table">
                                             <thead id="update_detail_pembelian_thead">
                                                 <tr>
                                                     <th scope="col">Produk</th>
@@ -398,7 +394,7 @@
                                                 <label class="form-label mb-0 mt-2" for="update_ppn">PPN:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <select class="form-select" id="update_ppn">
                                                     <option value="0.11">11%</option>
-                                                    <option value="0.10">10%</option>
+                                                    <option value="0.1">10%</option>
 
                                                 </select>
                                             </div>

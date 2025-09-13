@@ -119,7 +119,7 @@ if (isset($data['table']) && $data['table'] === 'detail_pembelian' && isset($dat
 
     $pembelian_id = $data['pembelian_id'];
 
-    $sql = "SELECT p.pembelian_id,p.tanggal_po,p.tanggal_pengiriman,p.tanggal_terima,p.tanggal_invoice,p.supplier_id,p.keterangan,p.no_invoice_supplier,
+    $sql = "SELECT p.pembelian_id,p.tanggal_po,p.tanggal_pengiriman,p.tanggal_terima,p.supplier_id,p.keterangan,
     p.no_pengiriman,p.total_qty,p.ppn,p.nominal_ppn,p.diskon,p.nominal_pph,p.biaya_tambahan,p.sub_total,p.grand_total,p.created_on,p.created_by,p.status,s.nama AS supplier_nama
      FROM tb_pembelian p LEFT JOIN tb_supplier s ON p.supplier_id=s.supplier_id WHERE p.pembelian_id = ?";
 
@@ -168,7 +168,7 @@ if (isset($data['table']) && $data['table'] === 'detail_pembelian' && isset($dat
     }
 } else if (isset($data['pembelian_id'])) {
     $pembelian_id = trim($data['pembelian_id']);
-    $sql = "SELECT tanggal_po,tanggal_pengiriman,tanggal_terima,tanggal_invoice,no_pengiriman,no_invoice_supplier FROM tb_pembelian WHERE pembelian_id=?";
+    $sql = "SELECT tanggal_po,tanggal_pengiriman,tanggal_terima,no_pengiriman FROM tb_pembelian WHERE pembelian_id=?";
     $stmt = $conn->prepare($sql);
     if ($stmt == false) {
         http_response_code(500);

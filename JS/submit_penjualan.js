@@ -1,0 +1,647 @@
+import { apiRequest } from "./api.js";
+import * as access from "./cek_access.js";
+import * as helper from "./helper.js";
+let index = 0;
+const submit_penjualan = document.getElementById("submit_penjualan");
+const submit_detail_penjualan = document.getElementById(
+  "create_detail_penjualan_button"
+);
+
+function initPickadateOnce(selector) {
+  const $el = $(selector);
+  if (!$el.data("pickadate")) {
+    $el.pickadate({
+      format: "dd mmm yyyy",
+      selectYears: 25,
+      selectMonths: true,
+    });
+  }
+}
+if (submit_penjualan) {
+  submit_penjualan.addEventListener("click", submitpenjualan);
+  submit_detail_penjualan.addEventListener("click", () => {
+    add_field("create", "produk_select", "satuan_select");
+  });
+
+  $(document).ready(function () {
+    $("#modal_penjualan").on("shown.bs.modal", function () {
+      $("#name_penjualan").trigger("focus");
+      fetch_fk("gudang");
+      fetch_fk("customer");
+
+      $("#gudang_id").select2({
+        placeholder: "Pilih Gudang",
+        allowClear: true,
+        dropdownParent: $("#modal_penjualan"),
+      });
+
+      $("#customer_id").select2({
+        placeholder: "Pilih Customer",
+        allowClear: true,
+        dropdownParent: $("#modal_penjualan"),
+      });
+
+      initPickadateOnce("#tanggal_penjualan");
+    });
+    helper.format_nominal("nominal_pph");
+    helper.format_nominal("diskon");
+
+    add_field("create", "produk_select", "satuan_select");
+  });
+}
+
+async function select_detail_penjualan(
+  index,
+  action,
+  produk_element_id,
+  satuan_element_id,
+
+  current_produk_id,
+  current_satuan_id
+) {
+  if (action == "create") {
+    $(`#${produk_element_id}${index}`).select2({
+      placeholder: "Pilih produk",
+      allowClear: true,
+      dropdownParent: $("#modal_penjualan"),
+    });
+    $(`#${satuan_element_id}${index}`).select2({
+      placeholder: "Pilih satuan",
+      allowClear: true,
+      dropdownParent: $("#modal_penjualan"),
+    });
+  } else if (action == "update") {
+    $(`#${produk_element_id}${index}`).select2({
+      placeholder: "Pilih produk",
+      allowClear: true,
+      dropdownParent: $("#update_modal_penjualan"),
+    });
+    $(`#${satuan_element_id}${index}`).select2({
+      placeholder: "Pilih satuan",
+      allowClear: true,
+      dropdownParent: $("#update_modal_penjualan"),
+    });
+  }
+
+  delete_detail_penjualan(action);
+  try {
+    const response_produk = await apiRequest(
+      `/PHP/API/produk_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}&target=tb_penjualan&context=create`
+    );
+
+    const response_satuan = await apiRequest(
+      `/PHP/API/satuan_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}&target=tb_penjualan&context=create`
+    );
+
+    const select_produk = $(`#${produk_element_id}${index}`);
+    select_produk.empty();
+    select_produk.append(new Option("Pilih Produk", "", false, false));
+
+    const select_satuan = $(`#${satuan_element_id}${index}`);
+    select_satuan.empty();
+    select_satuan.append(new Option("Pilih Satuan", "", false, false));
+
+    if (action == "create") {
+      response_produk.data.forEach((produk) => {
+        const option = new Option(
+          `${produk.produk_id} - ${produk.nama}`,
+          produk.produk_id,
+          false,
+          false
+        );
+        select_produk.append(option);
+      });
+      select_produk.trigger("change");
+
+      response_satuan.data.forEach((satuan) => {
+        const option = new Option(
+          `${satuan.satuan_id} - ${satuan.nama}`,
+          satuan.satuan_id,
+          false,
+          false
+        );
+        select_satuan.append(option);
+      });
+      select_satuan.trigger("change");
+    } else if (action == "update") {
+      response_produk.data.forEach((produk) => {
+        const option = new Option(
+          `${produk.produk_id} - ${produk.nama}`,
+          produk.produk_id,
+          false,
+          produk.produk_id === current_produk_id
+        );
+        select_produk.append(option);
+      });
+      select_produk.val(current_produk_id).trigger("change");
+
+      response_satuan.data.forEach((satuan) => {
+        const option = new Option(
+          `${satuan.satuan_id} - ${satuan.nama}`,
+          satuan.satuan_id,
+          false,
+          satuan.satuan_id === current_satuan_id
+        );
+        select_satuan.append(option);
+      });
+      select_satuan.val(current_satuan_id).trigger("change");
+    }
+  } catch (error) {
+    console.error("error:", error);
+  }
+}
+
+function delete_detail_penjualan(action) {
+  $(`#${action}_detail_penjualan_tbody`).on(
+    "click",
+    ".delete_detail_penjualan",
+    async function () {
+      const result = await Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Anda tidak dapat mengembalikannya!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Iya, Hapus!",
+        cancelButtonText: "Batalkan",
+      });
+      if (result.isConfirmed) {
+        try {
+          $(this).closest("tr").remove();
+          Swal.fire("Berhasil", "penjualan dihapus.", "success");
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: error.message,
+          });
+        }
+      }
+    }
+  );
+}
+
+function add_field(action, produk_element_id, satuan_element_id) {
+  var myTable = document.getElementById(`${action}_detail_penjualan_tbody`);
+  var currentIndex = index++;
+  const tr_detail = document.createElement("tr");
+
+  const td_produk = document.createElement("td");
+  var produk_select = document.createElement("select");
+  produk_select.setAttribute("id", produk_element_id + currentIndex);
+  produk_select.classList.add("form-select");
+  td_produk.appendChild(produk_select);
+
+  const td_qty = document.createElement("td");
+  var input_qty = document.createElement("input");
+  input_qty.setAttribute("id", "qty" + currentIndex);
+  input_qty.classList.add("form-control");
+  td_qty.appendChild(input_qty);
+
+  const td_satuan = document.createElement("td");
+  var satuan_select = document.createElement("select");
+  satuan_select.setAttribute("id", satuan_element_id + currentIndex);
+  satuan_select.classList.add("form-select");
+  td_satuan.appendChild(satuan_select);
+
+  const td_harga = document.createElement("td");
+  var input_harga = document.createElement("input");
+  input_harga.setAttribute("id", "harga" + currentIndex);
+  input_harga.classList.add("form-control");
+  input_harga.style.textAlign = "right";
+  td_harga.appendChild(input_harga);
+
+  const td_diskon = document.createElement("td");
+  var input_diskon = document.createElement("input");
+  input_diskon.setAttribute("id", "diskon" + currentIndex);
+  input_diskon.classList.add("form-control");
+  input_diskon.style.textAlign = "right";
+  td_diskon.appendChild(input_diskon);
+
+  const td_aksi = document.createElement("td");
+  td_aksi.setAttribute("id", "aksi_tbody");
+  var delete_button = document.createElement("button");
+  delete_button.type = "button";
+  delete_button.className = "btn btn-danger btn-sm delete_detail_penjualan";
+  delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+  td_aksi.appendChild(delete_button);
+  td_aksi.style.textAlign = "center";
+
+  tr_detail.appendChild(td_produk);
+  tr_detail.appendChild(td_qty);
+  tr_detail.appendChild(td_satuan);
+  tr_detail.appendChild(td_harga);
+  tr_detail.appendChild(td_diskon);
+  tr_detail.appendChild(td_aksi);
+
+  myTable.appendChild(tr_detail);
+
+  helper.format_nominal("harga" + currentIndex);
+  helper.format_nominal("diskon" + currentIndex);
+  select_detail_penjualan(
+    currentIndex,
+    action,
+    produk_element_id,
+    satuan_element_id
+  );
+}
+async function fetch_fk(field) {
+  try {
+    const response = await apiRequest(
+      `/PHP/API/${field}_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}&target=tb_penjualan&context=create`,
+      "POST",
+      { select: "select" }
+    );
+    const select = $(`#${field}_id`);
+    select.empty();
+    if (field === "gudang") {
+      select.append(new Option("Pilih Gudang", "", false, false));
+      response.data.forEach((item) => {
+        const option = new Option(
+          `${item.gudang_id} - ${item.nama}`,
+          item.gudang_id,
+          false,
+          false
+        );
+        select.append(option);
+      });
+    } else if (field === "customer") {
+      select.append(new Option("Pilih Customer", "", false, false));
+      response.data.forEach((item) => {
+        const option = new Option(
+          `${item.customer_id} - ${item.nama} - ${item.channel_nama} `,
+          item.customer_id,
+          false,
+          false
+        );
+        select.append(option);
+      });
+    }
+
+    select.trigger("change");
+  } catch (error) {
+    console.error("error:", error);
+  }
+}
+
+async function submitpenjualan() {
+  // Collect form data
+  const picker_penjualan = $("#tanggal_penjualan").pickadate("picker");
+  const tanggal_penjualan = picker_penjualan.get("select", "yyyy-mm-dd");
+  const gudang_id = document.getElementById("gudang_id").value;
+  const customer_id = document.getElementById("customer_id").value;
+  const keterangan = document.getElementById("keterangan_penjualan").value;
+  let diskon = document.getElementById("diskon").value;
+  const ppn = document.getElementById("ppn").value;
+  let nominal_pph = document.getElementById("nominal_pph").value;
+
+  const status_penjualan = document.getElementById("status_penjualan").value;
+
+  const details = [];
+  const rows = document.querySelectorAll("#create_detail_penjualan_tbody tr");
+
+  for (const row of rows) {
+    const produk_select = row.querySelector("td:nth-child(1) select");
+    const qty = row.querySelector("td:nth-child(2) input");
+    const satuan = row.querySelector("td:nth-child(3) select");
+    const harga = row.querySelector("td:nth-child(4) input");
+    const diskon = row.querySelector("td:nth-child(5) input");
+
+    const produk_id = produk_select?.value?.trim();
+    const kuantitas = qty?.value?.trim();
+    let harga_ = harga?.value?.trim();
+    const satuan_id = satuan?.value?.trim();
+    let discount = diskon?.value?.trim();
+
+    if (
+      !produk_id ||
+      produk_id.trim() === "" ||
+      !kuantitas ||
+      kuantitas.trim() === "" ||
+      !harga_ ||
+      harga_.trim() === "" ||
+      !satuan_id ||
+      satuan_id.trim() === "" ||
+      !discount ||
+      discount.trim() === ""
+    ) {
+      toastr.error("Semua field pada detail penjualan wajib diisi.");
+      return;
+    }
+    harga_ = helper.format_angka(harga_);
+    discount = helper.format_angka(discount);
+    details.push({
+      produk_id: produk_id,
+      qty: kuantitas,
+      harga: harga_,
+      satuan_id: satuan_id,
+      diskon: discount,
+    });
+  }
+
+  if (details.length === 0) {
+    toastr.error("Minimal satu detail penjualan harus diisi.");
+    return;
+  }
+  nominal_pph = helper.format_angka(nominal_pph);
+  diskon = helper.format_angka(diskon);
+
+  const data_penjualan = {
+    user_id: `${access.decryptItem("user_id")}`,
+    created_by: `${access.decryptItem("nama")}`,
+    tanggal_penjualan: tanggal_penjualan,
+    gudang_id: gudang_id,
+    customer_id: customer_id,
+    keterangan: keterangan,
+    ppn: ppn,
+    diskon: diskon,
+    nominal_pph: nominal_pph,
+    status: status_penjualan,
+    details: details,
+  };
+  console.log(data_penjualan);
+  // try {
+  //   const response = await apiRequest(
+  //     `/PHP/API/penjualan_API.php?action=create`,
+  //     "POST",
+  //     data_penjualan
+  //   );
+  //   if (response.ok) {
+  //     swal.fire("Berhasil", response.message, "success");
+  //     document.querySelector("#create_detail_penjualan_tbody").innerHTML = "";
+  //     $("#modal_penjualan").modal("hide");
+  //     window.penjualan_grid.forceRender();
+  //     setTimeout(() => {
+  //       helper.custom_grid_header("penjualan");
+  //     }, 200);
+  //   }
+  // } catch (error) {
+  //   toastr.error(error.message);
+  // }
+}
+
+const cek_promo_button = document.getElementById("cek_promo_button");
+cek_promo_button.addEventListener("click", async function () {
+  cek_promo();
+});
+
+function cek_promo_kondisi_customer_channel(
+  array_promo_kondisi,
+  channel_id,
+  customer_id
+) {
+  const validPromoIds = [];
+
+  for (const subArray of array_promo_kondisi) {
+    let groupIsValid = true;
+    let promoId = null;
+
+    for (const kondisiObj of subArray) {
+      const { jenis_kondisi, exclude_include, kondisi } = kondisiObj;
+
+      if (!promoId && kondisiObj.promo_id) {
+        promoId = kondisiObj.promo_id;
+      }
+
+      let parsedKondisi = [];
+      try {
+        parsedKondisi = JSON.parse(
+          typeof kondisi === "string" ? kondisi : JSON.stringify(kondisi)
+        );
+      } catch (e) {
+        console.error("Failed to parse kondisi:", kondisi, e);
+        groupIsValid = false;
+        break;
+      }
+
+      if (jenis_kondisi === "customer") {
+        console.log(parsedKondisi);
+        if (exclude_include === "include") {
+          if (parsedKondisi.includes(customer_id)) {
+            console.log(
+              `Customer ${customer_id} is included in promo:`,
+              promoId
+            );
+          } else {
+            console.log(
+              `Customer ${customer_id} is NOT included in promo:`,
+              promoId
+            );
+            groupIsValid = false;
+            break;
+          }
+        } else if (exclude_include === "exclude") {
+          if (parsedKondisi.includes(customer_id)) {
+            console.log(
+              `Customer ${customer_id} is EXCLUDED from promo:`,
+              promoId
+            );
+            groupIsValid = false;
+            break;
+          } else {
+            console.log(
+              `Customer ${customer_id} is NOT excluded from promo:`,
+              promoId
+            );
+          }
+        }
+      } else if (jenis_kondisi === "channel") {
+        console.log(parsedKondisi);
+        if (exclude_include === "include") {
+          if (parsedKondisi.includes(channel_id)) {
+            console.log(`Channel ${channel_id} is included in promo:`, promoId);
+          } else {
+            console.log(
+              `Channel ${channel_id} is NOT included in promo:`,
+              promoId
+            );
+            groupIsValid = false;
+            break;
+          }
+        } else if (exclude_include === "exclude") {
+          if (parsedKondisi.includes(channel_id)) {
+            console.log(
+              `Channel ${channel_id} is EXCLUDED from promo:`,
+              promoId
+            );
+            groupIsValid = false;
+            break;
+          } else {
+            console.log(
+              `Channel ${channel_id} is NOT excluded from promo:`,
+              promoId
+            );
+          }
+        }
+      } else {
+        continue;
+      }
+    }
+
+    if (groupIsValid && promoId) {
+      validPromoIds.push(promoId);
+    }
+  }
+
+  return validPromoIds;
+}
+
+async function cek_promo_kondisi_produk_brand(array_promo_kondisi, items) {
+  const validPromoIds = [];
+  let promo_bonus_barang = [];
+  for (const subArray of array_promo_kondisi) {
+    let groupIsValid = true;
+    let promoId = null;
+    let total_bonus_qty = 0;
+
+    for (const kondisiObj of subArray) {
+      const { jenis_kondisi, exclude_include, kondisi, promo_id, qty_min } =
+        kondisiObj;
+
+      if (!promoId && promo_id) {
+        promoId = promo_id;
+      }
+
+      if (jenis_kondisi !== "produk" && jenis_kondisi !== "brand") {
+        continue;
+      }
+
+      let parsedKondisi = [];
+      try {
+        parsedKondisi = JSON.parse(
+          typeof kondisi === "string" ? kondisi : JSON.stringify(kondisi)
+        );
+      } catch (e) {
+        console.error("Failed to parse kondisi:", kondisi, e);
+        groupIsValid = false;
+        break;
+      }
+
+      const matchedItems = items.filter((item) => {
+        const itemValue = item[jenis_kondisi + "_id"];
+        const itemQty = parseInt(item.qty, 10) || 0;
+        const qtyMin = parseInt(qty_min, 10) || 0;
+
+        const valueMatch = parsedKondisi.includes(itemValue);
+        const qtyMatch = itemQty >= qtyMin;
+
+        return valueMatch && qtyMatch;
+      });
+
+      if (exclude_include === "include" && matchedItems.length === 0) {
+        groupIsValid = false;
+        break;
+      }
+
+      if (exclude_include === "exclude" && matchedItems.length > 0) {
+        groupIsValid = false;
+        break;
+      }
+    }
+
+    if (groupIsValid && promoId) {
+      validPromoIds.push(promoId);
+    }
+  }
+
+  return validPromoIds;
+}
+
+async function cek_promo() {
+  const picker_penjualan = $("#tanggal_penjualan").pickadate("picker");
+  const tanggal_penjualan = picker_penjualan.get("select", "yyyy-mm-dd");
+  const gudang_id = document.getElementById("gudang_id").value;
+  const customer_id = document.getElementById("customer_id").value;
+  const keterangan = document.getElementById("keterangan_penjualan").value;
+  let diskon = document.getElementById("diskon").value;
+  const ppn = document.getElementById("ppn").value;
+  let nominal_pph = document.getElementById("nominal_pph").value;
+
+  const status_penjualan = document.getElementById("status_penjualan").value;
+
+  const details = [];
+  const rows = document.querySelectorAll("#create_detail_penjualan_tbody tr");
+
+  for (const row of rows) {
+    const produk_select = row.querySelector("td:nth-child(1) select");
+    const qty = row.querySelector("td:nth-child(2) input");
+    const satuan = row.querySelector("td:nth-child(3) select");
+    const harga = row.querySelector("td:nth-child(4) input");
+    const diskon = row.querySelector("td:nth-child(5) input");
+
+    const produk_id = produk_select?.value?.trim();
+    const kuantitas = qty?.value?.trim();
+    let harga_ = harga?.value?.trim();
+    const satuan_id = satuan?.value?.trim();
+    let discount = diskon?.value?.trim();
+
+    if (
+      !produk_id ||
+      produk_id.trim() === "" ||
+      !kuantitas ||
+      kuantitas.trim() === "" ||
+      !harga_ ||
+      harga_.trim() === "" ||
+      !satuan_id ||
+      satuan_id.trim() === "" ||
+      !discount ||
+      discount.trim() === ""
+    ) {
+      toastr.error("Semua field pada detail penjualan wajib diisi.");
+      return;
+    }
+    harga_ = helper.format_angka(harga_);
+    discount = helper.format_angka(discount);
+    details.push({
+      produk_id: produk_id,
+      qty: kuantitas,
+      harga: harga_,
+      satuan_id: satuan_id,
+      diskon: discount,
+    });
+  }
+
+  if (details.length === 0) {
+    toastr.error("Minimal satu detail penjualan harus diisi.");
+    return;
+  }
+  nominal_pph = helper.format_angka(nominal_pph);
+  diskon = helper.format_angka(diskon);
+
+  const data_penjualan = {
+    user_id: `${access.decryptItem("user_id")}`,
+    created_by: `${access.decryptItem("nama")}`,
+    tanggal_penjualan: tanggal_penjualan,
+    gudang_id: gudang_id,
+    customer_id: customer_id,
+    keterangan: keterangan,
+    ppn: ppn,
+    diskon: diskon,
+    nominal_pph: nominal_pph,
+    status: status_penjualan,
+    details: details,
+  };
+
+  try {
+    const response_promo_kondisi = await apiRequest(
+      `/PHP/API/penjualan_API.php?action=create&user_id=${access.decryptItem(
+        "user_id"
+      )}`,
+      "POST",
+      {
+        cek_promo: "cek_promo",
+        data_penjualan,
+      }
+    );
+    promo_bonus_barang.push(response_promo_kondisi.data);
+  } catch (error) {
+    console.error("Promo_kondisi:", error);
+  }
+}

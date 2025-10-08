@@ -388,171 +388,9 @@ async function submitpenjualan() {
 }
 
 const cek_promo_button = document.getElementById("cek_promo_button");
-cek_promo_button.addEventListener("click", async function () {
+cek_promo_button.addEventListener("click", function () {
   cek_promo();
 });
-
-function cek_promo_kondisi_customer_channel(
-  array_promo_kondisi,
-  channel_id,
-  customer_id
-) {
-  const validPromoIds = [];
-
-  for (const subArray of array_promo_kondisi) {
-    let groupIsValid = true;
-    let promoId = null;
-
-    for (const kondisiObj of subArray) {
-      const { jenis_kondisi, exclude_include, kondisi } = kondisiObj;
-
-      if (!promoId && kondisiObj.promo_id) {
-        promoId = kondisiObj.promo_id;
-      }
-
-      let parsedKondisi = [];
-      try {
-        parsedKondisi = JSON.parse(
-          typeof kondisi === "string" ? kondisi : JSON.stringify(kondisi)
-        );
-      } catch (e) {
-        console.error("Failed to parse kondisi:", kondisi, e);
-        groupIsValid = false;
-        break;
-      }
-
-      if (jenis_kondisi === "customer") {
-        console.log(parsedKondisi);
-        if (exclude_include === "include") {
-          if (parsedKondisi.includes(customer_id)) {
-            console.log(
-              `Customer ${customer_id} is included in promo:`,
-              promoId
-            );
-          } else {
-            console.log(
-              `Customer ${customer_id} is NOT included in promo:`,
-              promoId
-            );
-            groupIsValid = false;
-            break;
-          }
-        } else if (exclude_include === "exclude") {
-          if (parsedKondisi.includes(customer_id)) {
-            console.log(
-              `Customer ${customer_id} is EXCLUDED from promo:`,
-              promoId
-            );
-            groupIsValid = false;
-            break;
-          } else {
-            console.log(
-              `Customer ${customer_id} is NOT excluded from promo:`,
-              promoId
-            );
-          }
-        }
-      } else if (jenis_kondisi === "channel") {
-        console.log(parsedKondisi);
-        if (exclude_include === "include") {
-          if (parsedKondisi.includes(channel_id)) {
-            console.log(`Channel ${channel_id} is included in promo:`, promoId);
-          } else {
-            console.log(
-              `Channel ${channel_id} is NOT included in promo:`,
-              promoId
-            );
-            groupIsValid = false;
-            break;
-          }
-        } else if (exclude_include === "exclude") {
-          if (parsedKondisi.includes(channel_id)) {
-            console.log(
-              `Channel ${channel_id} is EXCLUDED from promo:`,
-              promoId
-            );
-            groupIsValid = false;
-            break;
-          } else {
-            console.log(
-              `Channel ${channel_id} is NOT excluded from promo:`,
-              promoId
-            );
-          }
-        }
-      } else {
-        continue;
-      }
-    }
-
-    if (groupIsValid && promoId) {
-      validPromoIds.push(promoId);
-    }
-  }
-
-  return validPromoIds;
-}
-
-async function cek_promo_kondisi_produk_brand(array_promo_kondisi, items) {
-  const validPromoIds = [];
-  let promo_bonus_barang = [];
-  for (const subArray of array_promo_kondisi) {
-    let groupIsValid = true;
-    let promoId = null;
-    let total_bonus_qty = 0;
-
-    for (const kondisiObj of subArray) {
-      const { jenis_kondisi, exclude_include, kondisi, promo_id, qty_min } =
-        kondisiObj;
-
-      if (!promoId && promo_id) {
-        promoId = promo_id;
-      }
-
-      if (jenis_kondisi !== "produk" && jenis_kondisi !== "brand") {
-        continue;
-      }
-
-      let parsedKondisi = [];
-      try {
-        parsedKondisi = JSON.parse(
-          typeof kondisi === "string" ? kondisi : JSON.stringify(kondisi)
-        );
-      } catch (e) {
-        console.error("Failed to parse kondisi:", kondisi, e);
-        groupIsValid = false;
-        break;
-      }
-
-      const matchedItems = items.filter((item) => {
-        const itemValue = item[jenis_kondisi + "_id"];
-        const itemQty = parseInt(item.qty, 10) || 0;
-        const qtyMin = parseInt(qty_min, 10) || 0;
-
-        const valueMatch = parsedKondisi.includes(itemValue);
-        const qtyMatch = itemQty >= qtyMin;
-
-        return valueMatch && qtyMatch;
-      });
-
-      if (exclude_include === "include" && matchedItems.length === 0) {
-        groupIsValid = false;
-        break;
-      }
-
-      if (exclude_include === "exclude" && matchedItems.length > 0) {
-        groupIsValid = false;
-        break;
-      }
-    }
-
-    if (groupIsValid && promoId) {
-      validPromoIds.push(promoId);
-    }
-  }
-
-  return validPromoIds;
-}
 
 async function cek_promo() {
   const picker_penjualan = $("#tanggal_penjualan").pickadate("picker");
@@ -616,6 +454,7 @@ async function cek_promo() {
   diskon = helper.format_angka(diskon);
 
   const data_penjualan = {
+    cek_promo: "cek_promo",
     user_id: `${access.decryptItem("user_id")}`,
     created_by: `${access.decryptItem("nama")}`,
     tanggal_penjualan: tanggal_penjualan,
@@ -629,19 +468,124 @@ async function cek_promo() {
     details: details,
   };
 
+  console.log(data_penjualan);
+
   try {
     const response_promo_kondisi = await apiRequest(
       `/PHP/API/penjualan_API.php?action=create&user_id=${access.decryptItem(
         "user_id"
       )}`,
       "POST",
-      {
-        cek_promo: "cek_promo",
-        data_penjualan,
-      }
+
+      data_penjualan
     );
-    promo_bonus_barang.push(response_promo_kondisi.data);
+    console.log(response_promo_kondisi.data);
+
+    display_promo_bonus_barang(
+      response_promo_kondisi.data,
+      "table_bonus_barang_tbody"
+    );
   } catch (error) {
     console.error("Promo_kondisi:", error);
+  }
+}
+
+async function display_promo_bonus_barang(data, tbody_id) {
+  data.valid_kelipatan_promo.forEach(async (item) => {
+    try {
+      const response_promo_bonus_barang = await apiRequest(
+        `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
+          "user_id"
+        )}&target=tb_penjualan&context=create`,
+        "POST",
+        { promo_id: item.promo_id, table: "tb_promo_bonus_barang" }
+      );
+      populate_bonus_barang(response_promo_bonus_barang.data, tbody_id);
+      console.log(
+        "promo bonus" + JSON.stringify(response_promo_bonus_barang.data)
+      );
+    } catch (error) {
+      console.error("Promo_kondisi:", error);
+    }
+  });
+}
+
+function populate_bonus_barang(data, tbody_id) {
+  const tbody = document.getElementById(`${tbody_id}`);
+  const container = document.getElementById("list-container");
+  tbody.innerHTML = "";
+  container.innerHTML = "";
+
+  let index = 1;
+  if (data.length != 0) {
+    data.forEach((item) => {
+      let nama_promo = item.nama_promo;
+      let nama_produk = item.nama_produk;
+      let qty = item.qty_bonus;
+      let jenis_diskon = item.jenis_diskon;
+      let jumlah_diskon = item.jlh_diskon;
+
+      const tr_promo_bonus_barang = document.createElement("tr");
+      const td_no = document.createElement("td");
+      td_no.textContent = index;
+      td_no.style.textAlign = "center";
+
+      const td_promo = document.createElement("td");
+      td_promo.textContent = nama_promo;
+
+      const td_produk = document.createElement("td");
+      td_produk.textContent = nama_produk;
+
+      const td_qty = document.createElement("td");
+      td_qty.textContent = qty;
+
+      const td_jenis_diskon = document.createElement("td");
+      td_jenis_diskon.textContent = jenis_diskon;
+
+      const td_jumlah_diskon = document.createElement("td");
+      td_jumlah_diskon.textContent = jumlah_diskon;
+      index++;
+
+      tr_promo_bonus_barang.appendChild(td_no);
+      tr_promo_bonus_barang.appendChild(td_promo);
+      tr_promo_bonus_barang.appendChild(td_produk);
+      tr_promo_bonus_barang.appendChild(td_qty);
+      tr_promo_bonus_barang.appendChild(td_jenis_diskon);
+      tr_promo_bonus_barang.appendChild(td_jumlah_diskon);
+
+      tbody.appendChild(tr_promo_bonus_barang);
+
+      const tile = document.createElement("div");
+      tile.className = "list-tile";
+
+      tile.innerHTML = `
+
+        <div class="content">
+          <div class="title">${nama_promo}</div>
+          <div class="subtitle">${nama_produk}</div>
+        </div>
+        <div class="trailing">
+        <p>jlh barang   : ${qty}</p>
+        <p>jenis diskon : ${jenis_diskon}</p>
+        <p>jlh diskon   : ${jumlah_diskon}</p>
+        </div>
+
+
+      `;
+
+      container.appendChild(tile);
+    });
+  } else {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 4;
+    td.className = "text-center text-muted";
+    td.textContent = "Tidak ada promo yang berlaku.";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+
+    container.innerHTML = `<p class="text-danger">
+      Tidak ada promo yang berlaku
+      </p>`;
   }
 }

@@ -31,7 +31,10 @@ if ($search !== '' && strlen($search) >= 3) {
     $result = $stmt->get_result();
 } else if (isset($data['promo_id'])  && isset($data['table']) && $data['table'] == "tb_promo_bonus_barang") {
     $promo_id = $data['promo_id'];
-    $sql_bonus = "SELECT * FROM tb_promo_bonus_barang WHERE promo_id=?";
+    $sql_bonus = "SELECT b.promo_id,b.qty_bonus,b.jenis_diskon,b.jlh_diskon,b.produk_id,promo.nama AS nama_promo,produk.nama AS nama_produk FROM tb_promo_bonus_barang b 
+    LEFT JOIN tb_promo promo ON promo.promo_id = b.promo_id
+    LEFT JOIN tb_produk produk ON produk.produk_id = b.produk_id
+    WHERE b.promo_id=?";
     $stmt = $conn->prepare($sql_bonus);
     $stmt->bind_param("s", $promo_id);
     $stmt->execute();

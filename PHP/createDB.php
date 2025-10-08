@@ -692,7 +692,7 @@ $penjualan = "CREATE TABLE IF NOT EXISTS tb_penjualan(
 penjualan_id VARCHAR(20) PRIMARY KEY NOT NULL,
 tanggal_penjualan DATE,
 customer_id VARCHAR(20),
-supplier_id VARCHAR(20),
+promo_id JSON,
 gudang_id VARCHAR(20),
 keterangan_penjualan VARCHAR(255),
 no_pengiriman VARCHAR(20),
@@ -711,8 +711,8 @@ keterangan_cancel VARCHAR(255),
 cancel_by VARCHAR (100),
 keterangan_invoice VARCHAR(255),
 keterangan_pengiriman VARCHAR(255),
-keterangan_gudang VARCHAR(255),
-FOREIGN KEY (supplier_id) REFERENCES tb_supplier(supplier_id) ON DELETE RESTRICT,
+keterangan_gudang VARCHAR(255)
+
 FOREIGN KEY (gudang_id) REFERENCES tb_gudang(gudang_id) ON DELETE RESTRICT,
 FOREIGN KEY (customer_id) REFERENCES tb_customer(customer_id) ON DELETE RESTRICT
 )";
@@ -745,24 +745,6 @@ if ($conn->query($detail_penjualan)) {
     }
 }
 
-
-$biaya_tambahan_penjualan = "CREATE TABLE IF NOT EXISTS tb_biaya_tambahan_penjualan(
-biaya_tambahan_penjualan_id VARCHAR(20) PRIMARY KEY NOT NULL,
-data_biaya_id VARCHAR(20),
-penjualan_id VARCHAR(20),
-keterangan VARCHAR(255),
-jlh DECIMAL(20,2),
-urutan INT,
-FOREIGN KEY (data_biaya_id) REFERENCES tb_data_biaya(data_biaya_id) ON DELETE RESTRICT,
-FOREIGN KEY (penjualan_id) REFERENCES tb_penjualan(penjualan_id) ON DELETE RESTRICT)";
-
-
-if ($conn->query($biaya_tambahan_invoice)) {
-    try {
-    } catch (Error) {
-        echo mysqli_error($conn);
-    }
-}
 
 
 mysqli_close($conn);

@@ -944,8 +944,9 @@ async function fetch_promo(promo_id, tbody, field) {
         tr_detail.appendChild(td_select);
         tr_detail.appendChild(td_dynamic);
         tr_detail.appendChild(td_exclude);
-        tr_detail.appendChild(qty_max_td);
         tr_detail.appendChild(qty_min_td);
+        tr_detail.appendChild(qty_max_td);
+
         tr_detail.appendChild(qty_akumulasi_td);
         tr_detail.appendChild(td_aksi);
         tbody.appendChild(tr_detail);

@@ -4,20 +4,10 @@ import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 import * as helper from "./helper.js";
 
-const submit_pengiriman_button = document.getElementById(
-  "submit_pengiriman_button"
-);
 let index = 0;
-const submit_terima_button = document.getElementById("submit_terima_button");
-
-submit_pengiriman_button.addEventListener("click", submit_pengiriman);
-submit_terima_button.addEventListener("click", submit_terima);
 
 const update_detail_penjualan_tbody = document.getElementById(
   "update_detail_penjualan_tbody"
-);
-const update_biaya_tambahan_tbody = document.getElementById(
-  "update_biaya_tambahan_tbody"
 );
 
 const update_detail_penjualan_button = document.getElementById(
@@ -27,32 +17,8 @@ update_detail_penjualan_button.addEventListener("click", function () {
   add_field("update", "update_produk_id", "update_satuan_id");
 });
 
-const update_biaya_tambahan_button = document.getElementById(
-  "update_biaya_tambahan_button"
-);
-update_biaya_tambahan_button.addEventListener("click", function () {
-  add_biaya("update", "update_data_biaya_id");
-});
 const grid_container_penjualan = document.querySelector("#table_penjualan");
 const pickdatejs_po = $("#update_tanggal_po")
-  .pickadate({
-    format: "dd mmm yyyy", // user sees: 01 Jan 2025
-    formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
-    selectYears: 25,
-    selectMonths: true,
-  })
-  .pickadate("picker");
-
-const pickdatejs_terima = $("#tanggal_terima")
-  .pickadate({
-    format: "dd mmm yyyy", // user sees: 01 Jan 2025
-    formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
-    selectYears: 25,
-    selectMonths: true,
-  })
-  .pickadate("picker");
-
-const pickdatejs_pengiriman = $("#tanggal_pengiriman")
   .pickadate({
     format: "dd mmm yyyy", // user sees: 01 Jan 2025
     formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
@@ -64,16 +30,10 @@ const pickdatejs_pengiriman = $("#tanggal_pengiriman")
 if (grid_container_penjualan) {
   function getStatusBadge(status) {
     switch (status) {
-      case "proses":
-        return `<span class="badge text-bg-secondary">proses</span>`;
-      case "pengiriman":
-        return `<span class="badge text-bg-warning">pengiriman</span>`;
-      case "terima":
-        return `<span class="badge text-bg-primary">terima</span>`;
-      case "invoice":
-        return `<span class="badge text-bg-success">invoice</span>`;
-      case "cancel":
-        return `<span class="badge text-bg-danger">cancel</span>`;
+      case "lunas":
+        return `<span class="badge text-bg-secondary">Lunas</span>`;
+      case "belumlunas":
+        return `<span class="badge text-bg-warning">Belum Lunas</span>`;
       default:
         return `<span class="badge text-bg-secondary">${status}</span>`;
     }
@@ -91,33 +51,25 @@ if (grid_container_penjualan) {
   });
   window.penjualan_grid = new Grid({
     columns: [
-      "No Purchase Order",
-      "Tanggal PO",
-      "supplier_id",
-      "Supplier",
-      "Tanggal Tengiriman",
-      "No Pengiriman",
-      "Tanggal Terima",
-      "Total Qty",
-      "Ppn",
+      "No Penjualan",
+      "Tanggal penjualan",
+      "Customer",
+      "Promo",
+      "Gudang",
+      "Ket penjualan",
+      "No kirim",
+      "PPN",
       "Nominal PPN",
       "Nominal PPH",
       "Diskon",
-      "Keterangan",
-      "Biaya Tambahan",
-      "Grand Total",
-      "Created On",
-      "Created By",
 
       {
         name: "Status",
         formatter: (cell) => html(getStatusBadge(cell)),
       },
-      "gudang_id",
       {
         name: "Aksi",
         formatter: (cell, row) => {
-          const status = row.cells[17].data;
           let edit;
           let can_delete;
           if (access.isOwner()) {
@@ -132,12 +84,7 @@ if (grid_container_penjualan) {
           }
           let button = "";
 
-          if (
-            edit &&
-            status != "terima" &&
-            status != "invoice" &&
-            status != "cancel"
-          ) {
+          if (edit) {
             button += `<button
                 type="button"
                 id="update_penjualan_button"
@@ -155,20 +102,19 @@ if (grid_container_penjualan) {
                 ></span>
               </button>`;
           }
-          if (can_delete && status != "cancel") {
+          if (can_delete) {
             button += `
         <button type="button" class="btn btn-danger delete_penjualan btn-sm">
          <i class="bi bi-x-circle"></i>
         </button>
         `;
           }
-          if (status != "cancel") {
-            button += `
+
+          button += `
         <button type="button" class="btn btn btn-info view_penjualan btn-sm" >
           <i class="bi bi-eye"></i>
         </button>
         `;
-          }
 
           return html(button);
         },
@@ -204,56 +150,17 @@ if (grid_container_penjualan) {
       then: (data) =>
         data.map((penjualan) => [
           penjualan.penjualan_id,
-          helper.format_date(penjualan.tanggal_po),
-          penjualan.supplier_id,
-          penjualan.supplier_nama,
-          html(`
-            
-            ${
-              penjualan.tanggal_po &&
-              !penjualan.tanggal_terima &&
-              penjualan.status != "cancel"
-                ? `${helper.format_date(penjualan.tanggal_pengiriman)} 
-                <button
-                type="button"
-                id="tanggal_pengiriman"
-                class="btn btn-warning tanggal_pengiriman btn-sm" data-bs-toggle="modal" data-bs-target="#modal_pengiriman"
-              >
-                <i class="bi bi-pencil-fill"></i>
-              </button>`
-                : `${helper.format_date(penjualan.tanggal_pengiriman)}`
-            }
-            `),
+          helper.format_date(penjualan.tanggal_penjualan),
+          penjualan.customer_id,
+          JSON.parse(penjualan.promo_id),
+          penjualan.gudang_id,
+          penjualan.keterangan_penjualan,
           penjualan.no_pengiriman,
-          html(
-            `${
-              penjualan.tanggal_pengiriman &&
-              !penjualan.tanggal_terima &&
-              penjualan.status != "cancel"
-                ? `${helper.format_date(penjualan.tanggal_terima)}
-                <button
-                type="button"
-                id="tanggal_pengiriman"
-                class="btn btn-warning tanggal_terima btn-sm" data-bs-toggle="modal" data-bs-target="#modal_terima"
-              >
-                <i class="bi bi-pencil-fill"></i>
-              </button>`
-                : `${helper.format_date(penjualan.tanggal_terima)}`
-            }`
-          ),
-
-          penjualan.total_qty,
           helper.format_persen(penjualan.ppn),
           helper.format_angka(penjualan.nominal_ppn),
           helper.format_angka(penjualan.nominal_pph),
           helper.format_angka(penjualan.diskon),
-          penjualan.keterangan,
-          helper.format_angka(penjualan.biaya_tambahan),
-          helper.format_angka(penjualan.grand_total),
-          helper.format_date_time(penjualan.created_on),
-          penjualan.created_by,
           penjualan.status,
-          penjualan.gudang_id,
           null,
         ]),
     },
@@ -264,155 +171,9 @@ if (grid_container_penjualan) {
       "penjualan",
       handle_delete,
       handle_update,
-      handle_view,
-      handle_pengiriman,
-      handle_terima
+      handle_view
     );
   }, 200);
-}
-
-function handle_pengiriman(button) {
-  $("#modal_pengiriman").on("shown.bs.modal", async function () {
-    document.getElementById("pengiriman_penjualan_id").value = "";
-    const row = button.closest("tr");
-    window.currentRow = row;
-    const penjualan_id = row.cells[0].textContent;
-    document.getElementById("pengiriman_penjualan_id").value = penjualan_id;
-    const result = await apiRequest(
-      `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
-        "user_id"
-      )}`,
-      "POST",
-      { penjualan_id: penjualan_id }
-    );
-
-    result.data.forEach((item) => {
-      const parts = item.tanggal_pengiriman
-        ? item.tanggal_pengiriman.split("-")
-        : "";
-      if (parts.length === 3) {
-        const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-        pickdatejs_pengiriman.set("select", dateObj);
-      }
-
-      document.getElementById("no_pengiriman").value = item.no_pengiriman;
-    });
-  });
-
-  $("#modal_pengiriman").modal("show");
-}
-
-function handle_terima(button) {
-  $("#modal_terima").on("shown.bs.modal", async function () {
-    document.getElementById("terima_penjualan_id").value = "";
-    const row = button.closest("tr");
-    window.currentRow = row;
-    const penjualan_id = row.cells[0].textContent;
-    document.getElementById("terima_penjualan_id").value = penjualan_id;
-    console.log("penjualan_id: " + penjualan_id);
-    const result = await apiRequest(
-      `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
-        "user_id"
-      )}`,
-      "POST",
-      { penjualan_id: penjualan_id }
-    );
-
-    result.data.forEach((item) => {
-      const parts = item.tanggal_terima ? item.tanggal_terima.split("-") : "";
-      if (parts.length === 3) {
-        const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-        pickdatejs_terima.set("select", dateObj);
-      }
-    });
-  });
-
-  $("#modal_terima").modal("show");
-}
-
-async function submit_terima() {
-  const penjualan_id = document.getElementById("terima_penjualan_id").value;
-
-  const picker_terima = $("#tanggal_terima").pickadate("picker");
-  const tanggal_terima = picker_terima.get("select", "yyyy-mm-dd");
-
-  const body = {
-    user_id: `${access.decryptItem("user_id")}`,
-    penjualan_id: penjualan_id,
-    tanggal_terima: tanggal_terima,
-    status: "terima",
-  };
-  try {
-    const result = await Swal.fire({
-      title: "Apakah Anda Yakin?",
-      text: "Setelah submit tidak bisa diganti lagi!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Iya, Submit!",
-      cancelButtonText: "Batalkan",
-    });
-    if (result.isConfirmed) {
-      try {
-        const response = await apiRequest(
-          `/PHP/API/penjualan_API.php?action=update`,
-          "POST",
-          body
-        );
-
-        if (response.ok) {
-          swal.fire("Berhasil", response.message, "success");
-          $("#modal_terima").modal("hide");
-          window.penjualan_grid.forceRender();
-          setTimeout(() => {
-            helper.custom_grid_header("penjualan");
-          }, 200);
-        } else {
-          Swal.fire("Gagal", response.error || "Gagal.", "error");
-        }
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Gagal",
-          text: error.message,
-        });
-      }
-    }
-  } catch (error) {
-    toastr.error(error.message);
-  }
-}
-
-async function submit_pengiriman() {
-  const penjualan_id = document.getElementById("pengiriman_penjualan_id").value;
-  const picker_pengiriman = $("#tanggal_pengiriman").pickadate("picker");
-  const tanggal_pengiriman = picker_pengiriman.get("select", "yyyy-mm-dd");
-  const no_pengiriman = document.getElementById("no_pengiriman").value;
-  const body = {
-    user_id: `${access.decryptItem("user_id")}`,
-    penjualan_id: penjualan_id,
-    tanggal_pengiriman: tanggal_pengiriman,
-    no_pengiriman: no_pengiriman,
-    status: "pengiriman",
-  };
-  try {
-    const response = await apiRequest(
-      `/PHP/API/penjualan_API.php?action=update`,
-      "POST",
-      body
-    );
-    if (response.ok) {
-      swal.fire("Berhasil", response.message, "success");
-      $("#modal_pengiriman").modal("hide");
-      window.penjualan_grid.forceRender();
-      setTimeout(() => {
-        helper.custom_grid_header("penjualan");
-      }, 200);
-    }
-  } catch (error) {
-    toastr.error(error.message);
-  }
 }
 
 function handle_view(button) {
@@ -501,65 +262,7 @@ function delete_biaya_tambahan(action) {
     }
   );
 }
-async function select_data_biaya(
-  index,
-  action,
-  data_biaya_id,
-  current_data_biaya_id
-) {
-  if (action == "create") {
-    $(`#${data_biaya_id}${index}`).select2({
-      placeholder: "Pilih Biaya",
-      allowClear: true,
-      dropdownParent: $("#modal_penjualan"),
-    });
-  } else if (action == "update") {
-    $(`#${data_biaya_id}${index}`).select2({
-      placeholder: "Pilih Biaya",
-      allowClear: true,
-      dropdownParent: $("#update_modal_penjualan"),
-    });
-  }
 
-  delete_biaya_tambahan(action);
-  try {
-    const response = await apiRequest(
-      `/PHP/API/data_biaya_API.php?action=select&user_id=${access.decryptItem(
-        "user_id"
-      )}`
-    );
-
-    const select = $(`#${data_biaya_id}${index}`);
-    select.empty();
-    select.append(new Option("Pilih Biaya", "", false, false));
-
-    if (action == "create") {
-      response.data.forEach((item) => {
-        const option = new Option(
-          `${item.data_biaya_id} - ${item.nama}`,
-          item.data_biaya_id,
-          false,
-          false
-        );
-        select.append(option);
-      });
-      select.trigger("change");
-    } else if (action == "update") {
-      response.data.forEach((item) => {
-        const option = new Option(
-          `${item.data_biaya_id} - ${item.nama}`,
-          item.data_biaya_id,
-          false,
-          item.data_biaya_id === current_data_biaya_id
-        );
-        select.append(option);
-      });
-      select.val(current_data_biaya_id).trigger("change");
-    }
-  } catch (error) {
-    console.error("error:", error);
-  }
-}
 // Attach delete listeners
 async function handle_delete(button) {
   $("#modal_cancel").modal("show");

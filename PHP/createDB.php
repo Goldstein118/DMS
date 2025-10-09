@@ -711,7 +711,7 @@ keterangan_cancel VARCHAR(255),
 cancel_by VARCHAR (100),
 keterangan_invoice VARCHAR(255),
 keterangan_pengiriman VARCHAR(255),
-keterangan_gudang VARCHAR(255)
+keterangan_gudang VARCHAR(255),
 
 FOREIGN KEY (gudang_id) REFERENCES tb_gudang(gudang_id) ON DELETE RESTRICT,
 FOREIGN KEY (customer_id) REFERENCES tb_customer(customer_id) ON DELETE RESTRICT

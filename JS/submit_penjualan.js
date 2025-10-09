@@ -354,6 +354,7 @@ async function submitpenjualan() {
   diskon = helper.format_angka(diskon);
 
   const data_penjualan = {
+    create_penjualan: "create_penjualan",
     user_id: `${access.decryptItem("user_id")}`,
     created_by: `${access.decryptItem("nama")}`,
     tanggal_penjualan: tanggal_penjualan,
@@ -367,24 +368,24 @@ async function submitpenjualan() {
     details: details,
   };
   console.log(data_penjualan);
-  // try {
-  //   const response = await apiRequest(
-  //     `/PHP/API/penjualan_API.php?action=create`,
-  //     "POST",
-  //     data_penjualan
-  //   );
-  //   if (response.ok) {
-  //     swal.fire("Berhasil", response.message, "success");
-  //     document.querySelector("#create_detail_penjualan_tbody").innerHTML = "";
-  //     $("#modal_penjualan").modal("hide");
-  //     window.penjualan_grid.forceRender();
-  //     setTimeout(() => {
-  //       helper.custom_grid_header("penjualan");
-  //     }, 200);
-  //   }
-  // } catch (error) {
-  //   toastr.error(error.message);
-  // }
+  try {
+    const response = await apiRequest(
+      `/PHP/API/penjualan_API.php?action=create`,
+      "POST",
+      data_penjualan
+    );
+    if (response.ok) {
+      swal.fire("Berhasil", response.message, "success");
+      document.querySelector("#create_detail_penjualan_tbody").innerHTML = "";
+      $("#modal_penjualan").modal("hide");
+      window.penjualan_grid.forceRender();
+      setTimeout(() => {
+        helper.custom_grid_header("penjualan");
+      }, 200);
+    }
+  } catch (error) {
+    toastr.error(error.message);
+  }
 }
 
 const cek_promo_button = document.getElementById("cek_promo_button");
@@ -491,37 +492,50 @@ async function cek_promo() {
 }
 
 async function display_promo_bonus_barang(data, tbody_id) {
-  data.valid_kelipatan_promo.forEach(async (item) => {
-    try {
-      const response_promo_bonus_barang = await apiRequest(
-        `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
-          "user_id"
-        )}&target=tb_penjualan&context=create`,
-        "POST",
-        { promo_id: item.promo_id, table: "tb_promo_bonus_barang" }
-      );
-      populate_bonus_barang(response_promo_bonus_barang.data, tbody_id);
-      console.log(
-        "promo bonus" + JSON.stringify(response_promo_bonus_barang.data)
-      );
-    } catch (error) {
-      console.error("Promo_kondisi:", error);
-    }
-  });
+  if (
+    data.valid_kelipatan_promo != null &&
+    data.valid_kelipatan_promo.length > 0
+  ) {
+    data.valid_kelipatan_promo.forEach(async (item) => {
+      try {
+        const response_promo_bonus_barang = await apiRequest(
+          `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
+            "user_id"
+          )}&target=tb_penjualan&context=create`,
+          "POST",
+          { promo_id: item.promo_id, table: "tb_promo_bonus_barang" }
+        );
+        populate_bonus_barang(
+          response_promo_bonus_barang.data,
+          tbody_id,
+          item.bonus_kelipatan
+        );
+        console.log(
+          "promo bonus" + JSON.stringify(response_promo_bonus_barang.data)
+        );
+      } catch (error) {
+        console.error("Promo_kondisi:", error);
+      }
+    });
+  } else {
+    populate_bonus_barang([], tbody_id);
+  }
 }
 
-function populate_bonus_barang(data, tbody_id) {
+function populate_bonus_barang(data, tbody_id, bonus_kelipatan) {
   const tbody = document.getElementById(`${tbody_id}`);
   const container = document.getElementById("list-container");
   tbody.innerHTML = "";
   container.innerHTML = "";
-
+  let bonus_kelipatan_barang = bonus_kelipatan ? bonus_kelipatan : 1;
+  // console.log(bonus_kelipatan_barang);
   let index = 1;
   if (data.length != 0) {
     data.forEach((item) => {
       let nama_promo = item.nama_promo;
       let nama_produk = item.nama_produk;
-      let qty = item.qty_bonus;
+      let qty = Number(item.qty_bonus) * bonus_kelipatan_barang;
+
       let jenis_diskon = item.jenis_diskon;
       let jumlah_diskon = item.jlh_diskon;
 

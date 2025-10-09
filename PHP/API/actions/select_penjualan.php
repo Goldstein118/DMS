@@ -4,8 +4,8 @@ if (!$conn) {
     echo json_encode(["error" => "Database connection failed"]);
     exit;
 }
-$sql = "SELECT p.penjualan_id,p.tanggal_penjualan,p.keterangan_penjualan,p.gudang_id,
-    p.no_pengiriman,p.total_qty,p.ppn,p.nominal_ppn,p.diskon,p.nominal_pph,p.biaya_tambahan,p.grand_total,p.created_on,p.created_by,p.status,g.nama AS gudang_nama
+$sql = "SELECT p.penjualan_id,p.tanggal_penjualan,p.keterangan_penjualan,p.gudang_id,p.promo_id,
+    p.no_pengiriman,p.total_qty,p.ppn,p.nominal_ppn,p.diskon,p.nominal_pph,p.grand_total,p.created_on,p.created_by,p.status,g.nama AS gudang_nama
      FROM tb_penjualan p 
      LEFT JOIN tb_gudang g ON p.gudang_id=g.gudang_id
      ";

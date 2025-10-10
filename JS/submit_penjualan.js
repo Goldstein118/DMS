@@ -482,7 +482,7 @@ async function cek_promo() {
     );
     console.log(response_promo_kondisi.data);
 
-    display_promo_bonus_barang(
+    await display_promo_bonus_barang(
       response_promo_kondisi.data,
       "table_bonus_barang_tbody"
     );
@@ -492,32 +492,43 @@ async function cek_promo() {
 }
 
 async function display_promo_bonus_barang(data, tbody_id) {
-  if (
-    data.valid_kelipatan_promo != null &&
-    data.valid_kelipatan_promo.length > 0
-  ) {
-    data.valid_kelipatan_promo.forEach(async (item) => {
+  const validPromoItems = Array.isArray(data.valid_kelipatan_promo)
+    ? data.valid_kelipatan_promo.filter(
+        (item) => item && typeof item === "object" && item.promo_id
+      )
+    : [];
+
+  if (validPromoItems.length > 0) {
+    for (const item of validPromoItems) {
       try {
         const response_promo_bonus_barang = await apiRequest(
           `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
             "user_id"
           )}&target=tb_penjualan&context=create`,
           "POST",
-          { promo_id: item.promo_id, table: "tb_promo_bonus_barang" }
+          {
+            promo_id: item.promo_id,
+            table: "tb_promo_bonus_barang",
+          }
         );
+
         populate_bonus_barang(
           response_promo_bonus_barang.data,
           tbody_id,
           item.bonus_kelipatan
         );
+
         console.log(
-          "promo bonus" + JSON.stringify(response_promo_bonus_barang.data)
+          "Promo bonus:",
+          JSON.stringify(response_promo_bonus_barang.data)
         );
       } catch (error) {
-        console.error("Promo_kondisi:", error);
+        console.error("Promo_kondisi (bonus_barang):", error);
       }
-    });
+    }
   } else {
+    // No valid promo items
+    console.warn("No valid promo items found.");
     populate_bonus_barang([], tbody_id);
   }
 }

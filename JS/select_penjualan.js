@@ -18,7 +18,7 @@ update_detail_penjualan_button.addEventListener("click", function () {
 });
 
 const grid_container_penjualan = document.querySelector("#table_penjualan");
-const pickdatejs_po = $("#update_tanggal_po")
+const pickdatejs_penjualan = $("#update_tanggal_penjualan")
   .pickadate({
     format: "dd mmm yyyy", // user sees: 01 Jan 2025
     formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
@@ -39,7 +39,7 @@ if (grid_container_penjualan) {
     }
   }
   $(document).ready(function () {
-    $("#update_supplier_id").select2({
+    $("#update_customer_id").select2({
       allowClear: true,
       dropdownParent: $("#update_modal_penjualan"),
     });
@@ -62,7 +62,6 @@ if (grid_container_penjualan) {
       "Nominal PPN",
       "Nominal PPH",
       "Diskon",
-
       {
         name: "Status",
         formatter: (cell) => html(getStatusBadge(cell)),
@@ -186,80 +185,6 @@ function handle_view(button) {
     )}`,
     "_blank",
     "toolbar=0,location=0,menubar=0"
-  );
-}
-function add_biaya(action, data_biaya_element_id) {
-  var myTable = document.getElementById(`${action}_biaya_tambahan_tbody`);
-  var currentIndex = index++;
-  const tr_detail = document.createElement("tr");
-
-  const td_biaya = document.createElement("td");
-  var biaya_select = document.createElement("select");
-  biaya_select.setAttribute("id", data_biaya_element_id + currentIndex);
-  biaya_select.classList.add("form-select");
-  td_biaya.appendChild(biaya_select);
-
-  const td_jumlah = document.createElement("td");
-  var input_jumlah = document.createElement("input");
-  input_jumlah.setAttribute("id", "jumlah" + currentIndex);
-  input_jumlah.classList.add("form-control");
-  input_jumlah.style.textAlign = "right";
-  td_jumlah.appendChild(input_jumlah);
-
-  const td_keterangan = document.createElement("td");
-  var input_keterangan = document.createElement("input");
-  input_keterangan.setAttribute("id", "keterangan" + currentIndex);
-  input_keterangan.classList.add("form-control");
-  input_keterangan.style.textAlign = "right";
-  td_keterangan.appendChild(input_keterangan);
-
-  const td_aksi = document.createElement("td");
-  td_aksi.setAttribute("id", "aksi_tbody");
-  var delete_button = document.createElement("button");
-  delete_button.type = "button";
-  delete_button.className = "btn btn-danger btn-sm delete_biaya_tambahan";
-  delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
-  td_aksi.appendChild(delete_button);
-  td_aksi.style.textAlign = "center";
-
-  tr_detail.appendChild(td_biaya);
-  tr_detail.appendChild(td_jumlah);
-  tr_detail.appendChild(td_keterangan);
-  tr_detail.appendChild(td_aksi);
-
-  myTable.appendChild(tr_detail);
-
-  helper.format_nominal("jumlah" + currentIndex);
-  select_data_biaya(currentIndex, action, data_biaya_element_id);
-}
-function delete_biaya_tambahan(action) {
-  $(`#${action}_biaya_tambahan_tbody`).on(
-    "click",
-    ".delete_biaya_tambahan",
-    async function () {
-      const result = await Swal.fire({
-        title: "Apakah Anda Yakin?",
-        text: "Anda tidak dapat mengembalikannya!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Iya, Hapus!",
-        cancelButtonText: "Batalkan",
-      });
-      if (result.isConfirmed) {
-        try {
-          $(this).closest("tr").remove();
-          Swal.fire("Berhasil", "penjualan dihapus.", "success");
-        } catch (error) {
-          Swal.fire({
-            icon: "error",
-            title: "Gagal",
-            text: error.message,
-          });
-        }
-      }
-    }
   );
 }
 
@@ -538,14 +463,14 @@ function add_field(action, produk_element_id, satuan_element_id) {
 function populate_select(data, current_id, field) {
   const select = $(`#update_${field}_id`);
   select.empty();
-  if (field === "supplier") {
-    select.append(new Option("Pilih Supplier", "", false, false));
+  if (field === "customer") {
+    select.append(new Option("Pilih Customer", "", false, false));
     data.forEach((item) => {
       const option = new Option(
-        `${item.supplier_id} - ${item.nama}`,
-        item.supplier_id,
+        `${item.customer_id} - ${item.nama}`,
+        item.customer_id,
         false,
-        item.supplier_id == current_id
+        item.customer_id == current_id
       );
       select.append(option);
     });
@@ -575,21 +500,18 @@ async function handle_update(button) {
   spinner.style.display = "inline-block";
 
   const penjualan_id = row.cells[0].textContent;
-  let tanggal_po = row.cells[1].textContent;
-  const supplier_id = row.cells[2].textContent;
-  const gudang_id = row.cells[18].textContent;
-  let ppn = row.cells[8].textContent;
-  ppn = helper.unformat_persen(ppn);
-
-  const nominal_pph = row.cells[10].textContent;
-  const diskon = row.cells[11].textContent;
-  const keterangan = row.cells[12].textContent;
-  const status = row.cells[17].textContent.trim();
-
-  tanggal_po = helper.unformat_date(tanggal_po);
-  const parts = tanggal_po.split("-"); // ["2025", "05", "02"]
-  const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-  pickdatejs_po.set("select", dateObj);
+  try {
+    const response = await apiRequest(
+      `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}`,
+      "POST",
+      { penjualan_id: penjualan_id, table: "tb_penjualan" }
+    );
+    response.data.forEach((item) => {});
+  } catch (error) {
+    console.error("error:", error);
+  }
 
   document.getElementById("update_penjualan_id").value = penjualan_id;
   document.getElementById("update_ppn").value = ppn;

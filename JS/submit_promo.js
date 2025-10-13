@@ -361,27 +361,18 @@ jenis_bonus.addEventListener("change", (event) => {
   }
 });
 
-let akumulasi = document.getElementById("akumulasi");
-let kelipatan = document.getElementById("kelipatan");
-function handleToggle(source, target) {
-  if (source.value === "ya") {
-    target.value = "tidak";
-    target.disabled = true;
+let jenis_promo = document.getElementById("jenis_promo");
+
+jenis_promo.addEventListener("change", (event) => {
+  if (jenis_promo.value === "prioritas") {
+    document.getElementById("div_prioritas").style.display = "block";
+    document.getElementById("prioritas").value = 0;
   } else {
-    target.disabled = false;
-    target.value = "ya";
-    source.disabled = true;
+    document.getElementById("div_prioritas").style.display = "none";
+    document.getElementById("prioritas").value = 0;
   }
-}
-handleToggle(akumulasi, kelipatan);
-handleToggle(kelipatan, akumulasi);
-akumulasi.addEventListener("change", () => {
-  handleToggle(akumulasi, kelipatan);
 });
 
-kelipatan.addEventListener("change", () => {
-  handleToggle(kelipatan, akumulasi);
-});
 async function submitPromo() {
   const nama = document.getElementById("nama_promo").value;
   const picker_tanggal_berlaku = $("#tanggal_berlaku").pickadate("picker");
@@ -389,6 +380,8 @@ async function submitPromo() {
   const picker_tanggal_selesai = $("#tanggal_selesai").pickadate("picker");
   const tanggal_selesai = picker_tanggal_selesai.get("select", "yyyy-mm-dd");
   const jenis_bonus = document.getElementById("jenis_bonus").value;
+
+  const jenis_promo = document.getElementById("jenis_promo").value;
   const akumulasi = document.getElementById("akumulasi").value;
   const kelipatan = document.getElementById("kelipatan").value;
   const prioritas = document.getElementById("prioritas").value;
@@ -564,6 +557,7 @@ async function submitPromo() {
       tanggal_berlaku: tanggal_berlaku,
       tanggal_selesai: tanggal_selesai,
       jenis_bonus: jenis_bonus,
+      jenis_promo: jenis_promo,
       akumulasi: akumulasi,
       kelipatan: kelipatan,
       prioritas: prioritas,

@@ -165,7 +165,7 @@
                         </button>
                         <div id="list-container"></div>
 
-                        <div class="card" id="cek_promo_card">
+                        <!-- <div class="card" id="cek_promo_card">
                             <div class="card-header">Promo Bonus Barang</div>
                             <div class="card-body" id="cek_promo_card_body">
 
@@ -185,7 +185,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
+                        </div> -->
 
 
 
@@ -262,6 +262,8 @@
                                     <div class="accordion-body">
                                         <div class="row gap-2">
                                             <div class="col">
+
+                                                <input type="text" class="form-control d-none" id="update_penjualan_id" name="update_penjualan_id" />
                                                 <label class="form-label mb-0 mt-2" for="update_tanggal_penjualan">Tanggal Penjualan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <input class="form-control" type="text" id="update_tanggal_penjualan" name="update_tanggal_penjualan" value="">
                                                 <label class="form-label mb-0 mt-2" for="update_status_penjualan">Status:<i class="bi bi-asterisk text-danger align-middle"></i></label>
@@ -379,7 +381,8 @@
                                             <div class="col"> <label class="form-label mb-0 mt-2" for="update_keterangan_penjualan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <input type="text" class="form-control" id="update_keterangan_penjualan" name="update_keterangan_penjualan" />
                                             </div>
-                                            <div class="col"> <label class="form-label mb-0 mt-2" for="update_diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                            <div class="col">
+                                                <label class="form-label mb-0 mt-2" for="update_diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <input type="text" class="form-control" id="update_diskon" name="diskon" />
                                             </div>
                                         </div>
@@ -395,9 +398,9 @@
                         <button class="btn btn-primary btn-sm mb-2" id="update_cek_promo_button">
                             <i class="bi bi-eyeglasses"></i> Cek Promo
                         </button>
-                        <div id="list-container"></div>
-
-                        <div class="card" id="update_cek_promo_card">
+                        <div id="update-list-container"></div>
+                        <!-- 
+                        <div class="card mt-2" id="update_cek_promo_card">
                             <div class="card-header">Promo Bonus Barang</div>
                             <div class="card-body" id="update_cek_promo_card_body">
 
@@ -417,7 +420,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
+                        </div> -->
 
 
 

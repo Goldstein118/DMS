@@ -47,7 +47,7 @@ if ($search !== '' && strlen($search) >= 3) {
     $result = $conn->query($sql_bonus);
 } else {
     $sql_promo = "SELECT p.promo_id,p.nama,p.tanggal_berlaku,p.tanggal_selesai,p.jenis_bonus,p.akumulasi,p.kelipatan,p.prioritas,
-    p.jenis_diskon,p.jumlah_diskon,p.quota,p.created_on,p.status,p.satuan_id,s.nama AS satuan_nama FROM tb_promo p  
+    p.jenis_diskon,p.jumlah_diskon,p.quota,p.created_on,p.status,p.satuan_id,s.nama AS satuan_nama, p.jenis_promo FROM tb_promo p  
     LEFT JOIN tb_satuan s ON p.satuan_id = s.satuan_id";
     $result = $conn->query($sql_promo);
 }

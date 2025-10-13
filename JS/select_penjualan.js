@@ -204,7 +204,7 @@ async function handle_delete(button) {
         return;
       }
       const result = await Swal.fire({
-        title: "Cancel Purchase Order?",
+        title: "Cancel Penjualan?",
         text: "Setelah submit tidak bisa diganti lagi!",
         icon: "warning",
         showCancelButton: true,
@@ -230,7 +230,7 @@ async function handle_delete(button) {
           if (response.ok) {
             Swal.fire(
               "Berhasil",
-              response.message || "Purchase Order dicancel.",
+              response.message || "Penjualan Order dicancel.",
               "success"
             );
 
@@ -467,7 +467,7 @@ function populate_select(data, current_id, field) {
     select.append(new Option("Pilih Customer", "", false, false));
     data.forEach((item) => {
       const option = new Option(
-        `${item.customer_id} - ${item.nama}`,
+        `${item.customer_id} - ${item.nama} - ${item.channel_nama} `,
         item.customer_id,
         false,
         item.customer_id == current_id
@@ -500,6 +500,15 @@ async function handle_update(button) {
   spinner.style.display = "inline-block";
 
   const penjualan_id = row.cells[0].textContent;
+
+  let status = "";
+  let customer_id = "";
+  let gudang_id = "";
+  let ppn = "";
+  let nominal_pph = "";
+  let keterangan_penjualan = "";
+  let diskon_penjualan = "";
+
   try {
     const response = await apiRequest(
       `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
@@ -508,27 +517,53 @@ async function handle_update(button) {
       "POST",
       { penjualan_id: penjualan_id, table: "tb_penjualan" }
     );
-    response.data.forEach((item) => {});
+    response.data.forEach((item) => {
+      const part_penjualan = item.tanggal_penjualan
+        ? item.tanggal_penjualan.split("-")
+        : "";
+      if (part_penjualan.length == 3) {
+        const dateObj_penjualan = new Date(
+          part_penjualan[0],
+          part_penjualan[1] - 1,
+          part_penjualan[2]
+        );
+        pickdatejs_penjualan.set("select", dateObj_penjualan);
+      }
+
+      status = item.status;
+      customer_id = item.customer_id;
+      gudang_id = item.gudang_id;
+      ppn = item.ppn;
+      nominal_pph = item.nominal_pph;
+      keterangan_penjualan = item.keterangan_penjualan;
+      diskon_penjualan = item.diskon;
+    });
   } catch (error) {
     console.error("error:", error);
   }
 
   document.getElementById("update_penjualan_id").value = penjualan_id;
+
+  document.getElementById("update_status_penjualan").value = status;
+  document.getElementById("update_customer_id").value = customer_id;
+  document.getElementById("update_gudang_id").value = gudang_id;
   document.getElementById("update_ppn").value = ppn;
   document.getElementById("update_nominal_pph").value =
     helper.unformat_angka(nominal_pph);
-  document.getElementById("update_keterangan").value = keterangan;
+  document.getElementById("update_keterangan_penjualan").value =
+    keterangan_penjualan;
   document.getElementById("update_diskon").value =
-    helper.unformat_angka(diskon);
-  document.getElementById("update_status_penjualan").value = status;
+    helper.unformat_angka(diskon_penjualan);
 
   try {
     const response = await apiRequest(
-      `/PHP/API/supplier_API.php?action=select&user_id=${access.decryptItem(
+      `/PHP/API/customer_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
-      )}&target=tb_penjualan&context=edit`
+      )}&target=tb_penjualan&context=edit`,
+      "POST",
+      { select: "select" }
     );
-    populate_select(response.data, supplier_id, "supplier");
+    populate_select(response.data, customer_id, "customer");
   } catch (error) {
     console.error("error:", error);
   }
@@ -549,7 +584,7 @@ async function handle_update(button) {
         "user_id"
       )}`,
       "POST",
-      { penjualan_id: penjualan_id, table: "detail_penjualan" }
+      { penjualan_id: penjualan_id, table: "tb_detail_penjualan" }
     );
 
     renponse_detail_penjualan.data.forEach((detail, index) => {
@@ -560,7 +595,10 @@ async function handle_update(button) {
 
       const td_produk = document.createElement("td");
       var produk_select = document.createElement("select");
-      produk_select.setAttribute("id", "produk_element_id" + currentIndex);
+      produk_select.setAttribute(
+        "id",
+        "update_produk_element_id" + currentIndex
+      );
       produk_select.classList.add("form-select");
       td_produk.appendChild(produk_select);
 
@@ -573,7 +611,10 @@ async function handle_update(button) {
 
       const td_satuan = document.createElement("td");
       var satuan_select = document.createElement("select");
-      satuan_select.setAttribute("id", "satuan_element_id" + currentIndex);
+      satuan_select.setAttribute(
+        "id",
+        "update_satuan_element_id" + currentIndex
+      );
       satuan_select.classList.add("form-select");
       td_satuan.appendChild(satuan_select);
 
@@ -616,8 +657,8 @@ async function handle_update(button) {
       select_detail_penjualan(
         currentIndex,
         "update",
-        "produk_element_id",
-        "satuan_element_id",
+        "update_produk_element_id",
+        "update_satuan_element_id",
         current_produk_id,
         current_satuan_id
       );
@@ -626,72 +667,6 @@ async function handle_update(button) {
     console.error("error:", error);
   }
 
-  try {
-    update_biaya_tambahan_tbody.innerHTML = "";
-    const response_biaya_tambahan = await apiRequest(
-      `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
-        "user_id"
-      )}`,
-      "POST",
-      {
-        penjualan_id: penjualan_id,
-        table: "biaya_tambahan",
-      }
-    );
-    response_biaya_tambahan.data.forEach((detail, index) => {
-      var currentIndex = index++;
-      const tr_detail = document.createElement("tr");
-      const current_data_biaya_id = detail.data_biaya_id;
-
-      const td_biaya = document.createElement("td");
-      var biaya_select = document.createElement("select");
-      biaya_select.setAttribute("id", "data_biaya_element_id" + currentIndex);
-      biaya_select.classList.add("form-select");
-      td_biaya.appendChild(biaya_select);
-
-      const td_jumlah = document.createElement("td");
-      var input_jumlah = document.createElement("input");
-      input_jumlah.setAttribute("id", "jumlah" + currentIndex);
-      input_jumlah.classList.add("form-control");
-      input_jumlah.style.textAlign = "right";
-      input_jumlah.value = helper.unformat_angka(detail.jlh);
-      td_jumlah.appendChild(input_jumlah);
-
-      const td_keterangan = document.createElement("td");
-      var input_keterangan = document.createElement("input");
-      input_keterangan.setAttribute("id", "keterangan" + currentIndex);
-      input_keterangan.classList.add("form-control");
-      input_keterangan.style.textAlign = "right";
-      input_keterangan.value = detail.keterangan;
-      td_keterangan.appendChild(input_keterangan);
-
-      const td_aksi = document.createElement("td");
-      td_aksi.setAttribute("id", "aksi_tbody");
-      var delete_button = document.createElement("button");
-      delete_button.type = "button";
-      delete_button.className = "btn btn-danger btn-sm delete_biaya_tambahan";
-      delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
-      td_aksi.appendChild(delete_button);
-      td_aksi.style.textAlign = "center";
-
-      tr_detail.appendChild(td_biaya);
-      tr_detail.appendChild(td_jumlah);
-      tr_detail.appendChild(td_keterangan);
-      tr_detail.appendChild(td_aksi);
-
-      update_biaya_tambahan_tbody.appendChild(tr_detail);
-
-      helper.format_nominal("jumlah" + currentIndex);
-      select_data_biaya(
-        currentIndex,
-        "update",
-        "data_biaya_element_id",
-        current_data_biaya_id
-      );
-    });
-  } catch (error) {
-    console.error("error:", error);
-  }
   button_icon.style.display = "inline-block";
   spinner.style.display = "none";
   $("#update_modal_penjualan").modal("show");
@@ -703,18 +678,14 @@ const submit_penjualan_update = document.getElementById(
 
 if (submit_penjualan_update) {
   submit_penjualan_update.addEventListener("click", async function () {
-    if (!window.currentRow) {
-      toastr.error("No row selected for update.");
-      return;
-    }
-
-    const row = window.currentRow;
-    const picker_po = $("#update_tanggal_po").pickadate("picker");
-    const tanggal_po = picker_po.get("select", "yyyy-mm-dd");
     const penjualan_id = document.getElementById("update_penjualan_id").value;
-    const supplier_id = document.getElementById("update_supplier_id").value;
+    const picker_penjualan = $("#update_tanggal_penjualan").pickadate("picker");
+    const tanggal_penjualan = picker_penjualan.get("select", "yyyy-mm-dd");
     const gudang_id = document.getElementById("update_gudang_id").value;
-    const keterangan = document.getElementById("update_keterangan").value;
+    const customer_id = document.getElementById("update_customer_id").value;
+    const keterangan = document.getElementById(
+      "update_keterangan_penjualan"
+    ).value;
     let diskon = document.getElementById("update_diskon").value;
     const ppn = document.getElementById("update_ppn").value;
     let nominal_pph = document.getElementById("update_nominal_pph").value;
@@ -765,59 +736,32 @@ if (submit_penjualan_update) {
       });
     }
 
-    const biaya_tambahan = [];
-    const rows_biaya_tambahan = document.querySelectorAll(
-      "#update_biaya_tambahan_tbody tr"
-    );
-
-    for (const row of rows_biaya_tambahan) {
-      const biaya_select = row.querySelector("td:nth-child(1) select");
-      const jumlah_biaya = row.querySelector("td:nth-child(2) input");
-      const keterangan_biaya = row.querySelector("td:nth-child(3) input");
-
-      const data_biaya_id = biaya_select?.value?.trim();
-      let jumlah = jumlah_biaya?.value?.trim();
-      const keterangan = keterangan_biaya?.value?.trim();
-
-      if (
-        !data_biaya_id ||
-        data_biaya_id.trim() === "" ||
-        !jumlah ||
-        jumlah.trim() === "" ||
-        !keterangan ||
-        keterangan.trim() === ""
-      ) {
-        toastr.error("Semua field pada biaya tambahan wajib diisi.");
-        return;
-      }
-      jumlah = helper.format_angka(jumlah);
-      biaya_tambahan.push({
-        data_biaya_id: data_biaya_id,
-        jumlah: jumlah,
-        keterangan: keterangan,
-      });
+    if (details.length === 0) {
+      toastr.error("Minimal satu detail penjualan harus diisi.");
+      return;
     }
+    nominal_pph = helper.format_angka(nominal_pph);
+    diskon = helper.format_angka(diskon);
 
     const data_penjualan = {
+      update_penjualan: "update_penjualan",
       user_id: `${access.decryptItem("user_id")}`,
       created_by: `${access.decryptItem("nama")}`,
       penjualan_id: penjualan_id,
-      tanggal_po: tanggal_po,
-      supplier_id: supplier_id,
+      tanggal_penjualan: tanggal_penjualan,
       gudang_id: gudang_id,
+      customer_id: customer_id,
       keterangan: keterangan,
       ppn: ppn,
       diskon: diskon,
       nominal_pph: nominal_pph,
       status: status_penjualan,
       details: details,
-      biaya_tambahan: biaya_tambahan,
     };
+    console.log(data_penjualan);
     try {
       const response = await apiRequest(
-        `/PHP/API/penjualan_API.php?action=update&user_id=${access.decryptItem(
-          "user_id"
-        )}`,
+        `/PHP/API/penjualan_API.php?action=create`,
         "POST",
         data_penjualan
       );
@@ -828,12 +772,9 @@ if (submit_penjualan_update) {
 
         window.penjualan_grid.forceRender();
         setTimeout(() => {
-          helper.custom_grid_header(
-            "penjualan",
-            handle_delete,
-            handle_update,
-            handle_view
-          );
+          helper.custom_gr;
+
+          id_header("penjualan", handle_delete, handle_update, handle_view);
         }, 200);
       } else {
         Swal.fire("Gagal", response.message || "Update gagal.", "error");
@@ -846,4 +787,231 @@ if (submit_penjualan_update) {
       });
     }
   });
+}
+
+async function cek_promo() {
+  const penjualan_id = document.getElementById("update_penjualan_id").value;
+  const picker_penjualan = $("#update_tanggal_penjualan").pickadate("picker");
+  const tanggal_penjualan = picker_penjualan.get("select", "yyyy-mm-dd");
+  const gudang_id = document.getElementById("update_gudang_id").value;
+  const customer_id = document.getElementById("update_customer_id").value;
+  const keterangan = document.getElementById(
+    "update_keterangan_penjualan"
+  ).value;
+  let diskon = document.getElementById("update_diskon").value;
+  const ppn = document.getElementById("update_ppn").value;
+  let nominal_pph = document.getElementById("update_nominal_pph").value;
+
+  const status_penjualan = document.getElementById(
+    "update_status_penjualan"
+  ).value;
+
+  const details = [];
+  const rows = document.querySelectorAll("#update_detail_penjualan_tbody tr");
+
+  for (const row of rows) {
+    const produk_select = row.querySelector("td:nth-child(1) select");
+    const qty = row.querySelector("td:nth-child(2) input");
+    const satuan = row.querySelector("td:nth-child(3) select");
+    const harga = row.querySelector("td:nth-child(4) input");
+    const diskon = row.querySelector("td:nth-child(5) input");
+
+    const produk_id = produk_select?.value?.trim();
+    const kuantitas = qty?.value?.trim();
+    let harga_ = harga?.value?.trim();
+    const satuan_id = satuan?.value?.trim();
+    let discount = diskon?.value?.trim();
+
+    if (
+      !produk_id ||
+      produk_id.trim() === "" ||
+      !kuantitas ||
+      kuantitas.trim() === "" ||
+      !harga_ ||
+      harga_.trim() === "" ||
+      !satuan_id ||
+      satuan_id.trim() === "" ||
+      !discount ||
+      discount.trim() === ""
+    ) {
+      toastr.error("Semua field pada detail penjualan wajib diisi.");
+      return;
+    }
+    harga_ = helper.format_angka(harga_);
+    discount = helper.format_angka(discount);
+    details.push({
+      produk_id: produk_id,
+      qty: kuantitas,
+      harga: harga_,
+      satuan_id: satuan_id,
+      diskon: discount,
+    });
+  }
+
+  if (details.length === 0) {
+    toastr.error("Minimal satu detail penjualan harus diisi.");
+    return;
+  }
+  nominal_pph = helper.format_angka(nominal_pph);
+  diskon = helper.format_angka(diskon);
+
+  const data_penjualan = {
+    cek_promo: "cek_promo",
+    user_id: `${access.decryptItem("user_id")}`,
+    created_by: `${access.decryptItem("nama")}`,
+    penjualan_id: penjualan_id,
+    tanggal_penjualan: tanggal_penjualan,
+    gudang_id: gudang_id,
+    customer_id: customer_id,
+    keterangan: keterangan,
+    ppn: ppn,
+    diskon: diskon,
+    nominal_pph: nominal_pph,
+    status: status_penjualan,
+    details: details,
+  };
+
+  try {
+    const response_promo_kondisi = await apiRequest(
+      `/PHP/API/penjualan_API.php?action=update&user_id=${access.decryptItem(
+        "user_id"
+      )}`,
+      "POST",
+
+      data_penjualan
+    );
+    console.log(response_promo_kondisi.data);
+
+    await display_promo_bonus_barang(
+      response_promo_kondisi.data,
+      "table_bonus_barang_tbody"
+    );
+  } catch (error) {
+    console.error("Promo_kondisi:", error);
+  }
+}
+
+async function display_promo_bonus_barang(data, tbody_id) {
+  // Flatten the 2D array safely
+  const validPromoItems = Array.isArray(data.valid_kelipatan_promo)
+    ? data.valid_kelipatan_promo
+        .flat()
+        .filter((item) => item && typeof item === "object" && item.promo_id)
+    : [];
+
+  if (validPromoItems.length > 0) {
+    for (const item of validPromoItems) {
+      try {
+        const response_promo_bonus_barang = await apiRequest(
+          `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
+            "user_id"
+          )}&target=tb_penjualan&context=create`,
+          "POST",
+          {
+            promo_id: item.promo_id,
+            table: "tb_promo_bonus_barang",
+          }
+        );
+
+        populate_bonus_barang(
+          response_promo_bonus_barang.data,
+          tbody_id,
+          item.bonus_kelipatan
+        );
+
+        console.log(
+          "Promo bonus:",
+          JSON.stringify(response_promo_bonus_barang.data)
+        );
+      } catch (error) {
+        console.error("Promo_kondisi (bonus_barang):", error);
+      }
+    }
+  } else {
+    // No valid promo items
+    console.warn("No valid promo items found.");
+    populate_bonus_barang([], tbody_id);
+  }
+}
+
+function populate_bonus_barang(data, tbody_id, bonus_kelipatan) {
+  // const tbody = document.getElementById(`${tbody_id}`);
+  const container = document.getElementById("update-list-container");
+  // tbody.innerHTML = "";
+  container.innerHTML = "";
+  let bonus_kelipatan_barang = bonus_kelipatan ? bonus_kelipatan : 1;
+  // console.log(bonus_kelipatan_barang);
+  let index = 1;
+  if (data.length != 0) {
+    data.forEach((item) => {
+      let nama_promo = item.nama_promo;
+      let nama_produk = item.nama_produk;
+      let qty = Number(item.qty_bonus) * bonus_kelipatan_barang;
+
+      let jenis_diskon = item.jenis_diskon;
+      let jumlah_diskon = item.jlh_diskon;
+
+      // const tr_promo_bonus_barang = document.createElement("tr");
+      // const td_no = document.createElement("td");
+      // td_no.textContent = index;
+      // td_no.style.textAlign = "center";
+
+      // const td_promo = document.createElement("td");
+      // td_promo.textContent = nama_promo;
+
+      // const td_produk = document.createElement("td");
+      // td_produk.textContent = nama_produk;
+
+      // const td_qty = document.createElement("td");
+      // td_qty.textContent = qty;
+
+      // const td_jenis_diskon = document.createElement("td");
+      // td_jenis_diskon.textContent = jenis_diskon;
+
+      // const td_jumlah_diskon = document.createElement("td");
+      // td_jumlah_diskon.textContent = jumlah_diskon;
+      index++;
+
+      // tr_promo_bonus_barang.appendChild(td_no);
+      // tr_promo_bonus_barang.appendChild(td_promo);
+      // tr_promo_bonus_barang.appendChild(td_produk);
+      // tr_promo_bonus_barang.appendChild(td_qty);
+      // tr_promo_bonus_barang.appendChild(td_jenis_diskon);
+      // tr_promo_bonus_barang.appendChild(td_jumlah_diskon);
+
+      // tbody.appendChild(tr_promo_bonus_barang);
+
+      const tile = document.createElement("div");
+      tile.className = "list-tile";
+
+      tile.innerHTML = `
+
+        <div class="content">
+          <div class="title">${nama_promo}</div>
+          <div class="subtitle">${nama_produk}</div>
+        </div>
+        <div class="trailing">
+        <p>jlh barang   : ${qty}</p>
+        <p>jenis diskon : ${jenis_diskon}</p>
+        <p>jlh diskon   : ${jumlah_diskon}</p>
+        </div>
+
+
+      `;
+
+      container.appendChild(tile);
+    });
+  } else {
+    // const tr = document.createElement("tr");
+    // const td = document.createElement("td");
+    // td.colSpan = 4;
+    // td.className = "text-center text-muted";
+    // td.textContent = "Tidak ada promo yang berlaku.";
+    // tr.appendChild(td);
+    // tbody.appendChild(tr);
+
+    container.innerHTML = `<p class="text-danger">
+      Tidak ada promo yang berlaku
+      </p>`;
+  }
 }

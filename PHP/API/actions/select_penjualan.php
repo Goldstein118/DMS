@@ -12,6 +12,14 @@ if (isset($data['table']) && $data['table'] === 'tb_penjualan' && isset($data['p
     $stmt->bind_param("s", $penjualan_id);
     $stmt->execute();
     $result = $stmt->get_result();
+} else if (isset($data['table']) && $data['table'] === 'tb_detail_penjualan' && isset($data['penjualan_id'])) {
+    $penjualan_id = $data['penjualan_id'];
+    $sql = "SELECT *FROM tb_detail_penjualan WHERE penjualan_id=?";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $penjualan_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 } else {
     $sql = "SELECT p.penjualan_id,p.tanggal_penjualan,p.keterangan_penjualan,p.gudang_id,p.promo_id,
     p.no_pengiriman,p.total_qty,p.ppn,p.nominal_ppn,p.diskon,p.nominal_pph,p.grand_total,p.created_on,p.created_by,p.status,g.nama AS gudang_nama

@@ -98,6 +98,7 @@ if (grid_container_promo) {
       "Status",
       "Satuan",
       "satuan_id",
+      "jenis_promo",
       {
         name: "Aksi",
         formatter: () => {
@@ -187,6 +188,7 @@ if (grid_container_promo) {
           `),
           item.satuan_nama,
           item.satuan_id,
+          item.jenis_promo,
           null,
         ]),
     },
@@ -437,7 +439,8 @@ async function populate_bonus_barang_update_modal(promo_id, tbody, field) {
         field
       );
     });
-    delete_promo_kondisi("tbody");
+
+    delete_promo_kondisi(`${field}_table_bonus_barang_tbody`);
   }, 200);
 }
 
@@ -1108,7 +1111,7 @@ async function add_field_barang(table, field) {
     field
   );
 
-  delete_promo_kondisi("table");
+  delete_promo_kondisi(`${field}_table_bonus_barang_tbody`);
 }
 async function handle_update(button) {
   const row = button.closest("tr");
@@ -1135,6 +1138,7 @@ async function handle_update(button) {
       .toLowerCase()
       .replace(/\s/g, "");
     const current_satuan_id = row.cells[14].textContent;
+    const jenis_promo = row.cells[15].textContent;
 
     current_tanggal_berlaku = helper.unformat_date(current_tanggal_berlaku);
     const parts_tanggal_berlaku = current_tanggal_berlaku.split("-"); // ["2025", "05", "02"]
@@ -1165,6 +1169,7 @@ async function handle_update(button) {
     document.getElementById("update_jumlah_diskon").value =
       helper.unformat_angka(jumlah_diskon);
     document.getElementById("update_quota").value = quota;
+    document.getElementById("update_jenis_promo").value = jenis_promo;
     document.getElementById("update_status_promo").value = status;
     fetch_fk("satuan", "", "update_satuan_id", "", current_satuan_id, "update");
 
@@ -1200,27 +1205,25 @@ async function handle_update(button) {
       }
     });
 
-    let akumulasi_select = document.getElementById("update_akumulasi");
-    let kelipatan_select = document.getElementById("update_kelipatan");
-    function handleToggle(source, target) {
-      if (source.value === "ya") {
-        target.value = "tidak";
-        target.disabled = true;
+    let jenis_promo_select = document.getElementById("update_jenis_promo");
+
+    jenis_promo_select.addEventListener("change", (event) => {
+      if (jenis_promo_select.value === "prioritas") {
+        document.getElementById("update_div_prioritas").style.display = "block";
+        document.getElementById("update_prioritas").value = 0;
       } else {
-        target.disabled = false;
-        target.value = "ya";
-        source.disabled = true;
+        document.getElementById("update_div_prioritas").style.display = "none";
+        document.getElementById("update_prioritas").value = 0;
       }
-    }
-    handleToggle(akumulasi_select, kelipatan_select);
-    handleToggle(kelipatan_select, akumulasi_select);
-    akumulasi_select.addEventListener("change", () => {
-      handleToggle(akumulasi_select, kelipatan_select);
     });
 
-    kelipatan_select.addEventListener("change", () => {
-      handleToggle(kelipatan_select, akumulasi_select);
-    });
+    if (jenis_promo_select.value === "prioritas") {
+      document.getElementById("update_div_prioritas").style.display = "block";
+      document.getElementById("update_prioritas").value = 0;
+    } else {
+      document.getElementById("update_div_prioritas").style.display = "none";
+      document.getElementById("update_prioritas").value = 0;
+    }
   } catch (error) {
     toastr.error("Gagal mengambil data : " + error.message);
   }
@@ -1253,6 +1256,7 @@ if (submit_promo_update) {
 
     const tanggal_selesai = tanggal_selesai_picker.get("select", "yyyy-mm-dd");
     const jenis_bonus = document.getElementById("update_jenis_bonus").value;
+    const jenis_promo = document.getElementById("update_jenis_promo").value;
     const akumulasi = document.getElementById("update_akumulasi").value;
     const prioritas = document.getElementById("update_prioritas").value;
     const kelipatan = document.getElementById("update_kelipatan").value;
@@ -1437,6 +1441,7 @@ if (submit_promo_update) {
           kelipatan: kelipatan,
           prioritas: prioritas,
           jenis_diskon: jenis_diskon,
+          jenis_promo: jenis_promo,
           jumlah_diskon: jumlah_diskon,
           status: status,
           quota: quota,
@@ -1497,6 +1502,7 @@ async function submit_copy() {
   const status = document.getElementById("copy_status_promo").value;
   const quota = document.getElementById("copy_quota").value;
   const satuan_id = $("#copy_satuan_id").val();
+  const jenis_promo = document.getElementById("update_jenis_promo").value;
 
   let compare_tanggal = true;
   const startDate = new Date(tanggal_berlaku);
@@ -1664,6 +1670,7 @@ async function submit_copy() {
         tanggal_berlaku: tanggal_berlaku,
         tanggal_selesai: tanggal_selesai,
         jenis_bonus: jenis_bonus,
+        jenis_promo: jenis_promo,
         akumulasi: akumulasi,
         kelipatan: kelipatan,
         prioritas: prioritas,

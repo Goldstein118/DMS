@@ -50,6 +50,12 @@
                                             <input type="text" class="form-control" id="jumlah_diskon" name="jumlah_diskon" />
                                         </div>
 
+                                        <label class="form-label mb-0 mt-2" for="jenis_promo">Jenis Promo:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <select class="form-select" id="jenis_promo">
+                                            <option value="akumulasi">Akumulasi</option>
+                                            <option value="kelipatan">Kelipatan</option>
+                                            <option value="prioritas">Prioritas</option>
+                                        </select>
 
                                         <label class="form-label mb-0 mt-2" for="akumulasi">Akumulasi:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="akumulasi">
@@ -65,9 +71,11 @@
 
                                         </select>
 
+                                        <div id="div_prioritas" style="display: none;">
+                                            <label class="form-label mb-0 mt-2" for="prioritas">Prioritas:</label>
+                                            <input type="number" min="0" class="form-control" id="prioritas" name="prioritas" />
+                                        </div>
 
-                                        <label class="form-label mb-0 mt-2" for="prioritas">Prioritas:</label>
-                                        <input type="number" class="form-control" id="prioritas" name="prioritas" />
 
 
                                     </div>
@@ -184,6 +192,14 @@
                                             <label class="form-label mb-0 mt-2" for="update_jumlah_diskon">Jumlah Diskon:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                             <input type="text" class="form-control" id="update_jumlah_diskon" name="update_jumlah_diskon" />
                                         </div>
+
+                                        <label class="form-label mb-0 mt-2" for="update_jenis_promo">Jenis Promo:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <select class="form-select" id="update_jenis_promo">
+                                            <option value="akumulasi">Akumulasi</option>
+                                            <option value="kelipatan">Kelipatan</option>
+                                            <option value="prioritas">Prioritas</option>
+                                        </select>
+
                                         <label class="form-label mb-0 mt-2" for="update_akumulasi">Akumulasi:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="update_akumulasi">
                                             <option value="ya">Ya</option>
@@ -198,8 +214,11 @@
 
                                         </select>
 
-                                        <label class="form-label mb-0 mt-2" for="update_prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <input type="text" class="form-control" id="update_prioritas" name="prioritas" />
+                                        <div id="update_div_prioritas">
+                                            <label class="form-label mb-0 mt-2" for="update_prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                            <input type="number" min="0" class="form-control" id="update_prioritas" name="update_prioritas" />
+                                        </div>
+
 
                                         <label class="form-label mb-0 mt-2" for="update_satuan_id">Satuan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="update_satuan_id">

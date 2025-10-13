@@ -114,7 +114,6 @@ if (strlen($search) >= 3 && $search !== '') {
         LEFT JOIN tb_pricelist p ON p.pricelist_id=c.pricelist_id
         ";
 
-
     $result = $conn->query($sql);
 } else if (isset($data['customer_id']) && isset($data['select'])) {
     $customer_id = $data['customer_id'];

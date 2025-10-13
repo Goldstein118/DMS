@@ -396,7 +396,9 @@ h3 {
 #create_detail_pembelian_button,
 #detail_pembelian_button,
 #biaya_tambahan_button,
-#create_biaya_tambahan_button {
+#create_biaya_tambahan_button,
+#create_detail_penjualan_button,
+#update_detail_penjualan_button {
   max-width: fit-content !important;
 }
 .view_modal_pricelist {
@@ -425,7 +427,9 @@ h3 {
 #update_biaya_tambahan,
 #create_detail_pembelian,
 #create_biaya_tambahan,
-#update_detail_pembelian_table {
+#update_detail_pembelian_table,
+#detail_penjualan,
+#update_detail_penjualan {
   border-collapse: collapse;
   width: 100%;
   table-layout: fixed;
@@ -443,7 +447,9 @@ h3 {
 #update_detail_pembelian_table thead,
 #update_biaya_tambahan thead,
 #create_detail_pembelian thead,
-#create_biaya_tambahan thead {
+#create_biaya_tambahan thead,
+#detail_penjualan thead,
+#update_detail_penjualan thead {
   display: table;
   width: 100%;
   table-layout: fixed;
@@ -463,7 +469,9 @@ h3 {
 #update_detail_pembelian_table tbody,
 #update_biaya_tambahan tbody,
 #create_detail_pembelian tbody,
-#create_biaya_tambahan tbody {
+#create_biaya_tambahan tbody,
+#detail_penjualan tbody,
+#update_detail_penjualan tbody {
   display: block;
   max-height: 200px;
   overflow-y: scroll;
@@ -487,7 +495,9 @@ h3 {
 #update_detail_pembelian_table tbody tr,
 #update_biaya_tambahan tbody tr,
 #create_detail_pembelian tbody tr,
-#create_biaya_tambahan tbody tr {
+#create_biaya_tambahan tbody tr,
+#detail_penjualan tbody tr,
+#update_detail_penjualan tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
@@ -559,7 +569,9 @@ h3 {
 #update_promo_kondisi_card_body,
 #update_promo_bonus_card_body,
 #detail_pembelian_card_body,
-#update_detail_pembelian_card_body {
+#update_detail_pembelian_card_body,
+#detail_penjualan_card_body,
+#update_detail_penjualan_card_body {
   max-height: 35vh;
   margin-bottom: 25px;
   overflow-x: auto;
@@ -577,7 +589,11 @@ h3 {
 #create_detail_pembelian td:nth-child(6),
 #create_detail_pembelian th:nth-child(6),
 #create_biaya_tambahan th:nth-child(4),
-#create_biaya_tambahan td:nth-child(4) {
+#create_biaya_tambahan td:nth-child(4),
+#detail_penjualan th:nth-child(6),
+#detail_penjualan td:nth-child(6),
+#update_detail_penjualan th:nth-child(6),
+#update_detail_penjualan td:nth-child(6) {
   width: 5%;
 }
 
@@ -589,10 +605,11 @@ h3 {
   transition: background-color 0.2s ease;
   border-radius: 6px;
   box-shadow: 0px 2px 6px 1px rgba(0, 0, 0, 0.1);
+  background: #c9eb7b;
 }
 
 .list-tile:hover {
-  background-color: #0d6efdb8;
+  background-color: #7eb600;
 }
 
 .leading {
@@ -616,12 +633,12 @@ h3 {
 
 .subtitle {
   font-size: 14px;
-  color: #666;
+  color: #242424;
 }
 
 .trailing {
   margin-left: auto;
-  color: #999;
+  color: #262626;
   font-size: 12px;
 }
 

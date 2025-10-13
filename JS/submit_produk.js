@@ -132,7 +132,7 @@ async function submitProduk() {
   let harga_minimal = document.getElementById("harga_minimal").value;
   harga_minimal = helper.format_angka(harga_minimal);
   const stock_awal = document.getElementById("stock_awal").value;
-  const satuan_id = document.getElementById("satuan_id").value;
+  const satuan_id = document.getElementById("satuan").value;
 
   const details = [];
   const rows = document.querySelectorAll(

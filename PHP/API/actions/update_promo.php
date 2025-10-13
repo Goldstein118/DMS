@@ -55,6 +55,7 @@ try {
         $jenis_bonus = $fields['jenis_bonus'] ?? 'barang';
         $akumulasi = $fields['akumulasi'] ?? '';
         $kelipatan = $fields['kelipatan'];
+        $jenis_promo = $fields['jenis_promo'];
         $prioritas = $fields['prioritas'] ?? '';
         $jenis_diskon = $fields['jenis_diskon'] ?? '';
         $jumlah_diskon = $fields['jumlah_diskon'] ?? '';
@@ -82,7 +83,8 @@ try {
         nama = ?, 
         tanggal_berlaku = ?, 
         tanggal_selesai = ?, 
-        jenis_bonus = ?, 
+        jenis_bonus = ?,
+        jenis_promo=?, 
         akumulasi = ?, 
         prioritas = ?,
         kelipatan=?,
@@ -93,11 +95,12 @@ try {
         satuan_id =?
         WHERE promo_id = ?");
         $stmt->bind_param(
-            "ssssssssddsss",
+            "sssssssssddsss",
             $nama,
             $tanggal_berlaku,
             $tanggal_selesai,
             $jenis_bonus,
+            $jenis_promo,
             $akumulasi,
             $prioritas,
             $kelipatan,

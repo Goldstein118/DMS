@@ -492,10 +492,11 @@ async function cek_promo() {
 }
 
 async function display_promo_bonus_barang(data, tbody_id) {
+  // Flatten the 2D array safely
   const validPromoItems = Array.isArray(data.valid_kelipatan_promo)
-    ? data.valid_kelipatan_promo.filter(
-        (item) => item && typeof item === "object" && item.promo_id
-      )
+    ? data.valid_kelipatan_promo
+        .flat()
+        .filter((item) => item && typeof item === "object" && item.promo_id)
     : [];
 
   if (validPromoItems.length > 0) {
@@ -534,9 +535,9 @@ async function display_promo_bonus_barang(data, tbody_id) {
 }
 
 function populate_bonus_barang(data, tbody_id, bonus_kelipatan) {
-  const tbody = document.getElementById(`${tbody_id}`);
+  // const tbody = document.getElementById(`${tbody_id}`);
   const container = document.getElementById("list-container");
-  tbody.innerHTML = "";
+  // tbody.innerHTML = "";
   container.innerHTML = "";
   let bonus_kelipatan_barang = bonus_kelipatan ? bonus_kelipatan : 1;
   // console.log(bonus_kelipatan_barang);
@@ -550,35 +551,35 @@ function populate_bonus_barang(data, tbody_id, bonus_kelipatan) {
       let jenis_diskon = item.jenis_diskon;
       let jumlah_diskon = item.jlh_diskon;
 
-      const tr_promo_bonus_barang = document.createElement("tr");
-      const td_no = document.createElement("td");
-      td_no.textContent = index;
-      td_no.style.textAlign = "center";
+      // const tr_promo_bonus_barang = document.createElement("tr");
+      // const td_no = document.createElement("td");
+      // td_no.textContent = index;
+      // td_no.style.textAlign = "center";
 
-      const td_promo = document.createElement("td");
-      td_promo.textContent = nama_promo;
+      // const td_promo = document.createElement("td");
+      // td_promo.textContent = nama_promo;
 
-      const td_produk = document.createElement("td");
-      td_produk.textContent = nama_produk;
+      // const td_produk = document.createElement("td");
+      // td_produk.textContent = nama_produk;
 
-      const td_qty = document.createElement("td");
-      td_qty.textContent = qty;
+      // const td_qty = document.createElement("td");
+      // td_qty.textContent = qty;
 
-      const td_jenis_diskon = document.createElement("td");
-      td_jenis_diskon.textContent = jenis_diskon;
+      // const td_jenis_diskon = document.createElement("td");
+      // td_jenis_diskon.textContent = jenis_diskon;
 
-      const td_jumlah_diskon = document.createElement("td");
-      td_jumlah_diskon.textContent = jumlah_diskon;
+      // const td_jumlah_diskon = document.createElement("td");
+      // td_jumlah_diskon.textContent = jumlah_diskon;
       index++;
 
-      tr_promo_bonus_barang.appendChild(td_no);
-      tr_promo_bonus_barang.appendChild(td_promo);
-      tr_promo_bonus_barang.appendChild(td_produk);
-      tr_promo_bonus_barang.appendChild(td_qty);
-      tr_promo_bonus_barang.appendChild(td_jenis_diskon);
-      tr_promo_bonus_barang.appendChild(td_jumlah_diskon);
+      // tr_promo_bonus_barang.appendChild(td_no);
+      // tr_promo_bonus_barang.appendChild(td_promo);
+      // tr_promo_bonus_barang.appendChild(td_produk);
+      // tr_promo_bonus_barang.appendChild(td_qty);
+      // tr_promo_bonus_barang.appendChild(td_jenis_diskon);
+      // tr_promo_bonus_barang.appendChild(td_jumlah_diskon);
 
-      tbody.appendChild(tr_promo_bonus_barang);
+      // tbody.appendChild(tr_promo_bonus_barang);
 
       const tile = document.createElement("div");
       tile.className = "list-tile";
@@ -601,13 +602,13 @@ function populate_bonus_barang(data, tbody_id, bonus_kelipatan) {
       container.appendChild(tile);
     });
   } else {
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 4;
-    td.className = "text-center text-muted";
-    td.textContent = "Tidak ada promo yang berlaku.";
-    tr.appendChild(td);
-    tbody.appendChild(tr);
+    // const tr = document.createElement("tr");
+    // const td = document.createElement("td");
+    // td.colSpan = 4;
+    // td.className = "text-center text-muted";
+    // td.textContent = "Tidak ada promo yang berlaku.";
+    // tr.appendChild(td);
+    // tbody.appendChild(tr);
 
     container.innerHTML = `<p class="text-danger">
       Tidak ada promo yang berlaku

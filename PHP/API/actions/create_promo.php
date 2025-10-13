@@ -17,6 +17,7 @@ try {
     $tanggal_berlaku = $field['tanggal_berlaku'];
     $tanggal_selesai = $field['tanggal_selesai'];
     $jenis_bonus = $field['jenis_bonus'];
+    $jenis_promo = $field['jenis_promo'];
     $akumulasi = $field['akumulasi'];
     $kelipatan = $field['kelipatan'];
     $prioritas = $field['prioritas'];
@@ -41,8 +42,8 @@ try {
     executeInsert(
         $conn,
         "INSERT INTO tb_promo(promo_id,nama,tanggal_berlaku,tanggal_selesai,jenis_bonus,jenis_diskon
-        ,akumulasi,prioritas,jumlah_diskon,quota,status,satuan_id,kelipatan)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        ,akumulasi,prioritas,jumlah_diskon,quota,status,satuan_id,kelipatan,jenis_promo)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         [
             $promo_id,
             $nama,
@@ -56,9 +57,10 @@ try {
             $quota,
             $status_promo,
             $satuan_id,
-            $kelipatan
+            $kelipatan,
+            $jenis_promo
         ],
-        "sssssssdddsss"
+        "sssssssdddssss"
     );
     if (isset($data['promo_kondisi'])) {
 
@@ -81,9 +83,6 @@ try {
             validate_2($qty_akumulasi, '/^\d+$/', "Format qty akumulasi tidak valid");
             validate_2($qty_max, '/^\d+$/', "Format qty max tidak valid");
             validate_2($qty_min, '/^\d+$/', "Format qty min tidak valid");
-
-
-
 
 
             $promo_kondisi_id = generateCustomID('PRK', 'tb_promo_kondisi', 'promo_kondisi_id', $conn);

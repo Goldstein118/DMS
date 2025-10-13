@@ -267,8 +267,7 @@ if ($conn->query($frezzer)) {
 }
 
 $promo = "CREATE TABLE IF NOT EXISTS tb_promo (promo_id VARCHAR(20) PRIMARY KEY NOT NULL, nama VARCHAR (50),
-        tanggal_berlaku DATE ,tanggal_selesai DATE, jenis_bonus VARCHAR (20) DEFAULT 'barang',
-        akumulasi VARCHAR(20),prioritas INT,created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,jenis_diskon VARCHAR(20),
+        tanggal_berlaku DATE ,tanggal_selesai DATE, jenis_bonus VARCHAR (20) DEFAULT 'barang',jenis_promo VARCHAR(20),prioritas INT,created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,jenis_diskon VARCHAR(20),
         jumlah_diskon DECIMAL(20,2),quota INT, status VARCHAR(20) DEFAULT 'aktif',satuan_id VARCHAR(20), 
         FOREIGN KEY (satuan_id) REFERENCES tb_satuan(satuan_id) ON DELETE RESTRICT)";
 

@@ -406,7 +406,7 @@ function cek_promo(mysqli $conn, string $customer_id, string $tanggal_penjualan,
     // Get all active kelipatan promos
     $stmt = $conn->prepare("SELECT * FROM tb_promo 
                             WHERE status = 'aktif' 
-                            AND quota > 0 AND kelipatan = 'ya'
+                            AND quota > 0 AND jenis_promo = 'kelipatan'
                             AND ? BETWEEN tanggal_berlaku AND tanggal_selesai");
     $stmt->bind_param("s", $tanggal_penjualan);
     $stmt->execute();
@@ -536,7 +536,7 @@ function cek_promo(mysqli $conn, string $customer_id, string $tanggal_penjualan,
 
         $stmt = $conn->prepare("SELECT * FROM tb_promo 
                                 WHERE status = 'aktif' 
-                                AND quota > 0 AND akumulasi = 'ya'
+                                AND quota > 0 AND jenis_promo = 'akumulasi'
                                 AND ? BETWEEN tanggal_berlaku AND tanggal_selesai
                                 ORDER BY prioritas DESC");
         $stmt->bind_param("s", $tanggal_penjualan);
@@ -601,11 +601,87 @@ function cek_promo(mysqli $conn, string $customer_id, string $tanggal_penjualan,
         $valid_promos = cek_promo_non_kelipatan($promo_akumulasi_2, $promo_akumulasi_kondisi_2, $array_produk_brand_qty_combine) ?? [];
     }
 
+
+
+
     if (isset($valid_promos['promo_id'])) {
 
         $valid_promos = [$valid_promos];
     }
 
+
+
+
+    if (count($valid_promos) === 0) {
+
+
+
+        $stmt = $conn->prepare("SELECT * FROM tb_promo 
+                                WHERE status = 'aktif' 
+                                AND quota > 0 AND jenis_promo = 'prioritas'
+                                AND ? BETWEEN tanggal_berlaku AND tanggal_selesai
+                                ORDER BY prioritas DESC");
+        $stmt->bind_param("s", $tanggal_penjualan);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $promo_prioritas = [];
+        while ($row = $result->fetch_assoc()) {
+            $promo_prioritas[] = $row;
+        }
+        $stmt->close();
+
+        // Get conditions for akumulasi promos
+        $promo_prioritas_kondisi = [];
+        foreach ($promo_prioritas as $promo) {
+            $promo_id = $promo['promo_id'];
+            $stmt = $conn->prepare("SELECT * FROM tb_promo_kondisi WHERE promo_id = ?");
+            $stmt->bind_param("s", $promo_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $conditions = [];
+            while ($row = $result->fetch_assoc()) {
+                $conditions[] = $row;
+            }
+            $stmt->close();
+            $promo_prioritas_kondisi[$promo_id] = $conditions;
+        }
+
+        $promo_conditions_array_prioritas = array_values($promo_prioritas_kondisi);
+        $valid_promo_id_prioritas = cek_promo_kondisi_customer_channel($promo_conditions_array_prioritas, $channel_id, $customer_id) ?? [];
+
+        // Fetch valid akumulasi promos
+        $promo_prioritas_2 = [];
+        foreach ($valid_promo_id_prioritas as $promo_id) {
+            $stmt = $conn->prepare("SELECT * FROM tb_promo WHERE promo_id = ? ORDER BY prioritas DESC");
+            $stmt->bind_param("s", $promo_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $promo_prioritas_2[] = $row;
+            }
+            $stmt->close();
+        }
+
+        // Get conditions for valid akumulasi promos
+        $promo_prioritas_kondisi_2 = [];
+        foreach ($promo_prioritas_2 as $promo) {
+            $promo_id = $promo['promo_id'];
+            $stmt = $conn->prepare("SELECT * FROM tb_promo_kondisi WHERE promo_id = ?");
+            $stmt->bind_param("s", $promo_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $conditions = [];
+            while ($row = $result->fetch_assoc()) {
+                $conditions[] = $row;
+            }
+            $stmt->close();
+            $promo_prioritas_kondisi_2[$promo_id] = $conditions;
+        }
+
+        // Final check for valid akumulasi promos
+        $valid_promos = cek_promo_non_kelipatan($promo_prioritas_2, $promo_prioritas_kondisi_2, $array_produk_brand_qty) ?? [];
+    }
 
 
     return $valid_promos;

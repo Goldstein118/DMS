@@ -160,10 +160,8 @@
 
 
 
-                        <button class="btn btn-primary btn-sm mb-2" id="cek_promo_button">
-                            <i class="bi bi-eyeglasses"></i> Cek Promo
-                        </button>
-                        <div id="list-container"></div>
+
+
 
                         <!-- <div class="card" id="cek_promo_card">
                             <div class="card-header">Promo Bonus Barang</div>
@@ -187,13 +185,17 @@
                             </div>
                         </div> -->
 
-
-
                     </div>
                 </div>
             </div>
 
             <div class="modal-footer">
+
+                <button class="btn btn-primary btn-sm mb-2" id="cek_promo_button">
+                    <i class="bi bi-eyeglasses"></i> Cek Promo
+                </button>
+                <div id="list-container"></div>
+
                 <button id="submit_penjualan" type="button" class="btn btn-primary">Submit</button>
             </div>
         </div>
@@ -395,9 +397,7 @@
 
 
 
-                        <button class="btn btn-primary btn-sm mb-2" id="update_cek_promo_button">
-                            <i class="bi bi-eyeglasses"></i> Cek Promo
-                        </button>
+
                         <div id="update-list-container"></div>
                         <!-- 
                         <div class="card mt-2" id="update_cek_promo_card">
@@ -429,6 +429,9 @@
             </div>
 
             <div class="modal-footer">
+                <button class="btn btn-primary btn-sm mb-2" id="update_cek_promo_button">
+                    <i class="bi bi-eyeglasses"></i> Cek Promo
+                </button>
                 <button id="update_submit_penjualan" type="button" class="btn btn-primary">Submit</button>
             </div>
         </div>

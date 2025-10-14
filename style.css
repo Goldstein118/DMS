@@ -608,7 +608,7 @@ h3 {
   background: #c9eb7b;
 }
 
-.list-tile:hover {
+/* .list-tile:hover {
   background-color: #7eb600;
 }
 
@@ -644,7 +644,7 @@ h3 {
 
 .trailing p {
   margin: auto;
-}
+} */
 @font-face {
   font-family: "Roboto";
   src: url("/DMS/Vendor/fonts/Roboto/static/Roboto-Regular.ttf") format("woff2"),

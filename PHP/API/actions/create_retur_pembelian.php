@@ -10,7 +10,14 @@
         $tanggal_invoice = $data['tanggal_invoice'];
         $no_invoice = $data['no_invoice'];
         $status = $data['status'];
-        $invoice_id = $data['invoice_id'];
+        $input = $data['input'];
+
+        $invoice_id = "";
+        if ($input === "otomatis") {
+            $invoice_id = $data['invoice_id'];
+        } else {
+            $invoice_id = generateCustomID('GIN', 'tb_invoice', 'invoice_id', $conn);
+        }
         $retur_pembelian_id = generateCustomID('RTN', 'tb_retur_pembelian', 'retur_pembelian_id', $conn);
         $retur_pembelian_history_id = generateCustomID('RTNH', 'tb_retur_pembelian_history', 'retur_pembelian_history_id', $conn);
         $tanggal_input_invoice = date("Y-m-d");

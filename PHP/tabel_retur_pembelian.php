@@ -10,10 +10,23 @@
                 <div class="card mt-3" id="retur_pembelian_card">
                     <div class="card-header">Tambah Retur Pembelian</div>
                     <div class="card-body" id="create_retur_pembelian_card_body">
-                        <label class="form-label mb-0 mt-2" for="invoice_id">Pembelian:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                        <select class="form-select " id="invoice_id">
+
+
+                        <label class="form-label mb-0 mt-2" for="input">Input:</label>
+                        <select class="form-select " id="input">
+                            <option value="otomatis">Otomatis</option>
+                            <option value="manual">Manual</option>
                         </select>
-                        <input class="form-control d-none" type="text" id="pembelian_id" name="pembelian_id" value="" disabled>
+
+                        <div id="invoice_id_div" style="display:none;">
+                            <label class="form-label mb-0 mt-2" for="invoice_id">Pembelian:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                            <select class="form-select " id="invoice_id">
+                            </select>
+                            <input class="form-control d-none" type="text" id="pembelian_id" name="pembelian_id" value="" disabled>
+
+                        </div>
+
+
 
                         <div style="display: none;" id="retur_pembelian_div">
                             <!-- Informasi Dasar -->

@@ -159,45 +159,22 @@
                         </div>
 
 
-
-
-
-
-                        <!-- <div class="card" id="cek_promo_card">
-                            <div class="card-header">Promo Bonus Barang</div>
-                            <div class="card-body" id="cek_promo_card_body">
-
-                                <table id="table_bonus_barang" class="table table-hover table-bordered table-sm ">
-                                    <thead id="table_bonus_barang_thead">
-                                        <tr>
-                                            <th style="max-width: 9px; text-align:center">No</th>
-                                            <th>Promo</th>
-                                            <th>Produk</th>
-                                            <th>Jumlah Qty</th>
-                                            <th>Jenis Diskon</th>
-                                            <th>Jumlah Diskon/Nominal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="table_bonus_barang_tbody">
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div> -->
-
                     </div>
                 </div>
             </div>
 
-            <div class="modal-footer">
+            <div class="modal-footer d-flex justify-content-between align-items-center w-100">
 
-                <button class="btn btn-primary btn-sm mb-2" id="cek_promo_button">
-                    <i class="bi bi-eyeglasses"></i> Cek Promo
-                </button>
-                <div id="list-container"></div>
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-primary btn-sm" id="cek_promo_button">
+                        <i class="bi bi-gift"></i> Cek Promo
+                    </button>
+                    <div id="list-container"></div>
+                </div>
 
                 <button id="submit_penjualan" type="button" class="btn btn-primary">Submit</button>
             </div>
+
         </div>
     </div>
 </div>
@@ -397,47 +374,25 @@
 
 
 
-
-                        <div id="update-list-container"></div>
-                        <!-- 
-                        <div class="card mt-2" id="update_cek_promo_card">
-                            <div class="card-header">Promo Bonus Barang</div>
-                            <div class="card-body" id="update_cek_promo_card_body">
-
-                                <table id="update_table_bonus_barang" class="table table-hover table-bordered table-sm ">
-                                    <thead id="update_table_bonus_barang_thead">
-                                        <tr>
-                                            <th style="max-width: 9px; text-align:center">No</th>
-                                            <th>Promo</th>
-                                            <th>Produk</th>
-                                            <th>Jumlah Qty</th>
-                                            <th>Jenis Diskon</th>
-                                            <th>Jumlah Diskon/Nominal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="update_table_bonus_barang_tbody">
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div> -->
-
-
-
                     </div>
                 </div>
             </div>
 
-            <div class="modal-footer">
-                <button class="btn btn-primary btn-sm mb-2" id="update_cek_promo_button">
-                    <i class="bi bi-eyeglasses"></i> Cek Promo
-                </button>
+            <div class="modal-footer d-flex justify-content-between align-items-center w-100">
+
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-primary btn-sm" id="update_cek_promo_button">
+                        <i class="bi bi-gift"></i> Cek Promo
+                    </button>
+                    <div id="update-list-container"></div>
+                </div>
+
                 <button id="update_submit_penjualan" type="button" class="btn btn-primary">Submit</button>
             </div>
+
         </div>
     </div>
 </div>
-
 
 
 

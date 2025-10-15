@@ -7,7 +7,7 @@ let index = 0;
 const detail_pembelian_tbody = document.getElementById(
   "create_detail_retur_pembelian_tbody"
 );
-
+const input = document.getElementById("input");
 const detail_retur_pembelian_button = document.getElementById(
   "detail_retur_pembelian_button"
 );
@@ -77,6 +77,25 @@ if (submit_retur_pembelian_button) {
     });
     helper.format_nominal("nominal_pph");
     helper.format_nominal("diskon");
+
+    if (input.value === "otomatis") {
+      document.getElementById("invoice_id_div").style.display = "block";
+      document.getElementById("retur_pembelian_div").style.display = "none";
+    } else {
+      document.getElementById("invoice_id_div").style.display = "none";
+      document.getElementById("retur_pembelian_div").style.display = "block";
+    }
+
+    input.addEventListener("click", () => {
+      if (input.value === "otomatis") {
+        document.getElementById("invoice_id_div").style.display = "block";
+        document.getElementById("retur_pembelian_div").style.display = "none";
+      } else {
+        document.getElementById("invoice_id_div").style.display = "none";
+        document.getElementById("retur_pembelian_div").style.display = "block";
+        document.getElementById("invoice_id").value = "";
+      }
+    });
   });
 
   submit_retur_pembelian_button.addEventListener(
@@ -680,7 +699,10 @@ async function submitRetur_pembelian() {
   const tanggal_invoice = picker_invoice.get("select", "yyyy-mm-dd");
   const no_pengiriman = document.getElementById("no_pengiriman").value;
   const no_invoice = document.getElementById("no_invoice").value;
-  const invoice_id = document.getElementById("invoice_id").value;
+  const invoice_id = document.getElementById("invoice_id").value
+    ? document.getElementById("invoice_id").value
+    : "";
+  const input = document.getElementById("input").value;
   const supplier_id = document.getElementById("supplier_id").value;
   const keterangan = document.getElementById("keterangan").value;
   let diskon = document.getElementById("diskon").value;
@@ -741,6 +763,7 @@ async function submitRetur_pembelian() {
   const data_pembelian = {
     user_id: `${access.decryptItem("user_id")}`,
     created_by: `${access.decryptItem("nama")}`,
+    input: input,
     invoice_id: invoice_id,
     pembelian_id: pembelian_id,
     tanggal_po: tanggal_po,

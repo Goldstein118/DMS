@@ -620,10 +620,10 @@ if (isset($data['penjualan_id']) && isset($data['update_penjualan'])) {
         $requiredFields = ['penjualan_id', 'tanggal_penjualan'];
         $fields = validate_1($data, $requiredFields);
         $penjualan_id = $fields['penjualan_id'];
-        $tanggal_po = $fields['tanggal_penjualan'];
+        $tanggal_penjualan = $fields['tanggal_penjualan'];
         $customer_id = $fields['customer_id'];
         $gudang_id = $fields['gudang_id'];
-        $keterangan_penjualan = $fields['keterangan_penjualan'];
+        $keterangan_penjualan = $fields['keterangan'];
         $ppn = $fields['ppn'];
         $diskon_penjualan = $fields['diskon'];
         $nominal_pph = $fields['nominal_pph'];
@@ -662,14 +662,14 @@ if (isset($data['penjualan_id']) && isset($data['update_penjualan'])) {
         error_log("bonus_kelipatan value: " . print_r($bonus_kelipatan, true));
 
 
-        $stmt = $conn->prepare("UPDATE tb_penjualan SET tanggal_penjualan =?,customer_id=?,gudang_id=?,keterangan=?,ppn=?,diskon=?,nominal_pph=?,status=?,promo_id=?
+        $stmt = $conn->prepare("UPDATE tb_penjualan SET tanggal_penjualan =?,customer_id=?,gudang_id=?,keterangan_penjualan=?,ppn=?,diskon=?,nominal_pph=?,status=?,promo_id=?
         WHERE penjualan_id = ?");
         $stmt->bind_param(
             "ssssdddsss",
             $tanggal_penjualan,
             $customer_id,
             $gudang_id,
-            $keterangan,
+            $keterangan_penjualan,
             $ppn_unformat,
             $diskon_invoice_unformat,
             $nominal_pph_unformat,

@@ -63,6 +63,7 @@
               <select class="form-select" id="status_customer">
                 <option value="aktif">Aktif</option>
                 <option value="non aktif">Non Aktif</option>
+                <option value="noo">NOO</option>
               </select>
               <label class="form-label mb-0 mt-2" for="nitko">Nitku:</label>
               <input class="form-control" type="text" id="nitko" name="nitko" aria-describedby="basic-addon1" value="">
@@ -119,6 +120,7 @@
               <select class="form-select" id="update_jenis_customer">
                 <option value="pribadi">Pribadi</option>
                 <option value="perusahaan">Perusahaan</option>
+                <option value="noo">NOO</option>
               </select>
               <div id="update_alamat_customer_pribadi">
                 <label class="form-label mb-0 mt-2" for="update_nama_jalan">Alamat:</label>

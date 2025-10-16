@@ -16,7 +16,10 @@ const update_detail_penjualan_button = document.getElementById(
 update_detail_penjualan_button.addEventListener("click", function () {
   add_field("update", "update_produk_id", "update_satuan_id");
 });
-
+const update_cek_promo_button = document.getElementById(
+  "update_cek_promo_button"
+);
+update_cek_promo_button.addEventListener("click", cek_promo);
 const grid_container_penjualan = document.querySelector("#table_penjualan");
 const pickdatejs_penjualan = $("#update_tanggal_penjualan")
   .pickadate({
@@ -110,7 +113,7 @@ if (grid_container_penjualan) {
           }
 
           button += `
-        <button type="button" class="btn btn btn-info view_penjualan btn-sm" >
+        <button type="button" class="btn btn-info view_penjualan btn-sm" >
           <i class="bi bi-eye"></i>
         </button>
         `;
@@ -176,6 +179,7 @@ if (grid_container_penjualan) {
 }
 
 function handle_view(button) {
+  console.log("tekan");
   const row = button.closest("tr");
   const penjualan_id = row.cells[0].textContent.trim();
 
@@ -761,7 +765,7 @@ if (submit_penjualan_update) {
     console.log(data_penjualan);
     try {
       const response = await apiRequest(
-        `/PHP/API/penjualan_API.php?action=create`,
+        `/PHP/API/penjualan_API.php?action=update`,
         "POST",
         data_penjualan
       );
@@ -769,12 +773,14 @@ if (submit_penjualan_update) {
       if (response.ok) {
         $("#update_modal_penjualan").modal("hide");
         Swal.fire("Berhasil", response.message, "success");
-
         window.penjualan_grid.forceRender();
         setTimeout(() => {
-          helper.custom_gr;
-
-          id_header("penjualan", handle_delete, handle_update, handle_view);
+          helper.custom_grid_header(
+            "penjualan",
+            handle_delete,
+            handle_update,
+            handle_view
+          );
         }, 200);
       } else {
         Swal.fire("Gagal", response.message || "Update gagal.", "error");
@@ -884,7 +890,7 @@ async function cek_promo() {
 
     await display_promo_bonus_barang(
       response_promo_kondisi.data,
-      "table_bonus_barang_tbody"
+      "update_promo_berlaku_tbody"
     );
   } catch (error) {
     console.error("Promo_kondisi:", error);
@@ -892,7 +898,6 @@ async function cek_promo() {
 }
 
 async function display_promo_bonus_barang(data, tbody_id) {
-  // Flatten the 2D array safely
   const validPromoItems = Array.isArray(data.valid_kelipatan_promo)
     ? data.valid_kelipatan_promo
         .flat()
@@ -902,6 +907,17 @@ async function display_promo_bonus_barang(data, tbody_id) {
   if (validPromoItems.length > 0) {
     for (const item of validPromoItems) {
       try {
+        const response_promo = await apiRequest(
+          `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
+            "user_id"
+          )}&target=tb_penjualan&context=create`,
+          "POST",
+          {
+            promo_id: item.promo_id,
+            table: "tb_promo",
+          }
+        );
+
         const response_promo_bonus_barang = await apiRequest(
           `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
             "user_id"
@@ -914,6 +930,7 @@ async function display_promo_bonus_barang(data, tbody_id) {
         );
 
         populate_bonus_barang(
+          response_promo.data,
           response_promo_bonus_barang.data,
           tbody_id,
           item.bonus_kelipatan
@@ -934,84 +951,83 @@ async function display_promo_bonus_barang(data, tbody_id) {
   }
 }
 
-function populate_bonus_barang(data, tbody_id, bonus_kelipatan) {
-  // const tbody = document.getElementById(`${tbody_id}`);
+function populate_bonus_barang(
+  data_promo,
+  data_promo_bonus_barang,
+  tbody_id,
+  bonus_kelipatan
+) {
+  const tbody = document.getElementById(`${tbody_id}`);
   const container = document.getElementById("update-list-container");
-  // tbody.innerHTML = "";
   container.innerHTML = "";
   let bonus_kelipatan_barang = bonus_kelipatan ? bonus_kelipatan : 1;
   // console.log(bonus_kelipatan_barang);
   let index = 1;
-  if (data.length != 0) {
-    data.forEach((item) => {
-      let nama_promo = item.nama_promo;
-      let nama_produk = item.nama_produk;
-      let qty = Number(item.qty_bonus) * bonus_kelipatan_barang;
-
-      let jenis_diskon = item.jenis_diskon;
-      let jumlah_diskon = item.jlh_diskon;
-
-      // const tr_promo_bonus_barang = document.createElement("tr");
-      // const td_no = document.createElement("td");
-      // td_no.textContent = index;
-      // td_no.style.textAlign = "center";
-
-      // const td_promo = document.createElement("td");
-      // td_promo.textContent = nama_promo;
-
-      // const td_produk = document.createElement("td");
-      // td_produk.textContent = nama_produk;
-
-      // const td_qty = document.createElement("td");
-      // td_qty.textContent = qty;
-
-      // const td_jenis_diskon = document.createElement("td");
-      // td_jenis_diskon.textContent = jenis_diskon;
-
-      // const td_jumlah_diskon = document.createElement("td");
-      // td_jumlah_diskon.textContent = jumlah_diskon;
-      index++;
-
-      // tr_promo_bonus_barang.appendChild(td_no);
-      // tr_promo_bonus_barang.appendChild(td_promo);
-      // tr_promo_bonus_barang.appendChild(td_produk);
-      // tr_promo_bonus_barang.appendChild(td_qty);
-      // tr_promo_bonus_barang.appendChild(td_jenis_diskon);
-      // tr_promo_bonus_barang.appendChild(td_jumlah_diskon);
-
-      // tbody.appendChild(tr_promo_bonus_barang);
+  if (data_promo.length != 0) {
+    data_promo.forEach((item) => {
+      let nama_promo = item.nama;
 
       const tile = document.createElement("div");
-      tile.className = "list-tile";
 
       tile.innerHTML = `
-
-        <div class="content">
-          <div class="title">${nama_promo}</div>
-          <div class="subtitle">${nama_produk}</div>
-        </div>
-        <div class="trailing">
-        <p>jlh barang   : ${qty}</p>
-        <p>jenis diskon : ${jenis_diskon}</p>
-        <p>jlh diskon   : ${jumlah_diskon}</p>
-        </div>
-
-
+        <p></p>
+        <p>${index}. ${nama_promo}</p>
       `;
 
       container.appendChild(tile);
+      index++;
     });
   } else {
-    // const tr = document.createElement("tr");
-    // const td = document.createElement("td");
-    // td.colSpan = 4;
-    // td.className = "text-center text-muted";
-    // td.textContent = "Tidak ada promo yang berlaku.";
-    // tr.appendChild(td);
-    // tbody.appendChild(tr);
-
     container.innerHTML = `<p class="text-danger">
       Tidak ada promo yang berlaku
       </p>`;
+  }
+
+  if (data_promo_bonus_barang.length != 0) {
+    let nomor = 1;
+    data_promo_bonus_barang.forEach((item) => {
+      let nama_produk = item.nama_produk;
+      let qty = Number(item.qty_bonus) * bonus_kelipatan_barang;
+      let nama_satuan = item.nama_satuan;
+      let jenis_diskon = item.jenis_diskon;
+      let jumlah_diskon = item.jlh_diskon;
+
+      const tr_detail = document.createElement("tr");
+
+      const td_no = document.createElement("td");
+      td_no.textContent = nomor;
+      td_no.style.textAlign = "center";
+
+      const tdKode = document.createElement("td");
+      tdKode.textContent = nama_produk;
+
+      const tdKuantitas = document.createElement("td");
+      tdKuantitas.textContent = qty;
+
+      const tdSatuan = document.createElement("td");
+      tdSatuan.textContent = nama_satuan;
+
+      const tdHarga = document.createElement("td");
+      tdHarga.setAttribute("id", "view_harga");
+      tdHarga.textContent = helper.format_angka(jumlah_diskon);
+      tdHarga.style.textAlign = "right";
+
+      const tdJenis_diskon = document.createElement("td");
+      tdJenis_diskon.textContent = jenis_diskon;
+
+      const tdAksi = document.createElement("td");
+      tdAksi.textContent = "";
+
+      // Append all tds to tr
+      tr_detail.appendChild(tdKode);
+      tr_detail.appendChild(tdKuantitas);
+      tr_detail.appendChild(tdSatuan);
+      tr_detail.appendChild(tdHarga);
+      tr_detail.appendChild(tdJenis_diskon);
+      tr_detail.appendChild(tdAksi);
+      nomor += 1;
+      // Append tr to tbody
+      tbody.appendChild(tr_detail);
+    });
   }
 }

@@ -12,169 +12,190 @@
                     <div class="card-header">Penjualan</div>
                     <div class="card-body" id="penjualan_card_body">
 
-                        <!-- Informasi Dasar -->
-                        <div class="accordion mb-3" id="accordion_informasi_dasar_penjualan">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#collapseInformasiDasar_penjualan"
-                                        aria-expanded="true"
-                                        aria-controls="collapseInformasiDasar_penjualan">
-                                        Informasi Dasar
-                                    </button>
-                                </h2>
-                                <div id="collapseInformasiDasar_penjualan"
-                                    class="accordion-collapse collapse show"
-                                    data-bs-parent="#accordion_informasi_dasar_penjualan">
-                                    <div class="accordion-body">
-                                        <div class="row gap-2">
-                                            <div class="col">
-                                                <label class="form-label mb-0 mt-2" for="tanggal_penjualan">Tanggal Penjualan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                                <input class="form-control" type="text" id="tanggal_penjualan" name="tanggal_penjualan" value="">
-                                                <label class="form-label mb-0 mt-2" for="status_penjualan">Status:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                                <select class="form-select" id="status_penjualan" disabled>
-                                                    <option value="belumlunas">Belum Lunas</option>
-                                                </select>
 
-                                            </div>
-                                            <div class="col">
-                                                <label class="form-label mb-0 mt-2" for="customer_id">Customer:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                                <select class="form-select" id="customer_id"></select>
-                                                <label class="form-label mb-0 mt-2" for="gudang_id">Gudang:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                                <select class="form-select" id="gudang_id"></select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
+                        <label class="form-label mb-0 mt-2" for="input">Input:</label>
+                        <select class="form-select " id="input">
+                            <option value="otomatis">Otomatis</option>
+                            <option value="manual">Manual</option>
+                        </select>
+
+
+                        <div id="penjualan_id_div" style="display:none;">
+                            <label class="form-label mb-0 mt-2" for="invoice_id">Penjualan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                            <select class="form-select " id="invoice_id">
+                            </select>
+                            <input class="form-control d-none" type="text" id="penjualan_id" name="pembelian_id" value="" disabled>
+
                         </div>
 
-                        <!-- Detail Barang -->
-                        <div class="accordion mb-3" id="accordion_detail_barang_penjualan">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#collapseDetailBarang_penjualan"
-                                        aria-expanded="true"
-                                        aria-controls="collapseDetailBarang_penjualan">
-                                        Informasi Detail Barang
-                                    </button>
-                                </h2>
-                                <div id="collapseDetailBarang_penjualan"
-                                    class="accordion-collapse collapse show"
-                                    data-bs-parent="#accordion_detail_barang_penjualan">
-                                    <div class="accordion-body" id="detail_penjualan_card_body">
-                                        <button class="btn btn-primary btn-sm mb-2" id="create_detail_penjualan_button">
-                                            <i class="bi bi-plus-circle"></i> Tambah
+                        <div id="retur_penjualan_div">
+                            <!-- Informasi Dasar -->
+                            <div class="accordion mb-3" id="accordion_informasi_dasar_penjualan">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapseInformasiDasar_penjualan"
+                                            aria-expanded="true"
+                                            aria-controls="collapseInformasiDasar_penjualan">
+                                            Informasi Dasar
                                         </button>
-                                        <table class="table table-hover table-bordered table-sm" id="detail_penjualan">
-                                            <thead id="detail_penjualan_thead">
-                                                <tr>
-                                                    <th scope="col">Produk</th>
-                                                    <th scope="col">Kuantitas</th>
-                                                    <th scope="col">Satuan</th>
-                                                    <th scope="col">Harga</th>
-                                                    <th>Diskon</th>
-                                                    <th id="aksi_thead">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="create_detail_penjualan_tbody"></tbody>
-                                            <tbody id="promo_berlaku_tbody"></tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    </h2>
+                                    <div id="collapseInformasiDasar_penjualan"
+                                        class="accordion-collapse collapse show"
+                                        data-bs-parent="#accordion_informasi_dasar_penjualan">
+                                        <div class="accordion-body">
+                                            <div class="row gap-2">
+                                                <div class="col">
+                                                    <label class="form-label mb-0 mt-2" for="tanggal_penjualan">Tanggal Penjualan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                    <input class="form-control" type="text" id="tanggal_penjualan" name="tanggal_penjualan" value="">
+                                                    <label class="form-label mb-0 mt-2" for="status_penjualan">Status:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                    <select class="form-select" id="status_penjualan" disabled>
+                                                        <option value="belumlunas">Belum Lunas</option>
+                                                    </select>
 
-                        <!-- Informasi Pajak -->
-                        <div class="accordion mb-3" id="accordion_pajak_penjualan">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#collapsePajak_penjualan"
-                                        aria-expanded="true"
-                                        aria-controls="collapsePajak_penjualan">
-                                        Informasi Pajak
-                                    </button>
-                                </h2>
-                                <div id="collapsePajak_penjualan"
-                                    class="accordion-collapse collapse show"
-                                    data-bs-parent="#accordion_pajak_penjualan">
-                                    <div class="accordion-body">
-                                        <div class="row gap-2">
-                                            <div class="col">
-                                                <label class="form-label mb-0 mt-2" for="ppn">PPN:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                                <select class="form-select" id="ppn">
-                                                    <option value="0.11">11%</option>
-                                                    <option value="0.1">10%</option>
-
-                                                </select>
-                                            </div>
-                                            <div class="col">
-                                                <label class="form-label mb-0 mt-2" for="nominal_pph">Nominal PPH:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                                <input type="text" class="form-control" id="nominal_pph" name="nominal_pph" />
+                                                </div>
+                                                <div class="col">
+                                                    <label class="form-label mb-0 mt-2" for="customer_id">Customer:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                    <select class="form-select" id="customer_id"></select>
+                                                    <label class="form-label mb-0 mt-2" for="gudang_id">Gudang:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                    <select class="form-select" id="gudang_id"></select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Informasi Tambahan -->
-                        <div class="accordion mb-3" id="accordion_tambahan_penjualan">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#collapseTambahan_penjualan"
-                                        aria-expanded="true"
-                                        aria-controls="collapseTambahan_penjualan">
-                                        Informasi Tambahan
-                                    </button>
-                                </h2>
-                                <div id="collapseTambahan_penjualan"
-                                    class="accordion-collapse collapse show"
-                                    data-bs-parent="#accordion_tambahan_penjualan">
-                                    <div class="accordion-body">
-
-                                        <div class="row g-2">
-                                            <div class="col"> <label class="form-label mb-0 mt-2" for="keterangan_penjualan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                                <input type="text" class="form-control" id="keterangan_penjualan" name="keterangan_penjualan" />
-                                            </div>
-                                            <div class="col"> <label class="form-label mb-0 mt-2" for="diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
-                                                <input type="text" class="form-control" id="diskon" name="diskon" />
-                                            </div>
+                            <!-- Detail Barang -->
+                            <div class="accordion mb-3" id="accordion_detail_barang_penjualan">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapseDetailBarang_penjualan"
+                                            aria-expanded="true"
+                                            aria-controls="collapseDetailBarang_penjualan">
+                                            Informasi Detail Barang
+                                        </button>
+                                    </h2>
+                                    <div id="collapseDetailBarang_penjualan"
+                                        class="accordion-collapse collapse show"
+                                        data-bs-parent="#accordion_detail_barang_penjualan">
+                                        <div class="accordion-body" id="detail_penjualan_card_body">
+                                            <button class="btn btn-primary btn-sm mb-2" id="create_detail_penjualan_button">
+                                                <i class="bi bi-plus-circle"></i> Tambah
+                                            </button>
+                                            <table class="table table-hover table-bordered table-sm" id="detail_penjualan">
+                                                <thead id="detail_penjualan_thead">
+                                                    <tr>
+                                                        <th scope="col">Produk</th>
+                                                        <th scope="col">Kuantitas</th>
+                                                        <th scope="col">Satuan</th>
+                                                        <th scope="col">Harga</th>
+                                                        <th>Diskon</th>
+                                                        <th id="aksi_thead">Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="create_detail_penjualan_tbody"></tbody>
+                                                <tbody id="promo_berlaku_tbody"></tbody>
+                                            </table>
                                         </div>
-
-
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Informasi Pajak -->
+                            <div class="accordion mb-3" id="accordion_pajak_penjualan">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapsePajak_penjualan"
+                                            aria-expanded="true"
+                                            aria-controls="collapsePajak_penjualan">
+                                            Informasi Pajak
+                                        </button>
+                                    </h2>
+                                    <div id="collapsePajak_penjualan"
+                                        class="accordion-collapse collapse show"
+                                        data-bs-parent="#accordion_pajak_penjualan">
+                                        <div class="accordion-body">
+                                            <div class="row gap-2">
+                                                <div class="col">
+                                                    <label class="form-label mb-0 mt-2" for="ppn">PPN:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                    <select class="form-select" id="ppn">
+                                                        <option value="0.11">11%</option>
+                                                        <option value="0.1">10%</option>
+
+                                                    </select>
+                                                </div>
+                                                <div class="col">
+                                                    <label class="form-label mb-0 mt-2" for="nominal_pph">Nominal PPH:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                    <input type="text" class="form-control" id="nominal_pph" name="nominal_pph" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Informasi Tambahan -->
+                            <div class="accordion mb-3" id="accordion_tambahan_penjualan">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapseTambahan_penjualan"
+                                            aria-expanded="true"
+                                            aria-controls="collapseTambahan_penjualan">
+                                            Informasi Tambahan
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTambahan_penjualan"
+                                        class="accordion-collapse collapse show"
+                                        data-bs-parent="#accordion_tambahan_penjualan">
+                                        <div class="accordion-body">
+
+                                            <div class="row g-2">
+                                                <div class="col"> <label class="form-label mb-0 mt-2" for="keterangan_penjualan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                    <input type="text" class="form-control" id="keterangan_penjualan" name="keterangan_penjualan" />
+                                                </div>
+                                                <div class="col"> <label class="form-label mb-0 mt-2" for="diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                    <input type="text" class="form-control" id="diskon" name="diskon" />
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
-
-
                     </div>
                 </div>
-            </div>
 
-            <div class="modal-footer d-flex justify-content-between align-items-center w-100">
+                <div class="modal-footer d-flex justify-content-between align-items-center w-100">
 
-                <div class="d-flex align-items-center gap-2">
-                    <button class="btn btn-primary btn-sm" id="cek_promo_button">
-                        <i class="bi bi-gift"></i> Cek Promo
-                    </button>
-                    <div id="list-container"></div>
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-primary btn-sm" id="cek_promo_button">
+                            <i class="bi bi-gift"></i> Cek Promo
+                        </button>
+                        <div id="list-container"></div>
+                    </div>
+
+                    <button id="submit_penjualan" type="button" class="btn btn-primary">Submit</button>
                 </div>
 
-                <button id="submit_penjualan" type="button" class="btn btn-primary">Submit</button>
             </div>
+
 
         </div>
     </div>

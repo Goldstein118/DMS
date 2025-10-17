@@ -173,7 +173,14 @@
             <li>
               <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_penjualan"
-                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_penjualan' ? 'active' : ''; ?>"> Purchase Order</a>
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_penjualan' ? 'active' : ''; ?>"> Penjualan</a>
+            </li>
+
+
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_retur_penjualan"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_retur_penjualan' ? 'active' : ''; ?>"> Retur Penjualan</a>
             </li>
           </ul>
         </div>
@@ -353,6 +360,12 @@
               <a
                 href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_penjualan"
                 class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_penjualan' ? 'active' : ''; ?>"> Penjualan</a>
+            </li>
+
+            <li>
+              <a
+                href="<?php echo $_ENV['BASE_URL']; ?>index.php?page=tabel_retur_penjualan"
+                class="link-dark d-inline-flex text-decoration-none rounded <?php echo ($_GET['page'] ?? '') === 'tabel_retur_penjualan' ? 'active' : ''; ?>"> Retur Penjualan</a>
             </li>
           </ul>
         </div>

@@ -298,6 +298,12 @@ async function submitpenjualan() {
   const gudang_id = document.getElementById("gudang_id").value;
   const customer_id = document.getElementById("customer_id").value;
   const keterangan = document.getElementById("keterangan_penjualan").value;
+  const keterangan_invoice =
+    document.getElementById("keterangan_invoice").value;
+  const keterangan_gudang = document.getElementById("keterangan_gudang").value;
+  const keterangan_pengiriman = document.getElementById(
+    "keterangan_pengiriman"
+  ).value;
   let diskon = document.getElementById("diskon").value;
   const ppn = document.getElementById("ppn").value;
   let nominal_pph = document.getElementById("nominal_pph").value;
@@ -361,6 +367,9 @@ async function submitpenjualan() {
     gudang_id: gudang_id,
     customer_id: customer_id,
     keterangan: keterangan,
+    keterangan_invoice: keterangan_invoice,
+    keterangan_gudang: keterangan_gudang,
+    keterangan_pengiriman: keterangan_pengiriman,
     ppn: ppn,
     diskon: diskon,
     nominal_pph: nominal_pph,

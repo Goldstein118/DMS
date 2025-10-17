@@ -14,7 +14,8 @@ function checkContextAccess($conn, $userId, $context)
         'tb_pembelian' => ['tb_supplier', 'tb_satuan', 'tb_produk', 'tb_data_biaya', 'tb_gudang'],
         'tb_invoice' => ['tb_pembelian', 'tb_supplier', 'tb_satuan', 'tb_produk', 'tb_data_biaya', 'tb_gudang'],
         'tb_retur_pembelian' => ['tb_pembelian', 'tb_supplier', 'tb_satuan', 'tb_produk', 'tb_data_biaya', 'tb_invoice', 'tb_gudang'],
-        'tb_penjualan' => ['tb_supplier', 'tb_satuan', 'tb_produk', 'tb_data_biaya', 'tb_gudang', 'tb_promo', 'tb_customer']
+        'tb_penjualan' => ['tb_supplier', 'tb_satuan', 'tb_produk', 'tb_data_biaya', 'tb_gudang', 'tb_promo', 'tb_customer'],
+        'tb_retur_penjualan' => ['tb_supplier', 'tb_satuan', 'tb_produk', 'tb_data_biaya', 'tb_gudang', 'tb_promo', 'tb_customer', 'tb_penjualan']
 
         // Add more mappings as needed
     ];
@@ -40,7 +41,8 @@ function checkContextAccess($conn, $userId, $context)
         'tb_data_biaya' => 68,
         'tb_invoice' => 72,
         'tb_retur_pembelian' => 76,
-        'tb_penjualan' => 80
+        'tb_penjualan' => 80,
+        'tn_retur_penjualan' => 84
         // Add more tables and their base indices here
     ];
 

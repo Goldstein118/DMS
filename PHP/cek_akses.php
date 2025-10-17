@@ -22,7 +22,8 @@ function checkAccess($conn, $userId, $table, $index, $target_user_id = null)
         'tb_data_biaya' => 68,
         'tb_invoice' => 72,
         'tb_retur_pembelian' => 76,
-        'tb_penjualan' => 80
+        'tb_penjualan' => 80,
+        'tb_retur_penjualan' => 84
 
 
     ];

@@ -20,6 +20,31 @@ function generateCustomID($prefix, $table, $column, $conn)
     return "$prefix$year-$next";
 }
 
+function generate_no_pengiriman($prefix, $table, $column, $conn)
+{
+    $fullDate = date('ymd');
+    $monthKey = date('ym');
+
+    $likePattern = $prefix . $monthKey . '%';
+
+    $stmt = $conn->prepare("SELECT MAX($column) AS last_id FROM $table WHERE $column LIKE ?");
+    $stmt->bind_param("s", $likePattern);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    $last = $result['last_id'] ?? null;
+
+
+    if ($last) {
+        $lastNumber = (int)substr($last, -5);
+        $nextNumber = str_pad($lastNumber + 1, 5, '0', STR_PAD_LEFT);
+    } else {
+        $nextNumber = '00001';
+    }
+
+
+    return "$prefix$fullDate-$nextNumber";
+}
+
 function validate_1($data, $requiredFields, $defaults = [])
 {
     $output = [];

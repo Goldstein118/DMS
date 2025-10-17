@@ -1,5 +1,5 @@
 <!-- modal_penjualan -->
-<div class="modal fade" id="modal_penjualan" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modal_retur_penjualan" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -21,17 +21,19 @@
                         </select>
 
 
+
+
                         <div id="penjualan_id_div" style="display:none;">
-                            <label class="form-label mb-0 mt-2" for="invoice_id">Penjualan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                            <select class="form-select " id="invoice_id">
+                            <label class="form-label mb-0 mt-2" for="penjualan_id">Penjualan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                            <select class="form-select " id="penjualan_id">
                             </select>
-                            <input class="form-control d-none" type="text" id="penjualan_id" name="pembelian_id" value="" disabled>
+
 
                         </div>
 
-                        <div id="retur_penjualan_div">
+                        <div id="retur_penjualan_div" style="display: none;">
                             <!-- Informasi Dasar -->
-                            <div class="accordion mb-3" id="accordion_informasi_dasar_penjualan">
+                            <div class="accordion mb-3 mt-3" id="accordion_informasi_dasar_penjualan">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
                                         <button class="accordion-button"
@@ -191,7 +193,7 @@
                         <div id="list-container"></div>
                     </div>
 
-                    <button id="submit_penjualan" type="button" class="btn btn-primary">Submit</button>
+                    <button id="submit_retur_penjualan" type="button" class="btn btn-primary">Submit</button>
                 </div>
 
             </div>
@@ -424,6 +426,6 @@
 <main class="col-12 col-lg-10 ms-auto px-1">
     <div id="main" class="table-responsive">
         <h3>Data Penjualan</h3>
-        <div id="table_penjualan"></div>
+        <div id="table_retur_penjualan"></div>
     </div>
 </main>

@@ -2,11 +2,13 @@ import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 import * as helper from "./helper.js";
 let index = 0;
-const submit_penjualan = document.getElementById("submit_penjualan");
+const submit_penjualan = document.getElementById("submit_retur_penjualan");
 const submit_detail_penjualan = document.getElementById(
   "create_detail_penjualan_button"
 );
-
+const create_detail_penjualan_tbody = document.getElementById(
+  "create_detail_penjualan_tbody"
+);
 function initPickadateOnce(selector) {
   const $el = $(selector);
   if (!$el.data("pickadate")) {
@@ -24,29 +26,63 @@ if (submit_penjualan) {
   });
 
   $(document).ready(function () {
-    $("#modal_penjualan").on("shown.bs.modal", function () {
-      $("#name_penjualan").trigger("focus");
+    $("#modal_retur_penjualan").on("shown.bs.modal", function () {
       fetch_fk("gudang");
       fetch_fk("customer");
+      fetch_fk("penjualan");
 
       $("#gudang_id").select2({
         placeholder: "Pilih Gudang",
         allowClear: true,
-        dropdownParent: $("#modal_penjualan"),
+        dropdownParent: $("#modal_retur_penjualan"),
       });
 
       $("#customer_id").select2({
         placeholder: "Pilih Customer",
         allowClear: true,
-        dropdownParent: $("#modal_penjualan"),
+        dropdownParent: $("#modal_retur_penjualan"),
+      });
+
+      $("#penjualan_id").select2({
+        placeholder: "Pilih Penjualan",
+        allowClear: true,
+        dropdownParent: $("#modal_retur_penjualan"),
       });
 
       initPickadateOnce("#tanggal_penjualan");
+
+      $("#penjualan_id").on("change", function () {
+        create_detail_penjualan_tbody.innerHTML = "";
+        const selectedValue = $(this).val();
+        populate_penjualan(selectedValue);
+      });
     });
     helper.format_nominal("nominal_pph");
     helper.format_nominal("diskon");
 
     add_field("create", "produk_select", "satuan_select");
+
+    const jenis_input = document.getElementById("input");
+
+    if (jenis_input.value === "otomatis") {
+      document.getElementById("retur_penjualan_div").style.display = "none";
+      document.getElementById("penjualan_id_div").style.display = "block";
+    } else {
+      document.getElementById("retur_penjualan_div").style.display = "block";
+      document.getElementById("penjualan_id_div").style.display = "none";
+      document.getElementById("penjualan_id").value = "";
+    }
+
+    jenis_input.addEventListener("change", () => {
+      if (jenis_input.value === "otomatis") {
+        document.getElementById("retur_penjualan_div").style.display = "none";
+        document.getElementById("penjualan_id_div").style.display = "block";
+      } else {
+        document.getElementById("retur_penjualan_div").style.display = "block";
+        document.getElementById("penjualan_id_div").style.display = "none";
+        document.getElementById("penjualan_id").value = "";
+      }
+    });
   });
 }
 
@@ -255,7 +291,7 @@ async function fetch_fk(field) {
     const response = await apiRequest(
       `/PHP/API/${field}_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
-      )}&target=tb_penjualan&context=create`,
+      )}&target=tb_retur_penjualan&context=create`,
       "POST",
       { select: "select" }
     );
@@ -278,6 +314,17 @@ async function fetch_fk(field) {
         const option = new Option(
           `${item.customer_id} - ${item.nama} - ${item.channel_nama} `,
           item.customer_id,
+          false,
+          false
+        );
+        select.append(option);
+      });
+    } else if (field === "penjualan") {
+      select.append(new Option("Pilih Penjualan", "", false, false));
+      response.data.forEach((item) => {
+        const option = new Option(
+          `${item.penjualan_id} - ${item.customer_nama} - ${item.tanggal_penjualan} `,
+          item.penjualan_id,
           false,
           false
         );
@@ -388,238 +435,189 @@ async function submitpenjualan() {
   }
 }
 
-const cek_promo_button = document.getElementById("cek_promo_button");
-cek_promo_button.addEventListener("click", function () {
-  cek_promo();
-});
+async function populate_penjualan(penjualan_id) {
+  if (penjualan_id) {
+    const penjualan_id = penjualan_id;
 
-async function cek_promo() {
-  const picker_penjualan = $("#tanggal_penjualan").pickadate("picker");
-  const tanggal_penjualan = picker_penjualan.get("select", "yyyy-mm-dd");
-  const gudang_id = document.getElementById("gudang_id").value;
-  const customer_id = document.getElementById("customer_id").value;
-  const keterangan = document.getElementById("keterangan_penjualan").value;
-  let diskon = document.getElementById("diskon").value;
-  const ppn = document.getElementById("ppn").value;
-  let nominal_pph = document.getElementById("nominal_pph").value;
+    let customer_id = "";
+    let ppn = "";
+    let nominal_pph = "";
+    let diskon = "";
+    let keterangan = "";
+    let no_pengiriman = "";
+    let status = "";
+    let no_invoice = "";
 
-  const status_penjualan = document.getElementById("status_penjualan").value;
+    try {
+      const response = await apiRequest(
+        `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
+          "user_id"
+        )}&target=tb_retur_pembelian&context=create`,
+        "POST",
+        { penjualan_id: penjualan_id, table: "tb_penjualan" }
+      );
+      response.data.forEach((item) => {
+        customer_id = item.customer_id;
+        ppn = item.ppn;
+        nominal_pph = item.nominal_pph;
+        diskon = item.diskon;
+        keterangan = item.keterangan;
+        status = item.status;
 
-  const details = [];
-  const rows = document.querySelectorAll("#create_detail_penjualan_tbody tr");
+        const parts_po = item.tanggal_po ? item.tanggal_po.split("-") : "";
+        if (parts_po.length === 3) {
+          let dateObj_po = new Date(parts_po[0], parts_po[1] - 1, parts_po[2]);
+          pickdatejs_po.set("select", dateObj_po);
+        }
 
-  for (const row of rows) {
-    const produk_select = row.querySelector("td:nth-child(1) select");
-    const qty = row.querySelector("td:nth-child(2) input");
-    const satuan = row.querySelector("td:nth-child(3) select");
-    const harga = row.querySelector("td:nth-child(4) input");
-    const diskon = row.querySelector("td:nth-child(5) input");
+        const parts_pengiriman = item.tanggal_pengiriman
+          ? item.tanggal_pengiriman.split("-")
+          : "";
+        if (parts_pengiriman.length === 3) {
+          const dateObj_pengiriman = new Date(
+            parts_pengiriman[0],
+            parts_pengiriman[1] - 1,
+            parts_pengiriman[2]
+          );
+          pickdatejs_pengiriman.set("select", dateObj_pengiriman);
+        }
+        no_pengiriman = item.no_pengiriman;
+        no_invoice = item.no_invoice_supplier;
 
-    const produk_id = produk_select?.value?.trim();
-    const kuantitas = qty?.value?.trim();
-    let harga_ = harga?.value?.trim();
-    const satuan_id = satuan?.value?.trim();
-    let discount = diskon?.value?.trim();
+        const parts_terima = item.tanggal_terima
+          ? item.tanggal_terima.split("-")
+          : "";
+        if (parts_terima.length === 3) {
+          const dateObj_terima = new Date(
+            parts_terima[0],
+            parts_terima[1] - 1,
+            parts_terima[2]
+          );
+          pickdatejs_terima.set("select", dateObj_terima);
+        }
 
-    if (
-      !produk_id ||
-      produk_id.trim() === "" ||
-      !kuantitas ||
-      kuantitas.trim() === "" ||
-      !harga_ ||
-      harga_.trim() === "" ||
-      !satuan_id ||
-      satuan_id.trim() === "" ||
-      !discount ||
-      discount.trim() === ""
-    ) {
-      toastr.error("Semua field pada detail penjualan wajib diisi.");
-      return;
+        const parts_invoice = item.tanggal_invoice
+          ? item.tanggal_invoice.split("-")
+          : "";
+        if (parts_invoice.length === 3) {
+          const dateObj_invoice = new Date(
+            parts_invoice[0],
+            parts_invoice[1] - 1,
+            parts_invoice[2]
+          );
+          pickadatejs_invoice.set("select", dateObj_invoice);
+        }
+      });
+    } catch (error) {
+      console.error("error:", error);
     }
-    harga_ = helper.format_angka(harga_);
-    discount = helper.format_angka(discount);
-    details.push({
-      produk_id: produk_id,
-      qty: kuantitas,
-      harga: harga_,
-      satuan_id: satuan_id,
-      diskon: discount,
-    });
-  }
+    document.getElementById("penjualan_id").value = penjualan_id;
+    document.getElementById("no_pengiriman").value = no_pengiriman;
+    document.getElementById("no_invoice").value = no_invoice;
+    document.getElementById("status_pembelian").value = status;
 
-  if (details.length === 0) {
-    toastr.error("Minimal satu detail penjualan harus diisi.");
-    return;
-  }
-  nominal_pph = helper.format_angka(nominal_pph);
-  diskon = helper.format_angka(diskon);
+    document.getElementById("ppn").value = ppn;
+    document.getElementById("nominal_pph").value =
+      helper.unformat_angka(nominal_pph);
+    document.getElementById("keterangan").value = keterangan;
+    document.getElementById("diskon").value = helper.unformat_angka(diskon);
 
-  const data_penjualan = {
-    cek_promo: "cek_promo",
-    user_id: `${access.decryptItem("user_id")}`,
-    created_by: `${access.decryptItem("nama")}`,
-    tanggal_penjualan: tanggal_penjualan,
-    gudang_id: gudang_id,
-    customer_id: customer_id,
-    keterangan: keterangan,
-    ppn: ppn,
-    diskon: diskon,
-    nominal_pph: nominal_pph,
-    status: status_penjualan,
-    details: details,
-  };
-
-  console.log(data_penjualan);
-
-  try {
-    const response_promo_kondisi = await apiRequest(
-      `/PHP/API/penjualan_API.php?action=create&user_id=${access.decryptItem(
-        "user_id"
-      )}`,
-      "POST",
-
-      data_penjualan
-    );
-    console.log(response_promo_kondisi.data);
-
-    await display_promo_bonus_barang(
-      response_promo_kondisi.data,
-      "promo_berlaku_tbody"
-    );
-  } catch (error) {
-    console.error("Promo_kondisi:", error);
-  }
-}
-
-async function display_promo_bonus_barang(data, tbody_id) {
-  const validPromoItems = Array.isArray(data.valid_kelipatan_promo)
-    ? data.valid_kelipatan_promo
-        .flat()
-        .filter((item) => item && typeof item === "object" && item.promo_id)
-    : [];
-
-  if (validPromoItems.length > 0) {
-    for (const item of validPromoItems) {
-      try {
-        const response_promo = await apiRequest(
-          `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
-            "user_id"
-          )}&target=tb_penjualan&context=create`,
-          "POST",
-          {
-            promo_id: item.promo_id,
-            table: "tb_promo",
-          }
-        );
-
-        const response_promo_bonus_barang = await apiRequest(
-          `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
-            "user_id"
-          )}&target=tb_penjualan&context=create`,
-          "POST",
-          {
-            promo_id: item.promo_id,
-            table: "tb_promo_bonus_barang",
-          }
-        );
-
-        populate_bonus_barang(
-          response_promo.data,
-          response_promo_bonus_barang.data,
-          tbody_id,
-          item.bonus_kelipatan
-        );
-
-        console.log(
-          "Promo bonus:",
-          JSON.stringify(response_promo_bonus_barang.data)
-        );
-      } catch (error) {
-        console.error("Promo_kondisi (bonus_barang):", error);
-      }
+    try {
+      const response = await apiRequest(
+        `/PHP/API/supplier_API.php?action=select&user_id=${access.decryptItem(
+          "user_id"
+        )}&target=tb_retur_pembelian&context=create`
+      );
+      populate_supplier(response.data, supplier_id);
+    } catch (error) {
+      console.error("error:", error);
     }
-  } else {
-    // No valid promo items
-    console.warn("No valid promo items found.");
-    populate_bonus_barang([], tbody_id);
-  }
-}
 
-function populate_bonus_barang(
-  data_promo,
-  data_promo_bonus_barang,
-  tbody_id,
-  bonus_kelipatan
-) {
-  const tbody = document.getElementById(`${tbody_id}`);
-  const container = document.getElementById("list-container");
-  container.innerHTML = "";
-  let bonus_kelipatan_barang = bonus_kelipatan ? bonus_kelipatan : 1;
-  // console.log(bonus_kelipatan_barang);
-  let index = 1;
-  if (data_promo.length != 0) {
-    data_promo.forEach((item) => {
-      let nama_promo = item.nama;
+    try {
+      detail_pembelian_tbody.innerHTML = "";
+      const renponse_detail_pembelian = await apiRequest(
+        `/PHP/API/invoice_API.php?action=select&user_id=${access.decryptItem(
+          "user_id"
+        )}&target=tb_retur_pembelian&context=create`,
+        "POST",
+        { invoice_id: penjualan_id, table: "detail_invoice" }
+      );
 
-      const tile = document.createElement("div");
+      renponse_detail_pembelian.data.forEach((detail, index) => {
+        var currentIndex = index++;
+        const tr_detail = document.createElement("tr");
+        const current_produk_id = detail.produk_id;
+        const current_satuan_id = detail.satuan_id;
 
-      tile.innerHTML = `
-        <p></p>
-        <p>${index}. ${nama_promo}</p>
-      `;
+        const td_produk = document.createElement("td");
+        var produk_select = document.createElement("select");
+        produk_select.setAttribute("id", "produk_element_id" + currentIndex);
+        produk_select.classList.add("form-select");
+        td_produk.appendChild(produk_select);
 
-      container.appendChild(tile);
-      index++;
-    });
-  } else {
-    container.innerHTML = `<p class="text-danger">
-      Tidak ada promo yang berlaku
-      </p>`;
-  }
+        const td_qty = document.createElement("td");
+        var input_qty = document.createElement("input");
+        input_qty.setAttribute("id", "qty" + currentIndex);
+        input_qty.classList.add("form-control");
+        input_qty.value = detail.qty;
+        td_qty.appendChild(input_qty);
 
-  if (data_promo_bonus_barang.length != 0) {
-    let nomor = 1;
-    data_promo_bonus_barang.forEach((item) => {
-      let nama_produk = item.nama_produk;
-      let qty = Number(item.qty_bonus) * bonus_kelipatan_barang;
-      let nama_satuan = item.nama_satuan;
-      let jenis_diskon = item.jenis_diskon;
-      let jumlah_diskon = item.jlh_diskon;
+        const td_satuan = document.createElement("td");
+        var satuan_select = document.createElement("select");
+        satuan_select.setAttribute("id", "satuan_element_id" + currentIndex);
+        satuan_select.classList.add("form-select");
+        td_satuan.appendChild(satuan_select);
 
-      const tr_detail = document.createElement("tr");
+        const td_harga = document.createElement("td");
+        var input_harga = document.createElement("input");
+        input_harga.setAttribute("id", "harga" + currentIndex);
+        input_harga.classList.add("form-control");
+        input_harga.style.textAlign = "right";
+        input_harga.value = detail.harga;
+        td_harga.appendChild(input_harga);
 
-      const td_no = document.createElement("td");
-      td_no.textContent = nomor;
-      td_no.style.textAlign = "center";
+        const td_diskon = document.createElement("td");
+        var input_diskon = document.createElement("input");
+        input_diskon.setAttribute("id", "diskon" + currentIndex);
+        input_diskon.classList.add("form-control");
+        input_diskon.style.textAlign = "right";
+        input_diskon.value = detail.diskon;
+        td_diskon.appendChild(input_diskon);
 
-      const tdKode = document.createElement("td");
-      tdKode.textContent = nama_produk;
+        const td_aksi = document.createElement("td");
+        td_aksi.setAttribute("id", "aksi_tbody");
+        var delete_button = document.createElement("button");
+        delete_button.type = "button";
+        delete_button.className =
+          "btn btn-danger btn-sm delete_detail_pembelian";
+        delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+        td_aksi.appendChild(delete_button);
+        td_aksi.style.textAlign = "center";
 
-      const tdKuantitas = document.createElement("td");
-      tdKuantitas.textContent = qty;
+        tr_detail.appendChild(td_produk);
+        tr_detail.appendChild(td_qty);
+        tr_detail.appendChild(td_satuan);
+        tr_detail.appendChild(td_harga);
+        tr_detail.appendChild(td_diskon);
+        tr_detail.appendChild(td_aksi);
 
-      const tdSatuan = document.createElement("td");
-      tdSatuan.textContent = nama_satuan;
+        detail_pembelian_tbody.appendChild(tr_detail);
 
-      const tdHarga = document.createElement("td");
-      tdHarga.setAttribute("id", "view_harga");
-      tdHarga.textContent = helper.format_angka(jumlah_diskon);
-      tdHarga.style.textAlign = "right";
+        helper.format_nominal("harga" + currentIndex);
+        helper.format_nominal("diskon" + currentIndex);
+        select_detail_pembelian(
+          currentIndex,
+          "create",
+          "produk_element_id",
+          "satuan_element_id",
+          current_produk_id,
+          current_satuan_id
+        );
+      });
+    } catch (error) {
+      console.error("error:", error);
+    }
 
-      const tdJenis_diskon = document.createElement("td");
-      tdJenis_diskon.textContent = jenis_diskon;
-      const tdAksi = document.createElement("td");
-      tdAksi.textContent = "";
-      // Append all tds to tr
-      tr_detail.appendChild(tdKode);
-      tr_detail.appendChild(tdKuantitas);
-      tr_detail.appendChild(tdSatuan);
-      tr_detail.appendChild(tdHarga);
-      tr_detail.appendChild(tdJenis_diskon);
-      tr_detail.appendChild(tdAksi);
-      nomor += 1;
-      // Append tr to tbody
-      tbody.appendChild(tr_detail);
-    });
+    document.getElementById("retur_pembelian_div").style.display = "block";
   }
 }

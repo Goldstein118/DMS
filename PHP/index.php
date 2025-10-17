@@ -111,7 +111,8 @@ require_once $_ENV['BASE_PATH'] . '/PHP/config/vendor_paths.php';
         'tabel_data_biaya',
         'tabel_invoice',
         'tabel_retur_pembelian',
-        'tabel_penjualan'
+        'tabel_penjualan',
+        'tabel_retur_penjualan'
       ];
 
       if (in_array($page, $allowed_pages)) {
@@ -255,6 +256,13 @@ require_once $_ENV['BASE_PATH'] . '/PHP/config/vendor_paths.php';
       ?>
         <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_penjualan.js?v=2.0"></script>
         <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_penjualan.js?v=2.0"></script>
+      <?php
+        break;
+
+      case 'tabel_retur_penjualan':
+      ?>
+        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/select_retur_penjualan.js?v=2.0"></script>
+        <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/submit_retur_penjualan.js?v=2.0"></script>
     <?php
         break;
     }

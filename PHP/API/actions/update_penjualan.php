@@ -624,6 +624,11 @@ if (isset($data['penjualan_id']) && isset($data['update_penjualan'])) {
         $customer_id = $fields['customer_id'];
         $gudang_id = $fields['gudang_id'];
         $keterangan_penjualan = $fields['keterangan'];
+        $keterangan_gudang = $fields['keterangan_gudang'];
+        $keterangan_invoice = $fields['keterangan_invoice'];
+        $keterangan_pengiriman = $fields['keterangan_pengiriman'];
+
+
         $ppn = $fields['ppn'];
         $diskon_penjualan = $fields['diskon'];
         $nominal_pph = $fields['nominal_pph'];
@@ -662,7 +667,7 @@ if (isset($data['penjualan_id']) && isset($data['update_penjualan'])) {
         error_log("bonus_kelipatan value: " . print_r($bonus_kelipatan, true));
 
 
-        $stmt = $conn->prepare("UPDATE tb_penjualan SET tanggal_penjualan =?,customer_id=?,gudang_id=?,keterangan_penjualan=?,ppn=?,diskon=?,nominal_pph=?,status=?,promo_id=?
+        $stmt = $conn->prepare("UPDATE tb_penjualan SET tanggal_penjualan =?,customer_id=?,gudang_id=?,keterangan_penjualan=?,ppn=?,diskon=?,nominal_pph=?,status=?,promo_id=?,keterangan_gudang=?,keterangan_invoice=?,keterangan_pengiriman=?
         WHERE penjualan_id = ?");
         $stmt->bind_param(
             "ssssdddsss",
@@ -675,6 +680,9 @@ if (isset($data['penjualan_id']) && isset($data['update_penjualan'])) {
             $nominal_pph_unformat,
             $status,
             $valid_promos_id,
+            $keterangan_gudang,
+            $keterangan_invoice,
+            $keterangan_pengiriman,
             $penjualan_id
         );
         $stmt->execute();

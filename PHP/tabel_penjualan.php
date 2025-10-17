@@ -145,11 +145,23 @@
                                     <div class="accordion-body">
 
                                         <div class="row g-2">
-                                            <div class="col"> <label class="form-label mb-0 mt-2" for="keterangan_penjualan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                            <div class="col">
+                                                <label class="form-label mb-0 mt-2" for="keterangan_penjualan">Keterangan Penjualan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <input type="text" class="form-control" id="keterangan_penjualan" name="keterangan_penjualan" />
+
+                                                <label class="form-label mb-0 mt-2" for="keterangan_invoice">Keterangan Invoice:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                <input type="text" class="form-control" id="keterangan_invoice" name="keterangan_invoice" />
+
+                                                <label class="form-label mb-0 mt-2" for="keterangan_gudang">Keterangan Gudang:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                <input type="text" class="form-control" id="keterangan_gudang" name="keterangan_gudang" />
                                             </div>
-                                            <div class="col"> <label class="form-label mb-0 mt-2" for="diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                            <div class="col">
+                                                <label class="form-label mb-0 mt-2" for="diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <input type="text" class="form-control" id="diskon" name="diskon" />
+
+
+                                                <label class="form-label mb-0 mt-2" for="keterangan_pengiriman">Keterangan Pengiriman:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                <input type="text" class="form-control" id="keterangan_pengiriman" name="keterangan_pengiriman" />
                                             </div>
                                         </div>
 
@@ -359,15 +371,24 @@
                                     <div class="accordion-body">
 
                                         <div class="row g-2">
-                                            <div class="col"> <label class="form-label mb-0 mt-2" for="update_keterangan_penjualan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                            <div class="col">
+                                                <label class="form-label mb-0 mt-2" for="update_keterangan_penjualan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <input type="text" class="form-control" id="update_keterangan_penjualan" name="update_keterangan_penjualan" />
+
+                                                <label class="form-label mb-0 mt-2" for="update_keterangan_invoice">Keterangan Invoice:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                <input type="text" class="form-control" id="update_keterangan_invoice" name="update_keterangan_invoice" />
+
+                                                <label class="form-label mb-0 mt-2" for="update_keterangan_gudang">Keterangan Gudang:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                <input type="text" class="form-control" id="update_keterangan_gudang" name="update_keterangan_gudang" />
                                             </div>
                                             <div class="col">
                                                 <label class="form-label mb-0 mt-2" for="update_diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <input type="text" class="form-control" id="update_diskon" name="diskon" />
+
+                                                <label class="form-label mb-0 mt-2" for="update_keterangan_pengiriman">Keterangan Pengiriman:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                <input type="text" class="form-control" id="update_keterangan_pengiriman" name="keterangan_pengiriman" />
                                             </div>
                                         </div>
-
 
                                     </div>
                                 </div>

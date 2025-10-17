@@ -20,7 +20,9 @@ const update_cek_promo_button = document.getElementById(
   "update_cek_promo_button"
 );
 update_cek_promo_button.addEventListener("click", cek_promo);
-const grid_container_penjualan = document.querySelector("#table_penjualan");
+const grid_container_penjualan = document.querySelector(
+  "#table_retur_penjualan"
+);
 const pickdatejs_penjualan = $("#update_tanggal_penjualan")
   .pickadate({
     format: "dd mmm yyyy", // user sees: 01 Jan 2025
@@ -52,7 +54,7 @@ if (grid_container_penjualan) {
       dropdownParent: $("#update_modal_penjualan"),
     });
   });
-  window.penjualan_grid = new Grid({
+  window.retur_penjualan_grid = new Grid({
     columns: [
       "No Penjualan",
       "Tanggal penjualan",
@@ -77,20 +79,20 @@ if (grid_container_penjualan) {
           if (access.isOwner()) {
             edit = true;
           } else {
-            edit = access.hasAccess("tb_penjualan", "edit");
+            edit = access.hasAccess("tb_retur_penjualan", "edit");
           }
           if (access.isOwner()) {
             can_delete = true;
           } else {
-            can_delete = access.hasAccess("tb_penjualan", "delete");
+            can_delete = access.hasAccess("tb_retur_penjualan", "delete");
           }
           let button = "";
 
           if (edit) {
             button += `<button
                 type="button"
-                id="update_penjualan_button"
-                class="btn btn-warning update_penjualan btn-sm"
+                id="update_retur_penjualan_button"
+                class="btn btn-warning update_retur_penjualan btn-sm"
               >
                 <span id="button_icon" class="button_icon">
                   <i class="bi bi-pencil-square"></i>
@@ -106,14 +108,14 @@ if (grid_container_penjualan) {
           }
           if (can_delete) {
             button += `
-        <button type="button" class="btn btn-danger delete_penjualan btn-sm">
+        <button type="button" class="btn btn-danger delete_retur_penjualan btn-sm">
          <i class="bi bi-x-circle"></i>
         </button>
         `;
           }
 
           button += `
-        <button type="button" class="btn btn-info view_penjualan btn-sm" >
+        <button type="button" class="btn btn-info view_retur_penjualan btn-sm" >
           <i class="bi bi-eye"></i>
         </button>
         `;
@@ -141,7 +143,7 @@ if (grid_container_penjualan) {
     server: {
       url: `${
         config.API_BASE_URL
-      }/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
+      }/PHP/API/retur_penjualan_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
       )}`,
       method: "GET",
@@ -150,27 +152,29 @@ if (grid_container_penjualan) {
         "X-Requested-With": "XMLHttpRequest",
       },
       then: (data) =>
-        data.map((penjualan) => [
-          penjualan.penjualan_id,
-          helper.format_date(penjualan.tanggal_penjualan),
-          penjualan.customer_nama,
-          JSON.parse(penjualan.promo_id),
-          penjualan.gudang_nama,
-          penjualan.keterangan_penjualan,
-          penjualan.no_pengiriman,
-          helper.format_persen(penjualan.ppn),
-          helper.format_angka(penjualan.nominal_ppn),
-          helper.format_angka(penjualan.nominal_pph),
-          helper.format_angka(penjualan.diskon),
-          penjualan.status,
+        data.map((item) => [
+          item.penjualan_id,
+          helper.format_date(item.tanggal_penjualan),
+          item.customer_id,
+          JSON.parse(item.promo_id),
+          item.gudang_id,
+          item.keterangan_penjualan,
+          item.no_pengiriman,
+          helper.format_persen(item.ppn),
+          helper.format_angka(item.nominal_ppn),
+          helper.format_angka(item.nominal_pph),
+          helper.format_angka(item.diskon),
+          item.status,
           null,
         ]),
     },
   });
-  window.penjualan_grid.render(document.getElementById("table_penjualan"));
+  window.retur_penjualan_grid.render(
+    document.getElementById("table_retur_penjualan")
+  );
   setTimeout(() => {
     helper.custom_grid_header(
-      "penjualan",
+      "retur_penjualan",
       handle_delete,
       handle_update,
       handle_view
@@ -240,7 +244,7 @@ async function handle_delete(button) {
 
             $("#modal_cancel").modal("hide");
 
-            window.penjualan_grid.forceRender();
+            window.retur_penjualan_grid.forceRender();
             setTimeout(() => {
               helper.custom_grid_header(
                 "penjualan",
@@ -512,9 +516,6 @@ async function handle_update(button) {
   let nominal_pph = "";
   let keterangan_penjualan = "";
   let diskon_penjualan = "";
-  let keterangan_invoice = "";
-  let keterangan_gudang = "";
-  let keterangan_pengiriman = "";
 
   try {
     const response = await apiRequest(
@@ -544,9 +545,6 @@ async function handle_update(button) {
       nominal_pph = item.nominal_pph;
       keterangan_penjualan = item.keterangan_penjualan;
       diskon_penjualan = item.diskon;
-      keterangan_invoice = item.keterangan_invoice;
-      keterangan_gudang = item.keterangan_gudang;
-      keterangan_pengiriman = item.keterangan_pengiriman;
     });
   } catch (error) {
     console.error("error:", error);
@@ -564,12 +562,6 @@ async function handle_update(button) {
     keterangan_penjualan;
   document.getElementById("update_diskon").value =
     helper.unformat_angka(diskon_penjualan);
-
-  document.getElementById("update_keterangan_invoice").value =
-    keterangan_invoice;
-  document.getElementById("update_keterangan_gudang").value = keterangan_gudang;
-  document.getElementById("update_keterangan_pengiriman").value =
-    keterangan_pengiriman;
 
   try {
     const response = await apiRequest(
@@ -710,15 +702,6 @@ if (submit_penjualan_update) {
       "update_status_penjualan"
     ).value;
 
-    const keterangan_gudang = document.getElementById(
-      "update_keterangan_gudang"
-    ).value;
-    const keterangan_invoice = document.getElementById(
-      "update_keterangan_invoice"
-    ).value;
-    const keterangan_pengiriman = document.getElementById(
-      "update_keterangan_pengiriman"
-    ).value;
     const details = [];
     const rows = document.querySelectorAll("#update_detail_penjualan_tbody tr");
 
@@ -777,9 +760,6 @@ if (submit_penjualan_update) {
       gudang_id: gudang_id,
       customer_id: customer_id,
       keterangan: keterangan,
-      keterangan_gudang: keterangan_gudang,
-      keterangan_invoice: keterangan_invoice,
-      keterangan_pengiriman: keterangan_pengiriman,
       ppn: ppn,
       diskon: diskon,
       nominal_pph: nominal_pph,
@@ -797,7 +777,7 @@ if (submit_penjualan_update) {
       if (response.ok) {
         $("#update_modal_penjualan").modal("hide");
         Swal.fire("Berhasil", response.message, "success");
-        window.penjualan_grid.forceRender();
+        window.retur_penjualan_grid.forceRender();
         setTimeout(() => {
           helper.custom_grid_header(
             "penjualan",

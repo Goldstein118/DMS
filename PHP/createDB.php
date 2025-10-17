@@ -745,5 +745,67 @@ if ($conn->query($detail_penjualan)) {
 }
 
 
+$retur_penjualan = "CREATE TABLE IF NOT EXISTS tb_retur_penjualan(
+
+retur_penjualan_id VARCHAR(20) PRIMARY KEY NOT NULL,
+penjualan_id VARCHAR(20),
+tanggal_penjualan DATE,
+customer_id VARCHAR(20),
+promo_id JSON,
+gudang_id VARCHAR(20),
+keterangan_penjualan VARCHAR(255),
+no_pengiriman VARCHAR(20),
+total_qty INT,
+ppn DECIMAL(20,2),
+nominal_ppn DECIMAL(20,2),
+diskon DECIMAL(20,2),
+nominal_pph DECIMAL(20,2),
+sub_total DECIMAL(20,2),
+grand_total DECIMAL(20,2),
+created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+created_by VARCHAR(50),
+status VARCHAR (20),
+keterangan_cancel VARCHAR(255),
+cancel_by VARCHAR (100),
+keterangan_invoice VARCHAR(255),
+keterangan_pengiriman VARCHAR(255),
+keterangan_gudang VARCHAR(255),
+tanggal_input_promo_berlaku DATE,
+
+FOREIGN KEY (gudang_id) REFERENCES tb_gudang(gudang_id) ON DELETE RESTRICT,
+FOREIGN KEY (customer_id) REFERENCES tb_customer(customer_id) ON DELETE RESTRICT
+)";
+
+if ($conn->query($retur_penjualan)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+
+$detail_retur_penjualan = "CREATE TABLE IF NOT EXISTS tb_detail_penjualan(
+
+
+detail_retur_penjualan_id VARCHAR(20) PRIMARY KEY NOT NULL,
+retur_penjualan_id VARCHAR(20),
+produk_id VARCHAR(20),
+urutan INT,
+qty INT,
+harga DECIMAL(20,2),
+diskon DECIMAL(20,2),
+satuan_id VARCHAR(20),
+FOREIGN KEY (retur_penjualan_id) REFERENCES tb_retur_penjualan(retur_penjualan_id) ON DELETE RESTRICT,
+FOREIGN KEY (satuan_id) REFERENCES tb_satuan(satuan_id) ON DELETE RESTRICT
+)";
+
+if ($conn->query($detail_retur_penjualan)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+
 
 mysqli_close($conn);

@@ -87,7 +87,8 @@ export function custom_grid_header(
     field == "produk" ||
     field === "invoice" ||
     field === "retur_pembelian" ||
-    field === "penjualan"
+    field === "penjualan" ||
+    field === "retur_penjualan"
   ) {
     const tableElement = document.getElementById(`table_${field}`);
     tableElement.removeEventListener("click", tableElement._customHandler);

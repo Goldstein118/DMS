@@ -702,6 +702,9 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
         $gudang_id = $fields['gudang_id'];
         $customer_id = $fields['customer_id'];
         $keterangan = $fields['keterangan'];
+        $keterangan_invoice = $fields['keterangan_invoice'];
+        $keterangan_gudang = $fields['keterangan_gudang'];
+        $keterangan_pengiriman = $fields['keterangan_pengiriman'];
         $ppn = $fields['ppn'];
         $diskon_penjualan = $fields['diskon'];
         $nominal_pph = $fields['nominal_pph'];
@@ -720,6 +723,7 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
         validate_2($nominal_pph_unformat, '/^\d+$/', "Format nominal pph unformat tidak valid");
         // Generate ID
         $penjualan_id = generateCustomID('PJ', 'tb_penjualan', 'penjualan_id', $conn);
+        $no_pengiriman = generate_no_pengiriman('PJK', 'tb_penjualan', 'no_pengiriman', $conn);
         // $penjualan_history_id = generateCustomID('POH', 'tb_pembelian_history', 'pembelian_history_id', $conn);
 
         $promo_id = cek_promo($conn, $customer_id, $tanggal_penjualan, $data['details']);
@@ -747,8 +751,8 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
         if (!empty($promo_id)) {
             executeInsert(
                 $conn,
-                "INSERT INTO tb_penjualan (penjualan_id, tanggal_penjualan,customer_id,gudang_id,promo_id, keterangan_penjualan, ppn,diskon, nominal_pph, status, created_by,bonus_kelipatan,tanggal_input_promo_berlaku)
-        VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?)",
+                "INSERT INTO tb_penjualan (penjualan_id, tanggal_penjualan,customer_id,gudang_id,promo_id, keterangan_penjualan, ppn,diskon, nominal_pph, status, created_by,bonus_kelipatan,tanggal_input_promo_berlaku,keterangan_invoice,keterangan_gudang,keterangan_pengiriman,no_pengiriman)
+        VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?)",
                 [
                     $penjualan_id,
                     $tanggal_penjualan,
@@ -762,9 +766,13 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
                     $status,
                     $created_by,
                     $bonus_kelipatan,
-                    $tanggal_input_promo_berlaku
+                    $tanggal_input_promo_berlaku,
+                    $keterangan_invoice,
+                    $keterangan_gudang,
+                    $keterangan_pengiriman,
+                    $no_pengiriman
                 ],
-                "ssssssdddssds"
+                "ssssssdddssdsssss"
             );
 
             foreach ($promo_ids as $promo_id) {

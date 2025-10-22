@@ -11,6 +11,7 @@
         $no_invoice = $data['no_invoice'];
         $status = $data['status'];
         $input = $data['input'];
+        $gudang_id = $data['gudang_id'];
 
         $invoice_id = "";
         if ($input === "otomatis") {
@@ -42,7 +43,7 @@
         validate_2($diskon_invoice_unformat, '/^\d+$/', "Format diskon invoice unformat tidak valid");
         validate_2($nominal_pph_unformat, '/^\d+$/', "Format nominal pph unformat tidak valid");
 
-        executeInsert($conn, "INSERT INTO tb_retur_pembelian(retur_pembelian_id,invoice_id,tanggal_invoice,no_invoice_supplier,tanggal_input_invoice,pembelian_id, tanggal_po, supplier_id, keterangan, ppn,diskon, nominal_pph, status, created_by,no_pengiriman,tanggal_terima,tanggal_pengiriman) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [
+        executeInsert($conn, "INSERT INTO tb_retur_pembelian(retur_pembelian_id,invoice_id,tanggal_invoice,no_invoice_supplier,tanggal_input_invoice,pembelian_id, tanggal_po, supplier_id,gudang_id,keterangan, ppn,diskon, nominal_pph, status, created_by,no_pengiriman,tanggal_terima,tanggal_pengiriman,input) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [
             $retur_pembelian_id,
             $invoice_id,
             $tanggal_invoice,
@@ -51,6 +52,7 @@
             $pembelian_id,
             $tanggal_po,
             $supplier_id,
+            $gudang_id,
             $keterangan,
             $ppn_unformat,
             $diskon_invoice_unformat,
@@ -59,12 +61,12 @@
             $created_by,
             $no_pengiriman,
             $tanggal_terima,
-            $tanggal_pengiriman
-        ], "sssssssssdddsssss");
+            $tanggal_pengiriman,
+            $input
+        ], "ssssssssssdddssssss");
 
 
-        executeInsert($conn, "INSERT INTO tb_retur_pembelian_history(retur_pembelian_history_id,retur_pembelian_id_after,invoice_id_after,tanggal_invoice_after,no_invoice_supplier_after,tanggal_input_invoice_after,pembelian_id_after, tanggal_po_after, supplier_id_after, keterangan_after, ppn_after,diskon_after, nominal_pph_after, status_after, created_by_after,no_pengiriman_after,tanggal_terima_after,tanggal_pengiriman_after) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [
-
+        executeInsert($conn, "INSERT INTO tb_retur_pembelian_history(retur_pembelian_history_id,retur_pembelian_id_after,invoice_id_after,tanggal_invoice_after,no_invoice_supplier_after,tanggal_input_invoice_after,pembelian_id_after, tanggal_po_after, supplier_id_after,gudang_id_after,keterangan_after, ppn_after,diskon_after, nominal_pph_after, status_after, created_by_after,no_pengiriman_after,tanggal_terima_after,tanggal_pengiriman_after,created_status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [
             $retur_pembelian_history_id,
             $retur_pembelian_id,
             $invoice_id,
@@ -74,6 +76,7 @@
             $pembelian_id,
             $tanggal_po,
             $supplier_id,
+            $gudang_id,
             $keterangan,
             $ppn_unformat,
             $diskon_invoice_unformat,
@@ -82,8 +85,9 @@
             $created_by,
             $no_pengiriman,
             $tanggal_terima,
-            $tanggal_pengiriman
-        ], "ssssssssssdddsssss");
+            $tanggal_pengiriman,
+            'new'
+        ], "sssssssssssdddssssss");
 
 
         $total_qty = 0;

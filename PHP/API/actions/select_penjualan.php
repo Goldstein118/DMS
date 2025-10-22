@@ -6,7 +6,7 @@ if (!$conn) {
 }
 if (isset($data['table']) && $data['table'] === 'tb_penjualan' && isset($data['penjualan_id'])) {
     $penjualan_id = $data['penjualan_id'];
-    $sql = "SELECT *FROM tb_penjualan WHERE penjualan_id=?";
+    $sql = "SELECT * FROM tb_penjualan WHERE penjualan_id=?";
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $penjualan_id);

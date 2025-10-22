@@ -56,6 +56,8 @@ if (submit_retur_pembelian_button) {
 
   $(document).ready(function () {
     fetch_pembelian();
+    fetch_fk("supplier");
+    fetch_fk("gudang");
 
     $("#modal_retur_pembelian").on("shown.bs.modal", function () {
       $("#invoice_id").select2({
@@ -66,6 +68,12 @@ if (submit_retur_pembelian_button) {
 
       $("#supplier_id").select2({
         placeholder: "Pilih Supplier",
+        allowClear: true,
+        dropdownParent: $("#modal_retur_pembelian"),
+      });
+
+      $("#gudang_id").select2({
+        placeholder: "Pilih Gudang",
         allowClear: true,
         dropdownParent: $("#modal_retur_pembelian"),
       });
@@ -81,19 +89,23 @@ if (submit_retur_pembelian_button) {
     if (input.value === "otomatis") {
       document.getElementById("invoice_id_div").style.display = "block";
       document.getElementById("retur_pembelian_div").style.display = "none";
+      detail_retur_pembelian_button.style.display = "none";
     } else {
       document.getElementById("invoice_id_div").style.display = "none";
       document.getElementById("retur_pembelian_div").style.display = "block";
+      detail_retur_pembelian_button.style.display = "block";
     }
 
     input.addEventListener("click", () => {
       if (input.value === "otomatis") {
         document.getElementById("invoice_id_div").style.display = "block";
         document.getElementById("retur_pembelian_div").style.display = "none";
+        detail_retur_pembelian_button.style.display = "none";
       } else {
         document.getElementById("invoice_id_div").style.display = "none";
         document.getElementById("retur_pembelian_div").style.display = "block";
         document.getElementById("invoice_id").value = "";
+        detail_retur_pembelian_button.style.display = "block";
       }
     });
   });
@@ -138,25 +150,45 @@ function populate_pembelian_select(data) {
   select.trigger("change");
 }
 
-function populate_supplier(data, current_supplier_id) {
-  $(`#supplier_id`).select2({
-    allowClear: true,
-    dropdownParent: $("#modal_retur_pembelian"),
-  });
-
-  const supplier_id_Field = $("#supplier_id");
-  supplier_id_Field.empty();
-  data.forEach((item) => {
-    const option = new Option(
-      `${item.supplier_id} - ${item.nama}`,
-      item.supplier_id,
-      false,
-      item.supplier_id == current_supplier_id
+async function fetch_fk(field, current_field_id) {
+  try {
+    const response = await apiRequest(
+      `/PHP/API/${field}_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}&target=tb_retur_pembelian&context=create`,
+      "POST",
+      { select: "select" }
     );
-    supplier_id_Field.append(option);
-  });
+    const select = $(`#${field}_id`);
+    select.empty();
+    if (field === "gudang") {
+      select.append(new Option("Pilih Gudang", "", false, false));
+      response.data.forEach((item) => {
+        const option = new Option(
+          `${item.gudang_id} - ${item.nama}`,
+          item.gudang_id,
+          false,
+          item.gudang_id == current_field_id
+        );
+        select.append(option);
+      });
+    } else if (field === "supplier") {
+      select.append(new Option("Pilih Supplier", "", false, false));
+      response.data.forEach((item) => {
+        const option = new Option(
+          `${item.supplier_id} - ${item.nama}`,
+          item.supplier_id,
+          false,
+          item.supplier_id == current_field_id
+        );
+        select.append(option);
+      });
+    }
 
-  supplier_id_Field.trigger("change");
+    select.trigger("change");
+  } catch (error) {
+    console.error("error:", error);
+  }
 }
 
 function add_field(action, produk_element_id, satuan_element_id) {
@@ -375,6 +407,7 @@ async function populate_pembelian(id_pembelian) {
     let status = "";
     let no_invoice = "";
     let pembelian_ID = "";
+    let gudang_id = "";
     try {
       const response = await apiRequest(
         `/PHP/API/invoice_API.php?action=select&user_id=${access.decryptItem(
@@ -391,6 +424,7 @@ async function populate_pembelian(id_pembelian) {
         keterangan = item.keterangan;
         status = item.status;
         pembelian_ID = item.pembelian_id;
+        gudang_id = item.gudang_id;
 
         const parts_po = item.tanggal_po ? item.tanggal_po.split("-") : "";
         if (parts_po.length === 3) {
@@ -450,16 +484,8 @@ async function populate_pembelian(id_pembelian) {
     document.getElementById("keterangan").value = keterangan;
     document.getElementById("diskon").value = helper.unformat_angka(diskon);
 
-    try {
-      const response = await apiRequest(
-        `/PHP/API/supplier_API.php?action=select&user_id=${access.decryptItem(
-          "user_id"
-        )}&target=tb_retur_pembelian&context=create`
-      );
-      populate_supplier(response.data, supplier_id);
-    } catch (error) {
-      console.error("error:", error);
-    }
+    fetch_fk("supplier", supplier_id);
+    fetch_fk("gudang", gudang_id);
 
     try {
       detail_pembelian_tbody.innerHTML = "";
@@ -704,6 +730,7 @@ async function submitRetur_pembelian() {
     : "";
   const input = document.getElementById("input").value;
   const supplier_id = document.getElementById("supplier_id").value;
+  const gudang_id = document.getElementById("gudang_id").value;
   const keterangan = document.getElementById("keterangan").value;
   let diskon = document.getElementById("diskon").value;
   const ppn = document.getElementById("ppn").value;
@@ -765,6 +792,7 @@ async function submitRetur_pembelian() {
     created_by: `${access.decryptItem("nama")}`,
     input: input,
     invoice_id: invoice_id,
+    gudang_id: gudang_id,
     pembelian_id: pembelian_id,
     tanggal_po: tanggal_po,
     tanggal_pengiriman: tanggal_pengiriman,

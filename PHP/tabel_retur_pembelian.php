@@ -60,6 +60,10 @@
                                                     <label class="form-label mb-0 mt-2" for="tanggal_terima">Tanggal Terima:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                                     <input type="text" class="form-control" id="tanggal_terima" name="tanggal_terima" />
 
+                                                    <label class="form-label mb-0 mt-2" for="gudang_id">Gudang:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                    <select class="form-select" id="gudang_id">
+                                                    </select>
+
                                                 </div>
                                                 <div class="col">
 
@@ -177,11 +181,15 @@
                                         class="accordion-collapse collapse show"
                                         data-bs-parent="#accordion_tambahan_retur_pembelian">
                                         <div class="accordion-body">
-                                            <div class="row g-2">
-                                                <div class="col"> <label class="form-label mb-0 mt-2" for="keterangan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+
+
+                                            <div class="row gap-2">
+                                                <div class="col">
+                                                    <label class="form-label mb-0 mt-2" for="keterangan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                     <input type="text" class="form-control" id="keterangan" name="keterangan" />
                                                 </div>
-                                                <div class="col"> <label class="form-label mb-0 mt-2" for="diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                <div class="col">
+                                                    <label class="form-label mb-0 mt-2" for="diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                     <input type="text" class="form-control" id="diskon" name="diskon" />
                                                 </div>
                                             </div>
@@ -255,6 +263,10 @@
 
                                                     <label class="form-label mb-0 mt-2" for="update_tanggal_terima">Tanggal Terima:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                                     <input type="text" class="form-control" id="update_tanggal_terima" name="update_tanggal_terima" />
+
+                                                    <label class="form-label mb-0 mt-2" for="update_gudang_id">Gudang:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                    <select class="form-select" id="update_gudang_id">
+                                                    </select>
 
                                                 </div>
                                                 <div class="col">
@@ -372,15 +384,18 @@
                                     <div id="update_collapseTambahan_pembelian"
                                         class="accordion-collapse collapse show"
                                         data-bs-parent="#update_accordion_tambahan_retur_pembelian">
-                                        <div class="update_accordion-body">
-                                            <div class="row g-2">
-                                                <div class="col"> <label class="form-label mb-0 mt-2" for="update_keterangan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                        <div class="accordion-body">
+                                            <div class="row gap-2">
+                                                <div class="col">
+                                                    <label class="form-label mb-0 mt-2" for="update_keterangan">Keterangan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                     <input type="text" class="form-control" id="update_keterangan" name="update_keterangan" />
                                                 </div>
-                                                <div class="col"> <label class="form-label mb-0 mt-2" for="update_diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                <div class="col">
+                                                    <label class="form-label mb-0 mt-2" for="update_diskon">Diskon:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                     <input type="text" class="form-control" id="update_diskon" name="update_diskon" />
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -397,7 +412,26 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal_cancel" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalCenterTitle">Cancel</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
 
+
+                <label class="form-label mb-0 mt-2" for="keterangan_cancel">Keterangan Cancel:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                <input type="text" class="form-control" id="keterangan_cancel" name="keterangan_cancel" />
+
+            </div>
+            <div class="modal-footer">
+                <button id="submit_cancel_button" type="button" class="btn btn-primary">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <main class="col-12 col-lg-10 ms-auto px-1">
     <div id="main" class="table-responsive">

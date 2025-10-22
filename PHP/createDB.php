@@ -381,6 +381,8 @@ $invoice = "CREATE TABLE IF NOT EXISTS tb_invoice(
   grand_total DECIMAL(20,2),
   created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   created_by VARCHAR(50),
+  keterangan_cancel VARCHAR(255),
+  cancel_by VARCHAR (100),
   status VARCHAR(20),
   FOREIGN KEY (supplier_id) REFERENCES tb_supplier(supplier_id) ON DELETE RESTRICT,
   FOREIGN KEY (pembelian_id) REFERENCES tb_pembelian(pembelian_id) ON DELETE RESTRICT,
@@ -446,7 +448,12 @@ $invoice_history = "CREATE TABLE IF NOT EXISTS tb_invoice_history(
   grand_total_before DECIMAL(20,2),
   created_on_before TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   created_by_before VARCHAR(50),
+  keterangan_cancel_before VARCHAR(255),
+  cancel_by_before VARCHAR (100),
   status_before VARCHAR(20),  
+
+
+
   tanggal_invoice_after DATE,
   no_invoice_supplier_after VARCHAR(20),
   tanggal_input_invoice_after DATE,
@@ -469,6 +476,8 @@ $invoice_history = "CREATE TABLE IF NOT EXISTS tb_invoice_history(
   created_on_after TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   created_by_after VARCHAR(50),
   created_status VARCHAR(20),
+  keterangan_cancel_after VARCHAR(255),
+  cancel_by_after VARCHAR (100),
   status_after VARCHAR(20))
   ";
 
@@ -584,7 +593,10 @@ $retur_pembelian = "CREATE TABLE IF NOT EXISTS tb_retur_pembelian(
   grand_total DECIMAL(20,2),
   created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   created_by VARCHAR(50),
+  keterangan_cancel VARCHAR(255),
+  cancel_by VARCHAR(50),
   status VARCHAR(20),
+  input VARCHAR(50),
   FOREIGN KEY (supplier_id) REFERENCES tb_supplier(supplier_id) ON DELETE RESTRICT,
   FOREIGN KEY (invoice_id) REFERENCES tb_invoice(invoice_id) ON DELETE RESTRICT,
   FOREIGN KEY (gudang_id) REFERENCES tb_gudang(gudang_id) ON DELETE RESTRICT
@@ -637,6 +649,8 @@ $retur_pembelian_history = "CREATE TABLE IF NOT EXISTS tb_retur_pembelian_histor
   grand_total_before DECIMAL(20,2),
   created_on_before TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   created_by_before VARCHAR(50),
+  keterangan_cancel_before VARCHAR(255),
+  cancel_by_before VARCHAR(50),
   status_before VARCHAR(20),
 
 
@@ -663,9 +677,10 @@ $retur_pembelian_history = "CREATE TABLE IF NOT EXISTS tb_retur_pembelian_histor
   grand_total_after DECIMAL(20,2),
   created_on_after TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   created_by_after VARCHAR(50),
-  status_after VARCHAR(20)
-
-
+  keterangan_cancel_after VARCHAR(255),
+  cancel_by_after VARCHAR(50),
+  status_after VARCHAR(20),
+  created_status VARCHAR(20)
 )";
 
 if ($conn->query($retur_pembelian_history)) {
@@ -784,7 +799,7 @@ if ($conn->query($retur_penjualan)) {
 }
 
 
-$detail_retur_penjualan = "CREATE TABLE IF NOT EXISTS tb_detail_penjualan(
+$detail_retur_penjualan = "CREATE TABLE IF NOT EXISTS tb_detail_retur_penjualan(
 
 
 detail_retur_penjualan_id VARCHAR(20) PRIMARY KEY NOT NULL,
@@ -800,6 +815,85 @@ FOREIGN KEY (satuan_id) REFERENCES tb_satuan(satuan_id) ON DELETE RESTRICT
 )";
 
 if ($conn->query($detail_retur_penjualan)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+
+$penjualan_history = "CREATE TABLE IF NOT EXISTS tb_penjualan_history(
+penjualan_history_id VARCHAR(20) PRIMARY KEY NOT NULL,
+penjualan_id VARCHAR(20),
+
+tanggal_penjualan_before DATE,
+customer_id_before VARCHAR(20),
+promo_id_before JSON,
+gudang_id_before VARCHAR(20),
+keterangan_penjualan_before VARCHAR(255),
+no_pengiriman_before VARCHAR(20),
+total_qty_before INT,
+ppn_before DECIMAL(20,2),
+nominal_ppn_before DECIMAL(20,2),
+diskon_before DECIMAL(20,2),
+nominal_pph_before DECIMAL(20,2),
+sub_total_before DECIMAL(20,2),
+grand_total_before DECIMAL(20,2),
+created_on_before timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+created_by_before VARCHAR(50),
+status_before VARCHAR (20),
+keterangan_cancel_before VARCHAR(255),
+cancel_by_before VARCHAR (100),
+keterangan_invoice_before VARCHAR(255),
+keterangan_pengiriman_before VARCHAR(255),
+keterangan_gudang_before VARCHAR(255),
+tanggal_input_promo_berlaku_before DATE,
+
+tanggal_penjualan_after DATE,
+customer_id_after  VARCHAR(20),
+promo_id_after  JSON,
+gudang_id_after  VARCHAR(20),
+keterangan_penjualan_after  VARCHAR(255),
+no_pengiriman_after  VARCHAR(20),
+total_qty_after  INT,
+ppn_after  DECIMAL(20,2),
+nominal_ppn_after  DECIMAL(20,2),
+diskon_after  DECIMAL(20,2),
+nominal_pph_after  DECIMAL(20,2),
+sub_total_after  DECIMAL(20,2),
+grand_total_after  DECIMAL(20,2),
+created_on_after  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+created_by_after  VARCHAR(50),
+status_after  VARCHAR (20),
+keterangan_cancel_after  VARCHAR(255),
+cancel_by_after  VARCHAR (100),
+keterangan_invoice_after  VARCHAR(255),
+keterangan_pengiriman_after  VARCHAR(255),
+keterangan_gudang_after  VARCHAR(255),
+tanggal_input_promo_berlaku_after  DATE,
+created_status VARCHAR (50)
+)";
+
+if ($conn->query($penjualan_history)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+$detail_history_penjualan = "CREATE TABLE IF NOT EXISTS tb_detail_history_penjualan(
+detail_history_penjualan_id VARCHAR(20) PRIMARY KEY NOT NULL,
+history_penjualan_id VARCHAR(20),
+produk_id VARCHAR(20),
+urutan INT,
+qty INT,
+harga DECIMAL(20,2),
+diskon DECIMAL(20,2),
+satuan_id VARCHAR(20),
+tipe_retur_penjualan_history VARCHAR(20)
+)";
+
+if ($conn->query($detail_history_penjualan)) {
     try {
     } catch (Error) {
         echo mysqli_error($conn);

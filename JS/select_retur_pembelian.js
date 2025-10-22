@@ -50,6 +50,23 @@ const pickdatejs_invoice = $("#update_tanggal_invoice")
   })
   .pickadate("picker");
 if (grid_container_retur_pembelian) {
+  function getStatusBadge(status) {
+    switch (status) {
+      case "proses":
+        return `<span class="badge text-bg-secondary">proses</span>`;
+      case "pengiriman":
+        return `<span class="badge text-bg-warning">pengiriman</span>`;
+      case "terima":
+        return `<span class="badge text-bg-primary">terima</span>`;
+      case "invoice":
+        return `<span class="badge text-bg-success">invoice</span>`;
+      case "cancel":
+        return `<span class="badge text-bg-danger">cancel</span>`;
+      default:
+        return `<span class="badge text-bg-secondary">${status}</span>`;
+    }
+  }
+
   update_detail_retur_pembelian_button.addEventListener("click", () => {
     add_field("update", "update_produk_id_new", "update_satuan_id_new");
   });
@@ -60,7 +77,10 @@ if (grid_container_retur_pembelian) {
       "Tanggal Invoice",
       "No Invoice Supplier",
       "Supplier",
-      "Status",
+      {
+        name: "Status",
+        formatter: (cell) => html(getStatusBadge(cell)),
+      },
       "Sub Total",
       "Diskon",
       "PPN",
@@ -68,12 +88,13 @@ if (grid_container_retur_pembelian) {
       "Grand Total",
       {
         name: "Aksi",
-        formatter: () => {
+        formatter: (cell, row) => {
+          const status = row.cells[4].data;
           const edit = access.hasAccess("tb_retur_pembelian", "edit");
           const can_delete = access.hasAccess("tb_retur_pembelian", "delete");
           let button = "";
 
-          if (edit) {
+          if (edit && status != "cancel") {
             button += `<button
                 type="button"
                 class="btn btn-warning update_retur_pembelian btn-sm"
@@ -90,19 +111,22 @@ if (grid_container_retur_pembelian) {
                 ></span>
               </button>`;
           }
-          if (can_delete) {
+          if (can_delete && status != "cancel") {
             button += `<button
                 type="button"
                 class="btn btn-danger delete_retur_pembelian btn-sm"
               >
-                <i class="bi bi-trash-fill"></i>
+                <i class="bi bi-x-circle"></i>
               </button>`;
           }
-          button += `
+
+          if (status != "cancel") {
+            button += `
         <button type="button" class="btn btn btn-info view_retur_pembelian btn-sm" >
           <i class="bi bi-eye"></i>
         </button>
         `;
+          }
 
           return html(button);
         },
@@ -166,69 +190,106 @@ if (grid_container_retur_pembelian) {
 }
 
 async function handle_delete(button) {
+  $("#modal_cancel").modal("show");
   const row = button.closest("tr");
   const retur_pembelian_id = row.cells[0].textContent;
-  const result = await Swal.fire({
-    title: "Apakah Anda Yakin?",
-    text: "Anda tidak dapat mengembalikannya!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Iya, Hapus!",
-    cancelButtonText: "Batalkan",
-  });
-  if (result.isConfirmed) {
-    try {
-      const response = await apiRequest(
-        `/PHP/API/retur_pembelian_API.php?action=delete&user_id=${access.decryptItem(
-          "user_id"
-        )}`,
-        "DELETE",
-        { retur_pembelian_id: retur_pembelian_id }
-      );
-      if (response.ok) {
-        row.remove();
-        Swal.fire(
-          "Berhasil",
-          response.message || "Invoice dihapus.",
-          "success"
-        );
-      } else {
-        Swal.fire(
-          "Gagal",
-          response.error || "Gagal menghapus invoice.",
-          "error"
-        );
+  const submit_cancel = document.getElementById("submit_cancel_button");
+  if (submit_cancel) {
+    submit_cancel.addEventListener("click", async function () {
+      const keterangan_cancel =
+        document.getElementById("keterangan_cancel").value;
+      if (!keterangan_cancel || keterangan_cancel.trim() === "") {
+        toastr.error("Keterangan Cancel harus diisi.");
+        return;
       }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Gagal",
-        text: error.message,
+      const result = await Swal.fire({
+        title: "Cancel Pembelian?",
+        text: "Setelah submit tidak bisa diganti lagi!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Iya, Cancel!",
+        cancelButtonText: "Batalkan",
       });
-    }
+      if (result.isConfirmed) {
+        try {
+          const response = await apiRequest(
+            `/PHP/API/retur_pembelian_API.php?action=delete&user_id=${access.decryptItem(
+              "user_id"
+            )}`,
+            "DELETE",
+            {
+              retur_pembelian_id: retur_pembelian_id,
+              keterangan_cancel: keterangan_cancel,
+              status: "cancel",
+              cancel_by: `${access.decryptItem("nama")}`,
+            }
+          );
+          if (response.ok) {
+            Swal.fire(
+              "Berhasil",
+              response.message || "Retur Pembelian dicancel.",
+              "success"
+            );
+
+            $("#modal_cancel").modal("hide");
+
+            window.invoice_grid.forceRender();
+            setTimeout(() => {
+              helper.custom_grid_header(
+                "retur_pembelian",
+                handle_delete,
+                handle_update,
+                handle_view
+              );
+            }, 200);
+          } else {
+            Swal.fire("Gagal", response.error || "Gagal.", "error");
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: error.message,
+          });
+        }
+      }
+    });
   }
 }
-function populate_supplier(data, current_supplier_id) {
-  $(`#update_supplier_id`).select2({
+function populate_select(data, current_id, field) {
+  $(`#update_${field}_id`).select2({
     allowClear: true,
     dropdownParent: $("#update_modal_retur_pembelian"),
   });
 
-  const supplier_id_Field = $("#update_supplier_id");
-  supplier_id_Field.empty();
-  data.forEach((item) => {
-    const option = new Option(
-      `${item.supplier_id} - ${item.nama}`,
-      item.supplier_id,
-      false,
-      item.supplier_id == current_supplier_id
-    );
-    supplier_id_Field.append(option);
-  });
+  const select_field = $(`#update_${field}_id`);
+  select_field.empty();
 
-  supplier_id_Field.trigger("change");
+  if (field === "supplier") {
+    data.forEach((item) => {
+      const option = new Option(
+        `${item.supplier_id} - ${item.nama}`,
+        item.supplier_id,
+        false,
+        item.supplier_id == current_id
+      );
+      select_field.append(option);
+    });
+  } else if (field === "gudang") {
+    data.forEach((item) => {
+      const option = new Option(
+        `${item.gudang_id} - ${item.nama}`,
+        item.gudang_id,
+        false,
+        item.gudang_id == current_id
+      );
+      select_field.append(option);
+    });
+  }
+
+  select_field.trigger("change");
 }
 async function handle_update(button) {
   const row = button.closest("tr");
@@ -249,6 +310,8 @@ async function handle_update(button) {
   let nominal_pph = "";
   let status = "";
   let invoice_id = "";
+  let input = "";
+  let gudang_id = "";
   const retur_pembelian_id = row.cells[0].textContent;
 
   try {
@@ -313,6 +376,8 @@ async function handle_update(button) {
       diskon = item.diskon;
       nominal_pph = item.nominal_pph;
       status = item.status;
+      input = item.input;
+      gudang_id = item.gudang_id;
     });
   } catch (error) {
     console.error(error);
@@ -332,13 +397,30 @@ async function handle_update(button) {
   document.getElementById("update_keterangan").value = keterangan;
   document.getElementById("update_diskon").value = diskon;
 
+  if (input === "otomatis") {
+    update_detail_retur_pembelian_button.style.display = "none";
+  } else {
+    update_detail_retur_pembelian_button.style.display = "block";
+  }
+
   try {
-    const response = await apiRequest(
+    const response_supplier = await apiRequest(
       `/PHP/API/supplier_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
       )}&target=tb_invoice&context=edit`
     );
-    populate_supplier(response.data, supplier_id);
+    populate_select(response_supplier.data, supplier_id, "supplier");
+  } catch (error) {
+    console.error("error:", error);
+  }
+
+  try {
+    const response_gudang = await apiRequest(
+      `/PHP/API/gudang_API.php?action=select&user_id=${access.decryptItem(
+        "user_id"
+      )}&target=tb_invoice&context=edit`
+    );
+    populate_select(response_gudang.data, gudang_id, "gudang");
   } catch (error) {
     console.error("error:", error);
   }
@@ -788,6 +870,7 @@ if (submit_invoice_update) {
     const no_invoice = document.getElementById("update_no_invoice").value;
     const invoice_id = document.getElementById("update_invoice_id").value;
     const supplier_id = document.getElementById("update_supplier_id").value;
+    const gudang_id = document.getElementById("update_gudang_id").value;
     const keterangan = document.getElementById("update_keterangan").value;
     let diskon = document.getElementById("update_diskon").value;
     const ppn = document.getElementById("update_ppn").value;
@@ -861,6 +944,7 @@ if (submit_invoice_update) {
       no_pengiriman: no_pengiriman,
       no_invoice: no_invoice,
       supplier_id: supplier_id,
+      gudang_id: gudang_id,
       keterangan: keterangan,
       ppn: ppn,
       diskon: diskon,

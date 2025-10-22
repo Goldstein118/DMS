@@ -151,7 +151,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
             id="detail_penjualan">
             <thead id="view_detail_penjualan_thead">
                 <tr>
-                    <th colspan="6" style="text-align: center;">Purchase Order</th>
+                    <th colspan="6" style="text-align: center;">Detail Barang</th>
                 </tr>
                 <tr>
                     <th scope="col" style="max-width: 9px; text-align:center">No</th>

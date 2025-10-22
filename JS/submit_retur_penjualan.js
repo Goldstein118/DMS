@@ -9,16 +9,14 @@ const submit_detail_penjualan = document.getElementById(
 const create_detail_penjualan_tbody = document.getElementById(
   "create_detail_penjualan_tbody"
 );
-function initPickadateOnce(selector) {
-  const $el = $(selector);
-  if (!$el.data("pickadate")) {
-    $el.pickadate({
-      format: "dd mmm yyyy",
-      selectYears: 25,
-      selectMonths: true,
-    });
-  }
-}
+const pickdatejs_penjualan = $("#tanggal_penjualan")
+  .pickadate({
+    format: "dd mmm yyyy",
+    formatSubmit: "yyyy-mm-dd",
+    selectYears: 25,
+    selectMonths: true,
+  })
+  .pickadate("picker");
 if (submit_penjualan) {
   submit_penjualan.addEventListener("click", submitpenjualan);
   submit_detail_penjualan.addEventListener("click", () => {
@@ -48,8 +46,6 @@ if (submit_penjualan) {
         allowClear: true,
         dropdownParent: $("#modal_retur_penjualan"),
       });
-
-      initPickadateOnce("#tanggal_penjualan");
 
       $("#penjualan_id").on("change", function () {
         create_detail_penjualan_tbody.innerHTML = "";
@@ -99,23 +95,23 @@ async function select_detail_penjualan(
     $(`#${produk_element_id}${index}`).select2({
       placeholder: "Pilih produk",
       allowClear: true,
-      dropdownParent: $("#modal_penjualan"),
+      dropdownParent: $("#modal_retur_penjualan"),
     });
     $(`#${satuan_element_id}${index}`).select2({
       placeholder: "Pilih satuan",
       allowClear: true,
-      dropdownParent: $("#modal_penjualan"),
+      dropdownParent: $("#modal_retur_penjualan"),
     });
   } else if (action == "update") {
     $(`#${produk_element_id}${index}`).select2({
       placeholder: "Pilih produk",
       allowClear: true,
-      dropdownParent: $("#update_modal_penjualan"),
+      dropdownParent: $("#update_modal_retur_penjualan"),
     });
     $(`#${satuan_element_id}${index}`).select2({
       placeholder: "Pilih satuan",
       allowClear: true,
-      dropdownParent: $("#update_modal_penjualan"),
+      dropdownParent: $("#update_modal_retur_penjualan"),
     });
   }
 
@@ -135,57 +131,31 @@ async function select_detail_penjualan(
 
     const select_produk = $(`#${produk_element_id}${index}`);
     select_produk.empty();
-    select_produk.append(new Option("Pilih Produk", "", false, false));
 
     const select_satuan = $(`#${satuan_element_id}${index}`);
     select_satuan.empty();
-    select_satuan.append(new Option("Pilih Satuan", "", false, false));
 
-    if (action == "create") {
-      response_produk.data.forEach((produk) => {
-        const option = new Option(
-          `${produk.produk_id} - ${produk.nama}`,
-          produk.produk_id,
-          false,
-          false
-        );
-        select_produk.append(option);
-      });
-      select_produk.trigger("change");
+    response_produk.data.forEach((produk) => {
+      const option = new Option(
+        `${produk.produk_id} - ${produk.nama}`,
+        produk.produk_id,
+        false,
+        produk.produk_id === current_produk_id
+      );
+      select_produk.append(option);
+    });
+    select_produk.val(current_produk_id).trigger("change");
 
-      response_satuan.data.forEach((satuan) => {
-        const option = new Option(
-          `${satuan.satuan_id} - ${satuan.nama}`,
-          satuan.satuan_id,
-          false,
-          false
-        );
-        select_satuan.append(option);
-      });
-      select_satuan.trigger("change");
-    } else if (action == "update") {
-      response_produk.data.forEach((produk) => {
-        const option = new Option(
-          `${produk.produk_id} - ${produk.nama}`,
-          produk.produk_id,
-          false,
-          produk.produk_id === current_produk_id
-        );
-        select_produk.append(option);
-      });
-      select_produk.val(current_produk_id).trigger("change");
-
-      response_satuan.data.forEach((satuan) => {
-        const option = new Option(
-          `${satuan.satuan_id} - ${satuan.nama}`,
-          satuan.satuan_id,
-          false,
-          satuan.satuan_id === current_satuan_id
-        );
-        select_satuan.append(option);
-      });
-      select_satuan.val(current_satuan_id).trigger("change");
-    }
+    response_satuan.data.forEach((satuan) => {
+      const option = new Option(
+        `${satuan.satuan_id} - ${satuan.nama}`,
+        satuan.satuan_id,
+        false,
+        satuan.satuan_id === current_satuan_id
+      );
+      select_satuan.append(option);
+    });
+    select_satuan.val(current_satuan_id).trigger("change");
   } catch (error) {
     console.error("error:", error);
   }
@@ -286,7 +256,7 @@ function add_field(action, produk_element_id, satuan_element_id) {
     satuan_element_id
   );
 }
-async function fetch_fk(field) {
+async function fetch_fk(field, current_field_id) {
   try {
     const response = await apiRequest(
       `/PHP/API/${field}_API.php?action=select&user_id=${access.decryptItem(
@@ -304,7 +274,7 @@ async function fetch_fk(field) {
           `${item.gudang_id} - ${item.nama}`,
           item.gudang_id,
           false,
-          false
+          item.gudang_id == current_field_id
         );
         select.append(option);
       });
@@ -315,7 +285,7 @@ async function fetch_fk(field) {
           `${item.customer_id} - ${item.nama} - ${item.channel_nama} `,
           item.customer_id,
           false,
-          false
+          item.customer_id == current_field_id
         );
         select.append(option);
       });
@@ -345,6 +315,14 @@ async function submitpenjualan() {
   const gudang_id = document.getElementById("gudang_id").value;
   const customer_id = document.getElementById("customer_id").value;
   const keterangan = document.getElementById("keterangan_penjualan").value;
+  const penjualan_id = document.getElementById("penjualan_id").value;
+  const keterangan_gudang = document.getElementById("keterangan_gudang").value;
+  const keterangan_invoice =
+    document.getElementById("keterangan_invoice").value;
+  const keterangan_pengiriman = document.getElementById(
+    "keterangan_pengiriman"
+  ).value;
+
   let diskon = document.getElementById("diskon").value;
   const ppn = document.getElementById("ppn").value;
   let nominal_pph = document.getElementById("nominal_pph").value;
@@ -401,13 +379,16 @@ async function submitpenjualan() {
   diskon = helper.format_angka(diskon);
 
   const data_penjualan = {
-    create_penjualan: "create_penjualan",
     user_id: `${access.decryptItem("user_id")}`,
     created_by: `${access.decryptItem("nama")}`,
+    penjualan_id: penjualan_id,
     tanggal_penjualan: tanggal_penjualan,
     gudang_id: gudang_id,
     customer_id: customer_id,
     keterangan: keterangan,
+    keterangan_gudang: keterangan_gudang,
+    keterangan_invoice: keterangan_invoice,
+    keterangan_pengiriman: keterangan_pengiriman,
     ppn: ppn,
     diskon: diskon,
     nominal_pph: nominal_pph,
@@ -417,17 +398,17 @@ async function submitpenjualan() {
   console.log(data_penjualan);
   try {
     const response = await apiRequest(
-      `/PHP/API/penjualan_API.php?action=create`,
+      `/PHP/API/retur_penjualan_API.php?action=create`,
       "POST",
       data_penjualan
     );
     if (response.ok) {
       swal.fire("Berhasil", response.message, "success");
       document.querySelector("#create_detail_penjualan_tbody").innerHTML = "";
-      $("#modal_penjualan").modal("hide");
-      window.penjualan_grid.forceRender();
+      $("#modal_retur_penjualan").modal("hide");
+      window.retur_penjualan_grid.forceRender();
       setTimeout(() => {
-        helper.custom_grid_header("penjualan");
+        helper.custom_grid_header("retur_penjualan");
       }, 200);
     }
   } catch (error) {
@@ -435,115 +416,78 @@ async function submitpenjualan() {
   }
 }
 
-async function populate_penjualan(penjualan_id) {
-  if (penjualan_id) {
-    const penjualan_id = penjualan_id;
+async function populate_penjualan(id_penjualan) {
+  if (id_penjualan) {
+    const penjualan_id = id_penjualan;
 
     let customer_id = "";
+    let gudang_id = "";
     let ppn = "";
     let nominal_pph = "";
     let diskon = "";
     let keterangan = "";
-    let no_pengiriman = "";
+    let keterangan_invoice = "";
+    let keterangan_pengiriman = "";
+    let keterangan_gudang = "";
     let status = "";
-    let no_invoice = "";
 
     try {
       const response = await apiRequest(
         `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
           "user_id"
-        )}&target=tb_retur_pembelian&context=create`,
+        )}&target=tb_retur_penjualan&context=create`,
         "POST",
         { penjualan_id: penjualan_id, table: "tb_penjualan" }
       );
       response.data.forEach((item) => {
         customer_id = item.customer_id;
+        gudang_id = item.gudang_id;
         ppn = item.ppn;
         nominal_pph = item.nominal_pph;
         diskon = item.diskon;
-        keterangan = item.keterangan;
+        keterangan = item.keterangan_penjualan;
+        keterangan_invoice = item.keterangan_invoice;
+        keterangan_pengiriman = item.keterangan_pengiriman;
+        keterangan_gudang = item.keterangan_gudang;
         status = item.status;
 
-        const parts_po = item.tanggal_po ? item.tanggal_po.split("-") : "";
+        const parts_po = item.tanggal_penjualan
+          ? item.tanggal_penjualan.split("-")
+          : "";
         if (parts_po.length === 3) {
           let dateObj_po = new Date(parts_po[0], parts_po[1] - 1, parts_po[2]);
-          pickdatejs_po.set("select", dateObj_po);
-        }
-
-        const parts_pengiriman = item.tanggal_pengiriman
-          ? item.tanggal_pengiriman.split("-")
-          : "";
-        if (parts_pengiriman.length === 3) {
-          const dateObj_pengiriman = new Date(
-            parts_pengiriman[0],
-            parts_pengiriman[1] - 1,
-            parts_pengiriman[2]
-          );
-          pickdatejs_pengiriman.set("select", dateObj_pengiriman);
-        }
-        no_pengiriman = item.no_pengiriman;
-        no_invoice = item.no_invoice_supplier;
-
-        const parts_terima = item.tanggal_terima
-          ? item.tanggal_terima.split("-")
-          : "";
-        if (parts_terima.length === 3) {
-          const dateObj_terima = new Date(
-            parts_terima[0],
-            parts_terima[1] - 1,
-            parts_terima[2]
-          );
-          pickdatejs_terima.set("select", dateObj_terima);
-        }
-
-        const parts_invoice = item.tanggal_invoice
-          ? item.tanggal_invoice.split("-")
-          : "";
-        if (parts_invoice.length === 3) {
-          const dateObj_invoice = new Date(
-            parts_invoice[0],
-            parts_invoice[1] - 1,
-            parts_invoice[2]
-          );
-          pickadatejs_invoice.set("select", dateObj_invoice);
+          pickdatejs_penjualan.set("select", dateObj_po);
         }
       });
     } catch (error) {
       console.error("error:", error);
     }
     document.getElementById("penjualan_id").value = penjualan_id;
-    document.getElementById("no_pengiriman").value = no_pengiriman;
-    document.getElementById("no_invoice").value = no_invoice;
-    document.getElementById("status_pembelian").value = status;
-
+    document.getElementById("status_penjualan").value = status;
     document.getElementById("ppn").value = ppn;
     document.getElementById("nominal_pph").value =
       helper.unformat_angka(nominal_pph);
-    document.getElementById("keterangan").value = keterangan;
+    document.getElementById("keterangan_penjualan").value = keterangan;
     document.getElementById("diskon").value = helper.unformat_angka(diskon);
+    document.getElementById("keterangan_invoice").value = keterangan_invoice;
+    document.getElementById("keterangan_gudang").value = keterangan_gudang;
+    document.getElementById("keterangan_pengiriman").value =
+      keterangan_pengiriman;
+
+    fetch_fk("customer", customer_id);
+    fetch_fk("gudang", gudang_id);
 
     try {
-      const response = await apiRequest(
-        `/PHP/API/supplier_API.php?action=select&user_id=${access.decryptItem(
+      create_detail_penjualan_tbody.innerHTML = "";
+      const renponse_detail_penjualan = await apiRequest(
+        `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
           "user_id"
-        )}&target=tb_retur_pembelian&context=create`
-      );
-      populate_supplier(response.data, supplier_id);
-    } catch (error) {
-      console.error("error:", error);
-    }
-
-    try {
-      detail_pembelian_tbody.innerHTML = "";
-      const renponse_detail_pembelian = await apiRequest(
-        `/PHP/API/invoice_API.php?action=select&user_id=${access.decryptItem(
-          "user_id"
-        )}&target=tb_retur_pembelian&context=create`,
+        )}&target=tb_retur_penjualan&context=create`,
         "POST",
-        { invoice_id: penjualan_id, table: "detail_invoice" }
+        { penjualan_id: penjualan_id, table: "tb_detail_penjualan" }
       );
 
-      renponse_detail_pembelian.data.forEach((detail, index) => {
+      renponse_detail_penjualan.data.forEach((detail, index) => {
         var currentIndex = index++;
         const tr_detail = document.createElement("tr");
         const current_produk_id = detail.produk_id;
@@ -551,7 +495,10 @@ async function populate_penjualan(penjualan_id) {
 
         const td_produk = document.createElement("td");
         var produk_select = document.createElement("select");
-        produk_select.setAttribute("id", "produk_element_id" + currentIndex);
+        produk_select.setAttribute(
+          "id",
+          "update_produk_element_id" + currentIndex
+        );
         produk_select.classList.add("form-select");
         td_produk.appendChild(produk_select);
 
@@ -564,7 +511,10 @@ async function populate_penjualan(penjualan_id) {
 
         const td_satuan = document.createElement("td");
         var satuan_select = document.createElement("select");
-        satuan_select.setAttribute("id", "satuan_element_id" + currentIndex);
+        satuan_select.setAttribute(
+          "id",
+          "update_satuan_element_id" + currentIndex
+        );
         satuan_select.classList.add("form-select");
         td_satuan.appendChild(satuan_select);
 
@@ -589,7 +539,7 @@ async function populate_penjualan(penjualan_id) {
         var delete_button = document.createElement("button");
         delete_button.type = "button";
         delete_button.className =
-          "btn btn-danger btn-sm delete_detail_pembelian";
+          "btn btn-danger btn-sm delete_detail_penjualan";
         delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
         td_aksi.appendChild(delete_button);
         td_aksi.style.textAlign = "center";
@@ -601,15 +551,15 @@ async function populate_penjualan(penjualan_id) {
         tr_detail.appendChild(td_diskon);
         tr_detail.appendChild(td_aksi);
 
-        detail_pembelian_tbody.appendChild(tr_detail);
+        create_detail_penjualan_tbody.appendChild(tr_detail);
 
         helper.format_nominal("harga" + currentIndex);
         helper.format_nominal("diskon" + currentIndex);
-        select_detail_pembelian(
+        select_detail_penjualan(
           currentIndex,
-          "create",
-          "produk_element_id",
-          "satuan_element_id",
+          "update",
+          "update_produk_element_id",
+          "update_satuan_element_id",
           current_produk_id,
           current_satuan_id
         );
@@ -618,6 +568,8 @@ async function populate_penjualan(penjualan_id) {
       console.error("error:", error);
     }
 
-    document.getElementById("retur_pembelian_div").style.display = "block";
+    document.getElementById("retur_penjualan_div").style.display = "block";
+  } else {
+    document.getElementById("retur_penjualan_div").style.display = "none";
   }
 }

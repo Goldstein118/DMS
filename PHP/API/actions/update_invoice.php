@@ -37,12 +37,39 @@ try {
 
 
 
-    $stmt = $conn->prepare("UPDATE tb_invoice SET tanggal_invoice=?,no_invoice_supplier=?, tanggal_po=?, supplier_id=?, gudang_id=?,keterangan=?, ppn=?,diskon=?, nominal_pph=?,no_pengiriman=?,tanggal_terima=?,tanggal_pengiriman=? WHERE pembelian_id =?");
-    $stmt->bind_param("ssssssdddssss", $tanggal_invoice, $no_invoice, $tanggal_po, $supplier_id, $gudang_id, $keterangan, $ppn, $diskon_invoice_unformat, $nominal_pph_unformat, $no_pengiriman, $tanggal_terima, $tanggal_pengiriman, $pembelian_id);
+    $stmt = $conn->prepare("UPDATE tb_invoice SET 
+    tanggal_invoice=?,
+    no_invoice_supplier=?, 
+    tanggal_po=?, 
+    supplier_id=?, 
+    gudang_id=?,
+    keterangan=?, 
+    ppn=?,
+    diskon=?, 
+    nominal_pph=?,
+    no_pengiriman=?,
+    tanggal_terima=?,
+    tanggal_pengiriman=? WHERE pembelian_id =?");
+    $stmt->bind_param(
+        "ssssssdddssss",
+        $tanggal_invoice,
+        $no_invoice,
+        $tanggal_po,
+        $supplier_id,
+        $gudang_id,
+
+        $keterangan,
+        $ppn,
+        $diskon_invoice_unformat,
+        $nominal_pph_unformat,
+        $no_pengiriman,
+        $tanggal_terima,
+
+        $tanggal_pengiriman,
+        $pembelian_id
+    );
     $stmt->execute();
     $stmt->close();
-
-
 
 
     $invoice_history_id = generateCustomID('INH', 'tb_invoice_history', 'invoice_history_id', $conn);
@@ -51,54 +78,69 @@ try {
         $conn,
         "INSERT INTO tb_invoice_history (
         
-        invoice_history_id,invoice_id,
-        pembelian_id_before, tanggal_po_before, supplier_id_before,gudang_id_before ,keterangan_before, ppn_before, diskon_before, nominal_pph_before, status_before,
+        invoice_history_id,invoice_id,tanggal_invoice_before,no_invoice_supplier_before,tanggal_input_invoice_before,
+        tanggal_po_before,tanggal_pengiriman_before,tanggal_terima_before,supplier_id_before,gudang_id_before,
+        pembelian_id_before,keterangan_before,no_pengiriman_before,total_qty_before,ppn_before,
+        nominal_ppn_before,diskon_before,nominal_pph_before,biaya_tambahan_before,sub_total_before,
+        grand_total_before,created_by_before,status_before,keterangan_cancel_before,cancel_by_before,
         
-        total_qty_before,grand_total_before,nominal_ppn_before,biaya_tambahan_before,sub_total_before,
-        created_by_before,
-
-        pembelian_id_after, tanggal_po_after, supplier_id_after, gudang_id_after,keterangan_after, ppn_after, diskon_after, nominal_pph_after, status_after,
-        created_by_after, created_status
+        tanggal_invoice_after,no_invoice_supplier_after,tanggal_input_invoice_after,tanggal_po_after,supplier_id_after, 
+        gudang_id_after,keterangan_after,ppn_after,diskon_after,nominal_pph_after,
+        no_pengiriman_after,tanggal_terima_after,tanggal_pengiriman_after,pembelian_id_after
     )
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         [
             $invoice_history_id,
             // Before
             $oldData['invoice_id'],
-            $oldData['pembelian_id'],
+            $oldData['tanggal_invoice'],
+            $oldData['no_invoice_supplier'],
+            $oldData['tanggal_input_invoice'],
+
             $oldData['tanggal_po'],
+            $oldData['tanggal_pengiriman'],
+            $oldData['tanggal_terima'],
             $oldData['supplier_id'],
             $oldData['gudang_id'],
+
+            $oldData['pembelian_id'],
             $oldData['keterangan'],
+            $oldData['no_pengiriman'],
+            $oldData['total_qty'],
             $oldData['ppn'],
+
+            $oldData['nominal_ppn'],
             $oldData['diskon'],
             $oldData['nominal_pph'],
-            $oldData['status'],
-
-            $oldData['total_qty'],
-            $oldData['grand_total'],
-            $oldData['nominal_ppn'],
             $oldData['biaya_tambahan'],
             $oldData['sub_total'],
 
+            $oldData['grand_total'],
             $oldData['created_by'],
-
+            $oldData['status'],
+            $oldData['keterangan_cancel'],
+            $oldData['cancel_by'],
 
             // After
-            $pembelian_id,
+            $tanggal_invoice,
+            $no_invoice,
+            $oldData['tanggal_input_invoice'],
             $tanggal_po,
             $supplier_id,
+
             $gudang_id,
             $keterangan,
-            $ppn_unformat,
+            $ppn,
             $diskon_invoice_unformat,
             $nominal_pph_unformat,
-            $status,
-            $created_by,
-            'update'
+
+            $no_pengiriman,
+            $tanggal_terima,
+            $tanggal_pengiriman,
+            $pembelian_id
         ],
 
-        "sssssssdddsdddddssssssdddsss"
+        "sssssssssssssddddddddsssssssssssdddssss"
 
     );
 

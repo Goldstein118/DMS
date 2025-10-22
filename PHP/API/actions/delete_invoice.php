@@ -8,22 +8,34 @@ try {
         exit;
     }
     $invoice_id = trim($data['invoice_id']);
+    $status = trim($data['status']);
+    $ket_cancel = trim($data['keterangan_cancel']);
+    $cancel_by = trim($data['cancel_by']);
 
-    $stmt_biaya_tambahan = $conn->prepare("DELETE FROM tb_biaya_tambahan_invoice WHERE invoice_id=?");
-    $stmt_biaya_tambahan->bind_param("s", $invoice_id);
-    $execute_biaya_tambahan = $stmt_biaya_tambahan->execute();
-
-    $stmt_detail = $conn->prepare("DELETE FROM tb_detail_invoice WHERE invoice_id=?");
-    $stmt_detail->bind_param("s", $invoice_id);
-    $execute_detail = $stmt_detail->execute();
-
-    $stmt = $conn->prepare("DELETE FROM tb_invoice WHERE invoice_id = ?");
-    $stmt->bind_param("s", $invoice_id);
+    $stmt = $conn->prepare("UPDATE tb_invoice SET status =?,keterangan_cancel=?,cancel_by=? WHERE invoice_id = ?");
+    $stmt->bind_param("ssss", $status, $ket_cancel, $cancel_by, $invoice_id);
     $execute = $stmt->execute();
 
+    $stmt_history = $conn->prepare("UPDATE tb_invoice_history SET status_after =?,keterangan_cancel_after=?,cancel_by_after=? WHERE invoice_id = ?");
+    $stmt_history->bind_param("ssss", $status, $ket_cancel, $cancel_by, $invoice_id);
+    $execute = $stmt_history->execute();
 
 
-    if ($execute && $execute_detail && $stmt->affected_rows > 0) {
+    // $stmt_biaya_tambahan = $conn->prepare("DELETE FROM tb_biaya_tambahan_invoice WHERE invoice_id=?");
+    // $stmt_biaya_tambahan->bind_param("s", $invoice_id);
+    // $execute_biaya_tambahan = $stmt_biaya_tambahan->execute();
+
+    // $stmt_detail = $conn->prepare("DELETE FROM tb_detail_invoice WHERE invoice_id=?");
+    // $stmt_detail->bind_param("s", $invoice_id);
+    // $execute_detail = $stmt_detail->execute();
+
+    // $stmt = $conn->prepare("DELETE FROM tb_invoice WHERE invoice_id = ?");
+    // $stmt->bind_param("s", $invoice_id);
+    // $execute = $stmt->execute();
+
+
+
+    if ($execute) {
         http_response_code(200);
         echo json_encode(["message" => "Invoice berhasil terhapus"]);
     } else {
@@ -50,4 +62,5 @@ try {
     }
 }
 $stmt->close();
+$stmt_history->close();
 $conn->close();

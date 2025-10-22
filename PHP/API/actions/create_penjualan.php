@@ -724,7 +724,7 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
         // Generate ID
         $penjualan_id = generateCustomID('PJ', 'tb_penjualan', 'penjualan_id', $conn);
         $no_pengiriman = generate_no_pengiriman('PJK', 'tb_penjualan', 'no_pengiriman', $conn);
-        // $penjualan_history_id = generateCustomID('POH', 'tb_pembelian_history', 'pembelian_history_id', $conn);
+        $penjualan_history_id = generateCustomID('PJH', 'tb_penjualan_history', 'penjualan_history_id', $conn);
 
         $promo_id = cek_promo($conn, $customer_id, $tanggal_penjualan, $data['details']);
         error_log("cek_promo result: " . print_r($promo_id, true));
@@ -775,6 +775,35 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
                 "ssssssdddssdsssss"
             );
 
+            executeInsert(
+                $conn,
+                "INSERT INTO tb_penjualan_history (penjualan_history_id,penjualan_id, tanggal_penjualan_after,customer_id_after,gudang_id_after,promo_id_after, keterangan_penjualan_after, ppn_after,diskon_after, nominal_pph_after, status_after, created_by_after,bonus_kelipatan_after,tanggal_input_promo_berlaku_after,keterangan_invoice_after,keterangan_gudang_after,keterangan_pengiriman_after,no_pengiriman_after,created_status_after)
+        VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                [
+                    $penjualan_history_id,
+                    $penjualan_id,
+                    $tanggal_penjualan,
+                    $customer_id,
+                    $gudang_id,
+                    $valid_promos_id,
+                    $keterangan,
+                    $ppn_unformat,
+                    $diskon_penjualan,
+                    $nominal_pph_unformat,
+                    $status,
+                    $created_by,
+                    $bonus_kelipatan,
+                    $tanggal_input_promo_berlaku,
+                    $keterangan_invoice,
+                    $keterangan_gudang,
+                    $keterangan_pengiriman,
+                    $no_pengiriman,
+                    "new"
+                ],
+                "sssssssdddssdssssss"
+            );
+
+
             foreach ($promo_ids as $promo_id) {
 
                 $stmt_select = $conn->prepare("SELECT quota FROM tb_promo WHERE promo_id = ?");
@@ -793,50 +822,65 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
                     $stmt_update->close();
                 }
             }
+        } else {
+            executeInsert(
+                $conn,
+                "INSERT INTO tb_penjualan (penjualan_id, tanggal_penjualan,customer_id,gudang_id, keterangan_penjualan, ppn,diskon, nominal_pph, status, created_by,tanggal_input_promo_berlaku,keterangan_invoice,keterangan_gudang,keterangan_pengiriman,no_pengiriman)
+        VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?)",
+                [
+                    $penjualan_id,
+                    $tanggal_penjualan,
+                    $customer_id,
+                    $gudang_id,
+                    $keterangan,
+                    $ppn_unformat,
+                    $diskon_penjualan,
+                    $nominal_pph_unformat,
+                    $status,
+                    $created_by,
+                    $tanggal_input_promo_berlaku,
+                    $keterangan_invoice,
+                    $keterangan_gudang,
+                    $keterangan_pengiriman,
+                    $no_pengiriman
+                ],
+                "ssssdddssdsssss"
+            );
+
+
+            executeInsert(
+                $conn,
+                "INSERT INTO tb_penjualan_history (penjualan_history_id,penjualan_id, tanggal_penjualan_after,customer_id_after,gudang_id_after, keterangan_penjualan_after, ppn_after,diskon_after, nominal_pph_after, status_after, created_by_after,tanggal_input_promo_berlaku_after,keterangan_invoice_after,keterangan_gudang_after,keterangan_pengiriman_after,no_pengiriman_after,created_status_after)
+        VALUES (?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                [
+                    $penjualan_history_id,
+                    $penjualan_id,
+                    $tanggal_penjualan,
+                    $customer_id,
+                    $gudang_id,
+
+
+                    $keterangan,
+                    $ppn_unformat,
+                    $diskon_penjualan,
+                    $nominal_pph_unformat,
+
+                    $status,
+                    $created_by,
+
+                    $tanggal_input_promo_berlaku,
+                    $keterangan_invoice,
+                    $keterangan_gudang,
+                    $keterangan_pengiriman,
+                    $no_pengiriman,
+                    "new"
+                ],
+                "ssssssdddssssssss"
+            );
         }
-        //  else {
-        //     executeInsert(
-        //         $conn,
-        //         "INSERT INTO tb_penjualan (penjualan_id, tanggal_penjualan,customer_id,gudang_id, keterangan_penjualan, ppn,diskon, nominal_pph, status, created_by)
-        // VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?)",
-        //         [
-        //             $penjualan_id,
-        //             $tanggal_penjualan,
-        //             $customer_id,
-        //             $gudang_id,
-        //             $keterangan,
-        //             $ppn_unformat,
-        //             $diskon_penjualan,
-        //             $nominal_pph_unformat,
-        //             $status,
-        //             $created_by
-
-        //         ],
-        //         "ssssdddssd"
-        //     );
-        // }
 
 
-        // executeInsert(
-        //     $conn,
-        //     "INSERT INTO tb_pembelian_history (pembelian_history_id,pembelian_id_after, tanggal_po_after, supplier_id_after,gudang_id_after, keterangan_after, ppn_after,diskon_after, nominal_ppn_after, status_after, cancel_by_after,created_status)
-        // VALUES (?,?, ?, ?, ?, ?, ?, ?,?,?,?,?)",
-        //     [
-        //         $pembelian_history_id,
-        //         $penjualan_id,
-        //         $tanggal_po,
-        //         $supplier_id,
-        //         $gudang_id,
-        //         $keterangan,
-        //         $ppn_unformat,
-        //         $diskon_invoice_unformat,
-        //         $nominal_pph_unformat,
-        //         $status,
-        //         $created_by,
-        //         $created_status
-        //     ],
-        //     "ssssssdddsss"
-        // );
+
 
         $total_qty = 0;
         $total_harga = 0;
@@ -867,7 +911,7 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
                 $total_harga += $qty_unformat * ($harga_unformat - $diskon_unformat);
 
                 $detail_penjualan_id = generateCustomID('DPJ', 'tb_detail_penjualan', 'detail_penjualan_id', $conn);
-                // $detail_pembelian_history_id = generateCustomID('DPOH', 'tb_detail_pembelian_history', 'detail_pembelian_history_id', $conn);
+                $detail_penjualan_history_id = generateCustomID('DPJH', 'tb_detail_history_penjualan', 'detail_penjualan_history_id', $conn);
                 executeInsert(
                     $conn,
                     "INSERT INTO tb_detail_penjualan (detail_penjualan_id, penjualan_id, produk_id, qty, harga, diskon, satuan_id,urutan)
@@ -885,23 +929,24 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
                     "sssdddsd"
                 );
 
-                // executeInsert(
-                //     $conn,
-                //     "INSERT INTO tb_detail_pembelian_history (detail_pembelian_history_id, pembelian_history_id, produk_id, qty, harga, diskon, satuan_id,urutan,tipe_detail_pembelian_history)
-                // VALUES (?, ?, ?, ?, ?, ?, ?,?,?)",
-                //     [
-                //         $detail_pembelian_history_id,
-                //         $pembelian_history_id,
-                //         $produk_id,
-                //         $qty_unformat,
-                //         $harga_unformat,
-                //         $diskon_unformat,
-                //         $satuan_id,
-                //         $urutan_detail,
-                //         $tipe_detail_pembelian_history
-                //     ],
-                //     "sssdddsds"
-                // );
+
+                executeInsert(
+                    $conn,
+                    "INSERT INTO tb_detail_history_penjualan (detail_history_penjualan_id, history_penjualan_id, produk_id, qty, harga, diskon, satuan_id,urutan,tipe_retur_penjualan_history)
+                VALUES (?, ?, ?, ?, ?, ?, ?,?,?)",
+                    [
+                        $detail_penjualan_id,
+                        $penjualan_id,
+                        $produk_id,
+                        $qty_unformat,
+                        $harga_unformat,
+                        $diskon_unformat,
+                        $satuan_id,
+                        $urutan_detail,
+                        'A'
+                    ],
+                    "sssdddsds"
+                );
                 $urutan_detail += 1;
             }
         }
@@ -920,13 +965,12 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
         $stmt->execute();
         $stmt->close();
 
-
-        // $stmt_history = $conn->prepare("UPDATE tb_pembelian_history 
-        //                     SET total_qty_after = ?, grand_total_after = ?, nominal_ppn_after = ?,biaya_tambahan_after = ?,sub_total_after =?
-        //                     WHERE pembelian_history_id = ?");
-        // $stmt_history->bind_param("ddddds", $total_qty, $grand_total, $nominal_ppn, $total_biaya_tambahan, $sub_total, $pembelian_history_id);
-        // $stmt_history->execute();
-        // $stmt_history->close();
+        $stmt = $conn->prepare("UPDATE tb_penjualan_history
+                            SET total_qty_after = ?, grand_total_after = ?, nominal_ppn_after = ?,sub_total_after=?
+                            WHERE penjualan_id = ?");
+        $stmt->bind_param("dddds", $total_qty, $grand_total, $nominal_ppn, $sub_total, $penjualan_id);
+        $stmt->execute();
+        $stmt->close();
 
         echo json_encode([
             "success" => true,

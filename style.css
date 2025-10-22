@@ -398,7 +398,9 @@ h3 {
 #biaya_tambahan_button,
 #create_biaya_tambahan_button,
 #create_detail_penjualan_button,
-#update_detail_penjualan_button {
+#update_detail_penjualan_button,
+#detail_retur_pembelian_button,
+#update_detail_retur_pembelian_button {
   max-width: fit-content !important;
 }
 .view_modal_pricelist {
@@ -429,7 +431,9 @@ h3 {
 #create_biaya_tambahan,
 #update_detail_pembelian_table,
 #detail_penjualan,
-#update_detail_penjualan {
+#update_detail_penjualan,
+#detail_retur_pembelian_table,
+#update_detail_retur_pembelian_table {
   border-collapse: collapse;
   width: 100%;
   table-layout: fixed;
@@ -449,7 +453,9 @@ h3 {
 #create_detail_pembelian thead,
 #create_biaya_tambahan thead,
 #detail_penjualan thead,
-#update_detail_penjualan thead {
+#update_detail_penjualan thead,
+#detail_retur_pembelian_table thead,
+#update_detail_retur_pembelian_table thead {
   display: table;
   width: 100%;
   table-layout: fixed;
@@ -471,7 +477,9 @@ h3 {
 #create_detail_pembelian tbody,
 #create_biaya_tambahan tbody,
 #detail_penjualan tbody,
-#update_detail_penjualan tbody {
+#update_detail_penjualan tbody,
+#detail_retur_pembelian_table tbody,
+#update_detail_retur_pembelian_table tbody {
   display: block;
   max-height: 200px;
   overflow-y: scroll;
@@ -497,7 +505,9 @@ h3 {
 #create_detail_pembelian tbody tr,
 #create_biaya_tambahan tbody tr,
 #detail_penjualan tbody tr,
-#update_detail_penjualan tbody tr {
+#update_detail_penjualan tbody tr,
+#detail_retur_pembelian_table tbody tr,
+#update_detail_retur_pembelian_table tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
@@ -571,7 +581,9 @@ h3 {
 #detail_pembelian_card_body,
 #update_detail_pembelian_card_body,
 #detail_penjualan_card_body,
-#update_detail_penjualan_card_body {
+#update_detail_penjualan_card_body,
+#detail_retur_pembelian_card_body,
+#update_detail_retur_pembelian_card_body {
   max-height: 35vh;
   margin-bottom: 25px;
   overflow-x: auto;
@@ -593,8 +605,12 @@ h3 {
 #detail_penjualan th:nth-child(6),
 #detail_penjualan td:nth-child(6),
 #update_detail_penjualan th:nth-child(6),
-#update_detail_penjualan td:nth-child(6) {
-  width: 5%;
+#update_detail_penjualan td:nth-child(6),
+#detail_retur_pembelian_table th:nth-child(6),
+#detail_retur_pembelian_table td:nth-child(6),
+#update_detail_retur_pembelian_table th:nth-child(6),
+#update_detail_retur_pembelian_table td:nth-child(6) {
+  width: 8%;
 }
 
 .list-tile {

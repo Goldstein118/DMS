@@ -31,10 +31,12 @@ try {
         }
 
 
+
         $stmt = $conn->prepare("UPDATE tb_pembelian SET tanggal_pengiriman = ?,  no_pengiriman = ? ,status =? WHERE pembelian_id = ?");
         $stmt->bind_param("ssss", $tanggal_pengiriman, $no_pengiriman, $status, $pembelian_id);
         $stmt->execute();
         $stmt->close();
+
 
 
         $stmt_history = $conn->prepare("UPDATE tb_pembelian_history SET tanggal_pengiriman_after = ?,  no_pengiriman_after = ? ,status_after =? WHERE pembelian_history_id = ?");

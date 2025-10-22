@@ -60,13 +60,33 @@ biaya_tambahan_button.addEventListener("click", function () {
 });
 const grid_container_invoice = document.querySelector("#table_invoice");
 if (grid_container_invoice) {
+  function getStatusBadge(status) {
+    switch (status) {
+      case "proses":
+        return `<span class="badge text-bg-secondary">proses</span>`;
+      case "pengiriman":
+        return `<span class="badge text-bg-warning">pengiriman</span>`;
+      case "terima":
+        return `<span class="badge text-bg-primary">terima</span>`;
+      case "invoice":
+        return `<span class="badge text-bg-success">invoice</span>`;
+      case "cancel":
+        return `<span class="badge text-bg-danger">cancel</span>`;
+      default:
+        return `<span class="badge text-bg-secondary">${status}</span>`;
+    }
+  }
+
   window.invoice_grid = new Grid({
     columns: [
       "No Pembelian",
       "Tanggal Invoice",
       "No Invoice Supplier",
       "Supplier",
-      "Status",
+      {
+        name: "Status",
+        formatter: (cell) => html(getStatusBadge(cell)),
+      },
       "Sub Total",
       "Diskon",
       "PPN",
@@ -74,12 +94,13 @@ if (grid_container_invoice) {
       "Grand Total",
       {
         name: "Aksi",
-        formatter: () => {
+        formatter: (cell, row) => {
+          const status = row.cells[4].data;
           const edit = access.hasAccess("tb_invoice", "edit");
           const can_delete = access.hasAccess("tb_invoice", "delete");
           let button = "";
 
-          if (edit) {
+          if (edit && status != "cancel") {
             button += `<button
                 type="button"
                 class="btn btn-warning update_invoice btn-sm"
@@ -96,19 +117,21 @@ if (grid_container_invoice) {
                 ></span>
               </button>`;
           }
-          if (can_delete) {
+          if (can_delete && status != "cancel") {
             button += `<button
                 type="button"
                 class="btn btn-danger delete_invoice btn-sm"
               >
-                <i class="bi bi-trash-fill"></i>
+                <i class="bi bi-x-circle"></i>
               </button>`;
           }
-          button += `
+          if (status != "cancel") {
+            button += `
         <button type="button" class="btn btn btn-info view_invoice btn-sm" >
           <i class="bi bi-eye"></i>
         </button>
         `;
+          }
 
           return html(button);
         },
@@ -319,48 +342,72 @@ function populate_select(data, current_id, field) {
   select.trigger("change");
 }
 async function handle_delete(button) {
+  $("#modal_cancel").modal("show");
   const row = button.closest("tr");
   const invoice_id = row.cells[0].textContent;
-  const result = await Swal.fire({
-    title: "Apakah Anda Yakin?",
-    text: "Anda tidak dapat mengembalikannya!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Iya, Hapus!",
-    cancelButtonText: "Batalkan",
-  });
-  if (result.isConfirmed) {
-    try {
-      const response = await apiRequest(
-        `/PHP/API/invoice_API.php?action=delete&user_id=${access.decryptItem(
-          "user_id"
-        )}`,
-        "DELETE",
-        { invoice_id: invoice_id }
-      );
-      if (response.ok) {
-        row.remove();
-        Swal.fire(
-          "Berhasil",
-          response.message || "Invoice dihapus.",
-          "success"
-        );
-      } else {
-        Swal.fire(
-          "Gagal",
-          response.error || "Gagal menghapus invoice.",
-          "error"
-        );
+  const submit_cancel = document.getElementById("submit_cancel_button");
+  if (submit_cancel) {
+    submit_cancel.addEventListener("click", async function () {
+      const keterangan_cancel =
+        document.getElementById("keterangan_cancel").value;
+      if (!keterangan_cancel || keterangan_cancel.trim() === "") {
+        toastr.error("Keterangan Cancel harus diisi.");
+        return;
       }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Gagal",
-        text: error.message,
+      const result = await Swal.fire({
+        title: "Cancel Pembelian?",
+        text: "Setelah submit tidak bisa diganti lagi!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Iya, Cancel!",
+        cancelButtonText: "Batalkan",
       });
-    }
+      if (result.isConfirmed) {
+        try {
+          const response = await apiRequest(
+            `/PHP/API/invoice_API.php?action=delete&user_id=${access.decryptItem(
+              "user_id"
+            )}`,
+            "DELETE",
+            {
+              invoice_id: invoice_id,
+              keterangan_cancel: keterangan_cancel,
+              status: "cancel",
+              cancel_by: `${access.decryptItem("nama")}`,
+            }
+          );
+          if (response.ok) {
+            Swal.fire(
+              "Berhasil",
+              response.message || "Pembelian dicancel.",
+              "success"
+            );
+
+            $("#modal_cancel").modal("hide");
+
+            window.invoice_grid.forceRender();
+            setTimeout(() => {
+              helper.custom_grid_header(
+                "invoice",
+                handle_delete,
+                handle_update,
+                handle_view
+              );
+            }, 200);
+          } else {
+            Swal.fire("Gagal", response.error || "Gagal.", "error");
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: error.message,
+          });
+        }
+      }
+    });
   }
 }
 function delete_detail_pembelian(action) {

@@ -48,7 +48,7 @@ if (isset($data['table']) && $data['table'] === 'detail_retur_pembelian' && isse
 
     $sql = "SELECT i.retur_pembelian_id, i.invoice_id,i.tanggal_invoice,i.no_invoice_supplier,i.tanggal_input_invoice,i.tanggal_po,i.tanggal_pengiriman,i.tanggal_terima,
     i.supplier_id,i.pembelian_id,i.keterangan,i.no_pengiriman,i.total_qty,i.ppn,i.nominal_ppn,i.diskon,i.nominal_pph,i.biaya_tambahan,i.sub_total,i.grand_total,
-    i.created_on,i.created_by,i.status,s.nama AS supplier_nama FROM tb_retur_pembelian i
+    i.created_on,i.created_by,i.status,i.input,s.nama AS supplier_nama FROM tb_retur_pembelian i
     LEFT JOIN tb_supplier s ON i.supplier_id= s.supplier_id
      WHERE i.retur_pembelian_id=?";
     $stmt = $conn->prepare($sql);
@@ -70,7 +70,16 @@ if (isset($data['table']) && $data['table'] === 'detail_retur_pembelian' && isse
     echo json_encode(["data" => $detail_data]);
     exit;
 } else {
-    $sql = "SELECT * FROM tb_retur_pembelian";
+    $sql = "SELECT retur.retur_pembelian_id, retur.invoice_id,retur.tanggal_invoice,
+    retur.no_invoice_supplier,retur.tanggal_input_invoice,retur.tanggal_po,
+    retur.tanggal_pengiriman,retur.tanggal_terima,
+    retur.supplier_id,retur.pembelian_id,retur.keterangan,retur.no_pengiriman,
+    retur.total_qty,retur.ppn,retur.nominal_ppn,retur.diskon,retur.nominal_pph,
+    retur.biaya_tambahan,retur.sub_total,retur.grand_total,
+    retur.created_on,retur.created_by,retur.status,s.nama AS supplier_nama 
+    
+    FROM tb_retur_pembelian retur
+    LEFT JOIN tb_supplier s ON retur.supplier_id= s.supplier_id";
     $result = $conn->query($sql);
     if ($result) {
         $invoice_data = [];

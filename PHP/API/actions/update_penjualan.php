@@ -647,12 +647,12 @@ if (isset($data['penjualan_id']) && isset($data['update_penjualan'])) {
         validate_2($nominal_pph_unformat, '/^\d+$/', "Format nominal pph unformat tidak valid");
 
 
-        // $oldDataStmt = $conn->prepare("SELECT * FROM tb_penjualan WHERE penjualan_id = ?");
-        // $oldDataStmt->bind_param("s", $penjualan_id);
-        // $oldDataStmt->execute();
-        // $oldDataResult = $oldDataStmt->get_result();
-        // $oldData = $oldDataResult->fetch_assoc();
-        // $oldDataStmt->close();
+        $oldDataStmt = $conn->prepare("SELECT * FROM tb_penjualan WHERE penjualan_id = ?");
+        $oldDataStmt->bind_param("s", $penjualan_id);
+        $oldDataStmt->execute();
+        $oldDataResult = $oldDataStmt->get_result();
+        $oldData = $oldDataResult->fetch_assoc();
+        $oldDataStmt->close();
 
 
         $promo_id = cek_promo($conn, $customer_id, $tanggal_penjualan, $data['details']);
@@ -666,27 +666,52 @@ if (isset($data['penjualan_id']) && isset($data['update_penjualan'])) {
         $bonus_kelipatan = isset($promo_id[0]['bonus_kelipatan']) ? $promo_id[0]['bonus_kelipatan'] : 1;
         error_log("bonus_kelipatan value: " . print_r($bonus_kelipatan, true));
 
-
-        $stmt = $conn->prepare("UPDATE tb_penjualan SET tanggal_penjualan =?,customer_id=?,gudang_id=?,keterangan_penjualan=?,ppn=?,diskon=?,nominal_pph=?,status=?,promo_id=?,keterangan_gudang=?,keterangan_invoice=?,keterangan_pengiriman=?
+        if (!empty($promo_id)) {
+            $stmt = $conn->prepare("UPDATE tb_penjualan SET tanggal_penjualan =?,customer_id=?,gudang_id=?,keterangan_penjualan=?,ppn=?,diskon=?,nominal_pph=?,status=?,promo_id=?,bonus_kelipatan =?,keterangan_gudang=?,keterangan_invoice=?,keterangan_pengiriman=?
         WHERE penjualan_id = ?");
-        $stmt->bind_param(
-            "ssssdddsss",
-            $tanggal_penjualan,
-            $customer_id,
-            $gudang_id,
-            $keterangan_penjualan,
-            $ppn_unformat,
-            $diskon_invoice_unformat,
-            $nominal_pph_unformat,
-            $status,
-            $valid_promos_id,
-            $keterangan_gudang,
-            $keterangan_invoice,
-            $keterangan_pengiriman,
-            $penjualan_id
-        );
-        $stmt->execute();
-        $stmt->close();
+            $stmt->bind_param(
+                "ssssdddsss",
+                $tanggal_penjualan,
+                $customer_id,
+                $gudang_id,
+                $keterangan_penjualan,
+                $ppn_unformat,
+                $diskon_invoice_unformat,
+                $nominal_pph_unformat,
+                $status,
+                $valid_promos_id,
+                $bonus_kelipatan,
+                $keterangan_gudang,
+                $keterangan_invoice,
+                $keterangan_pengiriman,
+                $penjualan_id
+            );
+            $stmt->execute();
+            $stmt->close();
+        } else {
+            $stmt = $conn->prepare("UPDATE tb_penjualan SET tanggal_penjualan =?,customer_id=?,gudang_id=?,keterangan_penjualan=?,ppn=?,diskon=?,nominal_pph=?,status=?,promo_id=?,keterangan_gudang=?,keterangan_invoice=?,keterangan_pengiriman=?
+        WHERE penjualan_id = ?");
+            $stmt->bind_param(
+                "ssssdddsss",
+                $tanggal_penjualan,
+                $customer_id,
+                $gudang_id,
+                $keterangan_penjualan,
+                $ppn_unformat,
+                $diskon_invoice_unformat,
+                $nominal_pph_unformat,
+                $status,
+                $valid_promos_id,
+                $keterangan_gudang,
+                $keterangan_invoice,
+                $keterangan_pengiriman,
+                $penjualan_id
+            );
+            $stmt->execute();
+            $stmt->close();
+        }
+
+
 
 
 

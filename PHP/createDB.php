@@ -707,6 +707,7 @@ penjualan_id VARCHAR(20) PRIMARY KEY NOT NULL,
 tanggal_penjualan DATE,
 customer_id VARCHAR(20),
 promo_id JSON,
+bonus_kelipatan INT,
 gudang_id VARCHAR(20),
 keterangan_penjualan VARCHAR(255),
 no_pengiriman VARCHAR(20),
@@ -801,7 +802,6 @@ if ($conn->query($retur_penjualan)) {
 
 $detail_retur_penjualan = "CREATE TABLE IF NOT EXISTS tb_detail_retur_penjualan(
 
-
 detail_retur_penjualan_id VARCHAR(20) PRIMARY KEY NOT NULL,
 retur_penjualan_id VARCHAR(20),
 produk_id VARCHAR(20),
@@ -848,6 +848,7 @@ keterangan_invoice_before VARCHAR(255),
 keterangan_pengiriman_before VARCHAR(255),
 keterangan_gudang_before VARCHAR(255),
 tanggal_input_promo_berlaku_before DATE,
+bonus_kelipatan_before INT,
 
 tanggal_penjualan_after DATE,
 customer_id_after  VARCHAR(20),
@@ -871,6 +872,7 @@ keterangan_invoice_after  VARCHAR(255),
 keterangan_pengiriman_after  VARCHAR(255),
 keterangan_gudang_after  VARCHAR(255),
 tanggal_input_promo_berlaku_after  DATE,
+bonus_kelipatan_after INT,
 created_status VARCHAR (50)
 )";
 
@@ -881,19 +883,19 @@ if ($conn->query($penjualan_history)) {
     }
 }
 
-$detail_history_penjualan = "CREATE TABLE IF NOT EXISTS tb_detail_history_penjualan(
-detail_history_penjualan_id VARCHAR(20) PRIMARY KEY NOT NULL,
-history_penjualan_id VARCHAR(20),
+$detail_penjualan_history = "CREATE TABLE IF NOT EXISTS tb_detail_penjualan_history(
+detail_penjualan_history_id VARCHAR(20) PRIMARY KEY NOT NULL,
+penjualan_history_id VARCHAR(20),
 produk_id VARCHAR(20),
 urutan INT,
 qty INT,
 harga DECIMAL(20,2),
 diskon DECIMAL(20,2),
 satuan_id VARCHAR(20),
-tipe_retur_penjualan_history VARCHAR(20)
+tipe_detail_penjualan_history VARCHAR(20)
 )";
 
-if ($conn->query($detail_history_penjualan)) {
+if ($conn->query($detail_penjualan_history)) {
     try {
     } catch (Error) {
         echo mysqli_error($conn);

@@ -151,7 +151,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
             id="detail_penjualan">
             <thead id="view_detail_penjualan_thead">
                 <tr>
-                    <th colspan="6" style="text-align: center;">Detail Barang</th>
+                    <th colspan="7" style="text-align: center;">Detail Barang</th>
                 </tr>
                 <tr>
                     <th scope="col" style="max-width: 9px; text-align:center">No</th>
@@ -160,12 +160,13 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
                     <th scope="col">Satuan</th>
                     <th scope="col">Harga</th>
                     <th scope="col">Diskon</th>
+                    <th scope="col">Total</th>
                 </tr>
             </thead>
             <tbody id="view_detail_penjualan_tbody"></tbody>
             <tfoot id="view_detail_penjualan_tfoot">
                 <tr>
-                    <td colspan="4" rowspan="5" id="td_keterangan">
+                    <td colspan="5" rowspan="5" id="td_keterangan">
                     </td>
                     <td colspan="1">Sub total</td>
                     <td colspan="1" id="td_sub_total"></td>

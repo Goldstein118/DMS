@@ -40,6 +40,9 @@ async function populate_table_detail(penjualan_id) {
       tdDiskon.textContent = helper.format_angka(detail.diskon);
       tdDiskon.style.textAlign = "right";
 
+      const tdTotal = document.createElement("td");
+      tdTotal.setAttribute("id", "view_total");
+      tdTotal.textContent = detail.qty * (detail.harga - detail.diskon);
       // Append all tds to tr
       tr_detail.appendChild(td_no);
       tr_detail.appendChild(tdProduk);
@@ -47,6 +50,7 @@ async function populate_table_detail(penjualan_id) {
       tr_detail.appendChild(tdSatuan);
       tr_detail.appendChild(tdHarga);
       tr_detail.appendChild(tdDiskon);
+      tr_detail.appendChild(tdTotal);
 
       nomor += 1;
       // Append tr to tbody

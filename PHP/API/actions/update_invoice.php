@@ -77,7 +77,6 @@ try {
     executeInsert(
         $conn,
         "INSERT INTO tb_invoice_history (
-        
         invoice_history_id,invoice_id,tanggal_invoice_before,no_invoice_supplier_before,tanggal_input_invoice_before,
         tanggal_po_before,tanggal_pengiriman_before,tanggal_terima_before,supplier_id_before,gudang_id_before,
         pembelian_id_before,keterangan_before,no_pengiriman_before,total_qty_before,ppn_before,

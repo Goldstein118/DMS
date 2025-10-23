@@ -729,9 +729,6 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
         $promo_id = cek_promo($conn, $customer_id, $tanggal_penjualan, $data['details']);
         error_log("cek_promo result: " . print_r($promo_id, true));
 
-
-
-
         $promo_ids = array_column($promo_id, 'promo_id');
         error_log("Extracted promo_ids: " . print_r($promo_ids, true));
 
@@ -740,11 +737,6 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
 
         $bonus_kelipatan = isset($promo_id[0]['bonus_kelipatan']) ? $promo_id[0]['bonus_kelipatan'] : 1;
         error_log("bonus_kelipatan value: " . print_r($bonus_kelipatan, true));
-
-
-
-
-
 
         $tanggal_input_promo_berlaku = date('Y-m-d');
 
@@ -777,7 +769,7 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
 
             executeInsert(
                 $conn,
-                "INSERT INTO tb_penjualan_history (penjualan_history_id,penjualan_id, tanggal_penjualan_after,customer_id_after,gudang_id_after,promo_id_after, keterangan_penjualan_after, ppn_after,diskon_after, nominal_pph_after, status_after, created_by_after,bonus_kelipatan_after,tanggal_input_promo_berlaku_after,keterangan_invoice_after,keterangan_gudang_after,keterangan_pengiriman_after,no_pengiriman_after,created_status_after)
+                "INSERT INTO tb_penjualan_history (penjualan_history_id,penjualan_id, tanggal_penjualan_after,customer_id_after,gudang_id_after,promo_id_after, keterangan_penjualan_after, ppn_after,diskon_after, nominal_pph_after, status_after, created_by_after,bonus_kelipatan_after,tanggal_input_promo_berlaku_after,keterangan_invoice_after,keterangan_gudang_after,keterangan_pengiriman_after,no_pengiriman_after,created_status)
         VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 [
                     $penjualan_history_id,
@@ -911,7 +903,7 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
                 $total_harga += $qty_unformat * ($harga_unformat - $diskon_unformat);
 
                 $detail_penjualan_id = generateCustomID('DPJ', 'tb_detail_penjualan', 'detail_penjualan_id', $conn);
-                $detail_penjualan_history_id = generateCustomID('DPJH', 'tb_detail_history_penjualan', 'detail_penjualan_history_id', $conn);
+                $detail_penjualan_history_id = generateCustomID('DPJH', 'tb_detail_penjualan_history', 'detail_penjualan_history_id', $conn);
                 executeInsert(
                     $conn,
                     "INSERT INTO tb_detail_penjualan (detail_penjualan_id, penjualan_id, produk_id, qty, harga, diskon, satuan_id,urutan)
@@ -932,11 +924,11 @@ if (isset($data['tanggal_penjualan']) && isset($data['create_penjualan'])) {
 
                 executeInsert(
                     $conn,
-                    "INSERT INTO tb_detail_history_penjualan (detail_history_penjualan_id, history_penjualan_id, produk_id, qty, harga, diskon, satuan_id,urutan,tipe_retur_penjualan_history)
+                    "INSERT INTO tb_detail_penjualan_history (detail_penjualan_history_id, penjualan_history_id, produk_id, qty, harga, diskon, satuan_id,urutan,tipe_detail_penjualan_history)
                 VALUES (?, ?, ?, ?, ?, ?, ?,?,?)",
                     [
-                        $detail_penjualan_id,
-                        $penjualan_id,
+                        $detail_penjualan_history_id,
+                        $penjualan_history_id,
                         $produk_id,
                         $qty_unformat,
                         $harga_unformat,

@@ -43,6 +43,7 @@ async function populate_table_detail(penjualan_id) {
       const tdTotal = document.createElement("td");
       tdTotal.setAttribute("id", "view_total");
       tdTotal.textContent = detail.qty * (detail.harga - detail.diskon);
+      tdTotal.style.textAlign = "right";
       // Append all tds to tr
       tr_detail.appendChild(td_no);
       tr_detail.appendChild(tdProduk);

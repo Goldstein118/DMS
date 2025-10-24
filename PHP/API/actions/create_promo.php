@@ -6,7 +6,6 @@ try {
         'tanggal_berlaku',
         'tanggal_selesai',
         'jenis_bonus',
-        'akumulasi',
         'jenis_diskon',
         'status',
         'quota',
@@ -18,8 +17,6 @@ try {
     $tanggal_selesai = $field['tanggal_selesai'];
     $jenis_bonus = $field['jenis_bonus'];
     $jenis_promo = $field['jenis_promo'];
-    $akumulasi = $field['akumulasi'];
-    $kelipatan = $field['kelipatan'];
     $prioritas = $field['prioritas'];
     $jenis_diskon = $field['jenis_diskon'];
     $jumlah_diskon = $field['jumlah_diskon'];
@@ -42,8 +39,8 @@ try {
     executeInsert(
         $conn,
         "INSERT INTO tb_promo(promo_id,nama,tanggal_berlaku,tanggal_selesai,jenis_bonus,jenis_diskon
-        ,akumulasi,prioritas,jumlah_diskon,quota,status,satuan_id,kelipatan,jenis_promo)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        ,prioritas,jumlah_diskon,quota,status,satuan_id,jenis_promo)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
         [
             $promo_id,
             $nama,
@@ -51,16 +48,16 @@ try {
             $tanggal_selesai,
             $jenis_bonus,
             $jenis_diskon,
-            $akumulasi,
+
             $prioritas,
             $jumlah_diskon,
             $quota,
             $status_promo,
             $satuan_id,
-            $kelipatan,
+
             $jenis_promo
         ],
-        "sssssssdddssss"
+        "ssssssdddsss"
     );
     if (isset($data['promo_kondisi'])) {
 

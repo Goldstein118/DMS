@@ -28,12 +28,13 @@
                                             <option value="aktif">Aktif</option>
                                             <option value="nonaktif">Non Aktif</option>
                                         </select>
+                                    </div>
+                                    <div class="col">
+
 
                                         <label class="form-label mb-0 mt-2" for="satuan_id">Satuan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="satuan_id">
                                         </select>
-                                    </div>
-                                    <div class="col">
                                         <label class="form-label mb-0 mt-2" for="jenis_bonus">Jenis Bonus:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="jenis_bonus">
                                             <option value="barang">Barang</option>
@@ -57,19 +58,7 @@
                                             <option value="prioritas">Prioritas</option>
                                         </select>
 
-                                        <label class="form-label mb-0 mt-2" for="akumulasi">Akumulasi:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <select class="form-select" id="akumulasi">
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
-                                        </select>
 
-
-                                        <label class="form-label mb-0 mt-2" for="kelipatan">Berlaku Kelipatan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <select class="form-select" id="kelipatan">
-                                            <option value="tidak">Tidak</option>
-                                            <option value="ya">Ya</option>
-
-                                        </select>
 
                                         <div id="div_prioritas" style="display: none;">
                                             <label class="form-label mb-0 mt-2" for="prioritas">Prioritas:</label>
@@ -178,6 +167,9 @@
                                         </select>
                                     </div>
                                     <div class="col">
+                                        <label class="form-label mb-0 mt-2" for="update_satuan_id">Satuan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <select class="form-select" id="update_satuan_id">
+                                        </select>
                                         <label class="form-label mb-0 mt-2" for="update_jenis_bonus">Jenis Bonus:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="update_jenis_bonus">
                                             <option value="barang">Barang</option>
@@ -200,19 +192,7 @@
                                             <option value="prioritas">Prioritas</option>
                                         </select>
 
-                                        <label class="form-label mb-0 mt-2" for="update_akumulasi">Akumulasi:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <select class="form-select" id="update_akumulasi">
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
-                                        </select>
 
-                                        <label class="form-label mb-0 mt-2" for="update_kelipatan">Berlaku Kelipatan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <select class="form-select" id="update_kelipatan">
-
-                                            <option value="tidak">Tidak</option>
-                                            <option value="ya">Ya</option>
-
-                                        </select>
 
                                         <div id="update_div_prioritas">
                                             <label class="form-label mb-0 mt-2" for="update_prioritas">Prioritas:<i class="bi bi-asterisk text-danger align-middle "></i></label>
@@ -220,9 +200,7 @@
                                         </div>
 
 
-                                        <label class="form-label mb-0 mt-2" for="update_satuan_id">Satuan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <select class="form-select" id="update_satuan_id">
-                                        </select>
+
                                     </div>
                                 </div>
                             </div>
@@ -325,11 +303,12 @@
                                             <option value="nonaktif">Non Aktif</option>
                                         </select>
 
+
+                                    </div>
+                                    <div class="col">
                                         <label class="form-label mb-0 mt-2" for="copy_satuan_id">Satuan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="copy_satuan_id">
                                         </select>
-                                    </div>
-                                    <div class="col">
                                         <label class="form-label mb-0 mt-2" for="copy_jenis_bonus">Jenis Bonus:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                         <select class="form-select" id="copy_jenis_bonus">
                                             <option value="barang">Barang</option>
@@ -346,24 +325,20 @@
                                             <input type="text" class="form-control" id="copy_jumlah_diskon" name="jumlah_diskon" />
                                         </div>
 
-
-                                        <label class="form-label mb-0 mt-2" for="copy_akumulasi">Akumulasi:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <select class="form-select" id="copy_akumulasi">
-                                            <option value="ya">Ya</option>
-                                            <option value="tidak">Tidak</option>
+                                        <label class="form-label mb-0 mt-2" for="copy_jenis_promo">Jenis Promo:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                        <select class="form-select" id="copy_jenis_promo">
+                                            <option value="akumulasi">Akumulasi</option>
+                                            <option value="kelipatan">Kelipatan</option>
+                                            <option value="prioritas">Prioritas</option>
                                         </select>
 
 
-                                        <label class="form-label mb-0 mt-2" for="copy_kelipatan">Berlaku Kelipatan:<i class="bi bi-asterisk text-danger align-middle "></i></label>
-                                        <select class="form-select" id="copy_kelipatan">
-                                            <option value="tidak">Tidak</option>
-                                            <option value="ya">Ya</option>
+                                        <div id="copy_div_prioritas">
 
-                                        </select>
+                                            <label class="form-label mb-0 mt-2" for="copy_prioritas">Prioritas:</label>
+                                            <input type="text" class="form-control" id="copy_prioritas" name="prioritas" />
+                                        </div>
 
-
-                                        <label class="form-label mb-0 mt-2" for="copy_prioritas">Prioritas:</label>
-                                        <input type="text" class="form-control" id="copy_prioritas" name="prioritas" />
 
 
                                     </div>

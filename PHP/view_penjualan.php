@@ -145,55 +145,47 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
     </header>
 
     <main>
+        <div id="`invoice">
+            <table
+                class="table table-hover table-bordered table-sm table"
+                id="detail_penjualan">
+                <thead id="view_detail_penjualan_thead">
+                    <tr>
+                        <th colspan="7" style="text-align: center;">Detail Barang</th>
+                    </tr>
+                    <tr>
+                        <th scope="col" style="max-width: 9px; text-align:center">No</th>
+                        <th scope="col">Produk</th>
+                        <th scope="col">Kuantitas</th>
+                        <th scope="col">Satuan</th>
+                        <th scope="col">Harga</th>
+                        <th scope="col">Diskon</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody id="view_detail_penjualan_tbody"></tbody>
+                <tfoot id="view_detail_penjualan_tfoot">
+                    <tr>
+                        <td colspan="5" rowspan="5" id="td_keterangan">
+                        </td>
+                        <td colspan="1">Sub total</td>
+                        <td colspan="1" id="td_sub_total"></td>
+                    </tr>
+                    <tr>
 
-        <table
-            class="table table-hover table-bordered table-sm table"
-            id="detail_penjualan">
-            <thead id="view_detail_penjualan_thead">
-                <tr>
-                    <th colspan="7" style="text-align: center;">Detail Barang</th>
-                </tr>
-                <tr>
-                    <th scope="col" style="max-width: 9px; text-align:center">No</th>
-                    <th scope="col">Produk</th>
-                    <th scope="col">Kuantitas</th>
-                    <th scope="col">Satuan</th>
-                    <th scope="col">Harga</th>
-                    <th scope="col">Diskon</th>
-                    <th scope="col">Total</th>
-                </tr>
-            </thead>
-            <tbody id="view_detail_penjualan_tbody"></tbody>
-            <tfoot id="view_detail_penjualan_tfoot">
-                <tr>
-                    <td colspan="5" rowspan="5" id="td_keterangan">
-                    </td>
-                    <td colspan="1">Sub total</td>
-                    <td colspan="1" id="td_sub_total"></td>
-                </tr>
-                <tr>
+                        <td colspan="1">Diskon Penjualan</td>
+                        <td colspan="1" id="td_diskon"></td>
+                    </tr>
 
-                    <td colspan="1">Diskon Penjualan</td>
-                    <td colspan="1" id="td_diskon"></td>
-                </tr>
-                <tr>
+                    <tr>
 
-                    <td colspan="1">PPN</td>
-                    <td colspan="1" id="td_ppn"></td>
-                </tr>
+                        <td colspan="1">Grand total</td>
+                        <td colspan="1" id="td_grand_total"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
 
-                <tr>
-
-                    <td colspan="1">PPH</td>
-                    <td colspan="1" id="td_pph"></td>
-                </tr>
-                <tr>
-
-                    <td colspan="1">Grand total</td>
-                    <td colspan="1" id="td_grand_total"></td>
-                </tr>
-            </tfoot>
-        </table>
 
 
     </main>

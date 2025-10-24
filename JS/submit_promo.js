@@ -155,7 +155,7 @@ function add_field_kondisi(myTable) {
       qty_min.removeAttribute("disabled");
       qty_max.removeAttribute("disabled");
 
-      if (document.getElementById("kelipatan").value === "ya") {
+      if (document.getElementById("jenis_promo").value === "kelipatan") {
         qty_akumulasi.removeAttribute("disabled");
       }
 
@@ -183,7 +183,7 @@ function add_field_kondisi(myTable) {
       );
       qty_min.removeAttribute("disabled");
       qty_max.removeAttribute("disabled");
-      if (document.getElementById("kelipatan").value === "ya") {
+      if (document.getElementById("jenis_promo").value === "kelipatan") {
         qty_akumulasi.removeAttribute("disabled");
       }
       fetch_fk("produk", currentIndex, "jenis_produk");
@@ -382,8 +382,7 @@ async function submitPromo() {
   const jenis_bonus = document.getElementById("jenis_bonus").value;
 
   const jenis_promo = document.getElementById("jenis_promo").value;
-  const akumulasi = document.getElementById("akumulasi").value;
-  const kelipatan = document.getElementById("kelipatan").value;
+
   const prioritas = document.getElementById("prioritas").value;
   const jenis_diskon = document.getElementById("jenis_diskon").value;
   const jumlah_diskon = document.getElementById("jumlah_diskon").value;
@@ -444,7 +443,7 @@ async function submitPromo() {
   const row_bonus_barang = document.querySelectorAll(
     "#table_bonus_barang_tbody tr"
   );
-  if (jenis_bonus.value === "barang") {
+  if (jenis_bonus === "barang") {
     for (const row of row_bonus_barang) {
       const produk_select = row.querySelector("td:nth-child(1) select");
       const jumlah_qty = row.querySelector("td:nth-child(2) input");
@@ -480,7 +479,7 @@ async function submitPromo() {
   }
 
   // console.log(promo_bonus_barang);
-  if (jenis_bonus.value === "barang") {
+  if (jenis_bonus === "barang") {
     if (
       !nama ||
       nama.trim() === "" ||
@@ -490,8 +489,6 @@ async function submitPromo() {
       tanggal_selesai.trim() === "" ||
       !jenis_bonus ||
       jenis_bonus.trim() === "" ||
-      !akumulasi ||
-      akumulasi.trim() === "" ||
       !status_promo ||
       status_promo.trim() === "" ||
       !quota ||
@@ -500,7 +497,7 @@ async function submitPromo() {
       toastr.error("Kolom * wajib diisi.");
       return;
     }
-  } else if (jenis_bonus.value === "nominal") {
+  } else if (jenis_bonus === "nominal") {
     if (
       !nama ||
       nama.trim() === "" ||
@@ -510,8 +507,6 @@ async function submitPromo() {
       tanggal_selesai.trim() === "" ||
       !jenis_bonus ||
       jenis_bonus.trim() === "" ||
-      !akumulasi ||
-      akumulasi.trim() === "" ||
       !jenis_diskon ||
       jenis_diskon.trim() === "" ||
       !jumlah_diskon ||
@@ -558,8 +553,6 @@ async function submitPromo() {
       tanggal_selesai: tanggal_selesai,
       jenis_bonus: jenis_bonus,
       jenis_promo: jenis_promo,
-      akumulasi: akumulasi,
-      kelipatan: kelipatan,
       prioritas: prioritas,
       jenis_diskon: jenis_diskon,
       jumlah_diskon: jumlah_diskon,

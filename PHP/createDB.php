@@ -904,4 +904,85 @@ if ($conn->query($detail_penjualan_history)) {
 
 
 
+$retur_penjualan_history = "CREATE TABLE IF NOT EXISTS tb_retur_penjualan_history(
+
+retur_penjualan_history_id VARCHAR(20) PRIMARY KEY NOT NULL,
+retur_penjualan_id VARCHAR(20),
+penjualan_id VARCHAR(20),
+tanggal_penjualan_before DATE,
+customer_id_before VARCHAR(20),
+promo_id_before JSON,
+gudang_id_before VARCHAR(20),
+keterangan_penjualan_before VARCHAR(255),
+no_pengiriman_before VARCHAR(20),
+total_qty_before INT,
+ppn_before DECIMAL(20,2),
+nominal_ppn_before DECIMAL(20,2),
+diskon_before DECIMAL(20,2),
+nominal_pph_before DECIMAL(20,2),
+sub_total_before DECIMAL(20,2),
+grand_total_before DECIMAL(20,2),
+created_on_before timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+created_by_before VARCHAR(50),
+status_before VARCHAR (20),
+keterangan_cancel_before VARCHAR(255),
+cancel_by_before VARCHAR (100),
+keterangan_invoice_before VARCHAR(255),
+keterangan_pengiriman_before VARCHAR(255),
+keterangan_gudang_before VARCHAR(255),
+tanggal_input_promo_berlaku_before DATE,
+
+
+tanggal_penjualan_after DATE,
+customer_id_after VARCHAR(20),
+promo_id_after JSON,
+gudang_id_after VARCHAR(20),
+keterangan_penjualan_after VARCHAR(255),
+no_pengiriman_after VARCHAR(20),
+total_qty_after INT,
+ppn_after DECIMAL(20,2),
+nominal_ppn_after DECIMAL(20,2),
+diskon_after DECIMAL(20,2),
+nominal_pph_after DECIMAL(20,2),
+sub_total_after DECIMAL(20,2),
+grand_total_after DECIMAL(20,2),
+created_on_after timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+created_by_after VARCHAR(50),
+status_after VARCHAR (20),
+keterangan_cancel_after VARCHAR(255),
+cancel_by_after VARCHAR (100),
+keterangan_invoice_after VARCHAR(255),
+keterangan_pengiriman_after VARCHAR(255),
+keterangan_gudang_after VARCHAR(255),
+tanggal_input_promo_berlaku_after DATE,
+)";
+
+if ($conn->query($retur_penjualan_history)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+
+$detail_retur_penjualan_history = "CREATE TABLE IF NOT EXISTS tb_detail_retur_penjualan_history(
+detail_retur_penjualan_history_id VARCHAR(20) PRIMARY KEY NOT NULL,
+retur_penjualan_history_id VARCHAR(20),
+produk_id VARCHAR(20),
+urutan INT,
+qty INT,
+harga DECIMAL(20,2),
+diskon DECIMAL(20,2),
+satuan_id VARCHAR(20),
+tipe_detail_retur_penjualan_history VARCHAR(20)
+)";
+
+if ($conn->query($detail_retur_penjualan_history)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+
 mysqli_close($conn);

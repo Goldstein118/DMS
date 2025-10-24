@@ -14,7 +14,6 @@ if ($search !== '' && strlen($search) >= 3) {
     OR tanggal_berlaku LIKE CONCAT ('%',?,'%')
     OR tanggal_selesai LIKE CONCAT ('%',?,'%')
     OR jenis_bonus LIKE CONCAT ('%',?,'%')
-    OR akumulasi LIKE CONCAT ('%',?,'%')
     OR prioritas LIKE CONCAT ('%',?,'%')
     OR jenis_diskon LIKE CONCAT ('%',?,'%')
     OR jumlah_diskon LIKE CONCAT ('%',?,'%')
@@ -54,7 +53,7 @@ if ($search !== '' && strlen($search) >= 3) {
     $sql_bonus = "SELECT * FROM tb_promo_bonus_barang";
     $result = $conn->query($sql_bonus);
 } else {
-    $sql_promo = "SELECT p.promo_id,p.nama,p.tanggal_berlaku,p.tanggal_selesai,p.jenis_bonus,p.akumulasi,p.kelipatan,p.prioritas,
+    $sql_promo = "SELECT p.promo_id,p.nama,p.tanggal_berlaku,p.tanggal_selesai,p.jenis_bonus,
     p.jenis_diskon,p.jumlah_diskon,p.quota,p.created_on,p.status,p.satuan_id,s.nama AS satuan_nama, p.jenis_promo FROM tb_promo p  
     LEFT JOIN tb_satuan s ON p.satuan_id = s.satuan_id";
     $result = $conn->query($sql_promo);

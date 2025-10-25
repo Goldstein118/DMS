@@ -430,7 +430,7 @@ async function populate_penjualan(id_penjualan) {
     let keterangan_pengiriman = "";
     let keterangan_gudang = "";
     let status = "";
-
+    let promo_id = [];
     try {
       const response = await apiRequest(
         `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
@@ -450,6 +450,7 @@ async function populate_penjualan(id_penjualan) {
         keterangan_pengiriman = item.keterangan_pengiriman;
         keterangan_gudang = item.keterangan_gudang;
         status = item.status;
+        item.promo_id ? promo_id.push(...JSON.parse(item.promo_id)) : "";
 
         const parts_po = item.tanggal_penjualan
           ? item.tanggal_penjualan.split("-")
@@ -479,7 +480,7 @@ async function populate_penjualan(id_penjualan) {
 
     try {
       create_detail_penjualan_tbody.innerHTML = "";
-      const renponse_detail_penjualan = await apiRequest(
+      const response_detail_penjualan = await apiRequest(
         `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
           "user_id"
         )}&target=tb_retur_penjualan&context=create`,
@@ -487,7 +488,7 @@ async function populate_penjualan(id_penjualan) {
         { penjualan_id: penjualan_id, table: "tb_detail_penjualan" }
       );
 
-      renponse_detail_penjualan.data.forEach((detail, index) => {
+      response_detail_penjualan.data.forEach((detail, index) => {
         var currentIndex = index++;
         const tr_detail = document.createElement("tr");
         const current_produk_id = detail.produk_id;
@@ -566,6 +567,100 @@ async function populate_penjualan(id_penjualan) {
       });
     } catch (error) {
       console.error("error:", error);
+    }
+
+    if (promo_id.length != 0) {
+      for (const promo of promo_id) {
+        try {
+          const response_bonus_barang = await apiRequest(
+            `/PHP/API/promo_API.php?action=select&user_id=${access.decryptItem(
+              "user_id"
+            )}&target=tb_retur_penjualan&context=create`,
+            "POST",
+            { promo_id: promo, table: "tb_promo_bonus_barang" }
+          );
+
+          response_bonus_barang.data.forEach((detail, index) => {
+            var currentIndex = index++;
+            const tr_detail = document.createElement("tr");
+            const current_produk_id = detail.produk_id;
+            const current_satuan_id = detail.satuan_id;
+
+            const td_produk = document.createElement("td");
+            var produk_select = document.createElement("select");
+            produk_select.setAttribute(
+              "id",
+              "update_produk_bonus_element_id" + currentIndex
+            );
+            produk_select.setAttribute("disabled", "true");
+            produk_select.classList.add("form-select");
+            td_produk.appendChild(produk_select);
+
+            const td_qty = document.createElement("td");
+            var input_qty = document.createElement("input");
+            input_qty.setAttribute("id", "qty" + currentIndex);
+            input_qty.setAttribute("disabled", "true");
+            input_qty.classList.add("form-control");
+            input_qty.value = detail.qty_bonus;
+            td_qty.appendChild(input_qty);
+
+            const td_satuan = document.createElement("td");
+            var satuan_select = document.createElement("select");
+
+            satuan_select.setAttribute(
+              "id",
+              "update_satuan_bonus_element_id" + currentIndex
+            );
+            satuan_select.setAttribute("disabled", "true");
+            satuan_select.classList.add("form-select");
+            td_satuan.appendChild(satuan_select);
+
+            const td_harga = document.createElement("td");
+            var input_harga = document.createElement("input");
+            input_harga.setAttribute("id", "harga" + currentIndex);
+            input_harga.setAttribute("disabled", "true");
+            input_harga.classList.add("form-control");
+            input_harga.style.textAlign = "right";
+            input_harga.value = 0;
+            td_harga.appendChild(input_harga);
+
+            const td_diskon = document.createElement("td");
+            var input_diskon = document.createElement("input");
+            input_diskon.setAttribute("id", "diskon" + currentIndex);
+            input_diskon.classList.add("form-control");
+            input_diskon.style.textAlign = "right";
+            input_diskon.value = detail.jlh_diskon;
+            input_diskon.setAttribute("disabled", "true");
+            td_diskon.appendChild(input_diskon);
+
+            const td_aksi = document.createElement("td");
+
+            td_aksi.style.textAlign = "center";
+
+            tr_detail.appendChild(td_produk);
+            tr_detail.appendChild(td_qty);
+            tr_detail.appendChild(td_satuan);
+            tr_detail.appendChild(td_harga);
+            tr_detail.appendChild(td_diskon);
+            tr_detail.appendChild(td_aksi);
+
+            create_detail_penjualan_tbody.appendChild(tr_detail);
+
+            helper.format_nominal("harga" + currentIndex);
+            helper.format_nominal("diskon" + currentIndex);
+            select_detail_penjualan(
+              currentIndex,
+              "update",
+              "update_produk_bonus_element_id",
+              "update_satuan_bonus_element_id",
+              current_produk_id,
+              current_satuan_id
+            );
+          });
+        } catch (error) {
+          console.error("error:", error);
+        }
+      }
     }
 
     document.getElementById("retur_penjualan_div").style.display = "block";

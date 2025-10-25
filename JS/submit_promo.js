@@ -398,8 +398,8 @@ async function submitPromo() {
     const jenis_select = row.querySelector("td:nth-child(1) select"); // Jenis
     const dynamic_select = row.querySelector("td:nth-child(2) select"); // Dynamic
     const exclude_select = row.querySelector("td:nth-child(3) select"); // Include/Exclude
-    const qty_max = row.querySelector("td:nth-child(4) input"); // Qty Max
-    const qty_min = row.querySelector("td:nth-child(5) input"); // Qty Min
+    const qty_max = row.querySelector("td:nth-child(5) input"); // Qty Max
+    const qty_min = row.querySelector("td:nth-child(4) input"); // Qty Min
     const qty_akumulasi = row.querySelector("td:nth-child(6) input"); // Qty Akumulasi
 
     const selected_jenis = jenis_select?.value?.trim();

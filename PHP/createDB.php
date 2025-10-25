@@ -954,7 +954,7 @@ cancel_by_after VARCHAR (100),
 keterangan_invoice_after VARCHAR(255),
 keterangan_pengiriman_after VARCHAR(255),
 keterangan_gudang_after VARCHAR(255),
-tanggal_input_promo_berlaku_after DATE,
+tanggal_input_promo_berlaku_after DATE
 )";
 
 if ($conn->query($retur_penjualan_history)) {

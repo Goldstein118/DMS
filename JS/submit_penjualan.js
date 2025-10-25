@@ -399,6 +399,7 @@ async function submitpenjualan() {
 
 const cek_promo_button = document.getElementById("cek_promo_button");
 cek_promo_button.addEventListener("click", function () {
+  document.getElementById("promo_berlaku_tbody").innerHTML = "";
   cek_promo();
 });
 
@@ -564,7 +565,7 @@ function populate_bonus_barang(
   const container = document.getElementById("list-container");
   container.innerHTML = "";
   let bonus_kelipatan_barang = bonus_kelipatan ? bonus_kelipatan : 1;
-  // console.log(bonus_kelipatan_barang);
+
   let index = 1;
   if (data_promo.length != 0) {
     data_promo.forEach((item) => {
@@ -588,35 +589,74 @@ function populate_bonus_barang(
 
   if (data_promo_bonus_barang.length != 0) {
     let nomor = 1;
+
     data_promo_bonus_barang.forEach((item) => {
+      var currentIndex = index++;
+      let produk_id = item.produk_id;
       let nama_produk = item.nama_produk;
       let qty = Number(item.qty_bonus) * bonus_kelipatan_barang;
+      let satuan_id = item.satuan_id;
       let nama_satuan = item.nama_satuan;
       let jenis_diskon = item.jenis_diskon;
       let jumlah_diskon = item.jlh_diskon;
 
       const tr_detail = document.createElement("tr");
 
-      const td_no = document.createElement("td");
-      td_no.textContent = nomor;
-      td_no.style.textAlign = "center";
-
       const tdKode = document.createElement("td");
-      tdKode.textContent = nama_produk;
+      var produk_select = document.createElement("select");
+      produk_select.setAttribute("id", "bonus_produk_id" + currentIndex);
+      produk_select.setAttribute("disabled", "true");
+      produk_select.classList.add("form-select");
+
+      const option_produk = document.createElement("option");
+      option_produk.textContent = `${produk_id} - ${nama_produk}`;
+      option_produk.setAttribute("value", `${produk_id}`);
+      produk_select.appendChild(option_produk);
+
+      tdKode.appendChild(produk_select);
 
       const tdKuantitas = document.createElement("td");
-      tdKuantitas.textContent = qty;
+      var input_qty = document.createElement("input");
+      input_qty.setAttribute("id", "qty_bonus" + currentIndex);
+      input_qty.setAttribute("disabled", "true");
+      input_qty.classList.add("form-control");
+      input_qty.value = qty;
+
+      tdKuantitas.appendChild(input_qty);
 
       const tdSatuan = document.createElement("td");
-      tdSatuan.textContent = nama_satuan;
+      var satuan_select = document.createElement("select");
+      satuan_select.setAttribute("id", "bonus_satuan_id" + currentIndex);
+      satuan_select.setAttribute("disabled", "true");
+      satuan_select.classList.add("form-select");
+
+      const option_satuan = document.createElement("option");
+      option_satuan.textContent = `${satuan_id} - ${nama_satuan}`;
+      option_satuan.setAttribute("value", `${produk_id}`);
+      satuan_select.appendChild(option_satuan);
+
+      tdSatuan.appendChild(satuan_select);
 
       const tdHarga = document.createElement("td");
-      tdHarga.setAttribute("id", "view_harga");
-      tdHarga.textContent = helper.format_angka(jumlah_diskon);
-      tdHarga.style.textAlign = "right";
 
-      const tdJenis_diskon = document.createElement("td");
-      tdJenis_diskon.textContent = jenis_diskon;
+      var input_harga = document.createElement("input");
+      input_harga.setAttribute("id", "harga" + currentIndex);
+      input_harga.setAttribute("disabled", "true");
+      input_harga.classList.add("form-control");
+      input_harga.value = 0;
+      input_harga.style.textAlign = "right";
+
+      tdHarga.appendChild(input_harga);
+
+      const tdDiskon = document.createElement("td");
+      var input_diskon = document.createElement("input");
+      input_diskon.setAttribute("id", "harga" + currentIndex);
+      input_diskon.setAttribute("disabled", "true");
+      input_diskon.classList.add("form-control");
+      input_diskon.value = 100;
+      input_diskon.style.textAlign = "right";
+      tdDiskon.appendChild(input_diskon);
+
       const tdAksi = document.createElement("td");
       tdAksi.textContent = "";
       // Append all tds to tr
@@ -624,7 +664,7 @@ function populate_bonus_barang(
       tr_detail.appendChild(tdKuantitas);
       tr_detail.appendChild(tdSatuan);
       tr_detail.appendChild(tdHarga);
-      tr_detail.appendChild(tdJenis_diskon);
+      tr_detail.appendChild(tdDiskon);
       tr_detail.appendChild(tdAksi);
       nomor += 1;
       // Append tr to tbody

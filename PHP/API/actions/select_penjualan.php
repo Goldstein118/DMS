@@ -14,7 +14,9 @@ if (isset($data['table']) && $data['table'] === 'tb_penjualan' && isset($data['p
     $result = $stmt->get_result();
 } else if (isset($data['table']) && $data['table'] === 'view_penjualan' && isset($data['penjualan_id'])) {
     $penjualan_id = $data['penjualan_id'];
-    $sql = "SELECT penjualan.penjualan_id,penjualan.tanggal_penjualan,penjualan.customer_id,penjualan.promo_id,penjualan.gudang_id,penjualan.keterangan_penjualan,penjualan.no_pengiriman,penjualan.total_qty,penjualan.ppn,penjualan.nominal_ppn,penjualan.diskon,penjualan.nominal_pph,penjualan.sub_total,penjualan.grand_total,penjualan.status,penjualan.keterangan_invoice,penjualan.keterangan_pengiriman,penjualan.keterangan_gudang,penjualan.bonus_kelipatan,customer.nama AS nama_customer,gudang.nama AS nama_gudang FROM tb_penjualan penjualan 
+    $sql = "SELECT penjualan.penjualan_id,penjualan.tanggal_penjualan,penjualan.tanggal_pengiriman,penjualan.customer_id,penjualan.promo_id,penjualan.gudang_id,penjualan.keterangan_penjualan,penjualan.no_pengiriman,penjualan.total_qty,penjualan.ppn,penjualan.nominal_ppn,penjualan.diskon,penjualan.nominal_pph,penjualan.sub_total,penjualan.grand_total,penjualan.status,penjualan.keterangan_invoice,penjualan.keterangan_pengiriman,penjualan.keterangan_gudang,penjualan.bonus_kelipatan,customer.nama AS nama_customer,gudang.nama AS nama_gudang,customer.alamat,customer.nama_jalan,customer.rt,customer.kelurahan,customer.kecamatan,customer.jenis_customer 
+    
+    FROM tb_penjualan penjualan 
     LEFT JOIN tb_customer customer ON customer.customer_id=penjualan.customer_id
     LEFT JOIN tb_gudang gudang ON gudang.gudang_id = penjualan.gudang_id
     WHERE penjualan_id=?";
@@ -53,7 +55,7 @@ if (isset($data['table']) && $data['table'] === 'tb_penjualan' && isset($data['p
     $stmt->execute();
     $result = $stmt->get_result();
 } else {
-    $sql = "SELECT p.penjualan_id,p.tanggal_penjualan,p.keterangan_penjualan,p.gudang_id,p.promo_id,p.customer_id,
+    $sql = "SELECT p.penjualan_id,p.tanggal_penjualan,p.tanggal_pengiriman,p.keterangan_penjualan,p.gudang_id,p.promo_id,p.customer_id,
     p.no_pengiriman,p.total_qty,p.ppn,p.nominal_ppn,p.diskon,p.nominal_pph,p.grand_total,p.created_on,p.created_by,p.status,g.nama AS gudang_nama,c.nama AS customer_nama
      FROM tb_penjualan p 
      LEFT JOIN tb_gudang g ON p.gudang_id=g.gudang_id

@@ -13,6 +13,7 @@ if (isset($data['tanggal_penjualan'])) {
 
         $penjualan_id = $fields['penjualan_id'];
         $tanggal_penjualan = $fields['tanggal_penjualan'];
+        $tanggal_pengiriman = $fields['tanggal_pengiriman'];
         $gudang_id = $fields['gudang_id'];
         $customer_id = $fields['customer_id'];
         $keterangan = $fields['keterangan'];
@@ -41,12 +42,13 @@ if (isset($data['tanggal_penjualan'])) {
 
         executeInsert(
             $conn,
-            "INSERT INTO tb_retur_penjualan (retur_penjualan_id,penjualan_id, tanggal_penjualan,customer_id,gudang_id, keterangan_penjualan, ppn,diskon, nominal_pph, status, created_by,keterangan_invoice,keterangan_gudang,keterangan_pengiriman)
-        VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?)",
+            "INSERT INTO tb_retur_penjualan (retur_penjualan_id,penjualan_id, tanggal_penjualan,tanggal_pengiriman,customer_id,gudang_id, keterangan_penjualan, ppn,diskon, nominal_pph, status, created_by,keterangan_invoice,keterangan_gudang,keterangan_pengiriman)
+        VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?)",
             [
                 $retur_penjualan_id,
                 $penjualan_id,
                 $tanggal_penjualan,
+                $tanggal_pengiriman,
                 $customer_id,
                 $gudang_id,
                 $keterangan,
@@ -60,21 +62,22 @@ if (isset($data['tanggal_penjualan'])) {
                 $keterangan_pengiriman,
 
             ],
-            "ssssssdddsssss"
+            "sssssssdddsssss"
         );
 
 
         executeInsert(
             $conn,
-            "INSERT INTO tb_retur_penjualan_history (retur_penjualan_history_id,retur_penjualan_id,penjualan_id, tanggal_penjualan_after,customer_id_after,
+            "INSERT INTO tb_retur_penjualan_history (retur_penjualan_history_id,retur_penjualan_id,penjualan_id, tanggal_penjualan_after,tanggal_pengiriman_after,customer_id_after,
             gudang_id_after, keterangan_penjualan_after, ppn_after,diskon_after, nominal_pph_after,
             status_after, created_by_after,keterangan_invoice_after,keterangan_gudang_after,keterangan_pengiriman_after)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             [
                 $retur_penjualan_history_id,
                 $retur_penjualan_id,
                 $penjualan_id,
                 $tanggal_penjualan,
+                $tanggal_pengiriman,
                 $customer_id,
 
                 $gudang_id,
@@ -89,7 +92,7 @@ if (isset($data['tanggal_penjualan'])) {
                 $keterangan_gudang,
                 $keterangan_pengiriman,
             ],
-            "sssssssdddsssss"
+            "ssssssssdddsssss"
         );
 
         $total_qty = 0;

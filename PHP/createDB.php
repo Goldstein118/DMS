@@ -705,6 +705,7 @@ if ($conn->query($detail_retur_pembelian_history)) {
 $penjualan = "CREATE TABLE IF NOT EXISTS tb_penjualan(
 penjualan_id VARCHAR(20) PRIMARY KEY NOT NULL,
 tanggal_penjualan DATE,
+tanggal_pengiriman DATE,
 customer_id VARCHAR(20),
 promo_id JSON,
 bonus_kelipatan INT,
@@ -766,6 +767,7 @@ $retur_penjualan = "CREATE TABLE IF NOT EXISTS tb_retur_penjualan(
 retur_penjualan_id VARCHAR(20) PRIMARY KEY NOT NULL,
 penjualan_id VARCHAR(20),
 tanggal_penjualan DATE,
+tanggal_pengiriman DATE,
 customer_id VARCHAR(20),
 promo_id JSON,
 gudang_id VARCHAR(20),
@@ -827,6 +829,7 @@ penjualan_history_id VARCHAR(20) PRIMARY KEY NOT NULL,
 penjualan_id VARCHAR(20),
 
 tanggal_penjualan_before DATE,
+tanggal_pengiriman_before DATE,
 customer_id_before VARCHAR(20),
 promo_id_before JSON,
 gudang_id_before VARCHAR(20),
@@ -851,6 +854,7 @@ tanggal_input_promo_berlaku_before DATE,
 bonus_kelipatan_before INT,
 
 tanggal_penjualan_after DATE,
+tanggal_pengiriman_after DATE,
 customer_id_after  VARCHAR(20),
 promo_id_after  JSON,
 gudang_id_after  VARCHAR(20),
@@ -910,6 +914,7 @@ retur_penjualan_history_id VARCHAR(20) PRIMARY KEY NOT NULL,
 retur_penjualan_id VARCHAR(20),
 penjualan_id VARCHAR(20),
 tanggal_penjualan_before DATE,
+tanggal_pengiriman_before DATE,
 customer_id_before VARCHAR(20),
 promo_id_before JSON,
 gudang_id_before VARCHAR(20),
@@ -933,7 +938,9 @@ keterangan_gudang_before VARCHAR(255),
 tanggal_input_promo_berlaku_before DATE,
 
 
+
 tanggal_penjualan_after DATE,
+tanggal_pengiriman_after DATE,
 customer_id_after VARCHAR(20),
 promo_id_after JSON,
 gudang_id_after VARCHAR(20),
@@ -984,5 +991,31 @@ if ($conn->query($detail_retur_penjualan_history)) {
     }
 }
 
+$jual = "CREATE TABLE IF NOT EXISTS tb_jual(jual_id VARCHAR(20) PRIMARY KEY NOT NULL,invoice_id VARCHAR(20),produk_id VARCHAR(20),tanggal_pembelian DATE,tanggal_expired DATE, harga_pembelian DECIMAL(20,2),ppn DECIMAL(20,2), pph DECIMAL(20,2),biaya_tambahan DECIMAL(20,2),diskon_invoice DECIMAL(20,2),diskon_produk DECIMAL(20,2),qty INT,x_qty INT,modal DECIMAL(20,2))";
+
+if ($conn->query($jual)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+
+
+$detail_jual = "CREATE TABLE IF NOT EXISTS tb_detail_jual(
+detail_jual_id VARCHAR(20) PRIMARY KEY NOT NULL,penjualan_id VARCHAR(20),produk_id VARCHAR(20), jual_id JSON,tanggal_jual DATE,harga_jual DECIMAL(20,2),ppn DECIMAL(20,2),pph DECIMAL(20,2),qty INT,diskon_produk DECIMAL(20,2),diskon_penjualan DECIMAL(20,2))";
+
+if ($conn->query($detail_jual)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
+$stock_jual = "CREATE TABLE IF NOT EXISTS tb_stock_jual(detail_jual_id VARCHAR(20),jual_id VARCHAR(20))";
+if ($conn->query($stock_jual)) {
+    try {
+    } catch (Error) {
+        echo mysqli_error($conn);
+    }
+}
 
 mysqli_close($conn);

@@ -33,6 +33,15 @@ const pickdatejs_penjualan = $("#update_tanggal_penjualan")
   })
   .pickadate("picker");
 
+const pickdatejs_pengiriman = $("#update_tanggal_pengiriman")
+  .pickadate({
+    format: "dd mmm yyyy", // user sees: 01 Jan 2025
+    formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
+    selectYears: 25,
+    selectMonths: true,
+  })
+  .pickadate("picker");
+
 if (grid_container_penjualan) {
   function getStatusBadge(status) {
     switch (status) {
@@ -540,6 +549,18 @@ async function handle_update(button) {
         pickdatejs_penjualan.set("select", dateObj_penjualan);
       }
 
+      const part_pengiriman = item.tanggal_pengiriman
+        ? item.tanggal_pengiriman.split("-")
+        : "";
+      if (part_pengiriman.length == 3) {
+        const dateObj_pengiriman = new Date(
+          part_pengiriman[0],
+          part_pengiriman[1] - 1,
+          part_pengiriman[2]
+        );
+        pickdatejs_pengiriman.set("select", dateObj_pengiriman);
+      }
+
       status = item.status;
       customer_id = item.customer_id;
       gudang_id = item.gudang_id;
@@ -698,8 +719,15 @@ const submit_penjualan_update = document.getElementById(
 if (submit_penjualan_update) {
   submit_penjualan_update.addEventListener("click", async function () {
     const penjualan_id = document.getElementById("update_penjualan_id").value;
+
     const picker_penjualan = $("#update_tanggal_penjualan").pickadate("picker");
     const tanggal_penjualan = picker_penjualan.get("select", "yyyy-mm-dd");
+
+    const picker_pengiriman = $("#update_tanggal_pengiriman").pickadate(
+      "picker"
+    );
+    const tanggal_pengiriman = picker_pengiriman.get("select", "yyyy-mm-dd");
+
     const gudang_id = document.getElementById("update_gudang_id").value;
     const customer_id = document.getElementById("update_customer_id").value;
     const keterangan = document.getElementById(
@@ -777,6 +805,7 @@ if (submit_penjualan_update) {
       created_by: `${access.decryptItem("nama")}`,
       penjualan_id: penjualan_id,
       tanggal_penjualan: tanggal_penjualan,
+      tanggal_pengiriman: tanggal_pengiriman,
       gudang_id: gudang_id,
       customer_id: customer_id,
       keterangan: keterangan,
@@ -1015,6 +1044,7 @@ function populate_bonus_barang(
     data_promo_bonus_barang.forEach((item) => {
       var currentIndex = index++;
       let produk_id = item.produk_id;
+      let satuan_id = item.satuan_id;
       let nama_produk = item.nama_produk;
       let qty = Number(item.qty_bonus) * bonus_kelipatan_barang;
       let nama_satuan = item.nama_satuan;

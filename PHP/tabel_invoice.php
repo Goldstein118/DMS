@@ -16,8 +16,12 @@
                         <select class="form-select" id="purchase_order">
                         </select>
                         <div class="row">
-                            <div class="col"> <label class="form-label mb-0 mt-2" for="tanggal_invoice">Tanggal Invoice:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                            <div class="col">
+                                <label class="form-label mb-0 mt-2" for="tanggal_invoice">Tanggal Invoice:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                 <input type="text" class="form-control" id="tanggal_invoice" name="tanggal_invoice" />
+
+                                <label class="form-label mb-0 mt-2" for="tanggal_expired">Tanggal Expired:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                <input type="text" class="form-control" id="tanggal_expired" name="tanggal_expired" />
                             </div>
                             <div class="col"> <label class="form-label mb-0 mt-2" for="no_invoice">No Incvoice Supplier:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                 <input type="text" class="form-control" id="no_invoice" name="no_invoice" />
@@ -261,10 +265,16 @@
                         <input class="form-control" id="update_purchase_order" disabled />
 
                         <div class="row">
-                            <div class="col"> <label class="form-label mb-0 mt-2" for="update_tanggal_invoice">Tanggal Invoice:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                            <div class="col">
+                                <label class="form-label mb-0 mt-2" for="update_tanggal_invoice">Tanggal Invoice:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                 <input type="text" class="form-control" id="update_tanggal_invoice" />
+
+
+                                <label class="form-label mb-0 mt-2" for="update_tanggal_expired">Tanggal Expired:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                                <input type="text" class="form-control" id="update_tanggal_expired" name="update_tanggal_expired" />
                             </div>
-                            <div class="col"> <label class="form-label mb-0 mt-2" for="update_no_invoice">No Invoice Supplier:<i class="bi bi-asterisk text-danger align-middle "></i></label>
+                            <div class="col">
+                                <label class="form-label mb-0 mt-2" for="update_no_invoice">No Invoice Supplier:<i class="bi bi-asterisk text-danger align-middle "></i></label>
                                 <input type="text" class="form-control" id="update_no_invoice" />
                             </div>
                         </div>

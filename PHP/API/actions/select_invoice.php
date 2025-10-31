@@ -70,7 +70,7 @@ if (isset($data['table']) && $data['table'] === 'detail_invoice' && isset($data[
 } else if (isset($data['table']) && $data['table'] === 'invoice' && isset($data['invoice_id'])) {
     $invoice_id = $data['invoice_id'];
 
-    $sql = "SELECT i.invoice_id,i.tanggal_invoice,i.no_invoice_supplier,i.tanggal_input_invoice,i.tanggal_po,i.tanggal_pengiriman,i.tanggal_terima,
+    $sql = "SELECT i.invoice_id,i.tanggal_invoice,i.tanggal_expired,i.no_invoice_supplier,i.tanggal_input_invoice,i.tanggal_po,i.tanggal_pengiriman,i.tanggal_terima,
     i.supplier_id,i.gudang_id,i.pembelian_id,i.keterangan,i.no_pengiriman,i.total_qty,i.ppn,i.nominal_ppn,i.diskon,i.nominal_pph,i.biaya_tambahan,i.sub_total,i.grand_total,
     i.created_on,i.created_by,i.status,s.nama AS supplier_nama FROM tb_invoice i
     LEFT JOIN tb_supplier s ON i.supplier_id= s.supplier_id

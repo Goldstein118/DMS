@@ -162,7 +162,7 @@ if (grid_container_retur_pembelian) {
       then: (data) =>
         data.map((invoice) => [
           invoice.retur_pembelian_id,
-          invoice.tanggal_invoice,
+          helper.format_date(invoice.tanggal_invoice),
           invoice.no_invoice_supplier,
           invoice.supplier_nama,
           invoice.status,

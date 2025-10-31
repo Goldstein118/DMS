@@ -39,6 +39,8 @@ export function custom_grid_header(
     btn.innerHTML = `<i class="bi bi-plus-circle"></i> pembelian`;
   } else if (field === "retur_pembelian") {
     btn.innerHTML = `<i class="bi bi-plus-circle"></i> retur pembelian`;
+  } else if (field === "retur_penjualan") {
+    btn.innerHTML = `<i class="bi bi-plus-circle"></i> retur penjualan`;
   } else {
     if (field != "frezzer") {
       btn.innerHTML = `<i class="bi bi-plus-circle"></i> ${field}`;
@@ -76,6 +78,8 @@ export function custom_grid_header(
       input.placeholder = `Cari pembelian...`;
     } else if (field === "retur_pembelian") {
       input.placeholder = `Cari retur pembelian...`;
+    } else if (field === "retur_penjualan") {
+      input.placeholder = `Cari retur penjualan...`;
     } else {
       input.placeholder = `Cari ${field}...`;
     }

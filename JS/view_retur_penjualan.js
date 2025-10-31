@@ -1,13 +1,16 @@
 import { apiRequest } from "./api.js";
 import * as access from "./cek_access.js";
 import * as helper from "./helper.js";
-async function populate_table_detail(penjualan_id) {
+async function populate_table_detail(retur_penjualan_id) {
   const result = await apiRequest(
-    `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
+    `/PHP/API/retur_penjualan_API.php?action=select&user_id=${access.decryptItem(
       "user_id"
     )}`,
     "POST",
-    { penjualan_id: penjualan_id, table: "view_detail_penjualan" }
+    {
+      retur_penjualan_id: retur_penjualan_id,
+      table: "view_detail_retur_penjualan",
+    }
   );
   const tableBody = document.getElementById("view_detail_penjualan_tbody");
 
@@ -71,13 +74,16 @@ async function populate_table_detail(penjualan_id) {
   }
 }
 
-async function populate_table_gudang_pengiriman(penjualan_id, tbody) {
+async function populate_table_gudang_pengiriman(retur_penjualan_id, tbody) {
   const result = await apiRequest(
-    `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
+    `/PHP/API/retur_penjualan_API.php?action=select&user_id=${access.decryptItem(
       "user_id"
     )}`,
     "POST",
-    { penjualan_id: penjualan_id, table: "view_detail_penjualan" }
+    {
+      retur_penjualan_id: retur_penjualan_id,
+      table: "view_detail_retur_penjualan",
+    }
   );
   const tableBody = document.getElementById(`${tbody}`);
 
@@ -132,13 +138,13 @@ function getQueryParam(key) {
   return urlParams.get(key);
 }
 
-async function populate_penjualan(penjualan_id) {
+async function populate_penjualan(retur_penjualan_id) {
   const result = await apiRequest(
-    `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
+    `/PHP/API/retur_penjualan_API.php?action=select&user_id=${access.decryptItem(
       "user_id"
     )}`,
     "POST",
-    { penjualan_id: penjualan_id, table: "view_penjualan" }
+    { retur_penjualan_id: retur_penjualan_id, table: "view_retur_penjualan" }
   );
 
   result.data.forEach((detail) => {
@@ -184,68 +190,51 @@ async function populate_penjualan(penjualan_id) {
         : `Alamat : ${detail.nama_jalan} ${detail.rt} ${detail.kelurahan} ${detail.kecamatan}`;
   });
 }
-const penjualan_id = getQueryParam("penjualan_id");
+const retur_penjualan_id = getQueryParam("retur_penjualan_id");
 
-if (penjualan_id) {
-  console.log("Loaded penjualan_id:", penjualan_id);
-  // Use penjualan_id to fetch and populate your table
+if (retur_penjualan_id) {
+  console.log("Loaded retur_penjualan_id:", retur_penjualan_id);
 }
 
-populate_table_detail(penjualan_id);
-populate_penjualan(penjualan_id);
-populate_table_gudang_pengiriman(penjualan_id, "pengiriman_tbody");
-populate_table_gudang_pengiriman(penjualan_id, "gudang_tbody");
+populate_table_detail(retur_penjualan_id);
+populate_penjualan(retur_penjualan_id);
+// populate_table_gudang_pengiriman(retur_penjualan_id, "pengiriman_tbody");
+populate_table_gudang_pengiriman(retur_penjualan_id, "gudang_tbody");
 
 const jenis_keterangan = document.getElementById("view_jenis_keterangan");
 jenis_keterangan.addEventListener("change", () => {
   if (jenis_keterangan.value === "invoice") {
     document.getElementById("invoice").style.display = "block";
-    document.getElementById("pengiriman").style.display = "none";
+
     document.getElementById("gudang").style.display = "none";
 
     document.getElementById("invoice_header").style.display = "block";
-    document.getElementById("pengiriman_header").style.display = "none";
-    document.getElementById("gudang_header").style.display = "none";
-  } else if (jenis_keterangan.value === "pengiriman") {
-    document.getElementById("invoice").style.display = "none";
-    document.getElementById("pengiriman").style.display = "block";
-    document.getElementById("gudang").style.display = "none";
 
-    document.getElementById("invoice_header").style.display = "none";
-    document.getElementById("pengiriman_header").style.display = "block";
     document.getElementById("gudang_header").style.display = "none";
   } else if (jenis_keterangan.value === "gudang") {
     document.getElementById("invoice").style.display = "none";
-    document.getElementById("pengiriman").style.display = "none";
+
     document.getElementById("gudang").style.display = "block";
 
     document.getElementById("invoice_header").style.display = "none";
-    document.getElementById("pengiriman_header").style.display = "none";
+
     document.getElementById("gudang_header").style.display = "block";
   }
 });
 if (jenis_keterangan.value === "invoice") {
   document.getElementById("invoice").style.display = "block";
-  document.getElementById("pengiriman").style.display = "none";
+
   document.getElementById("gudang").style.display = "none";
 
   document.getElementById("invoice_header").style.display = "block";
-  document.getElementById("pengiriman_header").style.display = "none";
-  document.getElementById("gudang_header").style.display = "none";
-} else if (jenis_keterangan.value === "pengiriman") {
-  document.getElementById("invoice").style.display = "none";
-  document.getElementById("pengiriman").style.display = "block";
-  document.getElementById("gudang").style.display = "none";
 
-  document.getElementById("invoice_header").style.display = "none";
-  document.getElementById("pengiriman_header").style.display = "block";
   document.getElementById("gudang_header").style.display = "none";
 } else if (jenis_keterangan.value === "gudang") {
   document.getElementById("invoice").style.display = "none";
-  document.getElementById("pengiriman").style.display = "none";
+
   document.getElementById("gudang").style.display = "block";
 
   document.getElementById("invoice_header").style.display = "none";
-  document.getElementById("pengiriman_header").style.display = "none";
+
   document.getElementById("gudang_header").style.display = "block";
 }

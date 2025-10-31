@@ -47,6 +47,15 @@ const pickdatejs_invoice = $("#update_tanggal_invoice")
   })
   .pickadate("picker");
 
+const pickdatejs_expired = $("#update_tanggal_expired")
+  .pickadate({
+    format: "dd mmm yyyy", // user sees: 01 Jan 2025
+    formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
+    selectYears: 25,
+    selectMonths: true,
+  })
+  .pickadate("picker");
+
 const detail_pembelian_button = document.getElementById(
   "detail_pembelian_button"
 );
@@ -167,7 +176,7 @@ if (grid_container_invoice) {
       then: (data) =>
         data.map((invoice) => [
           invoice.invoice_id,
-          invoice.tanggal_invoice,
+          helper.format_date(invoice.tanggal_invoice),
           invoice.no_invoice_supplier,
           invoice.supplier_nama,
           invoice.status,
@@ -677,6 +686,18 @@ async function handle_update(button) {
         pickdatejs_invoice.set("select", dateObj_invoice);
       }
 
+      const part_expired = item.tanggal_expired
+        ? item.tanggal_expired.split("-")
+        : "";
+      if (part_expired.length == 3) {
+        const dateObj_expired = new Date(
+          part_expired[0],
+          part_expired[1] - 1,
+          part_expired[2]
+        );
+        pickdatejs_expired.set("select", dateObj_expired);
+      }
+
       no_invoice_supplier = item.no_invoice_supplier;
 
       const part_po = item.tanggal_po ? item.tanggal_po.split("-") : "";
@@ -943,6 +964,10 @@ if (submit_invoice_update) {
 
     const picker_pengiriman = $("#tanggal_pengiriman").pickadate("picker");
     const tanggal_pengiriman = picker_pengiriman.get("select", "yyyy-mm-dd");
+
+    const picker_expired = $("#tanggal_expired").pickadate("picker");
+    const tanggal_expired = picker_expired.get("select", "yyyy-mm-dd");
+
     const no_pengiriman = document.getElementById("no_pengiriman").value;
 
     const picker_terima = $("#tanggal_terima").pickadate("picker");
@@ -1039,6 +1064,7 @@ if (submit_invoice_update) {
       pembelian_id: pembelian_id,
       tanggal_po: tanggal_po,
       tanggal_pengiriman: tanggal_pengiriman,
+      tanggal_expired: tanggal_expired,
       no_pengiriman: no_pengiriman,
       tanggal_terima: tanggal_terima,
       supplier_id: supplier_id,

@@ -51,8 +51,15 @@
                                         <div class="accordion-body">
                                             <div class="row gap-2">
                                                 <div class="col">
+
+
+
                                                     <label class="form-label mb-0 mt-2" for="tanggal_penjualan">Tanggal Penjualan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                     <input class="form-control" type="text" id="tanggal_penjualan" name="tanggal_penjualan" value="">
+
+                                                    <label class="form-label mb-0 mt-2" for="tanggal_pengiriman">Tanggal Pengiriman:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                    <input class="form-control" type="text" id="tanggal_pengiriman" name="tanggal_pengiriman" value="">
+
                                                     <label class="form-label mb-0 mt-2" for="status_penjualan">Status:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                     <select class="form-select" id="status_penjualan" disabled>
                                                         <option value="belumlunas">Belum Lunas</option>
@@ -274,6 +281,8 @@
                                                 <input type="text" class="form-control d-none" id="update_penjualan_id" name="update_penjualan_id" />
                                                 <label class="form-label mb-0 mt-2" for="update_tanggal_penjualan">Tanggal Penjualan:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <input class="form-control" type="text" id="update_tanggal_penjualan" name="update_tanggal_penjualan" value="">
+                                                <label class="form-label mb-0 mt-2" for="update_tanggal_pengiriman">Tanggal Pengiriman:<i class="bi bi-asterisk text-danger align-middle"></i></label>
+                                                <input class="form-control" type="text" id="update_tanggal_pengiriman" name="update_tanggal_pengiriman" value="">
                                                 <label class="form-label mb-0 mt-2" for="update_status_penjualan">Status:<i class="bi bi-asterisk text-danger align-middle"></i></label>
                                                 <select class="form-select" id="update_status_penjualan" disabled>
                                                     <option value="belumlunas">Belum Lunas</option>

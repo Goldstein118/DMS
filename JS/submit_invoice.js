@@ -27,8 +27,8 @@ update_biaya_tambahan_button.addEventListener("click", function () {
 
 const pickdatejs_po = $("#update_tanggal_po")
   .pickadate({
-    format: "dd mmm yyyy", // user sees: 01 Jan 2025
-    formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
+    format: "dd mmm yyyy",
+    formatSubmit: "yyyy-mm-dd",
     selectYears: 25,
     selectMonths: true,
   })
@@ -36,8 +36,8 @@ const pickdatejs_po = $("#update_tanggal_po")
 
 const pickdatejs_terima = $("#update_tanggal_terima")
   .pickadate({
-    format: "dd mmm yyyy", // user sees: 01 Jan 2025
-    formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
+    format: "dd mmm yyyy",
+    formatSubmit: "yyyy-mm-dd",
     selectYears: 25,
     selectMonths: true,
   })
@@ -45,8 +45,8 @@ const pickdatejs_terima = $("#update_tanggal_terima")
 
 const pickdatejs_pengiriman = $("#update_tanggal_pengiriman")
   .pickadate({
-    format: "dd mmm yyyy", // user sees: 01 Jan 2025
-    formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
+    format: "dd mmm yyyy",
+    formatSubmit: "yyyy-mm-dd",
     selectYears: 25,
     selectMonths: true,
   })
@@ -54,12 +54,22 @@ const pickdatejs_pengiriman = $("#update_tanggal_pengiriman")
 
 $("#tanggal_invoice")
   .pickadate({
-    format: "dd mmm yyyy", // user sees: 01 Jan 2025
-    formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
+    format: "dd mmm yyyy",
+    formatSubmit: "yyyy-mm-dd",
     selectYears: 25,
     selectMonths: true,
   })
   .pickadate("picker");
+
+$("#tanggal_expired")
+  .pickadate({
+    format: "dd mmm yyyy",
+    formatSubmit: "yyyy-mm-dd",
+    selectYears: 25,
+    selectMonths: true,
+  })
+  .pickadate("picker");
+
 const submit_invoice_button = document.getElementById("submit_invoice_button");
 if (submit_invoice_button) {
   submit_invoice_button.addEventListener("click", submitInvoice);
@@ -740,6 +750,10 @@ async function submitInvoice() {
   const pembelian_id = document.getElementById("purchase_order").value;
   const picker_invoice = $("#tanggal_invoice").pickadate("picker");
   const tanggal_invoice = picker_invoice.get("select", "yyyy-mm-dd");
+
+  const picker_expired = $("#tanggal_expired").pickadate("picker");
+  const tanggal_expired = picker_expired.get("select", "yyyy-mm-dd");
+
   const no_invoice = document.getElementById("no_invoice").value;
 
   const picker_po = $("#update_tanggal_po").pickadate("picker");
@@ -837,6 +851,7 @@ async function submitInvoice() {
   const body = {
     user_id: `${access.decryptItem("user_id")}`,
     tanggal_invoice: tanggal_invoice,
+    tanggal_expired: tanggal_expired,
     no_invoice: no_invoice,
     status: "invoice",
     user_id: `${access.decryptItem("user_id")}`,

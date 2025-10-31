@@ -42,6 +42,7 @@ if (submit_penjualan) {
       });
 
       initPickadateOnce("#tanggal_penjualan");
+      initPickadateOnce("#tanggal_pengiriman");
     });
     helper.format_nominal("nominal_pph");
     helper.format_nominal("diskon");
@@ -295,6 +296,10 @@ async function submitpenjualan() {
   // Collect form data
   const picker_penjualan = $("#tanggal_penjualan").pickadate("picker");
   const tanggal_penjualan = picker_penjualan.get("select", "yyyy-mm-dd");
+
+  const picker_pengiriman = $("#tanggal_pengiriman").pickadate("picker");
+  const tanggal_pengiriman = picker_pengiriman.get("select", "yyyy-mm-dd");
+
   const gudang_id = document.getElementById("gudang_id").value;
   const customer_id = document.getElementById("customer_id").value;
   const keterangan = document.getElementById("keterangan_penjualan").value;
@@ -364,6 +369,7 @@ async function submitpenjualan() {
     user_id: `${access.decryptItem("user_id")}`,
     created_by: `${access.decryptItem("nama")}`,
     tanggal_penjualan: tanggal_penjualan,
+    tanggal_pengiriman: tanggal_pengiriman,
     gudang_id: gudang_id,
     customer_id: customer_id,
     keterangan: keterangan,
@@ -387,6 +393,7 @@ async function submitpenjualan() {
       swal.fire("Berhasil", response.message, "success");
       document.querySelector("#create_detail_penjualan_tbody").innerHTML = "";
       $("#modal_penjualan").modal("hide");
+
       window.penjualan_grid.forceRender();
       setTimeout(() => {
         helper.custom_grid_header("penjualan");

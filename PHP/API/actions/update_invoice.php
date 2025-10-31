@@ -18,6 +18,7 @@ try {
     $no_pengiriman = $fields['no_pengiriman'];
     $tanggal_terima = $fields['tanggal_terima'];
     $tanggal_pengiriman = $fields['tanggal_pengiriman'];
+    $tanggal_expired = $fields['tanggal_expired'];
     $invoice_id = $fields['invoice_id'];
     $ppn_unformat = toFloat($ppn);
     $diskon_invoice_unformat = toFloat($diskon_invoice);
@@ -35,8 +36,6 @@ try {
     $oldData = $oldDataResult->fetch_assoc();
     $oldDataStmt->close();
 
-
-
     $stmt = $conn->prepare("UPDATE tb_invoice SET 
     tanggal_invoice=?,
     no_invoice_supplier=?, 
@@ -49,9 +48,11 @@ try {
     nominal_pph=?,
     no_pengiriman=?,
     tanggal_terima=?,
-    tanggal_pengiriman=? WHERE pembelian_id =?");
+    tanggal_pengiriman=?, 
+    tanggal_expired=?
+    WHERE pembelian_id =?");
     $stmt->bind_param(
-        "ssssssdddssss",
+        "ssssssdddsssss",
         $tanggal_invoice,
         $no_invoice,
         $tanggal_po,
@@ -66,82 +67,87 @@ try {
         $tanggal_terima,
 
         $tanggal_pengiriman,
+        $tanggal_expired,
         $pembelian_id
     );
     $stmt->execute();
     $stmt->close();
-
 
     $invoice_history_id = generateCustomID('INH', 'tb_invoice_history', 'invoice_history_id', $conn);
 
     executeInsert(
         $conn,
         "INSERT INTO tb_invoice_history (
-        invoice_history_id,invoice_id,tanggal_invoice_before,no_invoice_supplier_before,tanggal_input_invoice_before,
-        tanggal_po_before,tanggal_pengiriman_before,tanggal_terima_before,supplier_id_before,gudang_id_before,
-        pembelian_id_before,keterangan_before,no_pengiriman_before,total_qty_before,ppn_before,
-        nominal_ppn_before,diskon_before,nominal_pph_before,biaya_tambahan_before,sub_total_before,
-        grand_total_before,created_by_before,status_before,keterangan_cancel_before,cancel_by_before,
+        invoice_history_id,invoice_id,tanggal_invoice_before,tanggal_expired_before,no_invoice_supplier_before,
+        tanggal_input_invoice_before,tanggal_po_before,tanggal_pengiriman_before,tanggal_terima_before,supplier_id_before,
+        gudang_id_before,pembelian_id_before,keterangan_before,no_pengiriman_before,total_qty_before,
+        ppn_before,nominal_ppn_before,diskon_before,nominal_pph_before,biaya_tambahan_before,
+        sub_total_before,grand_total_before,created_by_before,status_before,keterangan_cancel_before,
+        cancel_by_before,
         
-        tanggal_invoice_after,no_invoice_supplier_after,tanggal_input_invoice_after,tanggal_po_after,supplier_id_after, 
-        gudang_id_after,keterangan_after,ppn_after,diskon_after,nominal_pph_after,
-        no_pengiriman_after,tanggal_terima_after,tanggal_pengiriman_after,pembelian_id_after
+        tanggal_invoice_after,tanggal_expired_after,no_invoice_supplier_after,tanggal_input_invoice_after,tanggal_po_after,
+        supplier_id_after,gudang_id_after,keterangan_after,ppn_after,diskon_after,
+        nominal_pph_after,no_pengiriman_after,tanggal_terima_after,tanggal_pengiriman_after,pembelian_id_after
     )
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         [
             $invoice_history_id,
             // Before
             $oldData['invoice_id'],
             $oldData['tanggal_invoice'],
+            $oldData['tanggal_expired'],
             $oldData['no_invoice_supplier'],
-            $oldData['tanggal_input_invoice'],
 
+            $oldData['tanggal_input_invoice'],
             $oldData['tanggal_po'],
             $oldData['tanggal_pengiriman'],
             $oldData['tanggal_terima'],
             $oldData['supplier_id'],
-            $oldData['gudang_id'],
 
+            $oldData['gudang_id'],
             $oldData['pembelian_id'],
             $oldData['keterangan'],
             $oldData['no_pengiriman'],
             $oldData['total_qty'],
-            $oldData['ppn'],
 
+            $oldData['ppn'],
             $oldData['nominal_ppn'],
             $oldData['diskon'],
             $oldData['nominal_pph'],
             $oldData['biaya_tambahan'],
-            $oldData['sub_total'],
 
+            $oldData['sub_total'],
             $oldData['grand_total'],
             $oldData['created_by'],
             $oldData['status'],
             $oldData['keterangan_cancel'],
+
             $oldData['cancel_by'],
 
             // After
             $tanggal_invoice,
+            $tanggal_expired,
             $no_invoice,
             $oldData['tanggal_input_invoice'],
             $tanggal_po,
-            $supplier_id,
 
+            $supplier_id,
             $gudang_id,
             $keterangan,
             $ppn,
             $diskon_invoice_unformat,
-            $nominal_pph_unformat,
 
+            $nominal_pph_unformat,
             $no_pengiriman,
             $tanggal_terima,
             $tanggal_pengiriman,
             $pembelian_id
         ],
 
-        "sssssssssssssddddddddsssssssssssdddssss"
+        "ssssssssssssssddddddddssssssssssssdddssss"
 
     );
+
 
 
 
@@ -189,6 +195,11 @@ try {
         $delete_stmt->close();
 
 
+        $delete_stmt_jual = $conn->prepare("DELETE FROM tb_jual WHERE invoice_id = ?");
+        $delete_stmt_jual->bind_param("s", $invoice_id);
+        $delete_stmt_jual->execute();
+        $delete_stmt_jual->close();
+
         foreach ($data['details'] as $detail) {
             if (!isset($detail['produk_id']) || !isset($detail['harga'])) {
                 throw new Exception("Detail produk atau harga tidak lengkap.");
@@ -212,6 +223,9 @@ try {
             $total_harga += $qty_unformat * ($harga_unformat - $diskon_unformat);
 
             $detail_invoice_id = generateCustomID('DINV', 'tb_detail_invoice', 'detail_invoice_id', $conn);
+            $jual_id = generateCustomID('J', 'tb_jual', 'jual_id', $conn);
+
+
             executeInsert(
                 $conn,
                 "INSERT INTO tb_detail_invoice (detail_invoice_id, pembelian_id, produk_id, qty, harga, diskon, satuan_id,urutan,invoice_id)
@@ -251,6 +265,26 @@ try {
                 "ssssdddss"
             );
 
+            executeInsert(
+                $conn,
+                "INSERT INTO tb_jual(jual_id,invoice_id,produk_id,tanggal_pembelian,tanggal_expired,harga_pembelian,ppn,
+                                diskon_produk,qty,x_qty)
+                                VALUES (?,?,?,?,?,?,?,?,?,?)",
+                [
+                    $jual_id,
+                    $invoice_id,
+                    $produk_id,
+                    $tanggal_invoice,
+                    $tanggal_expired,
+                    $harga_unformat,
+
+                    $ppn_unformat,
+                    $diskon_unformat,
+                    $qty_unformat,
+                    $qty_unformat
+                ],
+                "sssssddddd"
+            );
 
             $urutan_detail += 1;
         }
@@ -359,6 +393,10 @@ try {
     $nominal_ppn = $sub_total * $ppn_unformat;
     $grand_total = $sub_total + $nominal_ppn - $nominal_pph_unformat;
 
+    $diskon_invoice_per_item = $diskon_invoice_unformat / $total_qty;
+    $total_biaya_tambahan_per_item = $total_biaya_tambahan / $total_qty;
+    $nominal_pph_per_item = $nominal_pph_unformat / $total_qty;
+
     // === Update Purchase Summary ===
     $stmt = $conn->prepare("UPDATE tb_invoice 
                             SET total_qty = ?, grand_total = ?, nominal_ppn = ?,biaya_tambahan= ?,sub_total=?
@@ -366,6 +404,18 @@ try {
     $stmt->bind_param("ddddds", $total_qty, $grand_total, $nominal_ppn, $total_biaya_tambahan, $sub_total, $pembelian_id);
     $stmt->execute();
     $stmt->close();
+
+    $stmt_jual = $conn->prepare("UPDATE tb_jual SET pph=?,biaya_tambahan=?,diskon_invoice=? WHERE invoice_id=?");
+    $stmt_jual->bind_param("ddds", $nominal_pph_per_item, $total_biaya_tambahan_per_item, $diskon_invoice_per_item, $invoice_id);
+    $stmt_jual->execute();
+    $stmt_jual->close();
+
+    $stmt_modal = $conn->prepare("UPDATE tb_jual SET modal = (((harga_pembelian - diskon_produk) - diskon_invoice + biaya_tambahan) + (((harga_pembelian - diskon_produk) - diskon_invoice + biaya_tambahan) * ppn)) - pph
+        WHERE modal IS NULL OR modal = 0;");
+    $stmt_modal->execute();
+    $stmt_modal->close();
+
+
 
     $stmt_history = $conn->prepare("UPDATE tb_invoice_history
                             SET total_qty_after = ?, grand_total_after = ?, nominal_ppn_after = ?,biaya_tambahan_after= ?,sub_total_after=?

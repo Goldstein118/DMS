@@ -107,7 +107,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
     <header class="mb-4">
         <select class="form-select mb-3 no_print" id="view_jenis_keterangan">
             <option value="gudang">Gudang</option>
-            <option value="pengiriman">Pengiriman</option>
+            <!-- <option value="pengiriman">Pengiriman</option> -->
             <option value="invoice">Invoice</option>
         </select>
 
@@ -116,7 +116,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
         <div id="invoice_header" style="display: none;">
 
             <div class="text-center">
-                <h1 style="display: block">Penjualan</h1>
+                <h1 style="display: block">Retur Penjualan</h1>
                 <span class="text-muted view_penjualan_id" id="view_penjualan_id" style="display:inline-block"></span>
             </div>
 
@@ -142,9 +142,9 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
             </div>
         </div>
 
-        <div id="pengiriman_header" style="display: none;">
+        <!-- <div id="pengiriman_header" style="display: none;">
             <div class="text-center">
-                <h1 style="display: block">Surat Pengantaran Barang</h1>
+                <h1 style="display: block">Surat Pengembalian Barang</h1>
                 <span class="text-muted view_penjualan_id" id="view_penjualan_id" style="display:inline-block"></span>
             </div>
 
@@ -172,11 +172,11 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
             </div>
 
 
-        </div>
+        </div> -->
         <div id="gudang_header" style="display: none;">
 
             <div class="text-center">
-                <h1 style="display: block">Surat Pengeluaran Gudang</h1>
+                <h1 style="display: block">Surat Pengembalian Barang</h1>
                 <span class="text-muted view_penjualan_id" id="view_penjualan_id" style="display:inline-block"></span>
             </div>
 
@@ -257,7 +257,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
         </div>
 
-        <div id="pengiriman" style="display: none;">
+        <!-- <div id="pengiriman" style="display: none;">
 
             <table
                 class="table table-hover table-bordered table-sm table"
@@ -302,7 +302,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
                 </div>
             </div>
 
-        </div>
+        </div> -->
         <div id="gudang" style="display: none;">
             <table
                 class="table table-hover table-bordered table-sm table"
@@ -355,7 +355,7 @@ include("{$_ENV['BASE_PATH']}/PHP/config/vendor_paths.php");
 
     <?php
     ?>
-    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/view_penjualan.js?v=2.1"></script>
+    <script type="module" src="<?php echo $_ENV['BASE_URL']; ?>../JS/view_retur_penjualan.js?v=2.1"></script>
 
     <?php
     ?>

@@ -13,6 +13,7 @@
         $invoice_id = generateCustomID('IN', 'tb_invoice', 'invoice_id', $conn);
         $invoice_history_id = generateCustomID('INH', 'tb_invoice_history', 'invoice_history_id', $conn);
 
+
         $tanggal_input_invoice = date("Y-m-d");
         $tanggal_po = $fields['tanggal_po'];
         $supplier_id = $fields['supplier_id'];
@@ -28,6 +29,7 @@
         $tipe_biaya_tambahan_invoice = "A";
         $tanggal_terima = $fields['tanggal_terima'];
         $tanggal_pengiriman = $fields['tanggal_pengiriman'];
+        $tanggal_expired = $fields['tanggal_expired'];
         $created_status = "new";
         $ppn_unformat = toFloat($ppn);
         $diskon_invoice_unformat = toFloat($diskon_invoice);
@@ -39,7 +41,7 @@
 
 
 
-        executeInsert($conn, "INSERT INTO tb_invoice(invoice_id,tanggal_invoice,no_invoice_supplier,tanggal_input_invoice,pembelian_id, tanggal_po, supplier_id,gudang_id, keterangan, ppn,diskon, nominal_pph, status, created_by,no_pengiriman,tanggal_terima,tanggal_pengiriman) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [
+        executeInsert($conn, "INSERT INTO tb_invoice(invoice_id,tanggal_invoice,no_invoice_supplier,tanggal_input_invoice,pembelian_id, tanggal_po, supplier_id,gudang_id, keterangan, ppn,diskon, nominal_pph, status, created_by,no_pengiriman,tanggal_terima,tanggal_pengiriman,tanggal_expired) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [
             $invoice_id,
             $tanggal_invoice,
             $no_invoice,
@@ -56,8 +58,9 @@
             $created_by,
             $no_pengiriman,
             $tanggal_terima,
-            $tanggal_pengiriman
-        ], "sssssssssdddsssss");
+            $tanggal_pengiriman,
+            $tanggal_expired
+        ], "sssssssssdddssssss");
 
         $stmt = $conn->prepare("UPDATE tb_pembelian SET status =? WHERE pembelian_id = ?");
         $stmt->bind_param("ss", $status, $pembelian_id);
@@ -66,7 +69,7 @@
 
         executeInsert(
             $conn,
-            "INSERT INTO tb_invoice_history(invoice_id,invoice_history_id,tanggal_invoice_after,no_invoice_supplier_after,tanggal_input_invoice_after,pembelian_id_after, tanggal_po_after, supplier_id_after, gudang_id_after,keterangan_after, ppn_after,diskon_after, nominal_pph_after, status_after, created_by_after,no_pengiriman_after,tanggal_terima_after,tanggal_pengiriman_after,created_status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO tb_invoice_history(invoice_id,invoice_history_id,tanggal_invoice_after,no_invoice_supplier_after,tanggal_input_invoice_after,pembelian_id_after, tanggal_po_after, supplier_id_after, gudang_id_after,keterangan_after, ppn_after,diskon_after, nominal_pph_after, status_after, created_by_after,no_pengiriman_after,tanggal_terima_after,tanggal_pengiriman_after,tanggal_expired_after,created_status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             [
                 $invoice_id,
                 $invoice_history_id,
@@ -86,10 +89,12 @@
                 $no_pengiriman,
                 $tanggal_terima,
                 $tanggal_pengiriman,
+                $tanggal_expired,
                 $created_status
             ],
-            "ssssssssssdddssssss"
+            "ssssssssssdddsssssss"
         );
+
 
 
         $total_qty = 0;
@@ -121,6 +126,8 @@
 
                 $detail_invoice_id = generateCustomID('DINV', 'tb_detail_invoice', 'detail_invoice_id', $conn);
                 $detail_invoice_history_id = generateCustomID('DINVH', 'tb_detail_invoice_history', 'detail_invoice_history_id', $conn);
+                $jual_id = generateCustomID('J', 'tb_jual', 'jual_id', $conn);
+
 
                 executeInsert(
                     $conn,
@@ -158,6 +165,27 @@
                         $tipe_detail_invoice_history
                     ],
                     "sssdddsdss"
+                );
+
+                executeInsert(
+                    $conn,
+                    "INSERT INTO tb_jual(jual_id,invoice_id,produk_id,tanggal_pembelian,tanggal_expired,harga_pembelian,ppn,
+                                diskon_produk,qty,x_qty)
+                                VALUES (?,?,?,?,?,?,?,?,?,?)",
+                    [
+                        $jual_id,
+                        $invoice_id,
+                        $produk_id,
+                        $tanggal_invoice,
+                        $tanggal_expired,
+                        $harga_unformat,
+
+                        $ppn_unformat,
+                        $diskon_unformat,
+                        $qty_unformat,
+                        $qty_unformat
+                    ],
+                    "sssssddddd"
                 );
 
                 $urutan_detail += 1;
@@ -226,6 +254,10 @@
         $nominal_ppn = $sub_total * $ppn_unformat;
         $grand_total = $sub_total + $nominal_ppn - $nominal_pph_unformat;
 
+        $diskon_invoice_per_item = $diskon_invoice_unformat / $total_qty;
+        $total_biaya_tambahan_per_item = $total_biaya_tambahan / $total_qty;
+        $nominal_pph_per_item = $nominal_pph_unformat / $total_qty;
+
         // === Update Purchase Summary ===
         $stmt = $conn->prepare("UPDATE tb_invoice 
                             SET total_qty = ?, grand_total = ?, nominal_ppn = ?,biaya_tambahan= ?,sub_total=?
@@ -233,6 +265,16 @@
         $stmt->bind_param("ddddds", $total_qty, $grand_total, $nominal_ppn, $total_biaya_tambahan, $sub_total, $pembelian_id);
         $stmt->execute();
         $stmt->close();
+
+        $stmt_jual = $conn->prepare("UPDATE tb_jual SET pph=?,biaya_tambahan=?,diskon_invoice=? WHERE invoice_id=?");
+        $stmt_jual->bind_param("ddds", $nominal_pph_per_item, $total_biaya_tambahan_per_item, $diskon_invoice_per_item, $invoice_id);
+        $stmt_jual->execute();
+        $stmt_jual->close();
+
+        $stmt_modal = $conn->prepare("UPDATE tb_jual SET modal = (((harga_pembelian - diskon_produk) - diskon_invoice + biaya_tambahan) * (1+ppn) - pph)
+        WHERE modal IS NULL OR modal = 0");
+        $stmt_modal->execute();
+        $stmt_modal->close();
 
 
         $stmt_history = $conn->prepare("UPDATE tb_invoice_history

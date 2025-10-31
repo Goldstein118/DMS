@@ -22,8 +22,17 @@ const grid_container_penjualan = document.querySelector(
 );
 const pickdatejs_penjualan = $("#update_tanggal_penjualan")
   .pickadate({
-    format: "dd mmm yyyy", // user sees: 01 Jan 2025
-    formatSubmit: "yyyy-mm-dd", // hidden value: 01/01/2025
+    format: "dd mmm yyyy",
+    formatSubmit: "yyyy-mm-dd",
+    selectYears: 25,
+    selectMonths: true,
+  })
+  .pickadate("picker");
+
+const pickdatejs_pengiriman = $("#update_tanggal_pengiriman")
+  .pickadate({
+    format: "dd mmm yyyy",
+    formatSubmit: "yyyy-mm-dd",
     selectYears: 25,
     selectMonths: true,
   })
@@ -150,11 +159,11 @@ if (grid_container_penjualan) {
       },
       then: (data) =>
         data.map((item) => [
-          item.penjualan_id,
+          item.retur_penjualan_id,
           helper.format_date(item.tanggal_penjualan),
-          item.customer_id,
+          item.customer_nama,
           JSON.parse(item.promo_id),
-          item.gudang_id,
+          item.gudang_nama,
           item.keterangan_penjualan,
           item.no_pengiriman,
           helper.format_persen(item.ppn),
@@ -182,11 +191,11 @@ if (grid_container_penjualan) {
 function handle_view(button) {
   console.log("tekan");
   const row = button.closest("tr");
-  const penjualan_id = row.cells[0].textContent.trim();
+  const retur_penjualan_id = row.cells[0].textContent.trim();
 
   window.open(
-    `../PHP/view_penjualan.php?penjualan_id=${encodeURIComponent(
-      penjualan_id
+    `../PHP/view_retur_penjualan.php?retur_penjualan_id=${encodeURIComponent(
+      retur_penjualan_id
     )}`,
     "_blank",
     "toolbar=0,location=0,menubar=0"
@@ -504,7 +513,7 @@ async function handle_update(button) {
   button_icon.style.display = "none";
   spinner.style.display = "inline-block";
 
-  const penjualan_id = row.cells[0].textContent;
+  const retur_penjualan_id = row.cells[0].textContent;
 
   let status = "";
   let customer_id = "";
@@ -516,11 +525,11 @@ async function handle_update(button) {
 
   try {
     const response = await apiRequest(
-      `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
+      `/PHP/API/retur_penjualan_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
       )}`,
       "POST",
-      { penjualan_id: penjualan_id, table: "tb_penjualan" }
+      { retur_penjualan_id: retur_penjualan_id, table: "tb_retur_penjualan" }
     );
     response.data.forEach((item) => {
       const part_penjualan = item.tanggal_penjualan
@@ -535,6 +544,18 @@ async function handle_update(button) {
         pickdatejs_penjualan.set("select", dateObj_penjualan);
       }
 
+      const part_pengiriman = item.tanggal_pengiriman
+        ? item.tanggal_pengiriman.split("-")
+        : "";
+      if (part_pengiriman.length == 3) {
+        const dateObj_pengiriman = new Date(
+          part_pengiriman[0],
+          part_pengiriman[1] - 1,
+          part_pengiriman[2]
+        );
+        pickdatejs_pengiriman.set("select", dateObj_pengiriman);
+      }
+
       status = item.status;
       customer_id = item.customer_id;
       gudang_id = item.gudang_id;
@@ -547,7 +568,7 @@ async function handle_update(button) {
     console.error("error:", error);
   }
 
-  document.getElementById("update_penjualan_id").value = penjualan_id;
+  document.getElementById("update_penjualan_id").value = retur_penjualan_id;
 
   document.getElementById("update_status_penjualan").value = status;
   document.getElementById("update_customer_id").value = customer_id;
@@ -585,11 +606,14 @@ async function handle_update(button) {
   try {
     update_detail_penjualan_tbody.innerHTML = "";
     const renponse_detail_penjualan = await apiRequest(
-      `/PHP/API/penjualan_API.php?action=select&user_id=${access.decryptItem(
+      `/PHP/API/retur_penjualan_API.php?action=select&user_id=${access.decryptItem(
         "user_id"
       )}`,
       "POST",
-      { penjualan_id: penjualan_id, table: "tb_detail_penjualan" }
+      {
+        retur_penjualan_id: retur_penjualan_id,
+        table: "tb_detail_retur_penjualan",
+      }
     );
 
     renponse_detail_penjualan.data.forEach((detail, index) => {
@@ -641,11 +665,14 @@ async function handle_update(button) {
 
       const td_aksi = document.createElement("td");
       td_aksi.setAttribute("id", "aksi_tbody");
-      var delete_button = document.createElement("button");
-      delete_button.type = "button";
-      delete_button.className = "btn btn-danger btn-sm delete_detail_penjualan";
-      delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
-      td_aksi.appendChild(delete_button);
+      if (detail.harga != 0) {
+        var delete_button = document.createElement("button");
+        delete_button.type = "button";
+        delete_button.className =
+          "btn btn-danger btn-sm delete_detail_penjualan";
+        delete_button.innerHTML = `<i class="bi bi-trash-fill"></i>`;
+        td_aksi.appendChild(delete_button);
+      }
       td_aksi.style.textAlign = "center";
 
       tr_detail.appendChild(td_produk);
@@ -684,8 +711,15 @@ const submit_penjualan_update = document.getElementById(
 if (submit_penjualan_update) {
   submit_penjualan_update.addEventListener("click", async function () {
     const penjualan_id = document.getElementById("update_penjualan_id").value;
+
     const picker_penjualan = $("#update_tanggal_penjualan").pickadate("picker");
     const tanggal_penjualan = picker_penjualan.get("select", "yyyy-mm-dd");
+
+    const picker_pengiriman = $("#update_tanggal_pengiriman").pickadate(
+      "picker"
+    );
+    const tanggal_pengiriman = picker_pengiriman.get("select", "yyyy-mm-dd");
+
     const gudang_id = document.getElementById("update_gudang_id").value;
     const customer_id = document.getElementById("update_customer_id").value;
     const keterangan = document.getElementById(
@@ -754,6 +788,7 @@ if (submit_penjualan_update) {
       created_by: `${access.decryptItem("nama")}`,
       penjualan_id: penjualan_id,
       tanggal_penjualan: tanggal_penjualan,
+      tanggal_pengiriman: tanggal_pengiriman,
       gudang_id: gudang_id,
       customer_id: customer_id,
       keterangan: keterangan,
@@ -766,7 +801,7 @@ if (submit_penjualan_update) {
     console.log(data_penjualan);
     try {
       const response = await apiRequest(
-        `/PHP/API/penjualan_API.php?action=update`,
+        `/PHP/API/retur_penjualan_API.php?action=update`,
         "POST",
         data_penjualan
       );

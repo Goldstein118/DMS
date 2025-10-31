@@ -17,6 +17,16 @@ const pickdatejs_penjualan = $("#tanggal_penjualan")
     selectMonths: true,
   })
   .pickadate("picker");
+
+const pickdatejs_pengiriman = $("#tanggal_pengiriman")
+  .pickadate({
+    format: "dd mmm yyyy",
+    formatSubmit: "yyyy-mm-dd",
+    selectYears: 25,
+    selectMonths: true,
+  })
+  .pickadate("picker");
+
 if (submit_penjualan) {
   submit_penjualan.addEventListener("click", submitpenjualan);
   submit_detail_penjualan.addEventListener("click", () => {
@@ -312,6 +322,10 @@ async function submitpenjualan() {
   // Collect form data
   const picker_penjualan = $("#tanggal_penjualan").pickadate("picker");
   const tanggal_penjualan = picker_penjualan.get("select", "yyyy-mm-dd");
+
+  const picker_pengiriman = $("#tanggal_pengiriman").pickadate("picker");
+  const tanggal_pengiriman = picker_pengiriman.get("select", "yyyy-mm-dd");
+
   const gudang_id = document.getElementById("gudang_id").value;
   const customer_id = document.getElementById("customer_id").value;
   const keterangan = document.getElementById("keterangan_penjualan").value;
@@ -383,6 +397,7 @@ async function submitpenjualan() {
     created_by: `${access.decryptItem("nama")}`,
     penjualan_id: penjualan_id,
     tanggal_penjualan: tanggal_penjualan,
+    tanggal_pengiriman: tanggal_pengiriman,
     gudang_id: gudang_id,
     customer_id: customer_id,
     keterangan: keterangan,
@@ -458,6 +473,18 @@ async function populate_penjualan(id_penjualan) {
         if (parts_po.length === 3) {
           let dateObj_po = new Date(parts_po[0], parts_po[1] - 1, parts_po[2]);
           pickdatejs_penjualan.set("select", dateObj_po);
+        }
+
+        const parts_pengiriman = item.tanggal_pengiriman
+          ? item.tanggal_pengiriman.split("-")
+          : "";
+        if (parts_pengiriman.length === 3) {
+          let dateObj_pengiriman = new Date(
+            parts_pengiriman[0],
+            parts_pengiriman[1] - 1,
+            parts_pengiriman[2]
+          );
+          pickdatejs_pengiriman.set("select", dateObj_pengiriman);
         }
       });
     } catch (error) {

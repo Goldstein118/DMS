@@ -10,6 +10,7 @@ if (isset($data['penjualan_id']) && isset($data['update_penjualan'])) {
         $retur_penjualan_id = $fields["retur_penjualan_id"];
         $penjualan_id = $fields['penjualan_id'];
         $tanggal_penjualan = $fields['tanggal_penjualan'];
+        $tanggal_pengiriman = $fields['tanggal_pengiriman'];
         $customer_id = $fields['customer_id'];
         $gudang_id = $fields['gudang_id'];
         $keterangan_penjualan = $fields['keterangan'];
@@ -45,11 +46,12 @@ if (isset($data['penjualan_id']) && isset($data['update_penjualan'])) {
         $oldData = $oldDataResult->fetch_assoc();
         $oldDataStmt->close();
 
-        $stmt = $conn->prepare("UPDATE tb_retur_penjualan SET tanggal_penjualan =?,customer_id=?,gudang_id=?,keterangan_penjualan=?,ppn=?,diskon=?,nominal_pph=?,status=?,keterangan_gudang=?,keterangan_invoice=?,keterangan_pengiriman=?
+        $stmt = $conn->prepare("UPDATE tb_retur_penjualan SET tanggal_penjualan =?,tanggal_pengiriman=?,customer_id=?,gudang_id=?,keterangan_penjualan=?,ppn=?,diskon=?,nominal_pph=?,status=?,keterangan_gudang=?,keterangan_invoice=?,keterangan_pengiriman=?
         WHERE penjualan_id = ?");
         $stmt->bind_param(
-            "ssssdddsssss",
+            "sssssdddsssss",
             $tanggal_penjualan,
+            $tanggal_pengiriman,
             $customer_id,
             $gudang_id,
             $keterangan_penjualan,
@@ -68,20 +70,21 @@ if (isset($data['penjualan_id']) && isset($data['update_penjualan'])) {
         executeInsert(
             $conn,
             "INSERT INTO tb_retur_penjualan_history (retur_penjualan_history_id,retur_penjualan_id,penjualan_id,
-                tanggal_penjualan_before,customer_id_before,gudang_id_before, keterangan_penjualan_before,ppn_before,
+                tanggal_penjualan_before,tanggal_pengiriman_before,customer_id_before,gudang_id_before, keterangan_penjualan_before,ppn_before,
                 diskon_before, nominal_pph_before, status_before, created_by_before,tanggal_input_promo_berlaku_before,
                 keterangan_invoice_before,keterangan_gudang_before,keterangan_pengiriman_before,no_pengiriman_before,
                 
-                tanggal_penjualan_after,customer_id_after,gudang_id_after, keterangan_penjualan_after,ppn_after,
+                tanggal_penjualan_after,tanggal_pengiriman_after,customer_id_after,gudang_id_after, keterangan_penjualan_after,ppn_after,
                 diskon_after, nominal_pph_after, status_after, created_by_after,tanggal_input_promo_berlaku_after,
                 keterangan_invoice_after,keterangan_gudang_after,keterangan_pengiriman_after,no_pengiriman_after,created_status)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             [
                 $retur_penjualan_history_id,
                 $retur_penjualan_id,
                 $penjualan_id,
 
                 $oldData['tanggal_penjualan'],
+                $oldData['tanggal_pengiriman'],
                 $oldData['customer_id'],
                 $oldData['gudang_id'],
                 $oldData['keterangan_penjualan'],
@@ -99,6 +102,7 @@ if (isset($data['penjualan_id']) && isset($data['update_penjualan'])) {
                 $oldData['no_pengiriman'],
 
                 $tanggal_penjualan,
+                $tanggal_pengiriman,
                 $customer_id,
                 $gudang_id,
                 $keterangan_penjualan,
@@ -116,7 +120,7 @@ if (isset($data['penjualan_id']) && isset($data['update_penjualan'])) {
                 $oldData['no_pengiriman'],
                 "update"
             ],
-            "sssssssdddsssssssssssdddssssssss"
+            "ssssssssdddssssssssssssdddssssssss"
         );
 
         $total_qty = 0;
